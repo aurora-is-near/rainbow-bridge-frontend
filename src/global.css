@@ -30,13 +30,17 @@ main {
 }
 
 h1 {
-  background-image: url(assets/logo-black.svg);
-  background-position: center 1em;
-  background-repeat: no-repeat;
-  background-size: auto 1.5em;
   margin-top: 0;
-  padding: 3.5em 0 0.5em;
+  padding: 3.5em 0 0;
   text-align: center;
+  position: relative;
+}
+h1:before {
+  content: '🌈';
+  position: absolute;
+  width: 100%;
+  top: 1.25em;
+  left: 0;
 }
 
 a,
@@ -140,37 +144,6 @@ li {
   padding-bottom: 1em;
 }
 
-aside {
-  animation: notify ease-in-out 10s;
-  background-color: var(--shadow);
-  border-radius: 5px;
-  bottom: 0;
-  font-size: 0.8em;
-  margin: 1em;
-  padding: 1em;
-  position: fixed;
-  transform: translateY(10em);
-  right: 0;
-}
-aside footer {
-  display: flex;
-  font-size: 0.9em;
-  justify-content: space-between;
-  margin-top: 0.5em;
-}
-aside footer *:first-child {
-  color: var(--success);
-}
-aside footer *:last-child {
-  color: var(--gray);
-}
-@keyframes notify {
-  0% { transform: translateY(10em) }
-  5% { transform: translateY(0) }
-  95% { transform: translateY(0) }
-  100% { transform: translateY(10em) }
-}
-
 @media (prefers-color-scheme: dark) {
   html {
     --bg: #1e1e1e;
@@ -178,9 +151,6 @@ aside footer *:last-child {
     --gray: #aaa;
     --shadow: #2a2a2a;
     --light-gray: #444;
-  }
-  h1 {
-    background-image: url(assets/logo-white.svg);
   }
   input:focus {
     box-shadow: 0 0 10em rgba(255, 255, 255, 0.02) inset;
