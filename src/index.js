@@ -21,11 +21,26 @@ const fill = selector => ({
       .forEach(n => n.innerHTML = content)
 })
 
+const params = new URLSearchParams(window.location.search)
+const erc20 = params.get('erc20')
+const abi = params.get('abi')
+
+// if erc20 or abi are missing, redirect to defaults
+const DEFAULT_ERC20 = '0xdeadbeef'
+const DEFAULT_ABI = '0xdeadbeef.json'
+if (!erc20 || !abi) {
+  window.location.replace(
+    window.location.origin +
+    window.location.pathname +
+    `?erc20=${DEFAULT_ERC20}&abi=${DEFAULT_ABI}`
+  )
+}
+
 // Displaying the signed in flow container and fill in data
 function signedInFlow() {
   fill('eth-node-url').with('eth-node-url')
-  fill('eth-erc20-address').with('eth-erc20-address')
-  fill('eth-erc20-abi-path').with('eth-erc20-abi-path')
+  fill('eth-erc20-address').with(erc20)
+  fill('eth-erc20-abi-path').with(abi)
   fill('eth-locker-address').with('eth-locker-address')
   fill('eth-locker-abi-path').with('eth-locker-abi-path')
   fill('near-node-url').with(nodeUrl)
