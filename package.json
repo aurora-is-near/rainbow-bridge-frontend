@@ -13,6 +13,7 @@
     "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
+    "ethers": "^5.0.9",
     "near-api-js": "^0.27.0"
   },
   "browserslist": [
