@@ -1,7 +1,7 @@
-import { initContract, login, logout } from './utils'
+import { initContract, login, logout } from './near-utils'
 
-import getConfig from './config'
-const { contractName, networkId, nodeUrl } = getConfig(process.env.NODE_ENV || 'development')
+import getNearConfig from './config'
+const { contractName, networkId, nodeUrl } = getNearConfig(process.env.NODE_ENV || 'development')
 
 document.querySelector('#sign-in-button').onclick = login
 document.querySelector('#sign-out-button').onclick = logout
