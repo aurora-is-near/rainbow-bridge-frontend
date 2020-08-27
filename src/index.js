@@ -3,7 +3,7 @@ import 'regenerator-runtime/runtime'
 import { initContract, login, logout } from './utils'
 
 import getConfig from './config'
-const { networkId, nodeUrl } = getConfig(process.env.NODE_ENV || 'development')
+const { contractName, networkId, nodeUrl } = getConfig(process.env.NODE_ENV || 'development')
 
 document.querySelector('#sign-in-button').onclick = login
 document.querySelector('#sign-out-button').onclick = logout
@@ -30,7 +30,7 @@ function signedInFlow() {
   fill('eth-locker-abi-path').with('eth-locker-abi-path')
   fill('near-node-url').with(nodeUrl)
   fill('near-network-id').with(networkId)
-  fill('near-fun-token-account').with('near-fun-token-account')
+  fill('near-fun-token-account').with(contractName)
   fill('near-client-account').with('near-client-account')
 
   document.querySelector('#signed-in-flow').style.display = 'block'
