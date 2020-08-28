@@ -10,20 +10,27 @@
 </head>
 <body>
   <h1>Eth→NEAR Fungible Tokens</h1>
-  <main id="signed-out-flow" style="display: none">
+  <main id="signed-out-flow">
     <p>
       Send an <a href="https://eips.ethereum.org/EIPS/eip-20" rel="nofollow">ERC20</a> token over the <a href="https://github.com/near/rainbow-bridge">Rainbow Bridge</a>, get an <a href="https://github.com/nearprotocol/NEPs/pull/21">NEP21</a> token on <a href="https://near.org/" rel="nofollow">NEAR</a>
     </p>
-    <p>
-      Enable <a href="https://metamask.io/" rel="nofollow">MetaMask</a> and sign in with NEAR to get started:
-    </p>
-    <p style="text-align: center; margin-top: 2.5em">
-      <button id="sign-in-button">Sign in with NEAR</button>
-    </p>
+    <!-- you can use posthtml to separate page into multiple files -->
+    <div style="text-align: center; margin-top: 2.5em">
+      <p>
+        <button data-behavior="auth-ethereum">
+          Connect to Ethereum
+        </button>
+      </p>
+      <p>
+        <button data-behavior="auth-near">
+          Sign in with NEAR
+        </button>
+      </p>
+    </div>
   </main>
 
   <div id="signed-in-flow" style="display: none">
-    <button class="link" style="position: absolute; top: 0.5em; right: 0" id="sign-out-button">
+    <button class="link" style="position: absolute; top: 0.5em; right: 0" data-behavior="logout">
       Sign out
     </button>
     <main>

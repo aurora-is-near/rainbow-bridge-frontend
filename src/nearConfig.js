@@ -1,6 +1,6 @@
 const CONTRACT_NAME = process.env.CONTRACT_NAME || 'mintable-fungible-token.testnet'
 
-function getConfig(env) {
+function getConfig(env = process.env.NODE_ENV || 'development') {
   switch (env) {
 
   case 'production':

@@ -1,41 +1,22 @@
-import { initContract, login, logout } from './near-utils'
+import './auth-ethereum'
+import './auth-near'
+import { erc20, abi } from './getParams'
+import { fill } from './domHelpers'
 
-import getNearConfig from './config'
-const { contractName, networkId, nodeUrl } = getNearConfig(process.env.NODE_ENV || 'development')
+import getNearConfig from './nearConfig'
+const { contractName, networkId, nodeUrl } = getNearConfig()
 
-document.querySelector('#sign-in-button').onclick = login
-document.querySelector('#sign-out-button').onclick = logout
-
-// Display the signed-out-flow container
-function signedOutFlow() {
-  document.querySelector('#signed-out-flow').style.display = 'block'
-}
-
-// A helper function to update DOM elements that have a "data-behavior" attribute
-// Search file for example use
-const fill = selector => ({
-  with: content =>
-    Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
-      .forEach(n => n.innerHTML = content)
-})
-
-const params = new URLSearchParams(window.location.search)
-const erc20 = params.get('erc20')
-const abi = params.get('abi')
-
-// if erc20 or abi are missing, redirect to defaults
-const DEFAULT_ERC20 = '0xdeadbeef'
-const DEFAULT_ABI = '0xdeadbeef.json'
-if (!erc20 || !abi) {
-  window.location.replace(
-    window.location.origin +
-    window.location.pathname +
-    `?erc20=${DEFAULT_ERC20}&abi=${DEFAULT_ABI}`
-  )
+document.querySelector('[data-behavior=logout]').onclick = async function logout() {
+  await window.web3Modal.clearCachedProvider()
+  window.nearConnection.signOut()
+  setTimeout(() => window.location.reload())
 }
 
 // Displaying the signed in flow container and fill in data
 function signedInFlow() {
+  clearInterval(authChecker)
+  document.querySelector('#signed-out-flow').style.display = 'none'
+
   fill('eth-node-url').with('eth-node-url')
   fill('eth-erc20-address').with(erc20)
   fill('eth-erc20-abi-path').with(abi)
@@ -49,10 +30,8 @@ function signedInFlow() {
   document.querySelector('#signed-in-flow').style.display = 'block'
 }
 
-// `nearInitPromise` gets called on page load
-window.nearInitPromise = initContract()
-  .then(() => {
-    if (window.walletConnection.isSignedIn()) signedInFlow()
-    else signedOutFlow()
-  })
-  .catch(console.error)
+function checkAuth() {
+  if (window.ethUserAddress && window.nearUserAddress) signedInFlow()
+}
+
+const authChecker = window.setInterval(checkAuth, 1000)
