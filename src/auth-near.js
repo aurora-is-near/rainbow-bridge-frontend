@@ -1,4 +1,4 @@
-import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
+import { keyStores, WalletConnection, Near } from 'near-api-js'
 import getConfig from './nearConfig'
 const config = getConfig()
 
@@ -23,7 +23,7 @@ const button = document.querySelector('[data-behavior=auth-near]')
 // returning to the current URL afterward, so we can rely on this whole set of
 // JS being re-evaluated after NEAR auth
 if (!window.nearUserAddress) {
-  button.onclick = function login() {
+  button.onclick = function login () {
     // Allow the current app to make calls to the specified contract on the
     // user's behalf. This works by creating a new access key for the user's
     // account and storing the private key in localStorage.

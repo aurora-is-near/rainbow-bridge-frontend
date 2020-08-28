@@ -6,14 +6,14 @@ import { fill } from './domHelpers'
 import getNearConfig from './nearConfig'
 const { contractName, networkId, nodeUrl } = getNearConfig()
 
-document.querySelector('[data-behavior=logout]').onclick = async function logout() {
+document.querySelector('[data-behavior=logout]').onclick = async function logout () {
   await window.web3Modal.clearCachedProvider()
   window.nearConnection.signOut()
   setTimeout(() => window.location.reload())
 }
 
 // Displaying the signed in flow container and fill in data
-function signedInFlow() {
+function signedInFlow () {
   clearInterval(authChecker)
   document.querySelector('#signed-out-flow').style.display = 'none'
 
@@ -30,7 +30,7 @@ function signedInFlow() {
   document.querySelector('#signed-in-flow').style.display = 'block'
 }
 
-function checkAuth() {
+function checkAuth () {
   if (window.ethUserAddress && window.nearUserAddress) signedInFlow()
 }
 

@@ -4,5 +4,5 @@
 export const fill = selector => ({
   with: content =>
     Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
-      .forEach(n => n.innerHTML = content)
+      .forEach(n => { n.innerHTML = content })
 })
