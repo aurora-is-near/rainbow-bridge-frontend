@@ -6,3 +6,16 @@ export const fill = selector => ({
     Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
       .forEach(n => { n.innerHTML = content })
 })
+
+/* SIDE EFFECTS
+ *
+ * Including this file in index.js has side effects!
+ * It adds the following handlers to the DOM
+ */
+document.querySelectorAll('.dropdown').forEach(d => {
+  d.onclick = () => {
+    d.className = d.className.match('active')
+      ? 'dropdown'
+      : 'dropdown active'
+  }
+})

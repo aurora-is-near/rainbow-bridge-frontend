@@ -17,6 +17,8 @@ function signedInFlow () {
   clearInterval(authChecker)
   document.querySelector('#signed-out-flow').style.display = 'none'
 
+  fill('eth-user').with(window.ethUserAddress)
+  fill('near-user').with(window.nearUserAddress)
   fill('eth-node-url').with('eth-node-url')
   fill('eth-erc20-address').with(erc20)
   fill('eth-erc20-abi-path').with(abi)
@@ -34,4 +36,4 @@ function checkAuth () {
   if (window.ethUserAddress && window.nearUserAddress) signedInFlow()
 }
 
-const authChecker = window.setInterval(checkAuth, 1000)
+const authChecker = window.setInterval(checkAuth, 500)

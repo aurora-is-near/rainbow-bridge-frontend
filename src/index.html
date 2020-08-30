@@ -30,9 +30,23 @@
   </main>
 
   <div id="signed-in-flow" style="display: none">
-    <button class="link" style="position: absolute; top: 0.5em; right: 0" data-behavior="logout">
-      Sign out
-    </button>
+    <nav class="dropdown" style="text-align: right; font-size: 0.8em; position: absolute; right: 0.5em; top: 0.5em;">
+      <button>
+        <img style="width: 0.9em" alt="ethereum" src="assets/eth-diamond-purple.png">&nbsp;
+        <picture style="vertical-align: top">
+          <source srcset="assets/near-icon-white.svg" media="(prefers-color-scheme: dark)">
+          <img style="width: 1em" alt="near" src="assets/near-icon-black.svg">
+        </picture>
+        <span>Connected</span>
+      </button>
+      <div>
+        <div>ETH: <code data-behavior="eth-user"></code></div>
+        <div>NEAR: <code data-behavior="near-user"></code></div>
+        <button class="link" data-behavior="logout">
+          Sign out
+        </button>
+      </div>
+    </nav>
     <main>
       <p>
         Connected to <code data-behavior="eth-node-url">🤔</code>,

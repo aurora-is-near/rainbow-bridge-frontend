@@ -7,7 +7,7 @@ html {
   --fg: #1e1e1e;
   --gray: #555;
   --light-gray: #ccc;
-  --shadow: #e6e6e6;
+  --shadow: #e2e2e2;
   --success: rgb(90, 206, 132);
   --primary: #FF585D;
   --secondary: #0072CE;
@@ -47,6 +47,7 @@ a,
 .link {
   color: var(--primary);
   text-decoration: none;
+  padding: 0;
 }
 a:hover,
 a:focus,
@@ -72,6 +73,9 @@ button {
   cursor: pointer;
   padding: 0.3em 0.75em;
   transition: transform 30ms;
+}
+button * {
+  vertical-align: middle;
 }
 button:hover, button:focus {
   box-shadow: 0 0 10em rgba(255, 255, 255, 0.2) inset;
@@ -142,6 +146,46 @@ code {
 
 li {
   padding-bottom: 1em;
+}
+
+.dropdown {
+  background: var(--bg);
+}
+.dropdown > button {
+  background: var(--bg);
+  border: 1px solid var(--gray);
+  border-radius: 5px;
+  color: var(--fg);
+}
+.dropdown > button:hover,
+.dropdown > button:focus {
+  box-shadow: 0 0 10em var(--shadow) inset;
+}
+
+.dropdown > button:after {
+  content: ' ';
+  border: 0.3em solid transparent;
+  border-top-color: var(--fg);
+  border-bottom-width: 0;
+  display: inline-block;
+  margin-left: 0.25em;
+}
+.dropdown > button + * {
+  display: none;
+}
+.dropdown.active > button {
+  border-radius: 5px 5px 0 0;
+  border-bottom: var(--bg);
+  position: relative;
+  z-index: 2;
+}
+.dropdown.active > button + * {
+  display: block;
+  border: 1px solid var(--gray);
+  padding: 0.5em;
+  border-radius: 5px 0 5px 5px;
+  position: relative;
+  top: -1px;
 }
 
 @media (prefers-color-scheme: dark) {
