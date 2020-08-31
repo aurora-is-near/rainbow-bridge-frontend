@@ -21,7 +21,7 @@ window.web3Modal = new Web3Modal({
   }
 })
 
-const button = document.querySelector('[data-behavior=auth-ethereum]')
+const button = document.querySelector('[data-behavior=authEthereum]')
 
 async function loadWeb3Modal () {
   const provider = await window.web3Modal.connect()

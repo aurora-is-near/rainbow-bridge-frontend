@@ -17,12 +17,12 @@
     <!-- you can use posthtml to separate page into multiple files -->
     <div style="text-align: center; margin-top: 2.5em">
       <p>
-        <button data-behavior="auth-ethereum">
+        <button data-behavior="authEthereum">
           Connect to Ethereum Ropsten
         </button>
       </p>
       <p>
-        <button data-behavior="auth-near">
+        <button data-behavior="authNear">
           Sign in with NEAR
         </button>
       </p>
@@ -40,8 +40,8 @@
         <span>Connected</span>
       </button>
       <div>
-        <div>ETH: <code data-behavior="eth-user"></code></div>
-        <div>NEAR: <code data-behavior="near-user"></code></div>
+        <div>ETH: <code data-behavior="ethUser"></code></div>
+        <div>NEAR: <code data-behavior="nearUser"></code></div>
         <button class="link" data-behavior="logout">
           Sign out
         </button>
@@ -49,19 +49,19 @@
     </nav>
     <main>
       <p>
-        Connected to <code data-behavior="eth-node-url">🤔</code>,
-        locking ERC20 <code data-behavior="eth-erc20-address">🤔</code>
-        (using ABI <code data-behavior="eth-erc20-abi-path">🤔</code>)
-        in TokenLocker <code data-behavior="eth-locker-address">🤔</code>
-        (ABI <code data-behavior="eth-locker-abi-path">🤔</code>)
+        Connected to <code data-behavior="ethNodeUrl">🤔</code>,
+        locking ERC20 <code data-behavior="ethErc20Address">🤔</code>
+        (using ABI <code data-behavior="ethErc20AbiPath">🤔</code>)
+        in TokenLocker <code data-behavior="ethLockerAddress">🤔</code>
+        (ABI <code data-behavior="ethLockerAbiPath">🤔</code>)
       </p>
       <p>
-        Connected to archival NEAR node at <code data-behavior="near-node-url">🤔</code>
-        for NEAR network <code data-behavior="near-network-id">🤔</code>,
-        minting NEP21 tokens via MintableFungibleToken at <code data-behavior="near-fun-token-account">🤔</code>
+        Connected to archival NEAR node at <code data-behavior="nearNodeUrl">🤔</code>
+        for NEAR network <code data-behavior="nearNetworkId">🤔</code>,
+        minting NEP21 tokens via MintableFungibleToken at <code data-behavior="nearFunTokenAccount">🤔</code>
       </p>
       <p>
-        Checking progress of Ethereum blocks at Eth2NearClient deployed at <code data-behavior="near-client-account">🤔</code>
+        Checking progress of Ethereum blocks at Eth2NearClient deployed at <code data-behavior="nearClientAccount">🤔</code>
       </p>
     </main>
   </div>

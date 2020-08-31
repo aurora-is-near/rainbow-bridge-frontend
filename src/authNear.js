@@ -17,7 +17,7 @@ window.nearConnection = new WalletConnection(near)
 // Getting the Account ID. If still unauthorized, it's just empty string
 window.nearUserAddress = window.nearConnection.getAccountId()
 
-const button = document.querySelector('[data-behavior=auth-near]')
+const button = document.querySelector('[data-behavior=authNear]')
 
 // The NEAR signin flow redirects from the current URL to NEAR Wallet,
 // returning to the current URL afterward, so we can rely on this whole set of

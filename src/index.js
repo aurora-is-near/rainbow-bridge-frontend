@@ -1,5 +1,5 @@
-import './auth-ethereum'
-import './auth-near'
+import './authEthereum'
+import './authNear'
 import { erc20, abi } from './getParams'
 import { fill } from './domHelpers'
 
@@ -17,17 +17,17 @@ function signedInFlow () {
   clearInterval(authChecker)
   document.querySelector('#signed-out-flow').style.display = 'none'
 
-  fill('eth-user').with(window.ethUserAddress)
-  fill('near-user').with(window.nearUserAddress)
-  fill('eth-node-url').with('eth-node-url')
-  fill('eth-erc20-address').with(erc20)
-  fill('eth-erc20-abi-path').with(abi)
-  fill('eth-locker-address').with('eth-locker-address')
-  fill('eth-locker-abi-path').with('eth-locker-abi-path')
-  fill('near-node-url').with(nodeUrl)
-  fill('near-network-id').with(networkId)
-  fill('near-fun-token-account').with(contractName)
-  fill('near-client-account').with('near-client-account')
+  fill('ethUser').with(window.ethUserAddress)
+  fill('nearUser').with(window.nearUserAddress)
+  fill('ethNodeUrl').with('ethNodeUrl')
+  fill('ethErc20Address').with(erc20)
+  fill('ethErc20AbiPath').with(abi)
+  fill('ethLockerAddress').with('ethLockerAddress')
+  fill('ethLockerAbiPath').with('ethLockerAbiPath')
+  fill('nearNodeUrl').with(nodeUrl)
+  fill('nearNetworkId').with(networkId)
+  fill('nearFunTokenAccount').with(contractName)
+  fill('nearClientAccount').with('nearClientAccount')
 
   document.querySelector('#signed-in-flow').style.display = 'block'
 }
