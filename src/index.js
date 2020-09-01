@@ -1,10 +1,16 @@
 import './authEthereum'
 import './authNear'
-import { erc20, abi } from './getParams'
 import { fill } from './domHelpers'
 
-import getNearConfig from './nearConfig'
-const { contractName, networkId, nodeUrl } = getNearConfig()
+fill('ethNodeUrl').with(process.env.ethNodeUrl)
+fill('ethErc20Address').with(process.env.ethErc20Address)
+fill('ethErc20AbiPath').with(process.env.ethErc20AbiPath)
+fill('ethLockerAddress').with(process.env.ethLockerAddress)
+fill('ethLockerAbiPath').with(process.env.ethLockerAbiPath)
+fill('nearNodeUrl').with(process.env.nearNodeUrl)
+fill('nearNetworkId').with(process.env.nearNetworkId)
+fill('nearFunTokenAccount').with(process.env.nearFunTokenAccount)
+fill('nearClientAccount').with(process.env.nearClientAccount)
 
 document.querySelector('[data-behavior=logout]').onclick = async function logout () {
   await window.web3Modal.clearCachedProvider()
@@ -19,15 +25,9 @@ function signedInFlow () {
 
   fill('ethUser').with(window.ethUserAddress)
   fill('nearUser').with(window.nearUserAddress)
-  fill('ethNodeUrl').with('ethNodeUrl')
-  fill('ethErc20Address').with(erc20)
-  fill('ethErc20AbiPath').with(abi)
-  fill('ethLockerAddress').with('ethLockerAddress')
-  fill('ethLockerAbiPath').with('ethLockerAbiPath')
-  fill('nearNodeUrl').with(nodeUrl)
-  fill('nearNetworkId').with(networkId)
-  fill('nearFunTokenAccount').with(contractName)
-  fill('nearClientAccount').with('nearClientAccount')
+
+  // how to get useful details about selected network in MetaMask?
+  fill('ethNetworkName').with(window.ethProvider.network.name)
 
   document.querySelector('#signed-in-flow').style.display = 'block'
 }

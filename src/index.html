@@ -18,7 +18,7 @@
     <div style="text-align: center; margin-top: 2.5em">
       <p>
         <button data-behavior="authEthereum">
-          Connect to Ethereum Ropsten
+          Connect to Ethereum <span data-behavior="ethNodeUrl">🤔</span>
         </button>
       </p>
       <p>
@@ -49,7 +49,7 @@
     </nav>
     <main>
       <p>
-        Connected to <code data-behavior="ethNodeUrl">🤔</code>,
+        Connected to <code data-behavior="ethNetworkName">🤔</code>,
         locking ERC20 <code data-behavior="ethErc20Address">🤔</code>
         (using ABI <code data-behavior="ethErc20AbiPath">🤔</code>)
         in TokenLocker <code data-behavior="ethLockerAddress">🤔</code>
@@ -58,7 +58,8 @@
       <p>
         Connected to archival NEAR node at <code data-behavior="nearNodeUrl">🤔</code>
         for NEAR network <code data-behavior="nearNetworkId">🤔</code>,
-        minting NEP21 tokens via MintableFungibleToken at <code data-behavior="nearFunTokenAccount">🤔</code>
+        minting NEP21 tokens via MintableFungibleToken at
+        <code data-behavior="nearFunTokenAccount">🤔</code>
       </p>
       <p>
         Checking progress of Ethereum blocks at Eth2NearClient deployed at <code data-behavior="nearClientAccount">🤔</code>

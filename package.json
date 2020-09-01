@@ -3,12 +3,14 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "build": "parcel build src/index.html --public-url ./",
-    "start": "echo The app is starting! It will automatically open in your browser when ready && parcel src/index.html --open",
+    "build": "env-cmd -e production -r .config.js parcel build src/index.html --public-url ./",
+    "start": "env-cmd -e development -r .config.js parcel src/index.html --open",
+    "local": "env-cmd -e local -r .config.js parcel src/index.html --open",
     "lint": "eslint src",
     "test": "jest test"
   },
   "devDependencies": {
+    "env-cmd": "^10.1.0",
     "eslint": "^7.7.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.0",

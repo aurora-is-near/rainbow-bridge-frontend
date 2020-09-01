@@ -1,20 +1,18 @@
 import { keyStores, WalletConnection, Near } from 'near-api-js'
-import getConfig from './nearConfig'
-const config = getConfig()
 
 // Create a Near config object
 const near = new Near({
-  deps: {
-    keyStore: new keyStores.BrowserLocalStorageKeyStore()
-  },
-  ...config
+  keyStore: new keyStores.BrowserLocalStorageKeyStore(),
+  networkId: process.env.nearNetworkId,
+  nodeUrl: process.env.nearNodeUrl,
+  helperUrl: process.env.nearHelperUrl,
+  walletUrl: process.env.nearWalletUrl
 })
 
-// Initializing Wallet based Account. It can work with NEAR testnet wallet that
-// is hosted at https://wallet.testnet.near.org
+// Initialize main interface to NEAR network
 window.nearConnection = new WalletConnection(near)
 
-// Getting the Account ID. If still unauthorized, it's just empty string
+// Getting the Account ID. If still unauthorized, it's an empty string
 window.nearUserAddress = window.nearConnection.getAccountId()
 
 const button = document.querySelector('[data-behavior=authNear]')
@@ -27,7 +25,7 @@ if (!window.nearUserAddress) {
     // Allow the current app to make calls to the specified contract on the
     // user's behalf. This works by creating a new access key for the user's
     // account and storing the private key in localStorage.
-    window.nearConnection.requestSignIn()
+    window.nearConnection.requestSignIn(process.env.nearFunTokenAccount)
   }
 } else {
   const span = document.createElement('span')
