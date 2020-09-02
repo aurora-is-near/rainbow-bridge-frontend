@@ -1,7 +1,6 @@
 import './authEthereum'
 import './authNear'
 import { fill } from './domHelpers'
-import { Contract } from '@ethersproject/contracts'
 
 fill('ethNodeUrl').with(process.env.ethNodeUrl)
 fill('ethErc20Address').with(process.env.ethErc20Address)
@@ -29,12 +28,6 @@ async function signedInFlow () {
 
   // how to get useful details about selected network in MetaMask?
   fill('ethNetworkName').with(window.ethProvider.network.name)
-
-  window.erc20 = new Contract(
-    process.env.ethErc20Address,
-    JSON.parse(process.env.ethErc20AbiText),
-    window.ethSigner
-  )
 
   console.log({ erc20: window.erc20 })
 

@@ -1,6 +1,7 @@
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Web3Provider } from '@ethersproject/providers'
+import { Contract } from '@ethersproject/contracts'
 
 // SWAP IN YOUR OWN INFURA_ID FROM https://infura.io/dashboard/ethereum
 const INFURA_ID = '9c91979e95cb4ef8a61eb029b4217a1a'
@@ -28,6 +29,12 @@ async function loadWeb3Modal () {
   window.ethProvider = new Web3Provider(provider)
   window.ethSigner = window.ethProvider.getSigner()
   window.ethUserAddress = await window.ethSigner.getAddress()
+
+  window.erc20 = new Contract(
+    process.env.ethErc20Address,
+    JSON.parse(process.env.ethErc20AbiText),
+    window.ethSigner
+  )
 
   const span = document.createElement('span')
   span.innerHTML = `Connected to Ethereum as <code>${window.ethUserAddress}</code>`
