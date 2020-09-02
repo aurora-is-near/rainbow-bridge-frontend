@@ -9,8 +9,8 @@
   <link rel="stylesheet" href="global.css">
 </head>
 <body>
-  <h1>Eth→NEAR Fungible Tokens</h1>
   <main id="signed-out-flow">
+    <h1>Eth→NEAR Fungible Tokens</h1>
     <p>
       Send an <a href="https://eips.ethereum.org/EIPS/eip-20" rel="nofollow">ERC20</a> token over the <a href="https://github.com/near/rainbow-bridge">Rainbow Bridge</a>, get an <a href="https://github.com/nearprotocol/NEPs/pull/21">NEP21</a> token on <a href="https://near.org/" rel="nofollow">NEAR</a>
     </p>
@@ -29,7 +29,7 @@
     </div>
   </main>
 
-  <div id="signed-in-flow" style="display: none">
+  <div id="signed-in-flow" style="display: none; height: 100%; flex-direction: column; justify-content: space-between">
     <nav class="dropdown" style="text-align: right; font-size: 0.8em; position: absolute; right: 0.5em; top: 0.5em;">
       <button>
         <img style="width: 0.9em; vertical-align: bottom" alt="ethereum" src="assets/eth-diamond-purple.png">
@@ -47,18 +47,21 @@
         </button>
       </div>
     </nav>
-    <main>
-      <p>
-        Your balance of ERC20 <code data-behavior="ethErc20Address" class="clip">🤔</code>:<br>
-        <strong data-behavior="erc20Balance">🤔</strong>
-      </p>
-    </main>
+    <div>
+      <h1>Eth→NEAR Fungible Tokens</h1>
+      <main>
+        <p>
+          Your balance of ERC20 <code data-behavior="ethErc20Address" class="clip">🤔</code>:<br>
+          <strong data-behavior="erc20Balance">🤔</strong>
+        </p>
+      </main>
+    </div>
     <footer style="
       display: grid;
       font-size: 0.75em;
       grid-column-gap: 1em;
       grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
-      margin: 5rem 0 -1rem;
+      margin: 4rem 0 -1rem;
       word-break: break-word;
     ">
       <p>

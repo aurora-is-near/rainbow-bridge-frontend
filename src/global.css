@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+}
+
 html {
   --bg: #efefef;
   --fg: #1e1e1e;
@@ -155,6 +159,7 @@ li {
 
 .dropdown {
   background: var(--bg);
+  z-index: 1;
 }
 .dropdown > button {
   background: var(--bg);

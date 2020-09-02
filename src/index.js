@@ -41,7 +41,7 @@ async function signedInFlow () {
   const erc20Balance = (await window.erc20.balanceOf(window.ethUserAddress)).toNumber()
   fill('erc20Balance').with(new Intl.NumberFormat().format(erc20Balance))
 
-  document.querySelector('#signed-in-flow').style.display = 'block'
+  document.querySelector('#signed-in-flow').style.display = 'flex'
 }
 
 function checkAuth () {
