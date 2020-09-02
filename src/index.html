@@ -49,22 +49,38 @@
     </nav>
     <main>
       <p>
+        Your balance of ERC20 <code data-behavior="ethErc20Address" class="clip">🤔</code>:<br>
+        <strong data-behavior="erc20Balance">🤔</strong>
+      </p>
+    </main>
+    <footer style="
+      display: grid;
+      font-size: 0.75em;
+      grid-column-gap: 1em;
+      grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+      margin: 5rem 0 -1rem;
+      word-break: break-word;
+    ">
+      <p>
+        <strong>Ethereum:</strong><br>
         Connected to <code data-behavior="ethNetworkName">🤔</code>,
-        locking ERC20 <code data-behavior="ethErc20Address">🤔</code>
-        (using ABI <code data-behavior="ethErc20AbiPath">🤔</code>)
-        in TokenLocker <code data-behavior="ethLockerAddress">🤔</code>
-        (ABI <code data-behavior="ethLockerAbiPath">🤔</code>)
+        locking ERC20 <code data-behavior="ethErc20Address" class="clip">🤔</code>
+        (using ABI <code data-behavior="ethErc20AbiText" class="clip">🤔</code>)
+        in TokenLocker <code data-behavior="ethLockerAddress" class="clip">🤔</code>
+        (ABI <code data-behavior="ethLockerAbiText" class="clip">🤔</code>)
       </p>
       <p>
+        <strong>NEAR:</strong><br>
         Connected to archival NEAR node at <code data-behavior="nearNodeUrl">🤔</code>
         for NEAR network <code data-behavior="nearNetworkId">🤔</code>,
         minting NEP21 tokens via MintableFungibleToken at
         <code data-behavior="nearFunTokenAccount">🤔</code>
       </p>
       <p>
+        <strong>Bridge:</strong><br>
         Checking progress of Ethereum blocks at Eth2NearClient deployed at <code data-behavior="nearClientAccount">🤔</code>
       </p>
-    </main>
+    </footer>
   </div>
 
   <script src="./index.js"></script>

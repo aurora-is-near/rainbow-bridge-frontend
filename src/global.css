@@ -140,6 +140,14 @@ input:focus {
 code {
   color: var(--gray);
 }
+code.clip {
+  display:inline-block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  vertical-align:text-bottom;
+  white-space:nowrap;
+  max-width:10em;
+}
 
 li {
   padding-bottom: 1em;

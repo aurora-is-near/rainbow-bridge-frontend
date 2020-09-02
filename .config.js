@@ -7,6 +7,7 @@
 // Then use `yarn local` to use config created by rainbow-bridge-cli
 const homedir = require('os').homedir()
 const path = require('path')
+const { readFileSync } = require('fs')
 let localConfig
 try {
   localConfig = require(path.join(homedir, '.rainbow', 'config.json'))
@@ -17,8 +18,8 @@ try {
 module.exports = {
   local: {
     ...localConfig,
-    ethErc20AbiPath: '~/.rainbow/bridge/node_modules/rainbow-bridge-sol/token-locker/dist/MyERC20.full.abi',
-    ethLockerAbiPath: '~/.rainbow/bridge/node_modules/rainbow-bridge-sol/token-locker/dist/TokenLocker.full.abi',
+    ethErc20AbiText: readFileSync('./node_modules/rainbow-bridge-sol/token-locker/dist/MyERC20.full.abi'),
+    ethLockerAbiText: readFileSync('./node_modules/rainbow-bridge-sol/token-locker/dist/TokenLocker.full.abi'),
     nearClientAccount: 'rainbow_bridge_eth_on_near_client',
     nearFunTokenAccount: 'nearfuntoken',
     nearWalletUrl: 'http://localhost:4000/',
@@ -26,10 +27,10 @@ module.exports = {
   },
   development: {
     ethErc20Address: '???',
-    ethErc20AbiPath: '~/.rainbow/bridge/node_modules/rainbow-bridge-sol/token-locker/dist/MyERC20.full.abi',
+    ethErc20AbiText: readFileSync('./node_modules/rainbow-bridge-sol/token-locker/dist/MyERC20.full.abi'),
     ethNodeUrl: '???',
     ethLockerAddress: '',
-    ethLockerAbiPath: '~/.rainbow/bridge/node_modules/rainbow-bridge-sol/token-locker/dist/TokenLocker.full.abi',
+    ethLockerAbiText: readFileSync('./node_modules/rainbow-bridge-sol/token-locker/dist/TokenLocker.full.abi'),
     nearNodeUrl: 'https://rpc.testnet.near.org',
     nearNetworkId: 'testnet',
     nearFunTokenAccount: '???',
