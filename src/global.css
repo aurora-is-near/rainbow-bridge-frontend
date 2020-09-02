@@ -18,7 +18,7 @@ html {
 
   background-color: var(--bg);
   color: var(--fg);
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-family: system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   font-size: calc(0.9em + 0.5vw);
   line-height: 1.3;
 }
@@ -142,15 +142,18 @@ input:focus {
 }
 
 code {
+  box-shadow: 0 0 3px var(--light-gray) inset;
+  border-radius: 5px;
   color: var(--gray);
+  padding: 0 0.25em;
 }
 code.clip {
-  display:inline-block;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  vertical-align:text-bottom;
-  white-space:nowrap;
-  max-width:10em;
+  display: inline-block;
+  max-width: 10em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+  white-space: nowrap;
 }
 
 li {
