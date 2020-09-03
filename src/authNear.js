@@ -1,5 +1,7 @@
 import { keyStores, WalletConnection, Near } from 'near-api-js'
 
+import render from './render'
+
 // Create a Near config object
 const near = new Near({
   keyStore: new keyStores.BrowserLocalStorageKeyStore(),
@@ -31,4 +33,5 @@ if (!window.nearUserAddress) {
   const span = document.createElement('span')
   span.innerHTML = `Connected to NEAR as <code>${window.nearUserAddress}</code>`
   button.replaceWith(span)
+  render()
 }

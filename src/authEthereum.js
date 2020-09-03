@@ -3,6 +3,8 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Web3Provider } from '@ethersproject/providers'
 import { Contract } from '@ethersproject/contracts'
 
+import render from './render'
+
 // SWAP IN YOUR OWN INFURA_ID FROM https://infura.io/dashboard/ethereum
 const INFURA_ID = '9c91979e95cb4ef8a61eb029b4217a1a'
 
@@ -39,6 +41,7 @@ async function loadWeb3Modal () {
   const span = document.createElement('span')
   span.innerHTML = `Connected to Ethereum as <code>${window.ethUserAddress}</code>`
   button.replaceWith(span)
+  render()
 }
 
 button.onclick = loadWeb3Modal
