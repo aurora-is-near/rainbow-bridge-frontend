@@ -18,9 +18,11 @@ try {
 module.exports = {
   local: {
     ...localConfig,
+    ethErc20Name: 'RAIN',
     ethErc20AbiText: readFileSync('./node_modules/rainbow-bridge-sol/token-locker/dist/MyERC20.full.abi'),
     ethLockerAbiText: readFileSync('./node_modules/rainbow-bridge-sol/token-locker/dist/TokenLocker.full.abi'),
     nearClientAccount: 'rainbow_bridge_eth_on_near_client',
+    nearNep21Name: 'nRAIN',
     nearFunTokenAccount: 'nearfuntoken',
     nearWalletUrl: 'http://localhost:4000/',
     nearHelperUrl: 'http://localhost:3000/'

@@ -9,59 +9,136 @@
   <link rel="stylesheet" href="global.css">
 </head>
 <body>
-  <main id="signed-out-flow">
-    <h1>Eth→NEAR Fungible Tokens</h1>
-    <p>
-      Send an <a href="https://eips.ethereum.org/EIPS/eip-20" rel="nofollow">ERC20</a> token over the <a href="https://github.com/near/rainbow-bridge">Rainbow Bridge</a>, get an <a href="https://github.com/nearprotocol/NEPs/pull/21">NEP21</a> token on <a href="https://near.org/" rel="nofollow">NEAR</a>
-    </p>
-    <!-- you can use posthtml to separate page into multiple files -->
-    <div style="text-align: center; margin-top: 2.5em">
+  <div id="signed-out-flow">
+    <h1 class="title">Eth→NEAR Fungible Tokens</h1>
+    <div style="margin: 0 auto; max-width: 25em">
       <p>
-        <button data-behavior="authEthereum">
-          Connect to Ethereum <span data-behavior="ethNodeUrl">🤔</span>
-        </button>
+        Send an <a href="https://eips.ethereum.org/EIPS/eip-20" rel="nofollow">ERC20</a> token over the <a href="https://github.com/near/rainbow-bridge">Rainbow Bridge</a>, get an <a href="https://github.com/nearprotocol/NEPs/pull/21">NEP21</a> token on <a href="https://near.org/" rel="nofollow">NEAR</a>
       </p>
-      <p>
-        <button data-behavior="authNear">
-          Sign in with NEAR
-        </button>
-      </p>
+      <!-- you can use posthtml to separate page into multiple files -->
+      <div style="text-align: center; margin-top: 2.5em">
+        <p>
+          <button data-behavior="authEthereum">
+            Connect to Ethereum <span data-behavior="ethNodeUrl">🤔</span>
+          </button>
+        </p>
+        <p>
+          <button data-behavior="authNear">
+            Sign in with NEAR
+          </button>
+        </p>
+      </div>
     </div>
-  </main>
+  </div>
 
   <div id="signed-in-flow" style="display: none; height: 100%; flex-direction: column; justify-content: space-between">
-    <nav id="account" class="dropdown" aria-live="polite" style="text-align: right; font-size: 0.8em; position: absolute; right: 0.5em; top: 0.5em;">
-      <button aria-controls="account">
-        <img style="width: 0.9em; vertical-align: bottom" alt="ethereum" src="assets/eth-diamond-purple.png">
-        <picture>
-          <source srcset="assets/near-icon-white.svg" media="(prefers-color-scheme: dark)">
-          <img style="width: 1em; vertical-align: text-top" alt="near" src="assets/near-icon-black.svg">
-        </picture>
-        Connected
-      </button>
-      <div>
-        <div>ETH: <code data-behavior="ethUser"></code></div>
-        <div>NEAR: <code data-behavior="nearUser"></code></div>
-        <button class="link" data-behavior="logout">
-          Sign out
+    <nav style="display: flex; position: absolute; right: 0.5em; top: 0.5em; z-index: 2">
+      <div id="notifications" class="dropdown" aria-live="polite">
+        <button aria-controls="notifications">
+          <picture>
+            <source srcset="assets/bell-white.svg" media="(prefers-color-scheme: dark)">
+            <img style="width: 1em; vertical-align: text-top" alt="notifications" src="assets/bell-black.svg">
+          </picture>
         </button>
+        <div class="right">
+          <div data-behavior="no-notifications" style="
+            display: flex;
+            flex-direction: column;
+            height: 5em;
+            justify-content: space-around;
+            text-align: center;
+            width: 15em;
+          ">
+            No notifications
+          </div>
+        </div>
       </div>
+      <button class="link" data-behavior="logout" style="margin-left: 0.5em; font-size: 0.8em">
+        Sign out
+      </button>
     </nav>
-    <div>
-      <h1>Eth→NEAR Fungible Tokens</h1>
-      <main>
+    <main>
+      <section class="balance">
+        <header>
+          <img alt="ethereum" src="assets/eth-diamond-purple.png">
+          Ethereum
+        </header>
+        <div>
+          <span id="erc20name" class="dropdown" aria-live="polite">
+            <button aria-controls="erc20name" data-behavior="ethErc20Name">🤔</button>
+            <small class="left" style="width:27em; text-align:left">
+              Contract <code data-behavior="ethErc20Address">🤔</code>
+            </small>
+          </span>
+          balance
+        </div>
+        <strong class="jumbo" data-behavior="erc20Balance">🤔</strong>
+        <footer>
+          <img alt="account" src="assets/account.svg">
+          <code data-behavior="ethUser" class="clip">🤔</code>
+        </footer>
+      </section>
+      <div data-behavior="balanceZero" style="grid-column: span 2; margin: 1em 0 0 1em">
         <p>
-          Your balance of ERC20 <code data-behavior="ethErc20Address" class="clip">🤔</code>:<br>
-          <strong data-behavior="erc20Balance">🤔</strong>
+          Uh oh! You have no <span data-behavior="ethErc20Name">🤔</span>
+          tokens. If you want to send some to yourself on NEAR, you'll need to
+          get some on Ethereum first 😄
         </p>
-      </main>
-    </div>
+        <p>
+          Maybe you need to use a different account?
+        </p>
+      </div>
+      <form data-behavior="balancePositive" style="display: none; margin: 3em 1em">
+        <fieldset id="fieldset">
+          <label
+            for="amount"
+            style="display: block; margin: -1em 0 0.1em"
+          >
+            Send
+          </label>
+          <div style="display: flex">
+            <input
+              autocomplete="off"
+              id="amount"
+              data-behavior="greeting"
+              type="number"
+            />
+            <button disabled style="border-radius: 0 5px 5px 0">
+              <span class="visually-hidden">Confirm</span>
+            </button>
+          </div>
+        </fieldset>
+      </form>
+      <section class="balance" data-behavior="balancePositive" style="display: none">
+        <header>
+          <picture>
+            <source srcset="assets/near-icon-white.svg" media="(prefers-color-scheme: dark)">
+            <img alt="near" src="assets/near-icon-black.svg">
+          </picture>
+          NEAR
+        </header>
+        <div>
+          <span id="nep21name" class="dropdown" aria-live="polite">
+            <button aria-controls="nep21name" data-behavior="nearNep21Name">🤔</button>
+            <small class="right" style="width:14em">
+              Contract <code data-behavior="nearFunTokenAccount">🤔</code>
+            </small>
+          </span>
+          balance
+        </div>
+        <strong class="jumbo" data-behavior="nep21Balance">🤔</strong>
+        <footer>
+          <img alt="account" src="assets/account.svg">
+          <code data-behavior="nearUser" class="clip">🤔</code>
+        </footer>
+      </section>
+    </main>
     <footer style="
       display: grid;
       font-size: 0.75em;
       grid-column-gap: 1em;
       grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
-      margin: 4rem 0 -1rem;
+      margin: 0 0 -1rem;
       word-break: break-word;
     ">
       <p>

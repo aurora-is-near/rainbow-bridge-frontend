@@ -4,8 +4,23 @@
 export const fill = selector => ({
   with: content =>
     Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
-      .forEach(n => { n.innerHTML = content })
+      .forEach(n => {
+        n.innerHTML = content
+        if (n.className.match('clip')) {
+          n.title = content
+        }
+      })
 })
+
+// Hide DOM elements that have the given "data-behavior" attribute
+export const hide = selector =>
+  Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
+    .forEach(n => { n.style.display = 'none' })
+
+// Hide DOM elements that have the given "data-behavior" attribute
+export const show = selector =>
+  Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
+    .forEach(n => { n.style.removeProperty('display') })
 
 // DOM handlers to be added once after page load
 export const initDOMhandlers = () => {
