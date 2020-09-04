@@ -38,6 +38,12 @@ async function loadWeb3Modal () {
     window.ethSigner
   )
 
+  window.tokenLocker = new Contract(
+    process.env.ethLockerAddress,
+    JSON.parse(process.env.ethLockerAbiText),
+    window.ethSigner
+  )
+
   const span = document.createElement('span')
   span.innerHTML = `Connected to Ethereum as <code>${window.ethUserAddress}</code>`
   button.replaceWith(span)

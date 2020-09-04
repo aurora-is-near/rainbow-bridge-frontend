@@ -1,4 +1,5 @@
-import BN from 'bn.js'
+import { push as addNotification } from './notifications'
+import render from './render'
 
 // Update DOM elements that have a "data-behavior" attribute
 // Given `<span data-behavior="thing"></span>`
@@ -20,9 +21,15 @@ export const hide = selector =>
     .forEach(n => { n.style.display = 'none' })
 
 // Hide DOM elements that have the given "data-behavior" attribute
-export const show = selector =>
+export const show = (selector, display) =>
   Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
-    .forEach(n => { n.style.removeProperty('display') })
+    .forEach(n => {
+      if (display) {
+        n.style.display = display
+      } else {
+        n.style.removeProperty('display')
+      }
+    })
 
 // DOM handlers to be added once after page load
 export const initDOMhandlers = () => {
@@ -66,18 +73,20 @@ export const initDOMhandlers = () => {
     event.preventDefault()
 
     // get elements from the form using their id attribute
-    const { amount, fieldset, submit } = event.target.elements
+    const { amount: input, fieldset, submit } = event.target.elements
+
+    const amount = input.value
+
+    console.log({ amount })
 
     // disable the form while the tokens get locked in Ethereum
     fieldset.disabled = true
 
     try {
       // make an update call to the smart contract
-      await window.erc20.approve(
-        process.env.ethLockerAddress,
-        amount.value
-      )
-      // await transferErc20ToNear.lock(amount)
+      await window.erc20.approve(process.env.ethLockerAddress, amount)
+      const lockCall = await window.tokenLocker.lockToken(amount, window.nearUserAddress)
+      addNotification(lockCall)
     } catch (e) {
       alert(
         'Something went wrong! ' +
@@ -91,7 +100,8 @@ export const initDOMhandlers = () => {
     }
 
     // if the call succeeded, reset the form
-    amount.value = 0
+    input.value = 0
     submit.disabled = true
+    render()
   }
 }

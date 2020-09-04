@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="global.css">
 </head>
 <body>
-  <div id="signed-out-flow">
+  <div data-behavior="signed-out">
     <h1 class="title">Eth→NEAR Fungible Tokens</h1>
     <div style="margin: 0 auto; max-width: 25em">
       <p>
@@ -31,14 +31,22 @@
     </div>
   </div>
 
-  <div id="signed-in-flow" style="display: none; height: 100%; flex-direction: column; justify-content: space-between">
+  <div data-behavior="signed-in" style="display: none; height: 100%; flex-direction: column; justify-content: space-between">
     <nav style="display: flex; position: absolute; right: 0.5em; top: 0.5em; z-index: 2">
       <div id="notifications" class="dropdown" aria-live="polite">
-        <button aria-controls="notifications">
-          <picture>
-            <source srcset="assets/bell-white.svg" media="(prefers-color-scheme: dark)">
-            <img style="width: 1em; vertical-align: text-top" alt="notifications" src="assets/bell-black.svg">
-          </picture>
+        <button aria-controls="notifications" style="padding: 0.1em 0.25em">
+          <div data-behavior="no-notifications">
+            <picture>
+              <source srcset="assets/bell-white.svg" media="(prefers-color-scheme: dark)">
+              <img style="width: 1em; vertical-align: middle" alt="no notifications" src="assets/bell-black.svg">
+            </picture>
+          </div>
+          <div data-behavior="has-notifications" style="display: none">
+            <picture>
+              <source srcset="assets/rainbow-black.gif" media="(prefers-color-scheme: dark)">
+              <img style="width: 4em; vertical-align: middle" alt="view notifications" src="assets/rainbow-white.gif">
+            </picture>
+          </div>
         </button>
         <div class="right">
           <div data-behavior="no-notifications" style="
@@ -51,6 +59,7 @@
           ">
             No notifications
           </div>
+          <div data-behavior="notifications-container"></div>
         </div>
       </div>
       <button class="link" data-behavior="logout" style="margin-left: 0.5em; font-size: 0.8em">

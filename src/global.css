@@ -273,6 +273,33 @@ main form button:after {
   font-weight: normal;
 }
 
+.notification {
+  display: flex;
+  min-width: 18em;
+  background-color: var(--bg);
+  margin-bottom: 0.5em;
+  border-radius: 5px;
+  text-align: left;
+}
+.notification:last-child {
+  margin-bottom: 0;
+}
+.notification header {
+  font-size: 1.5em;
+  padding: 0.25em 0.5em;
+  margin-right: 0.25em;
+  border-right: 1px solid var(--shadow);
+}
+.notification header + * {
+  font-size: 0.75em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.notification p {
+  margin: 0.25em 0;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     --bg: #1e1e1e;

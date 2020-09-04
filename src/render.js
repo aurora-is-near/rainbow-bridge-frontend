@@ -1,8 +1,30 @@
 import { fill, hide, show } from './domHelpers'
+import { get as getNotifications } from './notifications'
 
 const formatLargeNum = n => n >= 1e5 || (n < 1e-3 && n !== 0)
   ? n.toExponential(2)
   : new Intl.NumberFormat(undefined, { maximumSignificantDigits: 3 }).format(n)
+
+function updateNotifications () {
+  const notifications = getNotifications()
+
+  if (!notifications.length) {
+    show('no-notifications'); hide('has-notifications')
+  } else {
+    hide('no-notifications'); show('has-notifications')
+    fill('notifications-container').with(notifications.map(n => `
+      <div class="notification">
+        <header>
+          Sending...
+        </header>
+        <div>
+          <p>10 RAIN to NEAR</p>
+          <p>awaiting Locked event...</p>
+        </div>
+      </div>
+    `).join(''))
+  }
+}
 
 // update the html based on user & data state
 export default async function render () {
@@ -21,7 +43,7 @@ export default async function render () {
   // if not signed in with both eth & near, stop here
   if (!window.ethUserAddress || !window.nearUserAddress) return
 
-  document.querySelector('#signed-out-flow').style.display = 'none'
+  updateNotifications()
 
   fill('ethUser').with(window.ethUserAddress)
   fill('nearUser').with(window.nearUserAddress)
@@ -41,5 +63,6 @@ export default async function render () {
   const nep21Balance = Number(await window.nep21.get_balance({ owner_id: window.nearUserAddress }))
   fill('nep21Balance').with(formatLargeNum(nep21Balance))
 
-  document.querySelector('#signed-in-flow').style.display = 'flex'
+  hide('signed-out')
+  show('signed-in', 'flex')
 }
