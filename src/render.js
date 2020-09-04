@@ -33,12 +33,13 @@ export default async function render () {
   fill('erc20Balance').with(formatLargeNum(erc20Balance))
 
   if (erc20Balance) {
-    hide('balanceZero')
-    show('balancePositive')
+    hide('balanceZero'); show('balancePositive')
   } else {
-    show('balanceZero')
-    hide('balancePositive')
+    show('balanceZero'); hide('balancePositive')
   }
+
+  const nep21Balance = Number(await window.nep21.get_balance({ owner_id: window.nearUserAddress }))
+  fill('nep21Balance').with(formatLargeNum(nep21Balance))
 
   document.querySelector('#signed-in-flow').style.display = 'flex'
 }
