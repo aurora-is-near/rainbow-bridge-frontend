@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "build": "env-cmd -e production -r .config.js parcel build src/index.html --public-url ./",
-    "start": "env-cmd -e development -r .config.js parcel src/index.html --open",
-    "local": "env-cmd -e local -r .config.js parcel src/index.html --open",
+    "start": "env-cmd -e development -r .config.js parcel src/index.html",
+    "local": "env-cmd -e local -r .config.js parcel src/index.html",
     "lint": "eslint src",
     "test": "jest test"
   },
