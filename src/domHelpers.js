@@ -102,6 +102,9 @@ export const initDOMhandlers = () => {
     // if the call succeeded, reset the form
     input.value = 0
     submit.disabled = true
-    render()
+    await render()
+    const notificationsButton = document.querySelector('#notifications button')
+    notificationsButton.click()
+    notificationsButton.focus()
   }
 }

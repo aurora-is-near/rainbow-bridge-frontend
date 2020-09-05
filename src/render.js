@@ -12,13 +12,17 @@ function updateNotifications () {
     show('no-notifications'); hide('has-notifications')
   } else {
     hide('no-notifications'); show('has-notifications')
+
     fill('notifications-container').with(notifications.map(n => `
       <div class="notification">
         <header>
-          Sending...
+          <picture>
+            <source srcset="rainbow-black.gif" media="(prefers-color-scheme: dark)">
+            <img style="width: 5em" alt="" src="rainbow-white.gif">
+          </picture>
         </header>
         <div>
-          <p>10 RAIN to NEAR</p>
+          <p>Sending 10 RAIN to NEAR</p>
           <p>awaiting Locked event...</p>
         </div>
       </div>

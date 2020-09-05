@@ -286,18 +286,20 @@ main form button:after {
 }
 .notification header {
   font-size: 1.5em;
-  padding: 0.25em 0.5em;
   margin-right: 0.25em;
-  border-right: 1px solid var(--shadow);
+  padding: 2px;
+}
+.notification header img {
+  display: block;
 }
 .notification header + * {
-  font-size: 0.75em;
+  font-size: 0.8em;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 .notification p {
-  margin: 0.25em 0;
+  margin: 0;
 }
 
 @media (prefers-color-scheme: dark) {
