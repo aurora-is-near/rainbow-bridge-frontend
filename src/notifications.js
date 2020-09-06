@@ -1,7 +1,7 @@
 import * as localStorage from './localStorage'
 
 const getKey = () =>
-  `${process.env.ethErc20Address}-to-${process.env.nearFunTokenAccount}`
+  `${window.ethUserAddress}-to-${window.nearUserAddress}`
 
 export function get () {
   return localStorage.get(getKey()) || []
