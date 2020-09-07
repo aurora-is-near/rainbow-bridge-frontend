@@ -1,19 +1,19 @@
 import { fill, hide, show } from './domHelpers'
-import { get as getNotifications } from './notifications'
+import { get as getTransfers, humanStatusFor } from './transfers'
 
 const formatLargeNum = n => n >= 1e5 || (n < 1e-3 && n !== 0)
   ? n.toExponential(2)
   : new Intl.NumberFormat(undefined, { maximumSignificantDigits: 3 }).format(n)
 
-function updateNotifications () {
-  const notifications = getNotifications()
+function updateTransfers () {
+  const transfers = getTransfers()
 
-  if (!notifications.length) {
+  if (!transfers.length) {
     show('no-notifications'); hide('has-notifications')
   } else {
     hide('no-notifications'); show('has-notifications')
 
-    fill('notifications-container').with(notifications.map(n => `
+    fill('notifications-container').with(transfers.map(transfer => `
       <div class="notification">
         <header>
           <picture>
@@ -22,8 +22,8 @@ function updateNotifications () {
           </picture>
         </header>
         <div>
-          <p>Sending 10 RAIN to NEAR</p>
-          <p>awaiting Locked event...</p>
+          <p>Sending ${transfer.amount} RAIN to NEAR</p>
+          <p>${humanStatusFor(transfer)}...</p>
         </div>
       </div>
     `).join(''))
@@ -47,7 +47,7 @@ export default async function render () {
   // if not signed in with both eth & near, stop here
   if (!window.ethUserAddress || !window.nearUserAddress) return
 
-  updateNotifications()
+  updateTransfers()
 
   fill('ethUser').with(window.ethUserAddress)
   fill('nearUser').with(window.nearUserAddress)

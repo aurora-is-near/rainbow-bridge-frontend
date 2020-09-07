@@ -1,6 +1,7 @@
 import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 
 import render from './render'
+import { checkStatuses as checkTransferStatuses } from './transfers'
 
 // Create a Near config object
 const near = new Near({
@@ -39,6 +40,10 @@ async function login () {
   })
 
   render()
+
+  // start checking statuses of in-flight transfers after both NEAR & Ethereum
+  // logins complete – if Eth login not yet done, this is a no-op
+  checkTransferStatuses(render)
 }
 
 // The NEAR signin flow redirects from the current URL to NEAR Wallet,

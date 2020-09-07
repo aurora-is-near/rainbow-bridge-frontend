@@ -1,4 +1,4 @@
-import { push as addNotification } from './notifications'
+import { initiate as initiateTransfer } from './transfers'
 import render from './render'
 
 // Update DOM elements that have a "data-behavior" attribute
@@ -73,20 +73,13 @@ export const initDOMhandlers = () => {
     event.preventDefault()
 
     // get elements from the form using their id attribute
-    const { amount: input, fieldset, submit } = event.target.elements
-
-    const amount = input.value
-
-    console.log({ amount })
+    const { amount, fieldset, submit } = event.target.elements
 
     // disable the form while the tokens get locked in Ethereum
     fieldset.disabled = true
 
     try {
-      // make an update call to the smart contract
-      await window.erc20.approve(process.env.ethLockerAddress, amount)
-      const lockCall = await window.tokenLocker.lockToken(amount, window.nearUserAddress)
-      addNotification(lockCall)
+      await initiateTransfer(amount.value, render)
     } catch (e) {
       alert(
         'Something went wrong! ' +
@@ -100,7 +93,7 @@ export const initDOMhandlers = () => {
     }
 
     // if the call succeeded, reset the form
-    input.value = 0
+    amount.value = 0
     submit.disabled = true
     await render()
     const notificationsButton = document.querySelector('#notifications button')
