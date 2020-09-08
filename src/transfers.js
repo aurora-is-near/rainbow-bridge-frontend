@@ -23,14 +23,12 @@ export function get () {
 }
 
 const INITIATED = 'initiated'
-const HAS_RECEIPT = 'has_receipt'
-const EVENT_EMITTED = 'event_emitted'
+const LOCKED = 'event_emitted'
 const SUCCESS = 'success'
 
 const statusMessages = {
-  [INITIATED]: () => 'awaiting tx receipt',
-  [HAS_RECEIPT]: () => 'awaiting Locked event',
-  [EVENT_EMITTED]: (progress) => `${progress}/25 blocks synced`,
+  [INITIATED]: () => 'locking',
+  [LOCKED]: (progress) => `${progress}/25 blocks synced`,
   [SUCCESS]: () => 'succeeded'
 }
 
@@ -41,15 +39,14 @@ export function humanStatusFor (transfer) {
 // Add a new transfer to the set of cached local transfers.
 // This transfer will be given a chronologically-ordered id.
 // This transfer will be checked for updates after a pause.
-function track (transferRaw, callback) {
+async function track (transferRaw, callback) {
   const id = ulid()
   const transfer = { id, status: INITIATED, ...transferRaw }
 
   localStorage.set(getKey(), { ...getRaw(), [id]: transfer })
 
-  // checkStatus will pause to await for confirmation, no need to wait a long
-  // time before calling it
-  window.setTimeout(() => checkStatus(id, callback), 500)
+  if (callback) await callback()
+  checkStatus(id, callback)
 }
 
 function update (transfer, withData) {
@@ -62,55 +59,49 @@ function update (transfer, withData) {
 }
 
 export async function initiate (amount, callback) {
-  await window.erc20.approve(process.env.ethLockerAddress, amount)
-  const initiateLock = await window.tokenLocker.lockToken(amount, window.nearUserAddress)
-
-  track({ amount, initiateLock }, callback)
+  window.erc20.methods.approve(process.env.ethLockerAddress, amount).send()
+    .on('transactionHash', () => {
+      track({ amount }, callback)
+    })
 }
 
-// FIXME: does this require switching from ethers to web3js? 😱
 async function buildTrie (block) {
-  // const blockReceipts = await Promise.all(
-  //   block.transactions.map(t => window.ethProvider.waitForTransaction(t))
-  // )
+  const blockReceipts = await Promise.all(
+    block.transactions.map(t => window.web3.eth.getTransactionReceipt(t))
+  )
 
   // Build a Patricia Merkle Trie
   const tree = new Tree()
-  // await Promise.all(
-  //   blockReceipts.map(receipt => {
-  //     const path = encode(receipt.transactionIndex)
-  //     const serializedReceipt = Receipt.fromWeb3(receipt).serialize()
-  //     return promisfy(tree.put, tree)(path, serializedReceipt)
-  //   })
-  // )
+  await Promise.all(
+    blockReceipts.map(receipt => {
+      const path = encode(receipt.transactionIndex)
+      const serializedReceipt = Receipt.fromWeb3(receipt).serialize()
+      return promisfy(tree.put, tree)(path, serializedReceipt)
+    })
+  )
+
   return tree
 }
 
 async function extractProof (block, tree, transactionIndex) {
+  const [, , stack] = await promisfy(
+    tree.findPath,
+    tree
+  )(encode(transactionIndex))
+
+  const blockData = await window.web3.eth.getBlock(block.number)
+  // Correctly compose and encode the header.
+  const header = Header.fromWeb3(blockData)
   return {
-    header_rlp: 'ohno',
-    receiptProof: ['ohno'],
+    header_rlp: header.serialize(),
+    receiptProof: Proof.fromStack(stack),
     txIndex: transactionIndex
   }
-  // FIXME: does this require switching from ethers to web3js? 😱
-  // const [, , stack] = await promisfy(
-  //   tree.findPath,
-  //   tree
-  // )(encode(transactionIndex))
-  //
-  // const blockData = await web3.eth.getBlock(block.number)
-  // // Correctly compose and encode the header.
-  // const header = Header.fromWeb3(blockData)
-  // return {
-  //   header_rlp: header.serialize(),
-  //   receiptProof: Proof.fromStack(stack),
-  //   txIndex: transactionIndex
-  // }
 }
 
 async function findProof (transfer) {
-  const receipt = transfer.initiateLockReceipt
-  const block = await window.ethProvider.getBlock(transfer.lockedEvent.blockNumber)
+  const receipt = await window.web3.eth.getTransactionReceipt(transfer.lock.transactionHash)
+  const block = await window.web3.eth.getBlock(transfer.lock.blockNumber)
   const tree = await buildTrie(block)
   const proof = await extractProof(
     block,
@@ -118,15 +109,15 @@ async function findProof (transfer) {
     receipt.transactionIndex
   )
 
-  const log = receipt.logs.find(l => l.logIndex === transfer.lockedEvent.logIndex)
+  const log = receipt.logs.find(l => l.logIndex === transfer.lock.events.Locked.logIndex)
 
   return {
-    log_index: transfer.lockedEvent.logIndex,
+    log_index: transfer.lock.events.Locked.logIndex,
     log_entry_data: Log.fromWeb3(log).serialize(),
     receipt_index: proof.txIndex,
     receipt_data: Receipt.fromWeb3(receipt).serialize(),
     header_data: proof.header_rlp,
-    proof: proof.receiptProof.map(utils.rlp.encode)
+    proof: Array.from(proof.receiptProof).map(utils.rlp.encode)
   }
 }
 
@@ -138,32 +129,14 @@ async function checkStatus (id, callback) {
   let transfer = getRaw()[id]
 
   if (transfer.status === INITIATED) {
-    // CONSIDER: await 1 more confirmation on each checkStatus call until getting to 25 🤔
-    const confirms = 1
-    const initiateLockReceipt = await window.ethProvider.waitForTransaction(
-      transfer.initiateLock.hash,
-      confirms
-    )
-    if (initiateLockReceipt) {
-      transfer = update(transfer, { initiateLockReceipt, status: HAS_RECEIPT })
-    }
+    const lock = await window.tokenLocker.methods
+      .lockToken(transfer.amount, window.nearUserAddress).send()
+
+    transfer = update(transfer, { status: LOCKED, progress: 0, lock })
   }
 
-  if (transfer.status === HAS_RECEIPT) {
-    // TODO: find a way to query tokenLocker for single desired event, not all Locked events
-    const allLockedEvents = await window.tokenLocker.queryFilter('Locked')
-
-    const lockedEvent = allLockedEvents.find(event =>
-      event.transactionHash === transfer.initiateLock.hash
-    )
-
-    if (lockedEvent) {
-      transfer = update(transfer, { status: EVENT_EMITTED, progress: 0, lockedEvent })
-    }
-  }
-
-  if (transfer.status === EVENT_EMITTED) {
-    const eventEmittedAt = transfer.lockedEvent.blockNumber
+  if (transfer.status === LOCKED) {
+    const eventEmittedAt = transfer.lock.blockNumber
     const syncedTo = (await window.ethOnNearClient.last_block_number()).toNumber()
     const progress = Math.max(0, syncedTo - eventEmittedAt)
     transfer = update(transfer, { progress })
@@ -174,18 +147,18 @@ async function checkStatus (id, callback) {
       // Shouldn't MintableFungibleToken enforce this?
       // And a frontend set expectations accordingly?
       // What's the point of this block_hash_safe call??
-      const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lockedEvent.blockNumber)
+      const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lock.blockNumber)
       console.log({ isSafe })
       if (isSafe) {
-        // await window.nep21.mint(
-        //   await findProof(transfer),
-        //   new BN('300000000000000'),
-        //   // We need to attach tokens because minting increases the contract state, by <600 bytes, which
-        //   // requires an additional 0.06 NEAR to be deposited to the account for state staking.
-        //   // Note technically 0.0537 NEAR should be enough, but we round it up to stay on the safe side.
-        //   new BN('100000000000000000000').mul(new BN('600'))
-        // )
-        // transfer = update(transfer, { status: SUCCESS })
+        await window.nep21.mint(
+          await findProof(transfer),
+          new BN('300000000000000'),
+          // We need to attach tokens because minting increases the contract state, by <600 bytes, which
+          // requires an additional 0.06 NEAR to be deposited to the account for state staking.
+          // Note technically 0.0537 NEAR should be enough, but we round it up to stay on the safe side.
+          new BN('100000000000000000000').mul(new BN('600'))
+        )
+        transfer = update(transfer, { status: SUCCESS })
       }
     }
   }

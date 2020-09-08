@@ -53,9 +53,11 @@ export default async function render () {
   fill('nearUser').with(window.nearUserAddress)
 
   // how to get useful details about selected network in MetaMask?
-  fill('ethNetworkName').with((await window.ethProvider.getNetwork()).name)
+  fill('ethNetworkName').with(await window.web3.eth.net.getNetworkType())
 
-  const erc20Balance = (await window.erc20.balanceOf(window.ethUserAddress)).toNumber()
+  const erc20Balance = Number(
+    await window.erc20.methods.balanceOf(window.ethUserAddress).call()
+  )
   fill('erc20Balance').with(formatLargeNum(erc20Balance))
 
   if (erc20Balance) {
