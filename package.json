@@ -27,8 +27,11 @@
     "@ethersproject/contracts": "^5.0.3",
     "@ethersproject/providers": "^5.0.6",
     "@walletconnect/web3-provider": "^1.2.1",
+    "eth-object": "near/eth-object#54e03b8aac8208cf724e206d49ffb8bdd30451d7",
+    "eth-util-lite": "near/eth-util-lite#master",
     "ethers": "^5.0.9",
     "near-api-js": "^0.27.0",
+    "promisfy": "^1.2.0",
     "ulid": "^2.3.0",
     "web3modal": "^1.9.0"
   },

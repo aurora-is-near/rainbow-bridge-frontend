@@ -2,6 +2,7 @@ import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 
 import render from './render'
 import { checkStatuses as checkTransferStatuses } from './transfers'
+import EthOnNearClient from './ethOnNearClient'
 
 // Create a Near config object
 const near = new Near({
@@ -32,12 +33,21 @@ async function login () {
   span.innerHTML = `Connected to NEAR as <code>${window.nearUserAddress}</code>`
   button.replaceWith(span)
 
-  window.nep21 = await new Contract(window.nearConnection.account(), process.env.nearFunTokenAccount, {
-    // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['get_balance'],
-    // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: []
-  })
+  window.nep21 = await new Contract(
+    window.nearConnection.account(),
+    process.env.nearFunTokenAccount,
+    {
+      // View methods are read only
+      viewMethods: ['get_balance'],
+      // Change methods modify state but don't receive updated data
+      changeMethods: ['mint']
+    }
+  )
+
+  window.ethOnNearClient = await new EthOnNearClient(
+    window.nearConnection.account(),
+    process.env.nearClientAccount
+  )
 
   render()
 
