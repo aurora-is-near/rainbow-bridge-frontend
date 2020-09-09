@@ -6,4 +6,4 @@ import { checkStatuses as checkTransferStatuses } from './transfers'
 
 initDOMhandlers()
 render()
-setTimeout(checkTransferStatuses, 500)
+setTimeout(() => checkTransferStatuses(render), 500)

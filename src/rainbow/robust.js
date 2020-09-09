@@ -24,12 +24,12 @@ const backoff = (retries, fn, delay = DELAY, wait = BACKOFF) =>
 const SLOW_TX_ERROR_MSG = 'transaction not executed within 5 minutes'
 
 class RobustWeb3 {
-  constructor(ethNodeUrl) {
+  constructor (ethNodeUrl) {
     this.ethNodeUrl = ethNodeUrl
     this.web3 = new Web3(ethNodeUrl)
   }
 
-  async getBlockNumber() {
+  async getBlockNumber () {
     return await backoff(RETRY, async () => {
       try {
         return await this.web3.eth.getBlockNumber()
@@ -41,7 +41,7 @@ class RobustWeb3 {
     })
   }
 
-  async getBlock(b) {
+  async getBlock (b) {
     return await backoff(RETRY, async () => {
       try {
         return await this.web3.eth.getBlock(b)
@@ -53,22 +53,22 @@ class RobustWeb3 {
     })
   }
 
-  async callContract(contract, method, args, options) {
+  async callContract (contract, method, args, options) {
     let gasPrice = await this.web3.eth.getGasPrice()
     let nonce = await this.web3.eth.getTransactionCount(options.from, 'pending')
     while (gasPrice < 10000 * 1e9) {
       try {
         // Keep sending with same nonce but higher gasPrice to override same txn
-        let tx = {
+        const tx = {
           from: options.from,
           to: contract.options.address,
           gas: Web3.utils.toHex(options.gas),
           gasPrice: Web3.utils.toHex(gasPrice),
           nonce: Web3.utils.toHex(nonce),
-          data: contract.methods[method](...args).encodeABI(),
+          data: contract.methods[method](...args).encodeABI()
         }
 
-        let receipt = await promiseWithTimeout(
+        const receipt = await promiseWithTimeout(
           5 * 60 * 1000,
           this.web3.eth.sendTransaction(tx),
           SLOW_TX_ERROR_MSG
@@ -79,7 +79,7 @@ class RobustWeb3 {
             return contract._decodeEventABI.call(
               {
                 name: 'ALLEVENTS',
-                jsonInterface: contract.options.jsonInterface,
+                jsonInterface: contract.options.jsonInterface
               },
               log
             )
@@ -131,7 +131,7 @@ class RobustWeb3 {
     throw new Error('Cannot finish txn within 1e13 gas')
   }
 
-  async getTransactionReceipt(t) {
+  async getTransactionReceipt (t) {
     return await backoff(RETRY, async () => {
       try {
         return await this.web3.eth.getTransactionReceipt(t)
@@ -143,7 +143,7 @@ class RobustWeb3 {
     })
   }
 
-  destroy() {
+  destroy () {
     if (this.web3.currentProvider.connection.close) {
       // Only WebSocket provider has close, HTTPS don't
       this.web3.currentProvider.connection.close()
@@ -151,7 +151,7 @@ class RobustWeb3 {
   }
 }
 
-function normalizeEthKey(key) {
+function normalizeEthKey (key) {
   let result = key.toLowerCase()
   if (!result.startsWith('0x')) {
     result = '0x' + result
@@ -174,7 +174,7 @@ const promiseWithTimeout = (timeoutMs, promise, failureMessage) => {
   })
 }
 
-async function nearJsonContractFunctionCall(
+async function nearJsonContractFunctionCall (
   contractId,
   sender,
   method,
@@ -186,19 +186,19 @@ async function nearJsonContractFunctionCall(
   // we don't know whether txn successfully submitted when timeout, so there's a risk of double sending
 
   await sender.ready
-  let accessKey = await sender.findAccessKey()
+  const accessKey = await sender.findAccessKey()
   return await signAndSendTransaction(accessKey, sender, contractId, [
     nearlib.transactions.functionCall(
       method,
       Buffer.from(JSON.stringify(args)),
       gas,
       amount
-    ),
+    )
   ])
 }
 
-const RETRY_SEND_TX = 10
-const RETRY_TX_STATUS = 10
+const RETRY_SEND_TX = 1
+const RETRY_TX_STATUS = 1
 
 const signAndSendTransaction = async (
   accessKey,
@@ -232,10 +232,11 @@ const signAndSendTransaction = async (
           account.accountId,
           account.connection.networkId
         )
+        console.log({ signedTx })
         const bytes = signedTx.encode()
         sendTxnAsync = async () => {
           await account.connection.provider.sendJsonRpc('broadcast_tx_async', [
-            Buffer.from(bytes).toString('base64'),
+            Buffer.from(bytes).toString('base64')
           ])
           console.log('TxHash', nearlib.utils.serialize.base_encode(txHash))
         }
@@ -261,6 +262,12 @@ const signAndSendTransaction = async (
           break
         }
       } catch (e) {
+        console.error(e)
+        if (j + 1 < RETRY_TX_STATUS) {
+          console.log(
+            `Retrying to find status for TxHash in ${(j + 1) * 500}ms`
+          )
+        }
         await sleep((j + 1) * 500)
       }
     }
@@ -268,9 +275,9 @@ const signAndSendTransaction = async (
     if (result) {
       const flatLogs = [
         result.transaction_outcome,
-        ...result.receipts_outcome,
+        ...result.receipts_outcome
       ].reduce((acc, it) => acc.concat(it.outcome.logs), [])
-      if (flatLogs && flatLogs != []) {
+      if (flatLogs && flatLogs.length) {
         console.log(flatLogs)
       }
 
@@ -304,5 +311,5 @@ module.exports = {
   normalizeEthKey,
   promiseWithTimeout,
   nearJsonContractFunctionCall,
-  signAndSendTransaction,
+  signAndSendTransaction
 }
