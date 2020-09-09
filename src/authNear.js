@@ -1,8 +1,8 @@
 import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 
 import render from './render'
-import { checkStatuses as checkTransferStatuses } from './transfers'
 import EthOnNearClient from './ethOnNearClient'
+import Minter from './minter'
 
 // Create a Near config object
 const near = new Near({
@@ -40,9 +40,15 @@ async function login () {
       // View methods are read only
       viewMethods: ['get_balance'],
       // Change methods modify state but don't receive updated data
-      changeMethods: ['mint']
+      changeMethods: []
     }
   )
+
+  window.minter = await new Minter(
+    window.nearConnection.account(),
+    process.env.nearClientAccount
+  )
+  await window.minter.accessKeyInit()
 
   window.ethOnNearClient = await new EthOnNearClient(
     window.nearConnection.account(),
@@ -50,10 +56,6 @@ async function login () {
   )
 
   render()
-
-  // start checking statuses of in-flight transfers after both NEAR & Ethereum
-  // logins complete – if Eth login not yet done, this is a no-op
-  checkTransferStatuses(render)
 }
 
 // The NEAR signin flow redirects from the current URL to NEAR Wallet,

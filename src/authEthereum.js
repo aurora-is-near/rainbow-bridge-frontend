@@ -3,7 +3,6 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import Web3 from 'web3'
 
 import render from './render'
-import { checkStatuses as checkTransferStatuses } from './transfers'
 
 // SWAP IN YOUR OWN INFURA_ID FROM https://infura.io/dashboard/ethereum
 const INFURA_ID = '9c91979e95cb4ef8a61eb029b4217a1a'
@@ -47,10 +46,6 @@ async function loadWeb3Modal () {
   span.innerHTML = `Connected to Ethereum as <code>${window.ethUserAddress}</code>`
   button.replaceWith(span)
   render()
-
-  // start checking statuses of in-flight transfers after both NEAR & Ethereum
-  // logins complete – if NEAR login not yet done, this is a no-op
-  checkTransferStatuses(render)
 }
 
 button.onclick = loadWeb3Modal

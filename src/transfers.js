@@ -18,7 +18,6 @@ function getRaw () {
 // return an array of chronologically-ordered transfers
 export function get () {
   const raw = getRaw()
-  console.log({ raw })
   return Object.keys(raw).sort().map(id => raw[id])
 }
 
@@ -148,9 +147,8 @@ async function checkStatus (id, callback) {
       // And a frontend set expectations accordingly?
       // What's the point of this block_hash_safe call??
       const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lock.blockNumber)
-      console.log({ isSafe })
       if (isSafe) {
-        await window.nep21.mint(
+        await window.minter.mint(
           await findProof(transfer),
           new BN('300000000000000'),
           // We need to attach tokens because minting increases the contract state, by <600 bytes, which
