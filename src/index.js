@@ -6,4 +6,15 @@ import { checkStatuses as checkTransferStatuses } from './transfers'
 
 initDOMhandlers()
 render()
-setTimeout(() => checkTransferStatuses(render), 500)
+
+// once Ethereum & NEAR contracts have been fully initialized,
+// start checking transfers
+const loginCheck = window.setInterval(
+  () => {
+    if (window.ethInitialized && window.nearInitialized) {
+      window.clearInterval(loginCheck)
+      checkTransferStatuses(render)
+    }
+  },
+  500
+)

@@ -42,6 +42,8 @@ async function loadWeb3Modal () {
     { from: window.ethUserAddress }
   )
 
+  window.ethInitialized = true
+
   const span = document.createElement('span')
   span.innerHTML = `Connected to Ethereum as <code>${window.ethUserAddress}</code>`
   button.replaceWith(span)

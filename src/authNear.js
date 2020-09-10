@@ -55,6 +55,8 @@ async function login () {
     process.env.nearClientAccount
   )
 
+  window.nearInitialized = true
+
   render()
 }
 
