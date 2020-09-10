@@ -46,7 +46,7 @@ async function login () {
 
   window.minter = await new Minter(
     window.nearConnection.account(),
-    process.env.nearClientAccount
+    process.env.nearFunTokenAccount
   )
   await window.minter.accessKeyInit()
 
