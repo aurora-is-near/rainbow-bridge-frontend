@@ -238,7 +238,7 @@ const signAndSendTransaction = async (
           await account.connection.provider.sendJsonRpc('broadcast_tx_async', [
             Buffer.from(bytes).toString('base64')
           ])
-          console.log('TxHash', nearlib.utils.serialize.base_encode(txHash))
+          console.log('txHash', nearlib.utils.serialize.base_encode(txHash))
         }
         await sendTxnAsync()
       }
@@ -267,7 +267,7 @@ const signAndSendTransaction = async (
         console.error(e)
         if (j + 1 < RETRY_TX_STATUS) {
           console.log(
-            `Retrying to find status for TxHash in ${(j + 1) * 500}ms`
+            `Retrying to find status for txHash in ${(j + 1) * 500}ms`
           )
         }
         await sleep((j + 1) * 500)
