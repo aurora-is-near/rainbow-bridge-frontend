@@ -244,6 +244,8 @@ const signAndSendTransaction = async (
       }
     } catch (e) {
       // sleep to avoid socket hangout on retry too soon
+      console.error(e)
+      console.log('Retrying to broadcast transaction in 500ms')
       await sleep(500)
       continue
     }
@@ -300,7 +302,11 @@ const signAndSendTransaction = async (
     }
   }
 
-  throw new Error(errorMsg)
+  throw new Error(
+    errorMsg || `Could not complete transaction ${receiverId}.${
+      actions.map(a => a.functionCall.methodName)
+    }`
+  )
 }
 
 module.exports = {

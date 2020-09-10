@@ -148,15 +148,19 @@ async function checkStatus (id, callback) {
       // What's the point of this block_hash_safe call??
       const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lock.blockNumber)
       if (isSafe) {
-        await window.minter.mint(
-          await findProof(transfer),
-          new BN('300000000000000'),
-          // We need to attach tokens because minting increases the contract state, by <600 bytes, which
-          // requires an additional 0.06 NEAR to be deposited to the account for state staking.
-          // Note technically 0.0537 NEAR should be enough, but we round it up to stay on the safe side.
-          new BN('100000000000000000000').mul(new BN('600'))
-        )
-        transfer = update(transfer, { status: SUCCESS })
+        try {
+          await window.minter.mint(
+            await findProof(transfer),
+            new BN('300000000000000'),
+            // We need to attach tokens because minting increases the contract state, by <600 bytes, which
+            // requires an additional 0.06 NEAR to be deposited to the account for state staking.
+            // Note technically 0.0537 NEAR should be enough, but we round it up to stay on the safe side.
+            new BN('100000000000000000000').mul(new BN('600'))
+          )
+          transfer = update(transfer, { status: SUCCESS })
+        } catch (e) {
+          console.error(e)
+        }
       }
     }
   }
