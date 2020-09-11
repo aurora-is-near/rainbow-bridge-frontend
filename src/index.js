@@ -8,13 +8,12 @@ initDOMhandlers()
 render()
 
 // once Ethereum & NEAR contracts have been fully initialized,
-// start checking transfers
-const loginCheck = window.setInterval(
+// start checking transfers. If no transfers, this is a no-op.
+window.setTimeout(
   () => {
     if (window.ethInitialized && window.nearInitialized) {
-      window.clearInterval(loginCheck)
       checkTransferStatuses(render)
     }
   },
-  500
+  5000
 )
