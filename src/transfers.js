@@ -57,11 +57,15 @@ function update (transfer, withData) {
   return updatedTransfer
 }
 
-export async function initiate (amount, callback) {
-  window.erc20.methods.approve(process.env.ethLockerAddress, amount).send()
-    .on('transactionHash', () => {
-      track({ amount }, callback)
-    })
+export function initiate (amount, callback) {
+  return new Promise((resolve, reject) => {
+    window.erc20.methods.approve(process.env.ethLockerAddress, amount).send()
+      .on('transactionHash', hash => {
+        resolve(hash)
+        track({ amount }, callback)
+      })
+      .catch(reject)
+  })
 }
 
 async function buildTrie (block) {

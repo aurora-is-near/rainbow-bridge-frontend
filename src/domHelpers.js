@@ -93,7 +93,7 @@ export const initDOMhandlers = () => {
     }
 
     // if the call succeeded, reset the form
-    amount.value = 0
+    amount.value = ''
     submit.disabled = true
     await render()
     const notificationsButton = document.querySelector('#notifications button')
