@@ -116,11 +116,11 @@ async function findProof (transfer) {
 
   return {
     log_index: transfer.lock.events.Locked.logIndex,
-    log_entry_data: Log.fromWeb3(log).serialize(),
+    log_entry_data: Array.from(Log.fromWeb3(log).serialize()),
     receipt_index: proof.txIndex,
-    receipt_data: Receipt.fromWeb3(receipt).serialize(),
-    header_data: proof.header_rlp,
-    proof: Array.from(proof.receiptProof).map(utils.rlp.encode)
+    receipt_data: Array.from(Receipt.fromWeb3(receipt).serialize()),
+    header_data: Array.from(proof.header_rlp),
+    proof: Array.from(proof.receiptProof).map(utils.rlp.encode).map(b => Array.from(b))
   }
 }
 
@@ -153,8 +153,8 @@ async function checkStatus (id, callback) {
       const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lock.blockNumber)
       if (isSafe) {
         try {
-          await window.minter.mint(
-            await findProof(transfer),
+          await window.nep21.mint_with_json(
+            { proof: await findProof(transfer) },
             new BN('300000000000000'),
             // We need to attach tokens because minting increases the contract state, by <600 bytes, which
             // requires an additional 0.06 NEAR to be deposited to the account for state staking.

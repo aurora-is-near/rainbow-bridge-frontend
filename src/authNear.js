@@ -2,7 +2,6 @@ import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 
 import render from './render'
 import EthOnNearClient from './ethOnNearClient'
-import Minter from './minter'
 
 // Create a Near config object
 const near = new Near({
@@ -40,15 +39,9 @@ async function login () {
       // View methods are read only
       viewMethods: ['get_balance'],
       // Change methods modify state but don't receive updated data
-      changeMethods: []
+      changeMethods: ['mint_with_json']
     }
   )
-
-  window.minter = await new Minter(
-    window.nearConnection.account(),
-    process.env.nearFunTokenAccount
-  )
-  await window.minter.accessKeyInit()
 
   window.ethOnNearClient = await new EthOnNearClient(
     window.nearConnection.account(),
