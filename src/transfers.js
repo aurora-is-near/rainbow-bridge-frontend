@@ -6,6 +6,7 @@ import { promisfy } from 'promisfy'
 import * as localStorage from './localStorage'
 import { ulid } from 'ulid'
 import utils from 'ethereumjs-util'
+import * as urlParams from './urlParams'
 
 function getKey () {
   return `${window.ethUserAddress}-to-${window.nearUserAddress}`
@@ -24,11 +25,13 @@ export function get () {
 const INITIATED = 'initiated'
 const LOCKED = 'event_emitted'
 const SUCCESS = 'success'
+const FAILED = 'failed'
 
 const statusMessages = {
   [INITIATED]: () => 'locking',
   [LOCKED]: (progress) => `${progress}/25 blocks synced`,
-  [SUCCESS]: () => 'succeeded'
+  [SUCCESS]: () => 'succeeded',
+  [FAILED]: () => 'failed'
 }
 
 export function humanStatusFor (transfer) {
@@ -131,11 +134,36 @@ async function findProof (transfer) {
 async function checkStatus (id, callback) {
   let transfer = getRaw()[id]
 
-  if (transfer.status === INITIATED) {
-    const lock = await window.tokenLocker.methods
-      .lockToken(transfer.amount, window.nearUserAddress).send()
+  // First, check if we've just returned to this page from NEAR Wallet after
+  // completing this transfer
+  const { minting, balanceBefore } = urlParams.get('minting', 'balanceBefore')
+  if (minting && id === minting) {
+    const balanceAfter = Number(
+      await window.nep21.get_balance({ owner_id: window.nearUserAddress })
+    )
+    if (balanceAfter - transfer.amount === Number(balanceBefore)) {
+      transfer = update(transfer, { status: SUCCESS })
+    } else {
+      transfer = update(transfer, { status: FAILED })
+    }
+    urlParams.clear('minting', 'balanceBefore')
+  }
 
-    transfer = update(transfer, { status: LOCKED, progress: 0, lock })
+  if (transfer.status === INITIATED) {
+    try {
+      // TODO only await transactionHash here, then look up transaction (and
+      // receipt?) in follow-up step
+      // This takes a long time and the user could navigate away/refresh the
+      // page before it completes, triggering a duplicate "lock" call on the
+      // next page load, which would never complete
+      const lock = await window.tokenLocker.methods
+        .lockToken(transfer.amount, window.nearUserAddress).send()
+
+      transfer = update(transfer, { status: LOCKED, progress: 0, lock })
+    } catch (error) {
+      console.error(error)
+      transfer = update(transfer, { status: FAILED, error })
+    }
   }
 
   if (transfer.status === LOCKED) {
@@ -152,6 +180,10 @@ async function checkStatus (id, callback) {
       // What's the point of this block_hash_safe call??
       const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lock.blockNumber)
       if (isSafe) {
+        const balanceBefore = Number(
+          await window.nep21.get_balance({ owner_id: window.nearUserAddress })
+        )
+        urlParams.set({ minting: transfer.id, balanceBefore })
         try {
           await window.nep21.mint_with_json(
             { proof: await findProof(transfer) },
@@ -161,16 +193,16 @@ async function checkStatus (id, callback) {
             // Note technically 0.0537 NEAR should be enough, but we round it up to stay on the safe side.
             new BN('100000000000000000000').mul(new BN('600'))
           )
-          transfer = update(transfer, { status: SUCCESS })
-        } catch (e) {
-          console.error(e)
+        } catch (error) {
+          console.error(error)
+          transfer = update(transfer, { status: FAILED, error })
         }
       }
     }
   }
 
   // if successfully transfered, call callback and end
-  if (transfer.status === SUCCESS) {
+  if (transfer.status === SUCCESS || transfer.status === FAILED) {
     if (callback) await callback()
     return
   }
@@ -183,7 +215,7 @@ async function checkStatus (id, callback) {
 }
 
 export async function checkStatuses (callback) {
-  const inFlight = get().filter(t => t.status !== SUCCESS)
+  const inFlight = get().filter(t => ![SUCCESS, FAILED].includes(t.status))
 
   // if all transfers successful, nothing to do
   if (!inFlight.length) return
