@@ -224,7 +224,7 @@ async function checkStatus (id, callback) {
   // if not fully transferred and callback passed in, check status again soon
   if (callback) {
     await callback()
-    window.setTimeout(() => checkStatus(transfer.id, callback), 6000)
+    window.setTimeout(() => checkStatus(transfer.id, callback), 5500)
   }
 }
 
@@ -241,5 +241,5 @@ export async function checkStatuses (callback) {
   if (callback) await callback()
 
   // recheck status again soon
-  window.setTimeout(() => checkStatuses(callback), 6000)
+  window.setTimeout(() => checkStatuses(callback), 5500)
 }
