@@ -11,20 +11,19 @@ function updateTransfers () {
   if (!inProgress.length && !complete.length) {
     show('transfers-none')
     hide('transfers-in-progress')
-    hide('transfers-complete')
+    hide('transfers-all-complete')
   } else {
     hide('transfers-none')
     if (inProgress.length) {
       show('transfers-in-progress'); hide('transfers-all-complete')
     } else {
       hide('transfers-in-progress'); show('transfers-all-complete')
-
       fill('notification-count').with(complete.length)
     }
 
     fill('transfers-container').with(
       complete.map(transfer => `
-        <div class="transfer">
+        <div class="transfer" id="${transfer.id}" data-behavior="transfer">
           <header>
             <span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>
             <span>${transfer.amount}</span>
@@ -37,6 +36,12 @@ function updateTransfers () {
           <div>
             <p>${humanStatusFor(transfer)}</p>
           </div>
+          <footer>
+            <button data-behavior="delete-transfer">
+              <span class="visually-hidden">clear</span>
+              <span aria-hidden="true">⨉</span>
+            </button>
+          </footer>
         </div>
       `).join('') +
       inProgress.map(transfer => `

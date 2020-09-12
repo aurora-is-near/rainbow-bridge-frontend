@@ -286,15 +286,17 @@ main form button:after {
 }
 
 .transfer {
-  display: flex;
-  min-width: 20em;
   background-color: var(--bg);
-  margin-bottom: 0.5em;
   border-radius: 5px;
-  text-align: left;
-  padding: 0.5rem;
+  border: 1px solid var(--bg);
+  display: flex;
   font-size: 0.8em;
+  margin-bottom: 0.5em;
   min-height: 4em;
+  min-width: 20em;
+  padding: 0.5rem;
+  position: relative;
+  text-align: left;
 }
 .transfer:last-child {
   margin-bottom: 0;
@@ -328,6 +330,30 @@ main form button:after {
 }
 .transfer p {
   margin: 0;
+}
+.transfer footer {
+  font-size: 0.8em;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.transfer footer button {
+  background: none;
+  box-shadow: none;
+  color: var(--fg);
+  border: 1px solid var(--bg);
+  padding: 0 0.25em;
+  text-decoration: none;
+}
+.transfer footer button:hover,
+.transfer footer button:focus {
+  background: var(--shadow);
+}
+.transfer footer button:focus {
+  border-color: var(--light-gray);
+}
+.transfer footer button:active {
+  background: var(--light-gray);
 }
 
 .notification-indicator {

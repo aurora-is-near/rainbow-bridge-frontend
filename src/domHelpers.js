@@ -1,4 +1,7 @@
-import { initiate as initiateTransfer } from './transfers'
+import {
+  initiate as initiateTransfer,
+  clear as clearTransfer
+} from './transfers'
 import render from './render'
 
 // Update DOM elements that have a "data-behavior" attribute
@@ -100,4 +103,17 @@ export const initDOMhandlers = () => {
     transfersButton.click()
     transfersButton.focus()
   }
+
+  // transfers are rendered after page load, so we add one click handler to the
+  // body tag to handle clicking any of them
+  document.querySelector('body').addEventListener('click', event => {
+    const clearTransferButton = event.target.closest('[data-behavior=delete-transfer]')
+
+    // no delete button clicked, end here
+    if (!clearTransferButton) return
+
+    const transferId = clearTransferButton.closest('[data-behavior=transfer]').id
+    clearTransfer(transferId)
+    render()
+  })
 }

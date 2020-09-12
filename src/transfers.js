@@ -81,6 +81,12 @@ export function initiate (amount, callback) {
   })
 }
 
+export function clear (id) {
+  const transfers = getRaw()
+  delete transfers[id]
+  localStorage.set(getKey(), transfers)
+}
+
 async function buildTrie (block) {
   const blockReceipts = await Promise.all(
     block.transactions.map(t => window.web3.eth.getTransactionReceipt(t))
