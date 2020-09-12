@@ -7,8 +7,10 @@ html, body {
 }
 
 html {
-  --bg: #efefef;
-  --fg: #1e1e1e;
+  --white: #efefef;
+  --black: #1e1e1e;
+  --bg: var(--white);
+  --fg: var(--black);
   --gray: #555;
   --light-gray: #ccc;
   --shadow: #e2e2e2;
@@ -342,8 +344,8 @@ main form button:after {
 
 @media (prefers-color-scheme: dark) {
   html {
-    --bg: #1e1e1e;
-    --fg: #efefef;
+    --bg: var(--black);
+    --fg: var(--white);
     --gray: #aaa;
     --shadow: #2a2a2a;
     --light-gray: #444;
