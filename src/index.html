@@ -47,6 +47,16 @@
               <img style="width: 4em; vertical-align: middle" alt="view transfers" src="assets/rainbow-white.gif">
             </picture>
           </div>
+          <div data-behavior="transfers-all-complete" style="display: none">
+            <picture>
+              <source srcset="assets/bell-white.svg" media="(prefers-color-scheme: dark)">
+              <img style="width: 1em; vertical-align: middle" alt="no transfers" src="assets/bell-black.svg">
+            </picture>
+            <div class="notification-indicator">
+              <span data-behavior="notification-count">#</span>
+              <span class="visually-hidden">notifications</span>
+            </div>
+          </div>
         </button>
         <div class="right">
           <div data-behavior="transfers-none" style="

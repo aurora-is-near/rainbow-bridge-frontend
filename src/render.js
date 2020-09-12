@@ -6,35 +6,54 @@ const formatLargeNum = n => n >= 1e5 || (n < 1e-3 && n !== 0)
   : new Intl.NumberFormat(undefined, { maximumSignificantDigits: 3 }).format(n)
 
 function updateTransfers () {
-  const transfers = getTransfers()
-  // const inProgress = transfers.filter(t => t.status !== 'complete')
+  const { inProgress, complete } = getTransfers()
 
-  if (!transfers.length) {
-    show('transfers-none'); hide('transfers-in-progress')
+  if (!inProgress.length && !complete.length) {
+    show('transfers-none')
+    hide('transfers-in-progress')
+    hide('transfers-complete')
   } else {
-    hide('transfers-none'); show('transfers-in-progress')
+    hide('transfers-none')
+    if (inProgress.length) {
+      show('transfers-in-progress'); hide('transfers-all-complete')
+    } else {
+      hide('transfers-in-progress'); show('transfers-all-complete')
 
-    fill('transfers-container').with(transfers.map(transfer => `
-      <div class="transfer">
-        <header>
-          ${transfer.status !== 'complete'
-            ? '<span class="loader" style="font-size: 0.75em; margin: -0.5em 0 0 -0.7em">in progress:</span>'
-            : transfer.outcome === 'success'
-              ? '<span>🌈</span>'
-              : '<span>😞</span>'
-          }
-          <span>${transfer.amount}</span>
-          <span>${process.env.ethErc20Name}</span>
-          <span class="arrow ${transfer.outcome} ${
-            transfer.status !== 'complete' && 'animate '
-          }">→</span>
-          <span>${process.env.nearNep21Name}</span>
-        </header>
-        <div>
-          <p>${humanStatusFor(transfer)}</p>
+      fill('notification-count').with(complete.length)
+    }
+
+    fill('transfers-container').with(
+      complete.map(transfer => `
+        <div class="transfer">
+          <header>
+            <span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>
+            <span>${transfer.amount}</span>
+            <span>${process.env.ethErc20Name}</span>
+            <span class="arrow ${transfer.outcome} ${
+              transfer.status !== 'complete' && 'animate '
+            }">→</span>
+            <span>${process.env.nearNep21Name}</span>
+          </header>
+          <div>
+            <p>${humanStatusFor(transfer)}</p>
+          </div>
         </div>
-      </div>
-    `).join(''))
+      `).join('') +
+      inProgress.map(transfer => `
+        <div class="transfer">
+          <header>
+            <span class="loader" style="font-size: 0.75em; margin: -0.5em 0 0 -0.7em">in progress:</span>
+            <span>${transfer.amount}</span>
+            <span>${process.env.ethErc20Name}</span>
+            <span class="arrow animate">→</span>
+            <span>${process.env.nearNep21Name}</span>
+          </header>
+          <div>
+            <p>${humanStatusFor(transfer)}</p>
+          </div>
+        </div>
+      `).join('')
+    )
   }
 }
 

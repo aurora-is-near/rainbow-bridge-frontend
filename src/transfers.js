@@ -19,7 +19,17 @@ function getRaw () {
 // return an array of chronologically-ordered transfers
 export function get () {
   const raw = getRaw()
-  return Object.keys(raw).sort().map(id => raw[id])
+  return Object.keys(raw).sort().reduce(
+    (acc, id) => {
+      const transfer = raw[id]
+
+      if (transfer.status === 'complete') acc.complete.push(transfer)
+      else acc.inProgress.push(transfer)
+
+      return acc
+    },
+    { inProgress: [], complete: [] }
+  )
 }
 
 const INITIATED = 'initiated'
@@ -219,14 +229,14 @@ async function checkStatus (id, callback) {
 }
 
 export async function checkStatuses (callback) {
-  const inFlight = get().filter(t => t.status !== COMPLETE)
+  const { inProgress } = get()
 
   // if all transfers successful, nothing to do
-  if (!inFlight.length) return
+  if (!inProgress.length) return
 
   // Check & update statuses for all in parallel.
   // Do not pass callback, only call it once after all updated.
-  await Promise.all(inFlight.map(t => checkStatus(t.id)))
+  await Promise.all(inProgress.map(t => checkStatus(t.id)))
 
   if (callback) await callback()
 
