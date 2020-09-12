@@ -24,18 +24,18 @@ export function get () {
 
 const INITIATED = 'initiated'
 const LOCKED = 'event_emitted'
+const COMPLETE = 'complete'
 const SUCCESS = 'success'
 const FAILED = 'failed'
 
 const statusMessages = {
   [INITIATED]: () => 'locking',
-  [LOCKED]: (progress) => `${progress}/25 blocks synced`,
-  [SUCCESS]: () => 'succeeded',
-  [FAILED]: () => 'failed'
+  [LOCKED]: ({ progress }) => `${progress}/25 blocks synced`,
+  [COMPLETE]: ({ outcome, error }) => outcome === SUCCESS ? 'Success!' : error
 }
 
 export function humanStatusFor (transfer) {
-  return statusMessages[transfer.status](transfer.progress)
+  return statusMessages[transfer.status](transfer)
 }
 
 // Add a new transfer to the set of cached local transfers.
@@ -142,9 +142,13 @@ async function checkStatus (id, callback) {
       await window.nep21.get_balance({ owner_id: window.nearUserAddress })
     )
     if (balanceAfter - transfer.amount === Number(balanceBefore)) {
-      transfer = update(transfer, { status: SUCCESS })
+      transfer = update(transfer, { status: COMPLETE, outcome: SUCCESS })
     } else {
-      transfer = update(transfer, { status: FAILED })
+      transfer = update(transfer, {
+        status: COMPLETE,
+        outcome: FAILED,
+        error: `Minting ${process.env.nearNep21Name} failed`
+      })
     }
     urlParams.clear('minting', 'balanceBefore')
   }
@@ -162,7 +166,7 @@ async function checkStatus (id, callback) {
       transfer = update(transfer, { status: LOCKED, progress: 0, lock })
     } catch (error) {
       console.error(error)
-      transfer = update(transfer, { status: FAILED, error })
+      transfer = update(transfer, { status: COMPLETE, outcome: FAILED, error })
     }
   }
 
@@ -195,14 +199,14 @@ async function checkStatus (id, callback) {
           )
         } catch (error) {
           console.error(error)
-          transfer = update(transfer, { status: FAILED, error })
+          transfer = update(transfer, { status: COMPLETE, outcome: FAILED, error })
         }
       }
     }
   }
 
   // if successfully transfered, call callback and end
-  if (transfer.status === SUCCESS || transfer.status === FAILED) {
+  if (transfer.status === COMPLETE) {
     if (callback) await callback()
     return
   }
@@ -210,12 +214,12 @@ async function checkStatus (id, callback) {
   // if not fully transferred and callback passed in, check status again soon
   if (callback) {
     await callback()
-    window.setTimeout(() => checkStatus(transfer.id, callback), 5000)
+    window.setTimeout(() => checkStatus(transfer.id, callback), 6000)
   }
 }
 
 export async function checkStatuses (callback) {
-  const inFlight = get().filter(t => ![SUCCESS, FAILED].includes(t.status))
+  const inFlight = get().filter(t => t.status !== COMPLETE)
 
   // if all transfers successful, nothing to do
   if (!inFlight.length) return
@@ -227,5 +231,5 @@ export async function checkStatuses (callback) {
   if (callback) await callback()
 
   // recheck status again soon
-  window.setTimeout(() => checkStatuses(callback), 5000)
+  window.setTimeout(() => checkStatuses(callback), 6000)
 }

@@ -33,23 +33,23 @@
 
   <div data-behavior="signed-in" style="display: none; height: 100%; flex-direction: column; justify-content: space-between">
     <nav style="display: flex; position: absolute; right: 0.5em; top: 0.5em; z-index: 2">
-      <div id="notifications" class="dropdown" aria-live="polite">
-        <button aria-controls="notifications" style="padding: 0.1em 0.25em">
-          <div data-behavior="no-notifications">
+      <div id="transfers" class="dropdown" aria-live="polite">
+        <button aria-controls="transfers" style="padding: 0.1em 0.25em">
+          <div data-behavior="transfers-none">
             <picture>
               <source srcset="assets/bell-white.svg" media="(prefers-color-scheme: dark)">
-              <img style="width: 1em; vertical-align: middle" alt="no notifications" src="assets/bell-black.svg">
+              <img style="width: 1em; vertical-align: middle" alt="no transfers" src="assets/bell-black.svg">
             </picture>
           </div>
-          <div data-behavior="has-notifications" style="display: none">
+          <div data-behavior="transfers-in-progress" style="display: none">
             <picture>
               <source srcset="assets/rainbow-black.gif" media="(prefers-color-scheme: dark)">
-              <img style="width: 4em; vertical-align: middle" alt="view notifications" src="assets/rainbow-white.gif">
+              <img style="width: 4em; vertical-align: middle" alt="view transfers" src="assets/rainbow-white.gif">
             </picture>
           </div>
         </button>
         <div class="right">
-          <div data-behavior="no-notifications" style="
+          <div data-behavior="transfers-none" style="
             display: flex;
             flex-direction: column;
             height: 5em;
@@ -57,9 +57,9 @@
             text-align: center;
             width: 15em;
           ">
-            No notifications
+            No transfers
           </div>
-          <div data-behavior="notifications-container"></div>
+          <div data-behavior="transfers-container"></div>
         </div>
       </div>
       <button class="link" data-behavior="logout" style="margin-left: 0.5em; font-size: 0.8em">
@@ -112,7 +112,7 @@
               data-behavior="greeting"
               type="number"
             />
-            <button id="submit" aria-controls="notifications" disabled style="border-radius: 0 5px 5px 0">
+            <button id="submit" aria-controls="transfers" disabled style="border-radius: 0 5px 5px 0">
               <span class="visually-hidden">Confirm</span>
             </button>
           </div>

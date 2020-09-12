@@ -7,23 +7,31 @@ const formatLargeNum = n => n >= 1e5 || (n < 1e-3 && n !== 0)
 
 function updateTransfers () {
   const transfers = getTransfers()
+  // const inProgress = transfers.filter(t => t.status !== 'complete')
 
   if (!transfers.length) {
-    show('no-notifications'); hide('has-notifications')
+    show('transfers-none'); hide('transfers-in-progress')
   } else {
-    hide('no-notifications'); show('has-notifications')
+    hide('transfers-none'); show('transfers-in-progress')
 
-    fill('notifications-container').with(transfers.map(transfer => `
-      <div class="notification">
+    fill('transfers-container').with(transfers.map(transfer => `
+      <div class="transfer">
         <header>
-          <picture>
-            <source srcset="rainbow-black.gif" media="(prefers-color-scheme: dark)">
-            <img style="width: 5em" alt="" src="rainbow-white.gif">
-          </picture>
+          ${transfer.status !== 'complete'
+            ? '<span class="loader" style="font-size: 0.75em; margin: -0.5em 0 0 -0.7em">in progress:</span>'
+            : transfer.outcome === 'success'
+              ? '<span>🌈</span>'
+              : '<span>😞</span>'
+          }
+          <span>${transfer.amount}</span>
+          <span>${process.env.ethErc20Name}</span>
+          <span class="arrow ${transfer.outcome} ${
+            transfer.status !== 'complete' && 'animate '
+          }">→</span>
+          <span>${process.env.nearNep21Name}</span>
         </header>
         <div>
-          <p>Sending ${transfer.amount} RAIN to NEAR</p>
-          <p>${humanStatusFor(transfer)}...</p>
+          <p>${humanStatusFor(transfer)}</p>
         </div>
       </div>
     `).join(''))

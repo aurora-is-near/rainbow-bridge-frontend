@@ -12,6 +12,7 @@ html {
   --gray: #555;
   --light-gray: #ccc;
   --shadow: #e2e2e2;
+  --error: #FF585D;
   --success: rgb(90, 206, 132);
   --primary: #FF585D;
   --secondary: #0072CE;
@@ -95,27 +96,35 @@ button.link {
   cursor: not-allowed;
   transform: none;
 }
-[disabled] button {
+[disabled] button,
+.loader {
+  display: block;
   text-indent: -900em;
   width: 2em;
   position: relative;
 }
-[disabled] button:after {
+[disabled] button:after,
+.loader:after {
   content: " ";
   display: block;
   width: 0.8em;
   height: 0.8em;
   border-radius: 50%;
-  border: 2px solid #fff;
-  border-color: var(--fg) transparent var(--fg) transparent;
-  animation: loader 1.2s linear infinite;
+  border: 0.15em solid transparent;
+  border-top-color: var(--secondary);
+  animation: spin 1.5s ease-in-out infinite,
+          rainbow 1.5s ease-in-out infinite;
   position: absolute;
-  top: 0.45em;
-  right: 0.5em;
+  top: 0.35em;
+  right: 0.4em;
 }
-@keyframes loader {
+@keyframes spin {
   0% { transform: rotate(0deg) }
   100% { transform: rotate(360deg) }
+}
+@keyframes rainbow {
+  0% { filter: hue-rotate(0deg) }
+  100% { filter: hue-rotate(360deg) }
 }
 
 fieldset {
@@ -273,32 +282,48 @@ main form button:after {
   font-weight: normal;
 }
 
-.notification {
+.transfer {
   display: flex;
-  min-width: 18em;
+  min-width: 20em;
   background-color: var(--bg);
   margin-bottom: 0.5em;
   border-radius: 5px;
   text-align: left;
+  padding: 0.5rem;
+  font-size: 0.8em;
+  min-height: 4em;
 }
-.notification:last-child {
+.transfer:last-child {
   margin-bottom: 0;
 }
-.notification header {
-  font-size: 1.5em;
-  margin-right: 0.25em;
-  padding: 2px;
+.transfer header {
+  align-items: center;
+  display: grid;
+  margin-right: 0.5em;
+  grid-template-columns: repeat(5, auto);
+  grid-gap: 0.2em;
 }
-.notification header img {
-  display: block;
+.transfer header .arrow {
+  font-weight: 200;
+  color: var(--secondary);
 }
-.notification header + * {
-  font-size: 0.8em;
+.transfer header .arrow.failed {
+  color: var(--error);
+}
+.transfer header .arrow.success {
+  color: var(--success);
+}
+.transfer header .arrow.animate {
+  animation: rainbow 1.5s ease-in-out infinite;
+}
+.transfer header + * {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  text-align: center;
+  flex: 1;
 }
-.notification p {
+.transfer p {
   margin: 0;
 }
 

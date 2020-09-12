@@ -20,7 +20,6 @@
     "jest": "^26.0.1",
     "jest-environment-node": "^26.0.0",
     "parcel-bundler": "^1.12.4",
-    "parcel-plugin-asset-copier": "^1.1.0",
     "rainbow-bridge-sol": "^1.0.10"
   },
   "dependencies": {
@@ -35,6 +34,5 @@
   },
   "browserslist": [
     "since 2017-04"
-  ],
-  "assetsPath": "src/assets"
+  ]
 }

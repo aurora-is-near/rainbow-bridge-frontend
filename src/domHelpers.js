@@ -96,8 +96,8 @@ export const initDOMhandlers = () => {
     amount.value = ''
     submit.disabled = true
     await render()
-    const notificationsButton = document.querySelector('#notifications button')
-    notificationsButton.click()
-    notificationsButton.focus()
+    const transfersButton = document.querySelector('#transfers button')
+    transfersButton.click()
+    transfersButton.focus()
   }
 }
