@@ -8,14 +8,6 @@ import { ulid } from 'ulid'
 import utils from 'ethereumjs-util'
 import * as urlParams from './urlParams'
 
-function getKey () {
-  return `${window.ethUserAddress}-to-${window.nearUserAddress}`
-}
-
-function getRaw () {
-  return localStorage.get(getKey()) || {}
-}
-
 // return an array of chronologically-ordered transfers
 export function get () {
   const raw = getRaw()
@@ -32,6 +24,51 @@ export function get () {
   )
 }
 
+export function humanStatusFor (transfer) {
+  return statusMessages[transfer.status](transfer)
+}
+
+export function initiate (amount, callback) {
+  return new Promise((resolve, reject) => {
+    window.erc20.methods.approve(process.env.ethLockerAddress, amount).send()
+      .on('transactionHash', hash => {
+        resolve(hash)
+        track({ amount }, callback)
+      })
+      .catch(reject)
+  })
+}
+
+export function clear (id) {
+  const transfers = getRaw()
+  delete transfers[id]
+  localStorage.set(getKey(), transfers)
+}
+
+export async function checkStatuses (callback) {
+  const { inProgress } = get()
+
+  // if all transfers successful, nothing to do
+  if (!inProgress.length) return
+
+  // Check & update statuses for all in parallel.
+  // Do not pass callback, only call it once after all updated.
+  await Promise.all(inProgress.map(t => checkStatus(t.id)))
+
+  if (callback) await callback()
+
+  // recheck status again soon
+  window.setTimeout(() => checkStatuses(callback), 5500)
+}
+
+function getKey () {
+  return `${window.ethUserAddress}-to-${window.nearUserAddress}`
+}
+
+function getRaw () {
+  return localStorage.get(getKey()) || {}
+}
+
 const INITIATED = 'initiated'
 const LOCKED = 'event_emitted'
 const COMPLETE = 'complete'
@@ -42,10 +79,6 @@ const statusMessages = {
   [INITIATED]: () => 'locking',
   [LOCKED]: ({ progress }) => `${progress}/25 blocks synced`,
   [COMPLETE]: ({ outcome, error }) => outcome === SUCCESS ? 'Success!' : error
-}
-
-export function humanStatusFor (transfer) {
-  return statusMessages[transfer.status](transfer)
 }
 
 // Add a new transfer to the set of cached local transfers.
@@ -68,23 +101,6 @@ function update (transfer, withData) {
     [transfer.id]: updatedTransfer
   })
   return updatedTransfer
-}
-
-export function initiate (amount, callback) {
-  return new Promise((resolve, reject) => {
-    window.erc20.methods.approve(process.env.ethLockerAddress, amount).send()
-      .on('transactionHash', hash => {
-        resolve(hash)
-        track({ amount }, callback)
-      })
-      .catch(reject)
-  })
-}
-
-export function clear (id) {
-  const transfers = getRaw()
-  delete transfers[id]
-  localStorage.set(getKey(), transfers)
 }
 
 async function buildTrie (block) {
@@ -232,20 +248,4 @@ async function checkStatus (id, callback) {
     await callback()
     window.setTimeout(() => checkStatus(transfer.id, callback), 5500)
   }
-}
-
-export async function checkStatuses (callback) {
-  const { inProgress } = get()
-
-  // if all transfers successful, nothing to do
-  if (!inProgress.length) return
-
-  // Check & update statuses for all in parallel.
-  // Do not pass callback, only call it once after all updated.
-  await Promise.all(inProgress.map(t => checkStatus(t.id)))
-
-  if (callback) await callback()
-
-  // recheck status again soon
-  window.setTimeout(() => checkStatuses(callback), 5500)
 }
