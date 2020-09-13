@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { BorshContract, hexToBuffer, readerToHex } from './rainbow/borsh'
+import { BorshContract, hexToBuffer, readerToHex } from './borsh'
 
 const borshSchema = {
   bool: {

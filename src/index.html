@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="./assets/favicon.ico" />
-  <link rel="apple-touch-icon" href="./assets/favicon.ico" />
+  <link rel="icon" href="./img/favicon.ico" />
+  <link rel="apple-touch-icon" href="./img/favicon.ico" />
   <title>Send an ERC20 from Ethereum to NEAR</title>
-  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="css/global.css">
 </head>
 <body>
   <div data-behavior="signed-out">
@@ -37,20 +37,20 @@
         <button aria-controls="transfers">
           <div data-behavior="transfers-none">
             <picture>
-              <source srcset="assets/bell-white.svg" media="(prefers-color-scheme: dark)">
-              <img style="width: 1em; vertical-align: middle" alt="no transfers" src="assets/bell-black.svg">
+              <source srcset="img/bell-white.svg" media="(prefers-color-scheme: dark)">
+              <img style="width: 1em; vertical-align: middle" alt="no transfers" src="img/bell-black.svg">
             </picture>
           </div>
           <div data-behavior="transfers-in-progress" style="display: none">
             <picture>
-              <source srcset="assets/rainbow-black.gif" media="(prefers-color-scheme: dark)">
-              <img style="width: 4em; vertical-align: middle" alt="view transfers" src="assets/rainbow-white.gif">
+              <source srcset="img/rainbow-black.gif" media="(prefers-color-scheme: dark)">
+              <img style="width: 4em; vertical-align: middle" alt="view transfers" src="img/rainbow-white.gif">
             </picture>
           </div>
           <div data-behavior="transfers-all-complete" style="display: none">
             <picture>
-              <source srcset="assets/bell-white.svg" media="(prefers-color-scheme: dark)">
-              <img style="width: 1em; vertical-align: middle" alt="no transfers" src="assets/bell-black.svg">
+              <source srcset="img/bell-white.svg" media="(prefers-color-scheme: dark)">
+              <img style="width: 1em; vertical-align: middle" alt="no transfers" src="img/bell-black.svg">
             </picture>
             <div class="notification-indicator">
               <span data-behavior="notification-count">#</span>
@@ -88,7 +88,7 @@
     <main>
       <section class="balance">
         <header>
-          <img alt="ethereum" src="assets/eth-diamond-purple.png">
+          <img alt="ethereum" src="img/eth-diamond-purple.png">
           Ethereum
         </header>
         <div>
@@ -102,7 +102,7 @@
         </div>
         <strong class="jumbo" data-behavior="erc20Balance">🤔</strong>
         <footer>
-          <img alt="account" src="assets/account.svg">
+          <img alt="account" src="img/account.svg">
           <code data-behavior="ethUser" class="clip">🤔</code>
         </footer>
       </section>
@@ -140,8 +140,8 @@
       <section class="balance" data-behavior="balancePositive" style="display: none">
         <header>
           <picture>
-            <source srcset="assets/near-icon-white.svg" media="(prefers-color-scheme: dark)">
-            <img alt="near" src="assets/near-icon-black.svg">
+            <source srcset="img/near-icon-white.svg" media="(prefers-color-scheme: dark)">
+            <img alt="near" src="img/near-icon-black.svg">
           </picture>
           NEAR
         </header>
@@ -156,7 +156,7 @@
         </div>
         <strong class="jumbo" data-behavior="nep21Balance">🤔</strong>
         <footer>
-          <img alt="account" src="assets/account.svg">
+          <img alt="account" src="img/account.svg">
           <code data-behavior="nearUser" class="clip">🤔</code>
         </footer>
       </section>
@@ -191,6 +191,6 @@
     </footer>
   </div>
 
-  <script src="./index.js"></script>
+  <script src="./js/index.js"></script>
 </body>
 </html>

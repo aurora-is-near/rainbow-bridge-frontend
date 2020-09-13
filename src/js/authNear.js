@@ -1,7 +1,7 @@
 import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 
 import render from './render'
-import EthOnNearClient from './ethOnNearClient'
+import EthOnNearClient from './borsh/ethOnNearClient'
 
 // Create a Near config object
 const near = new Near({
