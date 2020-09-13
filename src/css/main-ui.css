@@ -1,0 +1,52 @@
+main {
+  align-items: stretch;
+  grid-template-columns: repeat(auto-fit, minmax(12em, 1fr));
+  margin: 4rem auto;
+  max-width: 20em;
+}
+main > * {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+main section {
+  border-radius: 5px;
+  border: 1px solid var(--gray);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.5em 0.5em 0;
+  position: relative;
+  text-align: center;
+}
+main section header {
+  position: absolute;
+  top: -1.3em;
+  left: 0;
+}
+main section header img {
+  height: 1em;
+}
+main section button {
+  padding: 0 0.25em;
+}
+main section footer {
+  font-size: 0.8em;
+}
+main section footer img {
+  width: 1em;
+  vertical-align: bottom;
+}
+main form button:after {
+  content: '↓';
+}
+@media(min-width: 650px) {
+  main {
+    display: grid;
+    max-width: 40em;
+  }
+  main form button:after {
+    content: '→';
+  }
+}
+

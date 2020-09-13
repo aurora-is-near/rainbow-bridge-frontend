@@ -1,0 +1,69 @@
+.transfer {
+  background-color: var(--bg);
+  border-radius: 5px;
+  border: 1px solid var(--bg);
+  display: flex;
+  margin-bottom: 0.5em;
+  min-height: 3em;
+  min-width: 17em;
+  padding: 0.5rem;
+  position: relative;
+  text-align: left;
+}
+.transfer:last-child {
+  margin-bottom: 0;
+}
+.transfer header {
+  align-items: center;
+  display: grid;
+  margin-right: 0.5em;
+  grid-template-columns: repeat(5, auto);
+  grid-gap: 0.2em;
+}
+.transfer header .arrow {
+  font-weight: 200;
+  color: var(--secondary);
+}
+.transfer header .arrow.failed {
+  color: var(--error);
+}
+.transfer header .arrow.success {
+  color: var(--success);
+}
+.transfer header .arrow.animate {
+  animation: rainbow 1.5s ease-in-out infinite;
+}
+.transfer header + * {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  flex: 1;
+}
+.transfer p {
+  margin: 0;
+}
+.transfer footer {
+  font-size: 0.8em;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.transfer footer button {
+  background: none;
+  box-shadow: none;
+  color: var(--fg);
+  border: 1px solid var(--bg);
+  padding: 0 0.25em;
+  text-decoration: none;
+}
+.transfer footer button:hover,
+.transfer footer button:focus {
+  background: var(--shadow);
+}
+.transfer footer button:focus {
+  border-color: var(--light-gray);
+}
+.transfer footer button:active {
+  background: var(--light-gray);
+}

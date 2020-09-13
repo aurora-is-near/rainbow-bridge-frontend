@@ -1,0 +1,14 @@
+.menu-icon {
+  padding-top: 0.5em;
+}
+.menu-icon:after,
+.menu-icon:before,
+.menu-icon div {
+  background-color: var(--fg);
+  border-radius: 3px;
+  content: '';
+  display: block;
+  height: 2px;
+  margin: 3px 0;
+  width: 1em;
+}
