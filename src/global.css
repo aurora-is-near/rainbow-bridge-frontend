@@ -187,6 +187,7 @@ li {
   border: 1px solid var(--bg);
   box-shadow: none;
   color: var(--fg);
+  height: 100%;
   position: relative;
   z-index: 2;
 }
@@ -380,7 +381,6 @@ main form button:after {
   display: block;
   height: 2px;
   margin: 3px 0;
-  transition: all .2s ease-in-out;
   width: 1em;
 }
 

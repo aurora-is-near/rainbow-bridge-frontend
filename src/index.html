@@ -32,9 +32,9 @@
   </div>
 
   <div data-behavior="signed-in" style="display: none; height: 100%; flex-direction: column; justify-content: space-between">
-    <nav style="display: flex; align-items: center; position: absolute; right: 0.5em; top: 0.5em; z-index: 2">
+    <nav style="display: flex; align-items: stretch; position: absolute; right: 0.5em; top: 0.5em; z-index: 2">
       <div id="transfers" class="dropdown" aria-live="polite">
-        <button aria-controls="transfers" style="padding: 0.1em 0.25em">
+        <button aria-controls="transfers">
           <div data-behavior="transfers-none">
             <picture>
               <source srcset="assets/bell-white.svg" media="(prefers-color-scheme: dark)">
@@ -59,24 +59,26 @@
           </div>
         </button>
         <div class="right">
-          <div data-behavior="transfers-none" style="
-            display: flex;
-            flex-direction: column;
-            height: 5em;
-            justify-content: space-around;
-            text-align: center;
-            width: 15em;
-          ">
-            No transfers
+          <div data-behavior="transfers-none">
+            <div style="
+              display: flex;
+              flex-direction: column;
+              height: 3em;
+              justify-content: space-around;
+              text-align: center;
+              width: 10em;
+            ">
+              No transfers
+            </div>
           </div>
           <div data-behavior="transfers-container"></div>
         </div>
       </div>
       <div id="menu" class="dropdown" aria-live="polite" style="font-size: 0.8em">
-        <button class="menu-icon" aria-controls="menu" style="margin-left: 0.5em">
+        <button class="menu-icon" aria-controls="menu">
           <div></div>
         </button>
-        <div class="right" style="width: 5em">
+        <div class="right" style="width: 6em; text-align: center">
           <button class="link" data-behavior="logout">
             Sign out
           </button>

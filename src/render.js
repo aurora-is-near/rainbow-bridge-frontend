@@ -18,48 +18,48 @@ function updateTransfers () {
       show('transfers-in-progress'); hide('transfers-all-complete')
     } else {
       hide('transfers-in-progress'); show('transfers-all-complete')
-      fill('notification-count').with(complete.length)
     }
-
-    fill('transfers-container').with(
-      complete.map(transfer => `
-        <div class="transfer" id="${transfer.id}" data-behavior="transfer">
-          <header>
-            <span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>
-            <span>${transfer.amount}</span>
-            <span>${process.env.ethErc20Name}</span>
-            <span class="arrow ${transfer.outcome} ${
-              transfer.status !== 'complete' && 'animate '
-            }">→</span>
-            <span>${process.env.nearNep21Name}</span>
-          </header>
-          <div>
-            <p>${humanStatusFor(transfer)}</p>
-          </div>
-          <footer>
-            <button data-behavior="delete-transfer">
-              <span class="visually-hidden">clear</span>
-              <span aria-hidden="true">⨉</span>
-            </button>
-          </footer>
-        </div>
-      `).join('') +
-      inProgress.map(transfer => `
-        <div class="transfer">
-          <header>
-            <span class="loader" style="font-size: 0.75em; margin: -0.5em 0 0 -0.7em">in progress:</span>
-            <span>${transfer.amount}</span>
-            <span>${process.env.ethErc20Name}</span>
-            <span class="arrow animate">→</span>
-            <span>${process.env.nearNep21Name}</span>
-          </header>
-          <div>
-            <p>${humanStatusFor(transfer)}</p>
-          </div>
-        </div>
-      `).join('')
-    )
   }
+  fill('notification-count').with(complete.length)
+
+  fill('transfers-container').with(
+    complete.map(transfer => `
+      <div class="transfer" id="${transfer.id}" data-behavior="transfer">
+        <header>
+          <span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>
+          <span>${transfer.amount}</span>
+          <span>${process.env.ethErc20Name}</span>
+          <span class="arrow ${transfer.outcome} ${
+            transfer.status !== 'complete' && 'animate '
+          }">→</span>
+          <span>${process.env.nearNep21Name}</span>
+        </header>
+        <div>
+          <p>${humanStatusFor(transfer)}</p>
+        </div>
+        <footer>
+          <button data-behavior="delete-transfer">
+            <span class="visually-hidden">clear</span>
+            <span aria-hidden="true">⨉</span>
+          </button>
+        </footer>
+      </div>
+    `).join('') +
+    inProgress.map(transfer => `
+      <div class="transfer">
+        <header>
+          <span class="loader" style="font-size: 0.75em; margin: -0.5em 0 0 -0.7em">in progress:</span>
+          <span>${transfer.amount}</span>
+          <span>${process.env.ethErc20Name}</span>
+          <span class="arrow animate">→</span>
+          <span>${process.env.nearNep21Name}</span>
+        </header>
+        <div>
+          <p>${humanStatusFor(transfer)}</p>
+        </div>
+      </div>
+    `).join('')
+  )
 }
 
 // update the html based on user & data state
