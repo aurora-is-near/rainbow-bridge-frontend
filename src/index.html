@@ -32,7 +32,7 @@
   </div>
 
   <div data-behavior="signed-in" style="display: none; height: 100%; flex-direction: column; justify-content: space-between">
-    <nav style="display: flex; position: absolute; right: 0.5em; top: 0.5em; z-index: 2">
+    <nav style="display: flex; align-items: center; position: absolute; right: 0.5em; top: 0.5em; z-index: 2">
       <div id="transfers" class="dropdown" aria-live="polite">
         <button aria-controls="transfers" style="padding: 0.1em 0.25em">
           <div data-behavior="transfers-none">
@@ -72,9 +72,16 @@
           <div data-behavior="transfers-container"></div>
         </div>
       </div>
-      <button class="link" data-behavior="logout" style="margin-left: 0.5em; font-size: 0.8em">
-        Sign out
-      </button>
+      <div id="menu" class="dropdown" aria-live="polite" style="font-size: 0.8em">
+        <button class="menu-icon" aria-controls="menu" style="margin-left: 0.5em">
+          <div></div>
+        </button>
+        <div class="right" style="width: 5em">
+          <button class="link" data-behavior="logout">
+            Sign out
+          </button>
+        </div>
+      </div>
     </nav>
     <main>
       <section class="balance">

@@ -290,10 +290,9 @@ main form button:after {
   border-radius: 5px;
   border: 1px solid var(--bg);
   display: flex;
-  font-size: 0.8em;
   margin-bottom: 0.5em;
-  min-height: 4em;
-  min-width: 20em;
+  min-height: 3.5em;
+  min-width: 17em;
   padding: 0.5rem;
   position: relative;
   text-align: left;
@@ -360,13 +359,29 @@ main form button:after {
   background-color: var(--secondary);
   border-radius: 50em;
   color: var(--white);
-  font-size: 0.6em;
+  font-size: 0.55em;
   line-height: 1;
   padding: 0.2em 0.4em;
   position: absolute;
-  right: -0.2em;
+  right: 0;
   top: 0;
   vertical-align: super;
+}
+
+.menu-icon {
+  padding-top: 0.5em;
+}
+.menu-icon:after,
+.menu-icon:before,
+.menu-icon div {
+  background-color: var(--fg);
+  border-radius: 3px;
+  content: '';
+  display: block;
+  height: 2px;
+  margin: 3px 0;
+  transition: all .2s ease-in-out;
+  width: 1em;
 }
 
 @media (prefers-color-scheme: dark) {
