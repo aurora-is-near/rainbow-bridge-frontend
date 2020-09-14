@@ -42,7 +42,7 @@ export function initiate (amount, callback) {
 export function clear (id) {
   const transfers = getRaw()
   delete transfers[id]
-  localStorage.set(getKey(), transfers)
+  localStorage.set(STORAGE_KEY, transfers)
 }
 
 export async function checkStatuses (callback) {
@@ -61,12 +61,10 @@ export async function checkStatuses (callback) {
   window.setTimeout(() => checkStatuses(callback), 5500)
 }
 
-function getKey () {
-  return `${window.ethUserAddress}-to-${window.nearUserAddress}`
-}
+const STORAGE_KEY = 'rainbow-bridge-transfers'
 
 function getRaw () {
-  return localStorage.get(getKey()) || {}
+  return localStorage.get(STORAGE_KEY) || {}
 }
 
 const INITIATED = 'initiated'
@@ -88,7 +86,7 @@ async function track (transferRaw, callback) {
   const id = ulid()
   const transfer = { id, status: INITIATED, ...transferRaw }
 
-  localStorage.set(getKey(), { ...getRaw(), [id]: transfer })
+  localStorage.set(STORAGE_KEY, { ...getRaw(), [id]: transfer })
 
   if (callback) await callback()
   checkStatus(id, callback)
@@ -96,7 +94,7 @@ async function track (transferRaw, callback) {
 
 function update (transfer, withData) {
   const updatedTransfer = { ...transfer, ...withData }
-  localStorage.set(getKey(), {
+  localStorage.set(STORAGE_KEY, {
     ...getRaw(),
     [transfer.id]: updatedTransfer
   })
