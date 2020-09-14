@@ -19,6 +19,7 @@
 .dropdown > button:hover,
 .dropdown > button:focus {
   border: 1px solid var(--shadow);
+  box-shadow: none;
   background: var(--shadow);
 }
 
