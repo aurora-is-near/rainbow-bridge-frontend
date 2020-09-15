@@ -1,6 +1,7 @@
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Web3 from 'web3'
+import { createEthConnector } from 'rainbow-token-connector'
 
 import render from './render'
 
@@ -40,6 +41,15 @@ async function loadWeb3Modal () {
     JSON.parse(process.env.ethLockerAbiText),
     process.env.ethLockerAddress,
     { from: window.ethUserAddress }
+  )
+
+  window.ethConnector = await createEthConnector(
+    window.web3,
+    {
+      ethConnectorAddress: '???',
+      nearConnectorId: '???',
+      ethProverAddress: process.env.ethProverAddress
+    }
   )
 
   window.ethInitialized = true

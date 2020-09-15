@@ -1,4 +1,5 @@
 import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
+import { createNearConnector } from 'rainbow-token-connector'
 
 import render from './render'
 import EthOnNearClient from './borsh/ethOnNearClient'
@@ -46,6 +47,15 @@ async function login () {
   window.ethOnNearClient = await new EthOnNearClient(
     window.nearConnection.account(),
     process.env.nearClientAccount
+  )
+
+  window.tokenConnector = await createNearConnector(
+    window.nearConnection.account(),
+    {
+      nearConnectorId: '???',
+      nearEthProverId: process.env.nearProverAccount,
+      ethConnectorAddress: '???'
+    }
   )
 
   window.nearInitialized = true
