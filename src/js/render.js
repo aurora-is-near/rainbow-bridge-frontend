@@ -64,7 +64,6 @@ function updateTransfers () {
 
 // update the html based on user & data state
 export default async function render () {
-  fill('ethNodeUrl').with(process.env.ethNodeUrl)
   fill('ethErc20Name').with(process.env.ethErc20Name)
   fill('ethErc20Address').with(process.env.ethErc20Address)
   fill('ethErc20AbiText').with(process.env.ethErc20AbiText)
