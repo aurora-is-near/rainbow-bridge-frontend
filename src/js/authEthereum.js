@@ -11,7 +11,7 @@ const INFURA_ID = '9c91979e95cb4ef8a61eb029b4217a1a'
   Web3 modal helps us "connect" external wallets:
 */
 window.web3Modal = new Web3Modal({
-  network: process.env.ethNodeUrl, // optional
+  network: process.env.ethNetwork, // optional
   cacheProvider: true, // optional
   providerOptions: {
     walletconnect: {

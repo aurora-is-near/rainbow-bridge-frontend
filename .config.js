@@ -18,6 +18,7 @@ try {
 module.exports = {
   local: {
     ...localConfig,
+    ethNetwork: 'localhost:9545',
     ethErc20Name: 'RAIN',
     ethErc20AbiText: readFileSync('./node_modules/rainbow-bridge-sol/token-locker/dist/MyERC20.full.abi'),
     ethLockerAbiText: readFileSync('./node_modules/rainbow-bridge-sol/token-locker/dist/TokenLocker.full.abi'),
@@ -28,16 +29,23 @@ module.exports = {
     nearHelperUrl: 'http://localhost:3000/'
   },
   development: {
-    ethErc20Address: '???',
+    ethClientAddress: '0xF721c979db97413AA9D0F91ad531FaBF769bb09C',
+    ethEd25519Address: '0x9003342d15B21b4C42e1702447fE2f39FfAF55C2',
     ethErc20AbiText: readFileSync('./node_modules/rainbow-bridge-sol/token-locker/dist/MyERC20.full.abi'),
-    ethNodeUrl: '???',
-    ethLockerAddress: '',
+    ethErc20Address: '0x8151a8F90267bFf183E06921841C5dE774499388',
+    ethErc20Name: 'RAIN',
     ethLockerAbiText: readFileSync('./node_modules/rainbow-bridge-sol/token-locker/dist/TokenLocker.full.abi'),
-    nearNodeUrl: 'https://rpc.testnet.near.org',
+    ethLockerAddress: '0x5f7Cc23F90b5264a083dcB3b171c7111Dc32dD00',
+    ethNetwork: 'rinkeby',
+    ethNodeUrl: 'https://rinkeby.infura.io/v3/TODO',
+    ethProverAddress: '0xc5D62d66B8650E6242D9936c7e50E959BA0F9E37',
+    nearClientAccount: 'ethonnearclient10',
+    nearFunTokenAccount: 'mintablefuntoken11',
+    nearHelperUrl: 'https://helper.testnet.near.org/',
+    nearNep21Name: 'nRAIN',
     nearNetworkId: 'testnet',
-    nearFunTokenAccount: '???',
-    nearClientAccount: 'rainbow_bridge_eth_on_near_client',
+    nearNodeUrl: 'https://rpc.testnet.near.org',
+    nearProverAccount: 'ethonnearprover10',
     nearWalletUrl: 'https://wallet.testnet.near.org/',
-    nearHelperUrl: 'https://helper.testnet.near.org/'
   },
 }
