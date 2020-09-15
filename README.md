@@ -3,12 +3,16 @@ erc20-to-nep21
 
 Send an [ERC20] token over the [Rainbow Bridge], get an [NEP21] token on [NEAR]
 
+Try it between [Ethereum Rinkeby] & [NEAR Testnet]: https://near-examples.github.io/erc20-to-nep21/
+
 ![UI showing sending 10 RAIN tokens from Ethereum to NEAR. Two confirmations from MetaMask pop up at the beginning of the transaction, then a notification area shows waiting for 25 blocks to sync, then the tokens are deposited on the NEAR side and the NEAR balance increases by 10](demo.gif)
 
   [ERC20]: https://eips.ethereum.org/EIPS/eip-20
   [Rainbow Bridge]: https://github.com/near/rainbow-bridge
   [NEP21]: https://github.com/nearprotocol/NEPs/pull/21
   [NEAR]: https://near.org/
+  [Ethereum Rinkeby]: https://support.airswap.io/en/articles/2831385-what-is-rinkeby
+  [NEAR Testnet]: https://docs.near.org/docs/roles/developer/networks#testnet
 
 
 Run Everything Locally
