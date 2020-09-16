@@ -1,7 +1,6 @@
 .transfer {
   background-color: var(--bg);
   border-radius: 5px;
-  border: 1px solid var(--bg);
   display: flex;
   margin-bottom: 0.5em;
   min-height: 3em;
@@ -45,9 +44,8 @@
 }
 .transfer footer {
   font-size: 0.8em;
-  position: absolute;
-  right: 0;
-  top: 0;
+  margin-right: -0.5rem;
+  margin-top: -0.5rem;
 }
 .transfer footer button {
   background: none;

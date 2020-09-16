@@ -38,13 +38,15 @@ function updateTransfers () {
           <p>${humanStatusFor(transfer)}</p>
         </div>
         <footer>
-          <button data-behavior="delete-transfer">
-            <span class="visually-hidden">clear</span>
-            <span aria-hidden="true">⨉</span>
-          </button>
-          ${transfer.outcome === 'success' ? '' : `
+          ${transfer.outcome === 'success' ? `
+            <button data-behavior="delete-transfer">
+              <span class="visually-hidden">clear</span>
+              <span aria-hidden="true">⨉</span>
+            </button>
+          ` : `
             <button data-behavior="retry-transfer">
-              retry
+              <span class="visually-hidden">retry</span>
+              <span aria-hidden="true" title="retry">↻</span>
             </button>
           `}
         </footer>
