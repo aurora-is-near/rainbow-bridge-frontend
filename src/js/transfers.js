@@ -46,6 +46,31 @@ export function clear (id) {
 }
 
 export async function checkStatuses (callback) {
+  // First, check if we've just returned to this page from NEAR Wallet after
+  // completing a transfer. Do this outside of main Promise.all to
+  //
+  //   1. avoid race conditions
+  //   2. check retried failed transfers, which are not inProgress
+  const { minting, balanceBefore } = urlParams.get('minting', 'balanceBefore')
+  if (minting) {
+    const transfer = getRaw()[minting]
+    if (transfer) {
+      const balanceAfter = Number(
+        await window.nep21.get_balance({ owner_id: window.nearUserAddress })
+      )
+      if (balanceAfter - transfer.amount === Number(balanceBefore)) {
+        update(transfer, { status: COMPLETE, outcome: SUCCESS })
+      } else {
+        update(transfer, {
+          status: COMPLETE,
+          outcome: FAILED,
+          error: `Minting ${process.env.nearNep21Name} failed`
+        })
+      }
+    }
+    urlParams.clear('minting', 'balanceBefore')
+  }
+
   const { inProgress } = get()
 
   // if all transfers successful, nothing to do
@@ -187,25 +212,6 @@ async function findProof (transfer) {
 //   * a new call to checkStatus will be scheduled for this transfer, if its status is not SUCCESS
 async function checkStatus (id, callback) {
   let transfer = getRaw()[id]
-
-  // First, check if we've just returned to this page from NEAR Wallet after
-  // completing this transfer
-  const { minting, balanceBefore } = urlParams.get('minting', 'balanceBefore')
-  if (minting && id === minting) {
-    const balanceAfter = Number(
-      await window.nep21.get_balance({ owner_id: window.nearUserAddress })
-    )
-    if (balanceAfter - transfer.amount === Number(balanceBefore)) {
-      transfer = update(transfer, { status: COMPLETE, outcome: SUCCESS })
-    } else {
-      transfer = update(transfer, {
-        status: COMPLETE,
-        outcome: FAILED,
-        error: `Minting ${process.env.nearNep21Name} failed`
-      })
-    }
-    urlParams.clear('minting', 'balanceBefore')
-  }
 
   if (transfer.status === INITIATED) {
     try {
