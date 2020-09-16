@@ -165,30 +165,19 @@ async function findProof (transfer) {
     receipt.transactionIndex
   )
 
-  const log = receipt.logs.find(l => l.logIndex === transfer.lock.events.Locked.logIndex)
-
-  const log_index = transfer.lock.events.Locked.logIndex
-  const log_entry_data = Array.from(Log.fromWeb3(log).serialize())
-  const receipt_index = proof.txIndex
-  const receipt_data = Array.from(Receipt.fromWeb3(receipt).serialize())
-  const header_data = Array.from(proof.header_rlp)
-  const _proof = Array.from(proof.receiptProof).map(utils.rlp.encode).map(b => Array.from(b))
-
-  console.log('minting with proof:')
-  console.log('log_index:', log_index)
-  console.log('log_entry_data:', log_entry_data)
-  console.log('receipt_index:', receipt_index)
-  console.log('receipt_data:', receipt_data)
-  console.log('header_data:', header_data)
-  console.log('_proof:', _proof)
+  // `log.logIndex` does not necessarily match the log's order in the array of logs
+  const logIndexInArray = receipt.logs.findIndex(
+    l => l.logIndex === transfer.lock.events.Locked.logIndex
+  )
+  const log = receipt.logs[logIndexInArray]
 
   return {
-    log_index,
-    log_entry_data,
-    receipt_index,
-    receipt_data,
-    header_data,
-    proof: _proof
+    log_index: logIndexInArray,
+    log_entry_data: Array.from(Log.fromWeb3(log).serialize()),
+    receipt_index: proof.txIndex,
+    receipt_data: Array.from(Receipt.fromWeb3(receipt).serialize()),
+    header_data: Array.from(proof.header_rlp),
+    proof: Array.from(proof.receiptProof).map(utils.rlp.encode).map(b => Array.from(b))
   }
 }
 
