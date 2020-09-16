@@ -21,7 +21,7 @@
     "jest": "^26.0.1",
     "jest-environment-node": "^26.0.0",
     "parcel-bundler": "^1.12.4",
-    "rainbow-bridge-sol": "^1.0.10"
+    "rainbow-bridge-sol": "^1.1.0"
   },
   "dependencies": {
     "@walletconnect/web3-provider": "^1.2.1",
