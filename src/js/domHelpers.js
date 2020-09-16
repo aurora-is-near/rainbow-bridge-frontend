@@ -1,6 +1,7 @@
 import {
+  clear as clearTransfer,
   initiate as initiateTransfer,
-  clear as clearTransfer
+  mint as retryTransfer
 } from './transfers'
 import render from './render'
 
@@ -114,6 +115,17 @@ export const initDOMhandlers = () => {
 
     const transferId = clearTransferButton.closest('[data-behavior=transfer]').id
     clearTransfer(transferId)
+    render()
+  })
+
+  document.querySelector('body').addEventListener('click', event => {
+    const retryTransferButton = event.target.closest('[data-behavior=retry-transfer]')
+
+    // no delete button clicked, end here
+    if (!retryTransferButton) return
+
+    const transferId = retryTransferButton.closest('[data-behavior=transfer]').id
+    retryTransfer(transferId)
     render()
   })
 }

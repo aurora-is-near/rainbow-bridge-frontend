@@ -61,6 +61,27 @@ export async function checkStatuses (callback) {
   window.setTimeout(() => checkStatuses(callback), 5500)
 }
 
+export async function mint (id) {
+  const transfer = getRaw()[id]
+
+  const balanceBefore = Number(
+    await window.nep21.get_balance({ owner_id: window.nearUserAddress })
+  )
+  urlParams.set({ minting: transfer.id, balanceBefore })
+
+  const proof = await findProof(transfer)
+  console.log('minting with proof:', proof)
+
+  await window.nep21.mint_with_json(
+    { proof },
+    new BN('300000000000000'),
+    // We need to attach tokens because minting increases the contract state, by <600 bytes, which
+    // requires an additional 0.06 NEAR to be deposited to the account for state staking.
+    // Note technically 0.0537 NEAR should be enough, but we round it up to stay on the safe side.
+    new BN('100000000000000000000').mul(new BN('600'))
+  )
+}
+
 const STORAGE_KEY = 'rainbow-bridge-transfers'
 
 function getRaw () {
@@ -214,19 +235,8 @@ async function checkStatus (id, callback) {
       // What's the point of this block_hash_safe call??
       const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lock.blockNumber)
       if (isSafe) {
-        const balanceBefore = Number(
-          await window.nep21.get_balance({ owner_id: window.nearUserAddress })
-        )
-        urlParams.set({ minting: transfer.id, balanceBefore })
+        await mint(transfer.id)
         try {
-          await window.nep21.mint_with_json(
-            { proof: await findProof(transfer) },
-            new BN('300000000000000'),
-            // We need to attach tokens because minting increases the contract state, by <600 bytes, which
-            // requires an additional 0.06 NEAR to be deposited to the account for state staking.
-            // Note technically 0.0537 NEAR should be enough, but we round it up to stay on the safe side.
-            new BN('100000000000000000000').mul(new BN('600'))
-          )
         } catch (error) {
           console.error(error)
           transfer = update(transfer, { status: COMPLETE, outcome: FAILED, error })

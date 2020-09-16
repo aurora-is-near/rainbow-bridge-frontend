@@ -42,6 +42,11 @@ function updateTransfers () {
             <span class="visually-hidden">clear</span>
             <span aria-hidden="true">⨉</span>
           </button>
+          ${transfer.outcome === 'success' ? '' : `
+            <button data-behavior="retry-transfer">
+              retry
+            </button>
+          `}
         </footer>
       </div>
     `).join('') +
