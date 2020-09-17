@@ -209,8 +209,8 @@ async function extractProof (block, tree, transactionIndex) {
 }
 
 async function findProof (transfer) {
-  const receipt = await window.web3.eth.getTransactionReceipt(transfer.lock.transactionHash)
-  const block = await window.web3.eth.getBlock(transfer.lock.blockNumber)
+  const receipt = await window.web3.eth.getTransactionReceipt(transfer.lockReceipt.transactionHash)
+  const block = await window.web3.eth.getBlock(transfer.lockReceipt.blockNumber)
   const tree = await buildTrie(block)
   const proof = await extractProof(
     block,
@@ -220,7 +220,7 @@ async function findProof (transfer) {
 
   // `log.logIndex` does not necessarily match the log's order in the array of logs
   const logIndexInArray = receipt.logs.findIndex(
-    l => l.logIndex === transfer.lock.events.Locked.logIndex
+    l => l.logIndex === transfer.lockReceipt.events.Locked.logIndex
   )
   const log = receipt.logs[logIndexInArray]
 
@@ -316,7 +316,7 @@ async function checkStatus (id, callback) {
   }
 
   if (transfer.status === LOCKED) {
-    const eventEmittedAt = transfer.lock.blockNumber
+    const eventEmittedAt = transfer.lockReceipt.blockNumber
     const syncedTo = (await window.ethOnNearClient.last_block_number()).toNumber()
     const progress = Math.max(0, syncedTo - eventEmittedAt)
     transfer = update(transfer, { progress })
@@ -327,7 +327,7 @@ async function checkStatus (id, callback) {
       // Shouldn't MintableFungibleToken enforce this?
       // And a frontend set expectations accordingly?
       // What's the point of this block_hash_safe call??
-      const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lock.blockNumber)
+      const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lockReceipt.blockNumber)
       if (isSafe) {
         try {
           await mint(transfer)
