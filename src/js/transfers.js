@@ -65,7 +65,7 @@ export async function checkStatuses (callback) {
         update(transfer, {
           status: COMPLETE,
           outcome: FAILED,
-          completedStep: LOCKED,
+          failedAt: LOCKED,
           error: `Minting ${'n' + window.ethErc20Name} failed`
         })
       }
@@ -88,14 +88,34 @@ export async function checkStatuses (callback) {
   window.setTimeout(() => checkStatuses(callback), 5500)
 }
 
-export async function mint (id) {
-  const transfer = getRaw()[id]
+export async function retry (id, callback) {
+  let transfer = getRaw()[id]
 
-  if (transfer.completedStep !== LOCKED) {
-    alert('TO DO 😞')
-    return
+  transfer = update(transfer, {
+    status: transfer.failedAt,
+    outcome: null,
+    error: null,
+    failedAt: null
+  })
+
+  switch (transfer.status) {
+    case INITIATED_LOCK:
+      update(transfer, {
+        lockHash: await initiateLock(transfer.amount)
+      })
+      break
+    case LOCKED:
+      mint(transfer)
+      break
+    default:
+      alert(`Do not know how to retry transfer that failed at ${transfer.status} 😞`)
   }
 
+  if (callback) await callback()
+  checkStatus(id, callback)
+}
+
+async function mint (transfer) {
   const balanceBefore = Number(
     await window.nep21.get_balance({ owner_id: window.nearUserAddress })
   )
@@ -302,14 +322,14 @@ async function checkStatus (id, callback) {
       // What's the point of this block_hash_safe call??
       const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lock.blockNumber)
       if (isSafe) {
-        await mint(transfer.id)
         try {
+          await mint(transfer)
         } catch (error) {
           console.error(error)
           transfer = update(transfer, {
             status: COMPLETE,
             outcome: FAILED,
-            completedStep: LOCKED,
+            failedAt: LOCKED,
             error: error.message
           })
         }

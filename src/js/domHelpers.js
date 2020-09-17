@@ -1,7 +1,7 @@
 import {
   clear as clearTransfer,
   initiate as initiateTransfer,
-  mint as retryTransfer
+  retry as retryTransfer
 } from './transfers'
 import render from './render'
 
@@ -125,7 +125,6 @@ export const initDOMhandlers = () => {
     if (!retryTransferButton) return
 
     const transferId = retryTransferButton.closest('[data-behavior=transfer]').id
-    retryTransfer(transferId)
-    render()
+    retryTransfer(transferId, render)
   })
 }
