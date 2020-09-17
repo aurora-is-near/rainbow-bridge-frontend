@@ -82,7 +82,7 @@ export default async function render () {
   fill('nearFunTokenAccount').with(process.env.nearFunTokenAccount)
   fill('nearClientAccount').with(process.env.nearClientAccount)
 
-  if (process.env.ethErc20Address === '0x56897F3751A8164de38e27aAe2c46142E6F09337') {
+  if (process.env.ethErc20Address === '0x3e13318e92F0C67Ca10f0120372E998d43E6a8E8') {
     show('abound-token'); hide('not-abound-token')
   } else {
     hide('abound-token'); show('not-abound-token')
