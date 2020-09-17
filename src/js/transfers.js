@@ -218,9 +218,13 @@ async function findProof (transfer) {
     receipt.transactionIndex
   )
 
+  const [lockedEvent] = await window.tokenLocker.getPastEvents('Locked', {
+    filter: { transactionHash: transfer.lockHash },
+    fromBlock: transfer.lockReceipt.blockNumber
+  })
   // `log.logIndex` does not necessarily match the log's order in the array of logs
   const logIndexInArray = receipt.logs.findIndex(
-    l => l.logIndex === transfer.lockReceipt.events.Locked.logIndex
+    l => l.logIndex === lockedEvent.logIndex
   )
   const log = receipt.logs[logIndexInArray]
 
