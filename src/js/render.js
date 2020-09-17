@@ -28,11 +28,11 @@ function updateTransfers () {
         <header>
           <span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>
           <span>${transfer.amount}</span>
-          <span>${process.env.ethErc20Name}</span>
+          <span>${window.ethErc20Name}</span>
           <span class="arrow ${transfer.outcome} ${
             transfer.status !== 'complete' && 'animate '
           }">→</span>
-          <span>${process.env.nearNep21Name}</span>
+          <span>${'n' + window.ethErc20Name}</span>
         </header>
         <div>
           <p>${humanStatusFor(transfer)}</p>
@@ -57,9 +57,9 @@ function updateTransfers () {
         <header>
           <span class="loader" style="font-size: 0.75em; margin: -0.5em 0 0 -0.7em">in progress:</span>
           <span>${transfer.amount}</span>
-          <span>${process.env.ethErc20Name}</span>
+          <span>${window.ethErc20Name}</span>
           <span class="arrow animate">→</span>
-          <span>${process.env.nearNep21Name}</span>
+          <span>${'n' + window.ethErc20Name}</span>
         </header>
         <div>
           <p>${humanStatusFor(transfer)}</p>
@@ -71,16 +71,22 @@ function updateTransfers () {
 
 // update the html based on user & data state
 export default async function render () {
-  fill('ethErc20Name').with(process.env.ethErc20Name)
+  fill('ethErc20Name').with(window.ethErc20Name)
   fill('ethErc20Address').with(process.env.ethErc20Address)
   fill('ethErc20AbiText').with(process.env.ethErc20AbiText)
   fill('ethLockerAddress').with(process.env.ethLockerAddress)
   fill('ethLockerAbiText').with(process.env.ethLockerAbiText)
   fill('nearNodeUrl').with(process.env.nearNodeUrl)
   fill('nearNetworkId').with(process.env.nearNetworkId)
-  fill('nearNep21Name').with(process.env.nearNep21Name)
+  fill('nearNep21Name').with('n' + window.ethErc20Name)
   fill('nearFunTokenAccount').with(process.env.nearFunTokenAccount)
   fill('nearClientAccount').with(process.env.nearClientAccount)
+
+  if (process.env.ethErc20Address === '0x56897F3751A8164de38e27aAe2c46142E6F09337') {
+    show('abound-token'); hide('not-abound-token')
+  } else {
+    hide('abound-token'); show('not-abound-token')
+  }
 
   // if not signed in with both eth & near, stop here
   if (!window.ethUserAddress || !window.nearUserAddress) return

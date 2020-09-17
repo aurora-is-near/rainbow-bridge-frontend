@@ -118,7 +118,10 @@
           tokens. If you want to send some to yourself on NEAR, you'll need to
           get some on Ethereum first 😄
         </p>
-        <p>
+        <p data-behavior="abound-token" style="display: none">
+          You can <a href="https://chadoh.com/abundance-token" target="_blank">mint yourself more ABOUND</a>!
+        </p>
+        <p data-behavior="not-abound-token">
           Maybe you need to use a different account?
         </p>
       </div>
@@ -134,7 +137,6 @@
             <input
               autocomplete="off"
               id="amount"
-              data-behavior="greeting"
               type="number"
             />
             <button id="submit" aria-controls="transfers" disabled style="border-radius: 0 5px 5px 0">

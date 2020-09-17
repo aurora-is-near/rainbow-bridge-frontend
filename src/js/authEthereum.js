@@ -36,6 +36,8 @@ async function loadWeb3Modal () {
     { from: window.ethUserAddress }
   )
 
+  window.ethErc20Name = await window.erc20.methods.symbol().call()
+
   window.tokenLocker = new window.web3.eth.Contract(
     JSON.parse(process.env.ethLockerAbiText),
     process.env.ethLockerAddress,
