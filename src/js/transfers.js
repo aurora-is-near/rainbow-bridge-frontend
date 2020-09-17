@@ -29,15 +29,9 @@ export function humanStatusFor (transfer) {
   return statusMessages[transfer.status](transfer)
 }
 
-export function initiate (amount, callback) {
-  return new Promise((resolve, reject) => {
-    window.erc20.methods.approve(process.env.ethLockerAddress, amount).send()
-      .on('transactionHash', approvalHash => {
-        track({ amount, status: INITIATED_APPROVAL, approvalHash }, callback)
-        resolve(approvalHash)
-      })
-      .catch(reject)
-  })
+export async function initiate (amount, callback) {
+  const approvalHash = await initiateApproval(amount)
+  track({ amount, status: INITIATED_APPROVAL, approvalHash }, callback)
 }
 
 export function clear (id) {
@@ -99,6 +93,11 @@ export async function retry (id, callback) {
   })
 
   switch (transfer.status) {
+    case INITIATED_APPROVAL:
+      update(transfer, {
+        approvalHash: await initiateApproval(transfer.amount)
+      })
+      break
     case INITIATED_LOCK:
       update(transfer, {
         lockHash: await initiateLock(transfer.amount)
@@ -235,13 +234,21 @@ async function findProof (transfer) {
   }
 }
 
+function initiateApproval (amount) {
+  return new Promise((resolve, reject) => {
+    window.erc20.methods
+      .approve(process.env.ethLockerAddress, amount).send()
+      .on('transactionHash', resolve)
+      .catch(reject)
+  })
+}
+
 function initiateLock (amount) {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     window.tokenLocker.methods
       .lockToken(amount, window.nearUserAddress).send()
-      .on('transactionHash', hash => {
-        resolve(hash)
-      })
+      .on('transactionHash', resolve)
+      .catch(reject)
   })
 }
 
