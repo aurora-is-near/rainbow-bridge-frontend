@@ -65,6 +65,7 @@ export async function checkStatuses (callback) {
       }
     }
     urlParams.clear('minting', 'balanceBefore')
+    if (callback) await callback()
   }
 
   const { inProgress } = get()
