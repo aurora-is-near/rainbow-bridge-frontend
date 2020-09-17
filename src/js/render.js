@@ -114,5 +114,5 @@ export default async function render () {
   fill('nep21Balance').with(formatLargeNum(nep21Balance))
 
   hide('signed-out')
-  show('signed-in', 'flex')
+  show('signed-in')
 }
