@@ -7,6 +7,7 @@ import * as localStorage from './localStorage'
 import { ulid } from 'ulid'
 import utils from 'ethereumjs-util'
 import * as urlParams from './urlParams'
+import getRevertReason from 'eth-revert-reason'
 
 // return an array of chronologically-ordered transfers
 export function get () {
@@ -31,9 +32,9 @@ export function humanStatusFor (transfer) {
 export function initiate (amount, callback) {
   return new Promise((resolve, reject) => {
     window.erc20.methods.approve(process.env.ethLockerAddress, amount).send()
-      .on('transactionHash', hash => {
-        resolve(hash)
-        track({ amount }, callback)
+      .on('transactionHash', approvalHash => {
+        track({ amount, status: INITIATED_APPROVAL, approvalHash }, callback)
+        resolve(approvalHash)
       })
       .catch(reject)
   })
@@ -64,7 +65,8 @@ export async function checkStatuses (callback) {
         update(transfer, {
           status: COMPLETE,
           outcome: FAILED,
-          error: `Minting ${process.env.nearNep21Name} failed`
+          completedStep: LOCKED,
+          error: `Minting ${'n' + window.ethErc20Name} failed`
         })
       }
     }
@@ -89,6 +91,11 @@ export async function checkStatuses (callback) {
 export async function mint (id) {
   const transfer = getRaw()[id]
 
+  if (transfer.completedStep !== LOCKED) {
+    alert('TO DO 😞')
+    return
+  }
+
   const balanceBefore = Number(
     await window.nep21.get_balance({ owner_id: window.nearUserAddress })
   )
@@ -112,14 +119,16 @@ function getRaw () {
   return localStorage.get(STORAGE_KEY) || {}
 }
 
-const INITIATED = 'initiated'
-const LOCKED = 'event_emitted'
+const INITIATED_APPROVAL = 'initiated_approval'
+const INITIATED_LOCK = 'initiated_lock'
+const LOCKED = 'locked'
 const COMPLETE = 'complete'
 const SUCCESS = 'success'
 const FAILED = 'failed'
 
 const statusMessages = {
-  [INITIATED]: () => 'locking',
+  [INITIATED_APPROVAL]: () => 'approving TokenLocker',
+  [INITIATED_LOCK]: () => 'locking',
   [LOCKED]: ({ progress }) => `${progress}/25 blocks synced`,
   [COMPLETE]: ({ outcome, error }) => outcome === SUCCESS ? 'Success!' : error
 }
@@ -129,7 +138,7 @@ const statusMessages = {
 // This transfer will be checked for updates after a pause.
 async function track (transferRaw, callback) {
   const id = ulid()
-  const transfer = { id, status: INITIATED, ...transferRaw }
+  const transfer = { id, ...transferRaw }
 
   localStorage.set(STORAGE_KEY, { ...getRaw(), [id]: transfer })
 
@@ -206,6 +215,16 @@ async function findProof (transfer) {
   }
 }
 
+function initiateLock (amount) {
+  return new Promise(resolve => {
+    window.tokenLocker.methods
+      .lockToken(amount, window.nearUserAddress).send()
+      .on('transactionHash', hash => {
+        resolve(hash)
+      })
+  })
+}
+
 // check the status of a single transfer
 // if `callback` is provided:
 //   * it will be called after updating the status in localStorage
@@ -213,20 +232,59 @@ async function findProof (transfer) {
 async function checkStatus (id, callback) {
   let transfer = getRaw()[id]
 
-  if (transfer.status === INITIATED) {
-    try {
-      // TODO only await transactionHash here, then look up transaction (and
-      // receipt?) in follow-up step
-      // This takes a long time and the user could navigate away/refresh the
-      // page before it completes, triggering a duplicate "lock" call on the
-      // next page load, which would never complete
-      const lock = await window.tokenLocker.methods
-        .lockToken(transfer.amount, window.nearUserAddress).send()
+  if (transfer.status === INITIATED_APPROVAL) {
+    const approvalReceipt = await window.web3.eth.getTransactionReceipt(
+      transfer.approvalHash
+    )
 
-      transfer = update(transfer, { status: LOCKED, progress: 0, lock })
-    } catch (error) {
-      console.error(error)
-      transfer = update(transfer, { status: COMPLETE, outcome: FAILED, error })
+    // blockHash is null if tx still pending
+    if (approvalReceipt) {
+      if (approvalReceipt.status) {
+        const lockHash = await initiateLock(transfer.amount)
+        transfer = update(transfer, {
+          status: INITIATED_LOCK,
+          approvalReceipt,
+          lockHash
+        })
+      } else {
+        const error = await getRevertReason(
+          transfer.approvalHash, process.env.ethNetwork
+        )
+        transfer = update(transfer, {
+          status: COMPLETE,
+          outcome: FAILED,
+          failedAt: INITIATED_APPROVAL,
+          error,
+          approvalReceipt
+        })
+      }
+    }
+  }
+
+  if (transfer.status === INITIATED_LOCK) {
+    const lockReceipt = await window.web3.eth.getTransactionReceipt(
+      transfer.lockHash
+    )
+
+    if (lockReceipt) {
+      if (lockReceipt.status) {
+        transfer = update(transfer, {
+          status: LOCKED,
+          progress: 0,
+          lockReceipt
+        })
+      } else {
+        const error = await getRevertReason(
+          transfer.lockHash, process.env.ethNetwork
+        )
+        transfer = update(transfer, {
+          status: COMPLETE,
+          outcome: FAILED,
+          failedAt: INITIATED_LOCK,
+          error,
+          lockReceipt
+        })
+      }
     }
   }
 
@@ -248,7 +306,12 @@ async function checkStatus (id, callback) {
         try {
         } catch (error) {
           console.error(error)
-          transfer = update(transfer, { status: COMPLETE, outcome: FAILED, error })
+          transfer = update(transfer, {
+            status: COMPLETE,
+            outcome: FAILED,
+            completedStep: LOCKED,
+            error: error.message
+          })
         }
       }
     }
