@@ -36,7 +36,11 @@ async function loadWeb3Modal () {
     { from: window.ethUserAddress }
   )
 
-  window.ethErc20Name = await window.erc20.methods.symbol().call()
+  try {
+    window.ethErc20Name = await window.erc20.methods.symbol().call()
+  } catch (e) {
+    window.ethErc20Name = process.env.ethErc20Address.slice(0, 5) + '…'
+  }
 
   window.tokenLocker = new window.web3.eth.Contract(
     JSON.parse(process.env.ethLockerAbiText),
