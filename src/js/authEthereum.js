@@ -25,8 +25,7 @@ window.web3Modal = new Web3Modal({
 
 const button = document.querySelector('[data-behavior=authEthereum]')
 
-async function loadWeb3Modal () {
-  const provider = await window.web3Modal.connect()
+async function login (provider) {
   window.web3 = new Web3(provider)
   window.ethUserAddress = (await window.web3.eth.getAccounts())[0]
 
@@ -54,6 +53,16 @@ async function loadWeb3Modal () {
   span.innerHTML = `Connected to Ethereum as <code>${window.ethUserAddress}</code>`
   button.replaceWith(span)
   render()
+}
+
+async function loadWeb3Modal () {
+  const provider = await window.web3Modal.connect()
+
+  provider.on('accountsChanged', () => {
+    login(provider)
+  })
+
+  login(provider)
 }
 
 button.onclick = loadWeb3Modal
