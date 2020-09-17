@@ -32,7 +32,7 @@ module.exports = {
     ethErc20AbiText: readFileSync('./erc20.abi'),
     ethErc20Address: '0x56897F3751A8164de38e27aAe2c46142E6F09337',
     ethLockerAbiText: readFileSync('./node_modules/rainbow-bridge-sol/token-locker/dist/TokenLocker.full.abi'),
-    ethLockerAddress: '0x5f7Cc23F90b5264a083dcB3b171c7111Dc32dD00',
+    ethLockerAddress: '0xEF7d54da01D4590a411521986F941A4Ce73d727e',
     ethNetwork: 'rinkeby',
     ethNodeUrl: 'https://rinkeby.infura.io/v3/TODO',
     ethProverAddress: '0xc5D62d66B8650E6242D9936c7e50E959BA0F9E37',
