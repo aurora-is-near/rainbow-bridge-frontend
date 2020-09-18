@@ -31,7 +31,13 @@ export function humanStatusFor (transfer) {
 
 export async function initiate (amount, callback) {
   const approvalHash = await initiateApproval(amount)
-  track({ amount, status: INITIATED_APPROVAL, approvalHash }, callback)
+  const transfer = {
+    amount,
+    neededConfirmations: 10,
+    status: INITIATED_APPROVAL,
+    approvalHash
+  }
+  track(transfer, callback)
 }
 
 export function clear (id) {
@@ -149,7 +155,8 @@ const FAILED = 'failed'
 const statusMessages = {
   [INITIATED_APPROVAL]: () => 'approving TokenLocker',
   [INITIATED_LOCK]: () => 'locking',
-  [LOCKED]: ({ progress }) => `${progress}/25 blocks synced`,
+  [LOCKED]: ({ progress, neededConfirmations }) =>
+    `${progress}/${neededConfirmations} blocks synced`,
   [COMPLETE]: ({ outcome, error }) => outcome === SUCCESS ? 'Success!' : error
 }
 
@@ -326,12 +333,14 @@ async function checkStatus (id, callback) {
     const progress = Math.max(0, syncedTo - eventEmittedAt)
     transfer = update(transfer, { progress })
 
-    if (progress >= 25) {
-      // Copying rainbow-bridge-lib, but...
-      // Why should EthOnNearClient decide what's safe?
-      // Shouldn't MintableFungibleToken enforce this?
-      // And a frontend set expectations accordingly?
-      // What's the point of this block_hash_safe call??
+    if (progress >= transfer.neededConfirmations) {
+      // The number of confirmations needed is currently configured in the
+      // EthOnNearClient, but will be moved to individual Connector Contracts
+      // in the future. See https://github.com/near/rainbow-bridge-rs/issues/3
+      //
+      // At that point, `block_hash_safe` will go away and this logic will need
+      // to be refactored to query MintableFungibleToken for the number of
+      // needed confirmations, rather than hard-coding 10
       const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lockReceipt.blockNumber)
       if (isSafe) {
         try {
