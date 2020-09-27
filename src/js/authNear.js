@@ -1,7 +1,8 @@
 import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 
-import render from './render'
+import { checkStatuses as checkTransferStatuses } from './transfers'
 import EthOnNearClient from './borsh/ethOnNearClient'
+import render from './render'
 
 // Create a Near config object
 const near = new Near({
@@ -51,6 +52,8 @@ async function login () {
   window.nearInitialized = true
 
   render()
+
+  if (window.ethInitialized) checkTransferStatuses(render)
 }
 
 // The NEAR signin flow redirects from the current URL to NEAR Wallet,

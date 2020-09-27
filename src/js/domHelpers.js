@@ -106,7 +106,7 @@ export const initDOMhandlers = () => {
   }
 
   // transfers are rendered after page load, so we add one click handler to the
-  // body tag to handle clicking any of them
+  // body tag to handle clicking the "delete" button on any of them
   document.querySelector('body').addEventListener('click', event => {
     const clearTransferButton = event.target.closest('[data-behavior=delete-transfer]')
 
@@ -118,10 +118,12 @@ export const initDOMhandlers = () => {
     render()
   })
 
+  // transfers are rendered after page load, so we add one click handler to the
+  // body tag to handle clicking the "retry" button on any of them
   document.querySelector('body').addEventListener('click', event => {
     const retryTransferButton = event.target.closest('[data-behavior=retry-transfer]')
 
-    // no delete button clicked, end here
+    // no retry button clicked, end here
     if (!retryTransferButton) return
 
     const transferId = retryTransferButton.closest('[data-behavior=transfer]').id

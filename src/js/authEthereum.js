@@ -2,6 +2,7 @@ import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Web3 from 'web3'
 
+import { checkStatuses as checkTransferStatuses } from './transfers'
 import render from './render'
 
 // SWAP IN YOUR OWN INFURA_ID FROM https://infura.io/dashboard/ethereum
@@ -53,6 +54,8 @@ async function login (provider) {
   span.innerHTML = `Connected to Ethereum as <code>${window.ethUserAddress}</code>`
   button.replaceWith(span)
   render()
+
+  if (window.nearInitialized) checkTransferStatuses(render)
 }
 
 async function loadWeb3Modal () {
