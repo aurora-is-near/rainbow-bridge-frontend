@@ -8,6 +8,8 @@ import { ulid } from 'ulid'
 import utils from 'ethereumjs-util'
 import * as urlParams from './urlParams'
 import getRevertReason from 'eth-revert-reason'
+import { serialize as serializeBorsh } from 'near-api-js/lib/utils/serialize'
+import { Proof as BorshProof, schema as proofBorshSchema } from './borsh/mintableTokenFactoryBorshSchema'
 
 // Initiate a new transfer of 'amount' ERC20 tokens to NEAR.
 // Currently depends on many global variables:
@@ -345,8 +347,8 @@ async function deposit (transfer) {
 
   const proof = await findProof(transfer)
 
-  await window.mintableTokenFactory.deposit(
-    proof,
+  await window.nep21.deposit(
+    serializeBorsh(proofBorshSchema, proof),
     new BN('300000000000000'),
     // We need to attach tokens because depositing increases the contract state, by <600 bytes, which
     // requires an additional 0.06 NEAR to be deposited to the account for state staking.
@@ -378,14 +380,14 @@ async function findProof (transfer) {
   )
   const log = receipt.logs[logIndexInArray]
 
-  return {
+  return new BorshProof({
     log_index: logIndexInArray,
     log_entry_data: Array.from(Log.fromWeb3(log).serialize()),
     receipt_index: proof.txIndex,
     receipt_data: Array.from(Receipt.fromWeb3(receipt).serialize()),
     header_data: Array.from(proof.header_rlp),
     proof: Array.from(proof.receiptProof).map(utils.rlp.encode).map(b => Array.from(b))
-  }
+  })
 }
 
 async function buildTree (block) {
