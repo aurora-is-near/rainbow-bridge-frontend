@@ -19,7 +19,7 @@ import getRevertReason from 'eth-revert-reason'
 // * window.tokenLocker: a web3.js `Contract` instance for the TokenLocker
 //   contract at address `process.env.ethLockerAddress`
 // * window.nep21: a near-api-js `Contract` instance for the `MintableFungibleToken`
-//   contract that mints a corresponding NEP21 token on NEAR
+//   contract that deposits a corresponding NEP21 token on NEAR
 // * window.ethOnNearClient: similar to a near-api-js `Contract` instance, but
 //   using a custom wrapper to handle Borsh serialization. See https://borsh.io
 //   and the code in ./authNear.js. This will be streamlined and added to
@@ -72,9 +72,9 @@ export async function checkStatuses (callback) {
   //
   //   1. avoid race conditions
   //   2. check retried failed transfers, which are not inProgress
-  const { minting, balanceBefore } = urlParams.get('minting', 'balanceBefore')
-  if (minting) {
-    const transfer = getRaw()[minting]
+  const { depositing, balanceBefore } = urlParams.get('depositing', 'balanceBefore')
+  if (depositing) {
+    const transfer = getRaw()[depositing]
     if (transfer) {
       const balanceAfter = Number(
         await window.nep21.get_balance({ owner_id: window.nearUserAddress })
@@ -86,11 +86,11 @@ export async function checkStatuses (callback) {
           status: COMPLETE,
           outcome: FAILED,
           failedAt: LOCKED,
-          error: `Minting ${'n' + window.ethErc20Name} failed`
+          error: `Depositing ${'n' + window.ethErc20Name} failed`
         })
       }
     }
-    urlParams.clear('minting', 'balanceBefore')
+    urlParams.clear('depositing', 'balanceBefore')
     if (callback) await callback()
   }
 
@@ -133,7 +133,7 @@ export async function retry (id, callback) {
       })
       break
     case LOCKED:
-      mint(transfer)
+      deposit(transfer)
       break
     default:
       alert(`Do not know how to retry transfer that failed at ${transfer.status} 😞`)
@@ -307,7 +307,7 @@ async function checkStatus (id, callback) {
       const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lockReceipt.blockNumber)
       if (isSafe) {
         try {
-          await mint(transfer)
+          await deposit(transfer)
         } catch (error) {
           console.error(error)
           transfer = update(transfer, {
@@ -334,21 +334,21 @@ async function checkStatus (id, callback) {
   }
 }
 
-// Mint NEP21 tokens to window.nearUserAddress after successfully locking them
+// Deposit NEP21 tokens to window.nearUserAddress after successfully locking them
 // in window.tokenLocker and waiting for neededConfirmations to propogate into
 // window.ethOnNearClient
-async function mint (transfer) {
+async function deposit (transfer) {
   const balanceBefore = Number(
     await window.nep21.get_balance({ owner_id: window.nearUserAddress })
   )
-  urlParams.set({ minting: transfer.id, balanceBefore })
+  urlParams.set({ depositing: transfer.id, balanceBefore })
 
   const proof = await findProof(transfer)
 
-  await window.nep21.mint_with_json(
-    { proof },
+  await window.mintableTokenFactory.deposit(
+    proof,
     new BN('300000000000000'),
-    // We need to attach tokens because minting increases the contract state, by <600 bytes, which
+    // We need to attach tokens because depositing increases the contract state, by <600 bytes, which
     // requires an additional 0.06 NEAR to be deposited to the account for state staking.
     // Note technically 0.0537 NEAR should be enough, but we round it up to stay on the safe side.
     new BN('100000000000000000000').mul(new BN('600'))
@@ -356,8 +356,8 @@ async function mint (transfer) {
 }
 
 // Compute proof that Locked event was fired in Ethereum.
-// This proof can then be passed to window.nep21, which verifies the proof
-// against a Prover contract.
+// This proof can then be passed to window.mintableTokenFactory, which verifies
+// the proof against a Prover contract.
 async function findProof (transfer) {
   const receipt = await window.web3.eth.getTransactionReceipt(transfer.lockReceipt.transactionHash)
   const block = await window.web3.eth.getBlock(transfer.lockReceipt.blockNumber)

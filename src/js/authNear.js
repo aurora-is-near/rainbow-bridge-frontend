@@ -2,6 +2,7 @@ import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 
 import { checkStatuses as checkTransferStatuses } from './transfers'
 import EthOnNearClient from './borsh/ethOnNearClient'
+import MintableTokenFactory from './borsh/mintableTokenFactory'
 import render from './render'
 
 // Create a Near config object
@@ -39,10 +40,15 @@ async function login () {
     {
       // View methods are read only
       viewMethods: ['get_balance'],
-      // Change methods modify state but don't receive updated data
-      changeMethods: ['mint_with_json']
+      changeMethods: []
     }
   )
+
+  window.mintableTokenFactory = await new MintableTokenFactory(
+    window.nearConnection.account(),
+    process.env.nearFunTokenAccount
+  )
+  await window.mintableTokenFactory.accessKeyInit()
 
   window.ethOnNearClient = await new EthOnNearClient(
     window.nearConnection.account(),

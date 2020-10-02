@@ -62,10 +62,20 @@ class RobustWeb3 {
         const tx = {
           from: options.from,
           to: contract.options.address,
+          handleRevert: options.handleRevert,
           gas: Web3.utils.toHex(options.gas),
-          gasPrice: Web3.utils.toHex(gasPrice),
+          gasPrice: options.gasPrice
+            ? options.gasPrice
+            : Web3.utils.toHex(gasPrice),
           nonce: Web3.utils.toHex(nonce),
           data: contract.methods[method](...args).encodeABI()
+        }
+        // Call transaction via view method to check if there is specific error.
+        try {
+          await this.web3.eth.call(tx)
+        } catch (error) {
+          console.log(tx.from)
+          console.warn(error)
         }
 
         const receipt = await promiseWithTimeout(
@@ -197,8 +207,8 @@ async function nearJsonContractFunctionCall (
   ])
 }
 
-const RETRY_SEND_TX = 1
-const RETRY_TX_STATUS = 1
+const RETRY_SEND_TX = 10
+const RETRY_TX_STATUS = 10
 
 const signAndSendTransaction = async (
   accessKey,
@@ -221,6 +231,7 @@ const signAndSendTransaction = async (
       } else {
         const status = await account.connection.provider.status()
         let signedTx
+        console.log('status', status)
         ;[txHash, signedTx] = await nearlib.transactions.signTransaction(
           receiverId,
           ++accessKey.nonce,
@@ -232,20 +243,22 @@ const signAndSendTransaction = async (
           account.accountId,
           account.connection.networkId
         )
-        console.log({ signedTx })
         const bytes = signedTx.encode()
+        console.log('bytes', bytes)
         sendTxnAsync = async () => {
-          await account.connection.provider.sendJsonRpc('broadcast_tx_async', [
+          const broadcast = await account.connection.provider.sendJsonRpc('broadcast_tx_async', [
             Buffer.from(bytes).toString('base64')
           ])
-          console.log('txHash', nearlib.utils.serialize.base_encode(txHash))
+          console.log('broadcast', broadcast)
+          console.log('TxHash', nearlib.utils.serialize.base_encode(txHash))
         }
+        console.log('sendTxnAsync', sendTxnAsync)
         await sendTxnAsync()
       }
     } catch (e) {
-      // sleep to avoid socket hangout on retry too soon
       console.error(e)
-      console.log('Retrying to broadcast transaction in 500ms')
+      errorMsg = e.message
+      // sleep to avoid socket hangout on retry too soon
       await sleep(500)
       continue
     }
@@ -270,6 +283,7 @@ const signAndSendTransaction = async (
             `Retrying to find status for txHash in ${(j + 1) * 500}ms`
           )
         }
+        errorMsg = e.message
         await sleep((j + 1) * 500)
       }
     }
@@ -287,6 +301,7 @@ const signAndSendTransaction = async (
         return result
       }
 
+      console.error(JSON.stringify(result.status.Failure))
       errorMsg = JSON.stringify(result.status.Failure)
       if (errorMsg.includes('Transaction nonce')) {
         // nonce incorrect, re-fetch nonce and retry
