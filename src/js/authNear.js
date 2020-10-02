@@ -39,8 +39,7 @@ async function login () {
     {
       // View methods are read only
       viewMethods: ['get_balance'],
-      // Change methods modify state but don't receive updated data
-      changeMethods: ['mint_with_json']
+      changeMethods: ['mint']
     }
   )
 
