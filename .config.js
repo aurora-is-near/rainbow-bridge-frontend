@@ -37,7 +37,7 @@ module.exports = {
     ethNodeUrl: 'https://rinkeby.infura.io/v3/TODO',
     ethProverAddress: '0xc5D62d66B8650E6242D9936c7e50E959BA0F9E37',
     nearClientAccount: 'ethonnearclient10',
-    nearFunTokenAccount: 'mint_with_json-workaround-for-mintablefuntoken.chad',
+    nearFunTokenAccount: 'mintable-fungible-token.chad',
     nearHelperUrl: 'https://helper.testnet.near.org/',
     nearNetworkId: 'testnet',
     nearNodeUrl: 'https://rpc.testnet.near.org',
