@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.0.0...v1.1.0) (2020-10-08)
+
+
+### Features
+
+* rm mint_with_json, use borsh serialization ([7b311f6](https://github.com/near/rainbow-bridge-frontend/commit/7b311f64b3d93730efe17ec7b3c07b83034fae85))
+
 # 1.0.0 (2020-09-17)
 
 It works! 
