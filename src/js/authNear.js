@@ -39,14 +39,18 @@ async function login () {
     {
       // View methods are read only
       viewMethods: ['get_balance'],
+      // Change methods update contract state, but cannot return data
       changeMethods: ['mint']
     }
   )
 
-  window.ethOnNearClient = await new EthOnNearClient(
+  window.ethOnNearClient = new EthOnNearClient(await new Contract(
     window.nearConnection.account(),
-    process.env.nearClientAccount
-  )
+    process.env.nearClientAccount,
+    {
+      viewMethods: ['last_block_number']
+    }
+  ))
 
   window.nearInitialized = true
 

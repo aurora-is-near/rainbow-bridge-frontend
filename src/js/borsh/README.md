@@ -1,16 +1,16 @@
 What's Borsh?
 =============
 
-Borsh is a binary serializer for security-critical projects: https://borsh.io/
+Borsh is a binary serializer for security-critical projects: https://Borsh.io/
 
-It's more storage-efficient than JSON serialization, too
+It's more efficient than JSON, too. Storing it takes less space in your smart contract, and encoding/decoding takes less CPU.
 
-Borsh is maintained by the core NEAR team, and lots of core NEAR contracts use it
+Borsh is maintained by the core NEAR team, and lots of core NEAR contracts use it.
 
 
-But Borsh isn't supported by near-api-js yet
-============================================
+(de)serializing Borsh requires a schema
+=======================================
 
-That means that if a smart contract has an app-facing interface that receives a borsh-serialized input, or that returns borsh-serialized data, you can't use the default `Contract` class from `near-api-js` to wrap that contract function. Instead, for now, you need some extra boilerplate in that project.
+When you make a contract function receive or return JSON, near-api-js can use `JSON.parse` or `JSON.stringify` for you. But for Borsh, you'll need to tell it how to serialize and deserialize your data.
 
-This directory contains such boilerplate.
+This directory contains such schemas, and some other Borsh helpers.

@@ -297,31 +297,21 @@ async function checkStatus (id, callback) {
 
   if (transfer.status === LOCKED) {
     const eventEmittedAt = transfer.lockReceipt.blockNumber
-    const syncedTo = (await window.ethOnNearClient.last_block_number()).toNumber()
+    const syncedTo = await window.ethOnNearClient.lastBlockNumber()
     const progress = Math.max(0, syncedTo - eventEmittedAt)
     transfer = update(transfer, { progress })
 
     if (progress >= transfer.neededConfirmations) {
-      // The number of confirmations needed is currently configured in the
-      // EthOnNearClient, but will be moved to individual Connector Contracts
-      // in the future. See https://github.com/near/rainbow-bridge-rs/issues/3
-      //
-      // At that point, `block_hash_safe` will go away and this logic will need
-      // to be refactored to query MintableFungibleToken for the number of
-      // needed confirmations, rather than hard-coding 10
-      const isSafe = await window.ethOnNearClient.block_hash_safe(transfer.lockReceipt.blockNumber)
-      if (isSafe) {
-        try {
-          await mint(transfer)
-        } catch (error) {
-          console.error(error)
-          transfer = update(transfer, {
-            status: COMPLETE,
-            outcome: FAILED,
-            failedAt: LOCKED,
-            error: error.message
-          })
-        }
+      try {
+        await mint(transfer)
+      } catch (error) {
+        console.error(error)
+        transfer = update(transfer, {
+          status: COMPLETE,
+          outcome: FAILED,
+          failedAt: LOCKED,
+          error: error.message
+        })
       }
     }
   }
