@@ -9378,10 +9378,10 @@ qw@~1.0.1:
   resolved "https://registry.yarnpkg.com/qw/-/qw-1.0.1.tgz#efbfdc740f9ad054304426acb183412cc8b996d4"
   integrity sha1-77/cdA+a0FQwRCassYNBLMi5ltQ=
 
-rainbow-bridge-sol@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/rainbow-bridge-sol/-/rainbow-bridge-sol-1.1.0.tgz#5a6f8405391924a833560c3ab1fc2f8b86e716fa"
-  integrity sha512-r2eu6pwi837BjGUfWD+bnsmW+PKV+Ku1GVo9PT/puaQY6/Hx+N6h5thTaZSqILj2gguRubDbLQgTmw7H/LJeaw==
+rainbow-bridge-sol@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rainbow-bridge-sol/-/rainbow-bridge-sol-2.0.0.tgz#a9258fff0e04743075b63a33694c6f2d1313b930"
+  integrity sha512-JVDPwhCa7N1yNbv3wdfxwws00kwVoSiQYAXbPWcMGtJLf3VEnbtCiDeK7/WfUrwEQ9tgEboOOH+a/A6BBZp3Ew==
 
 randombytes@2.1.0, randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5, randombytes@^2.1.0:
   version "2.1.0"
