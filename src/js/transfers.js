@@ -227,7 +227,7 @@ function initiateApproval (amount) {
 function initiateLock (amount) {
   return new Promise((resolve, reject) => {
     window.tokenLocker.methods
-      .lockToken(amount, window.nearUserAddress).send()
+      .lockToken(process.env.ethErc20Address, amount, window.nearUserAddress).send()
       .on('transactionHash', resolve)
       .catch(reject)
   })
@@ -340,7 +340,7 @@ async function mint (transfer) {
 
   const proof = await findProof(transfer)
 
-  await window.nep21.mint(
+  await window.nearFungibleTokenFactory.deposit(
     serializeBorsh(proofBorshSchema, proof),
     new BN('300000000000000'),
     // We need to attach tokens because minting increases the contract state, by <600 bytes, which
