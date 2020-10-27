@@ -33,14 +33,26 @@ async function login () {
   span.innerHTML = `Connected to NEAR as <code>${window.nearUserAddress}</code>`
   button.replaceWith(span)
 
+  window.nearFungibleTokenFactory = await new Contract(
+    window.nearConnection.account(),
+    process.env.nearTokenFactoryAccount,
+    {
+      // Change methods update contract state, but cannot return data
+      changeMethods: ['deposit', 'deploy_bridge_token']
+    }
+  )
+
+  const nep21Address =
+    process.env.ethErc20Address.replace('0x', '').toLowerCase() +
+    '.' +
+    process.env.nearTokenFactoryAccount
+
   window.nep21 = await new Contract(
     window.nearConnection.account(),
-    process.env.nearFunTokenAccount,
+    nep21Address,
     {
       // View methods are read only
-      viewMethods: ['get_balance'],
-      // Change methods update contract state, but cannot return data
-      changeMethods: ['mint']
+      viewMethods: ['get_balance']
     }
   )
 
