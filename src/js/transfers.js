@@ -13,14 +13,15 @@ import {
   Proof as BorshProof,
   schema as proofBorshSchema
 } from './borsh/mintableTokenFactory'
+import { getErc20Name } from './ethHelpers'
 
-// Initiate a new transfer of 'amount' ERC20 tokens to NEAR.
+// Initiate a new transfer of 'amount' ERC20 tokens, at address given by
+// 'erc20' argument, to NEAR.
+//
 // Currently depends on many global variables:
 //
 // * window.web3: constructing a Proof of the `Locked` event currently has deep
 //   coupling with the web3.js library. Make initialized library available here.
-// * window.erc20: a web3.js `Contract` instance for ERC20 token at address
-//   `process.env.ethErc20Address`
 // * window.tokenLocker: a web3.js `Contract` instance for the TokenLocker
 //   contract at address `process.env.ethLockerAddress`
 // * window.nep21: a near-api-js `Contract` instance for the `MintableFungibleToken`
@@ -31,11 +32,11 @@ import {
 //   near-api-js soon.
 // * window.ethUserAddress: address of authenticated Ethereum wallet to send from
 // * window.nearUserAddress: address of authenticated NEAR wallet to send to
-// * window.ethErc20Name: used to fill in error messages when tranfers fail
-export async function initiate (amount, callback) {
-  const approvalHash = await initiateApproval(amount)
+export async function initiate ({ erc20, amount, callback }) {
+  const approvalHash = await initiateApproval({ erc20, amount })
   const transfer = {
     amount,
+    erc20,
     // currently hard-coding neededConfirmations until MintableFungibleToken is
     // updated with this information
     neededConfirmations: 10,
@@ -87,11 +88,12 @@ export async function checkStatuses (callback) {
       if (balanceAfter - transfer.amount === Number(balanceBefore)) {
         update(transfer, { status: COMPLETE, outcome: SUCCESS })
       } else {
+        const erc20Name = await getErc20Name(transfer.erc20)
         update(transfer, {
           status: COMPLETE,
           outcome: FAILED,
           failedAt: LOCKED,
-          error: `Minting ${'n' + window.ethErc20Name} failed`
+          error: `Minting ${'n' + erc20Name} failed`
         })
       }
     }
@@ -128,13 +130,19 @@ export async function retry (id, callback) {
   switch (transfer.status) {
     case INITIATED_APPROVAL:
       update(transfer, {
-        approvalHash: await initiateApproval(transfer.amount)
+        approvalHash: await initiateApproval({
+          amount: transfer.amount,
+          erc20: transfer.erc20
+        })
       })
       break
     case INITIATED_LOCK:
       // TODO: re-check previous lock attempt. Maybe it worked now?
       update(transfer, {
-        lockHash: await initiateLock(transfer.amount)
+        lockHash: await initiateLock({
+          amount: transfer.amount,
+          erc20: transfer.erc20
+        })
       })
       break
     case LOCKED:
@@ -211,9 +219,15 @@ function update (transfer, withData) {
 // Only wait for transaction to have dependable transactionHash created. Avoid
 // blocking to wait for transaction to be mined. Status of transactionHash
 // being mined is then checked in checkStatus.
-function initiateApproval (amount) {
+function initiateApproval ({ erc20, amount }) {
+  const erc20Contract = new window.web3.eth.Contract(
+    JSON.parse(process.env.ethErc20AbiText),
+    erc20,
+    { from: window.ethUserAddress }
+  )
+
   return new Promise((resolve, reject) => {
-    window.erc20.methods
+    erc20Contract.methods
       .approve(process.env.ethLockerAddress, amount).send()
       .on('transactionHash', resolve)
       .catch(reject)
@@ -224,10 +238,10 @@ function initiateApproval (amount) {
 // Only wait for transaction to have dependable transactionHash created. Avoid
 // blocking to wait for transaction to be mined. Status of transactionHash
 // being mined is then checked in checkStatus.
-function initiateLock (amount) {
+function initiateLock ({ erc20, amount }) {
   return new Promise((resolve, reject) => {
     window.tokenLocker.methods
-      .lockToken(process.env.ethErc20Address, amount, window.nearUserAddress).send()
+      .lockToken(erc20, amount, window.nearUserAddress).send()
       .on('transactionHash', resolve)
       .catch(reject)
   })
@@ -247,7 +261,10 @@ async function checkStatus (id, callback) {
 
     if (approvalReceipt) {
       if (approvalReceipt.status) {
-        const lockHash = await initiateLock(transfer.amount)
+        const lockHash = await initiateLock({
+          amount: transfer.amount,
+          erc20: transfer.erc20
+        })
         transfer = update(transfer, {
           status: INITIATED_LOCK,
           approvalReceipt,

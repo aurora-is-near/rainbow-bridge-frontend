@@ -30,18 +30,6 @@ async function login (provider) {
   window.web3 = new Web3(provider)
   window.ethUserAddress = (await window.web3.eth.getAccounts())[0]
 
-  window.erc20 = new window.web3.eth.Contract(
-    JSON.parse(process.env.ethErc20AbiText),
-    process.env.ethErc20Address,
-    { from: window.ethUserAddress }
-  )
-
-  try {
-    window.ethErc20Name = await window.erc20.methods.symbol().call()
-  } catch (e) {
-    window.ethErc20Name = process.env.ethErc20Address.slice(0, 5) + '…'
-  }
-
   window.tokenLocker = new window.web3.eth.Contract(
     JSON.parse(process.env.ethLockerAbiText),
     process.env.ethLockerAddress,

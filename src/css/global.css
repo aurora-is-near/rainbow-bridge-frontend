@@ -44,6 +44,10 @@ h1 {
   position: relative;
 }
 
+p {
+  margin: 0 0 1em;
+}
+
 a,
 .link {
   color: var(--primary);
