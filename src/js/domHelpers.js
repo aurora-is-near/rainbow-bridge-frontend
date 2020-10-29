@@ -1,9 +1,12 @@
+import BN from 'bn.js'
+import { utils } from 'near-api-js'
 import {
   clear as clearTransfer,
   initiate as initiateTransfer,
   retry as retryTransfer
 } from './transfers'
 import render from './render'
+import { get as getParam } from './urlParams'
 
 // Update DOM elements that have a "data-behavior" attribute
 // Given `<span data-behavior="thing"></span>`
@@ -12,7 +15,7 @@ export const fill = selector => ({
   with: content =>
     Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
       .forEach(n => {
-        n.innerHTML = content
+        n.innerHTML = Array.isArray(content) ? content.join('') : content
         if (n.className.match('clip')) {
           n.title = content
         }
@@ -83,7 +86,11 @@ export const initDOMhandlers = () => {
     fieldset.disabled = true
 
     try {
-      await initiateTransfer(amount.value, render)
+      await initiateTransfer({
+        amount: amount.value,
+        callback: render,
+        erc20: getParam('erc20')
+      })
     } catch (e) {
       alert(
         'Something went wrong! ' +
@@ -129,4 +136,23 @@ export const initDOMhandlers = () => {
     const transferId = retryTransferButton.closest('[data-behavior=transfer]').id
     retryTransfer(transferId, render)
   })
+
+  document.querySelector('[data-behavior=notBridged] button').onclick = function bridgeIt () {
+    window.nearFungibleTokenFactory.deploy_bridge_token(
+      { address: getParam('erc20').replace('0x', '') },
+
+      // Default gas limit used by near-api-js is 3e13, but this tx fails with
+      // that number. Doubling it works. Maybe slightly less would also work,
+      // but at min gas price of 100M yN, this will only amount to 0.006 $NEAR,
+      // which is already negligible compared to the deposit.
+      new BN(3e13).mul(new BN(2)),
+
+      // Attach a deposit to compensate the BridgeTokenFactory contract for the
+      // storage costs associated with deploying the new BridgeToken contract.
+      // 30N for the base fee, plus .02 for for storing the name of the contract
+      // Might not need full .02, but need more than .01, error message did not
+      // include needed amount at time of writing.
+      new BN(utils.format.parseNearAmount('30.02'))
+    )
+  }
 }

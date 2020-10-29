@@ -3,6 +3,7 @@ import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 import { checkStatuses as checkTransferStatuses } from './transfers'
 import EthOnNearClient from './borsh/ethOnNearClient'
 import render from './render'
+import { get as getParam } from './urlParams'
 
 // Create a Near config object
 const near = new Near({
@@ -43,7 +44,7 @@ async function login () {
   )
 
   const nep21Address =
-    process.env.ethErc20Address.replace('0x', '').toLowerCase() +
+    getParam('erc20').replace('0x', '').toLowerCase() +
     '.' +
     process.env.nearTokenFactoryAccount
 
