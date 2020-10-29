@@ -1,10 +1,6 @@
 @import './a11y.css';
 @import './dropdown.css';
-@import './erc20-to-near.css';
-@import './menu-icon.css';
-@import './notifications.css';
 @import './title.css';
-@import './transfers.css';
 
 * {
   box-sizing: border-box;
