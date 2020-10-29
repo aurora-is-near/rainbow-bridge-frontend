@@ -8,7 +8,6 @@ const formatLargeNum = n => n >= 1e5 || (n < 1e-3 && n !== 0)
   : new Intl.NumberFormat(undefined, { maximumSignificantDigits: 3 }).format(n)
 
 async function renderTransfer (transfer, { inProgress }) {
-  const erc20Name = await getErc20Name(transfer.erc20)
   return `
     <div class="transfer" id="${transfer.id}" data-behavior="transfer">
       <header>
@@ -18,11 +17,11 @@ async function renderTransfer (transfer, { inProgress }) {
           `<span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>`
         )}
         <span>${transfer.amount}</span>
-        <span>${erc20Name}</span>
+        <span>${transfer.erc20Name}</span>
         <span class="arrow ${
           inProgress ? 'animate' : transfer.outcome
         }">→</span>
-        <span>${'n' + erc20Name}</span>
+        <span>${'n' + transfer.erc20Name}</span>
       </header>
       <div>
         <p>${humanStatusFor(transfer)}</p>
