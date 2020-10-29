@@ -67,7 +67,7 @@ export const initDOMhandlers = () => {
   })
 
   document.querySelector('input#amount').oninput = (event) => {
-    const submitButton = document.querySelector('main form button')
+    const submitButton = document.querySelector('[data-behavior=erc20-to-near] form button')
 
     if (event.target.value > 0) {
       submitButton.disabled = false
@@ -76,7 +76,7 @@ export const initDOMhandlers = () => {
     }
   }
 
-  document.querySelector('main form').onsubmit = async (event) => {
+  document.querySelector('[data-behavior=erc20-to-near] form').onsubmit = async (event) => {
     event.preventDefault()
 
     // get elements from the form using their id attribute
