@@ -1,0 +1,285 @@
+<div class="erc20-to-near" data-behavior="erc20-to-near">
+  <section class="balance">
+    <header>
+      <img alt="ethereum" src="img/eth-diamond-purple.png">
+      Ethereum
+    </header>
+    <div>
+      <span id="erc20name" class="dropdown" aria-live="polite">
+        <button aria-controls="erc20name" data-behavior="ethErc20Name">🤔</button>
+        <small class="left" style="width:27em; text-align:left">
+          Contract <code data-behavior="ethErc20Address">🤔</code>
+        </small>
+      </span>
+      balance
+    </div>
+    <strong class="jumbo" data-behavior="erc20Balance">🤔</strong>
+    <footer>
+      <img alt="account" src="img/account.svg">
+      <code data-behavior="ethUser" class="clip">🤔</code>
+    </footer>
+  </section>
+  <div data-behavior="notBridged" style="grid-column: span 2; margin: 1em 0 0 1em; display: none">
+    <p>
+      Not yet bridged!
+    </p>
+    <p>
+      The
+      <a href="https://github.com/near/rainbow-token-connector" target="_blank">Fungible Token Connector</a>
+      allows sending any
+      <a href="https://eips.ethereum.org/EIPS/eip-20" target="_blank">ERC20</a>
+      token to NEAR, but requires a one-time deploy of a "BridgeToken"
+      <a href="https://docs.near.org/docs/roles/developer/contracts/intro#get-started" target="_blank">smart contract</a>.
+      No one has deployed such a contract for this token yet.
+    </p>
+    <p>
+      But you can!
+    </p>
+    <p>
+      It will require about 30 Ⓝ to cover
+      <a href="https://docs.near.org/docs/concepts/storage" target="_blank">storage fees</a>.
+    </p>
+    <p>
+      <button>Bridge it!</button>
+    </p>
+  </div>
+  <div data-behavior="balanceZero" style="grid-column: span 2; margin: 1em 0 0 1em">
+    <p>
+      Uh oh! You have no <span data-behavior="ethErc20Name">🤔</span>
+      tokens. If you want to send some to yourself on NEAR, you'll need to
+      get some on Ethereum first 😄
+    </p>
+    <p data-behavior="abound-token" style="display: none">
+      You can <a href="https://chadoh.com/abundance-token" target="_blank">mint yourself more <span data-behavior="ethErc20Name">🤔</span></a>!
+    </p>
+    <p data-behavior="not-abound-token">
+      Maybe you need to use a different account?
+    </p>
+  </div>
+  <form data-behavior="balancePositive" style="display: none; margin: 3em 1em">
+    <fieldset id="fieldset">
+      <label
+        for="amount"
+        style="display: block; margin: -1em 0 0.1em"
+      >
+        Send
+      </label>
+      <div style="display: flex">
+        <input
+          autocomplete="off"
+          id="amount"
+          type="number"
+        />
+        <button id="submit" aria-controls="transfers" disabled style="border-radius: 0 5px 5px 0">
+          <span class="visually-hidden">Confirm</span>
+        </button>
+      </div>
+    </fieldset>
+  </form>
+  <section class="balance" data-behavior="balancePositive" style="display: none">
+    <header>
+      <picture>
+        <source srcset="img/near-icon-white.svg" media="(prefers-color-scheme: dark)">
+        <img alt="near" src="img/near-icon-black.svg">
+      </picture>
+      NEAR
+    </header>
+    <div>
+      <span id="nep21name" class="dropdown" aria-live="polite">
+        <button aria-controls="nep21name" data-behavior="nearNep21Name">🤔</button>
+        <small class="right" style="width:14em">
+          Contract <code data-behavior="nearFunTokenAccount">🤔</code>
+        </small>
+      </span>
+      balance
+    </div>
+    <strong class="jumbo" data-behavior="nep21Balance">🤔</strong>
+    <footer>
+      <img alt="account" src="img/account.svg">
+      <code data-behavior="nearUser" class="clip">🤔</code>
+    </footer>
+  </section>
+</div>
+<script>
+  window.addEventListener('load', function addErc20ToNearHandlers () {
+    document.querySelector('input#amount').oninput = (event) => {
+      const submitButton = document.querySelector('[data-behavior=erc20-to-near] form button')
+
+      if (event.target.value > 0) {
+        submitButton.disabled = false
+      } else {
+        submitButton.disabled = true
+      }
+    }
+
+    document.querySelector('[data-behavior=erc20-to-near] form').onsubmit = async (event) => {
+      event.preventDefault()
+
+      // get elements from the form using their id attribute
+      const { amount, fieldset, submit } = event.target.elements
+
+      // disable the form while the tokens get locked in Ethereum
+      fieldset.disabled = true
+
+      try {
+        await window.initiateTransfer({
+          amount: amount.value,
+          callback: window.render,
+          erc20: getParam('erc20')
+        })
+      } catch (e) {
+        alert(
+          'Something went wrong! ' +
+          'Maybe you need to sign out and back in? ' +
+          'Check your browser console for more info.'
+        )
+        throw e
+      } finally {
+        // re-enable the form, whether the call succeeded or failed
+        fieldset.disabled = false
+      }
+
+      // if the call succeeded, reset the form
+      amount.value = ''
+      submit.disabled = true
+      await render()
+      const transfersButton = document.querySelector('#transfers button')
+      transfersButton.click()
+      transfersButton.focus()
+    }
+    document.querySelector('[data-behavior=notBridged] button').onclick = function bridgeIt () {
+      window.nearFungibleTokenFactory.deploy_bridge_token(
+        { address: getParam('erc20').replace('0x', '') },
+
+        // Default gas limit used by near-api-js is 3e13, but this tx fails with
+        // that number. Doubling it works. Maybe slightly less would also work,
+        // but at min gas price of 100M yN, this will only amount to 0.006 $NEAR,
+        // which is already negligible compared to the deposit.
+        new BN(3e13).mul(new BN(2)),
+
+        // Attach a deposit to compensate the BridgeTokenFactory contract for the
+        // storage costs associated with deploying the new BridgeToken contract.
+        // 30N for the base fee, plus .02 for for storing the name of the contract
+        // Might not need full .02, but need more than .01, error message did not
+        // include needed amount at time of writing.
+        new BN(utils.format.parseNearAmount('30.02'))
+      )
+    }
+  })
+
+  async function renderErc20ToNear () {
+    window.fill('ethUser').with(window.ethUserAddress)
+    window.fill('nearUser').with(window.nearUserAddress)
+
+    // how to get useful details about selected network in MetaMask?
+    window.fill('ethNetworkName').with(await window.web3.eth.net.getNetworkType())
+
+    const erc20Balance = await getErc20Balance()
+    const nep21Balance = await getNep21Balance()
+
+    window.fill('erc20Balance').with(formatLargeNum(erc20Balance))
+
+
+    if (erc20Balance === 0) {
+      window.hide('balancePositive')
+      window.hide('notBridged')
+      window.show('balanceZero')
+      if (ethErc20Address === '0x3e13318e92F0C67Ca10f0120372E998d43E6a8E8') {
+        window.show('abound-token')
+        window.hide('not-abound-token')
+      } else {
+        window.hide('abound-token')
+        window.show('not-abound-token')
+      }
+    } else {
+      if (nep21Balance === null) {
+        window.hide('balancePositive')
+        window.hide('balanceZero')
+        window.show('notBridged')
+      } else {
+        window.fill('nep21Balance').with(formatLargeNum(nep21Balance))
+        window.hide('balanceZero')
+        window.hide('notBridged')
+        window.show('balancePositive')
+      }
+    }
+  }
+
+  const formatLargeNum = n => n >= 1e5 || (n < 1e-3 && n !== 0)
+    ? n.toExponential(2)
+    : new Intl.NumberFormat(undefined, { maximumSignificantDigits: 3 }).format(n)
+
+  async function getErc20Balance () {
+    const erc20Contract = new window.web3.eth.Contract(
+      JSON.parse(process.env.ethErc20AbiText),
+      getParam('erc20'),
+      { from: window.ethUserAddress }
+    )
+
+    return Number(
+      await erc20Contract.methods.balanceOf(window.ethUserAddress).call()
+    )
+  }
+
+  async function getNep21Balance () {
+    return window.nep21
+      .get_balance({ owner_id: window.nearUserAddress })
+      .then(raw => Number(raw))
+      .catch(() => null)
+  }
+
+  window.renderers.push(renderErc20ToNear)
+</script>
+<style>
+  .erc20-to-near {
+    align-items: stretch;
+    grid-template-columns: repeat(3, minmax(10em, 1fr));
+    margin: 4rem auto;
+    max-width: 20em;
+  }
+  .erc20-to-near > * {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  .erc20-to-near section {
+    border-radius: 5px;
+    border: 1px solid var(--gray);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.5em 0.5em 0;
+    position: relative;
+    text-align: center;
+  }
+  .erc20-to-near section header {
+    position: absolute;
+    top: -1.3em;
+    left: 0;
+  }
+  .erc20-to-near section header img {
+    height: 1em;
+  }
+  .erc20-to-near section button {
+    padding: 0 0.25em;
+  }
+  .erc20-to-near section footer {
+    font-size: 0.8em;
+  }
+  .erc20-to-near section footer img {
+    width: 1em;
+    vertical-align: bottom;
+  }
+  .erc20-to-near form button:after {
+    content: '↓';
+  }
+  @media(min-width: 650px) {
+    .erc20-to-near {
+      display: grid;
+      max-width: 40em;
+    }
+    .erc20-to-near form button:after {
+      content: '→';
+    }
+  }
+</style>

@@ -36,7 +36,8 @@ export async function initiate ({ erc20, amount, callback }) {
   const approvalHash = await initiateApproval({ erc20, amount })
   const transfer = {
     amount,
-    erc20,
+    erc20Address: erc20,
+    erc20Name: await getErc20Name(erc20),
     // currently hard-coding neededConfirmations until MintableFungibleToken is
     // updated with this information
     neededConfirmations: 10,
@@ -88,12 +89,11 @@ export async function checkStatuses (callback) {
       if (balanceAfter - transfer.amount === Number(balanceBefore)) {
         update(transfer, { status: COMPLETE, outcome: SUCCESS })
       } else {
-        const erc20Name = await getErc20Name(transfer.erc20)
         update(transfer, {
           status: COMPLETE,
           outcome: FAILED,
           failedAt: LOCKED,
-          error: `Minting ${'n' + erc20Name} failed`
+          error: `Minting ${'n' + transfer.erc20Name} failed`
         })
       }
     }
@@ -132,7 +132,7 @@ export async function retry (id, callback) {
       update(transfer, {
         approvalHash: await initiateApproval({
           amount: transfer.amount,
-          erc20: transfer.erc20
+          erc20: transfer.erc20Address
         })
       })
       break
@@ -141,7 +141,7 @@ export async function retry (id, callback) {
       update(transfer, {
         lockHash: await initiateLock({
           amount: transfer.amount,
-          erc20: transfer.erc20
+          erc20: transfer.erc20Address
         })
       })
       break
@@ -263,7 +263,7 @@ async function checkStatus (id, callback) {
       if (approvalReceipt.status) {
         const lockHash = await initiateLock({
           amount: transfer.amount,
-          erc20: transfer.erc20
+          erc20: transfer.erc20Address
         })
         transfer = update(transfer, {
           status: INITIATED_LOCK,

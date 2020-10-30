@@ -1,0 +1,252 @@
+<nav style="display: flex; align-items: stretch; position: absolute; right: 0.5em; top: 0.5em; z-index: 2">
+  <div data-behavior="signed-in" id="transfers" class="dropdown" aria-live="polite" style="display: none">
+    <button aria-controls="transfers">
+      <div data-behavior="transfers-none">
+        <picture>
+          <source srcset="img/bell-white.svg" media="(prefers-color-scheme: dark)">
+          <img style="width: 1em; vertical-align: middle" alt="no transfers" src="img/bell-black.svg">
+        </picture>
+      </div>
+      <div data-behavior="transfers-in-progress" style="display: none">
+        <picture>
+          <source srcset="img/rainbow-black.gif" media="(prefers-color-scheme: dark)">
+          <img style="width: 4em; vertical-align: middle" alt="view transfers" src="img/rainbow-white.gif">
+        </picture>
+      </div>
+      <div data-behavior="transfers-all-complete" style="display: none">
+        <picture>
+          <source srcset="img/bell-white.svg" media="(prefers-color-scheme: dark)">
+          <img style="width: 1em; vertical-align: middle" alt="no transfers" src="img/bell-black.svg">
+        </picture>
+        <div class="notification-indicator">
+          <span data-behavior="notification-count">#</span>
+          <span class="visually-hidden">notifications</span>
+        </div>
+      </div>
+    </button>
+    <div class="right">
+      <div data-behavior="transfers-none">
+        <div style="
+          display: flex;
+          flex-direction: column;
+          height: 3em;
+          justify-content: space-around;
+          text-align: center;
+          width: 10em;
+        ">
+          No transfers
+        </div>
+      </div>
+      <div data-behavior="transfers-container"></div>
+    </div>
+  </div>
+  <div id="menu" class="dropdown" aria-live="polite" style="font-size: 0.8em">
+    <button class="menu-icon" aria-controls="menu">
+      <div></div>
+      <span class="visually-hidden">menu</span>
+    </button>
+    <div class="right" style="width: 7em">
+      <div>
+        <a href="https://github.com/near-examples/erc20-to-nep21">View source</a>
+      </div>
+      <div data-behavior="signed-in" style="display: none; margin-top: 0.5em">
+        <button class="link" data-behavior="logout">
+          Sign out
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+<script>
+  window.addEventListener('load', function addNavEventHandlers () {
+    document.querySelector('[data-behavior=logout]').onclick = async function logout () {
+      await window.web3Modal.clearCachedProvider()
+      window.nearConnection.signOut()
+      setTimeout(() => window.location.reload())
+    }
+
+    // transfers are rendered after page load, so we add one click handler to the
+    // body tag to handle clicking the "delete" button on any of them
+    document.querySelector('body').addEventListener('click', event => {
+      const clearTransferButton = event.target.closest('[data-behavior=delete-transfer]')
+
+      // no delete button clicked, end here
+      if (!clearTransferButton) return
+
+      const transferId = clearTransferButton.closest('[data-behavior=transfer]').id
+      clearTransfer(transferId)
+      render()
+    })
+
+    // transfers are rendered after page load, so we add one click handler to the
+    // body tag to handle clicking the "retry" button on any of them
+    document.querySelector('body').addEventListener('click', event => {
+      const retryTransferButton = event.target.closest('[data-behavior=retry-transfer]')
+
+      // no retry button clicked, end here
+      if (!retryTransferButton) return
+
+      const transferId = retryTransferButton.closest('[data-behavior=transfer]').id
+      retryTransfer(transferId, render)
+    })
+  })
+
+  async function renderTransfer (transfer, { inProgress }) {
+    return `
+      <div class="transfer" id="${transfer.id}" data-behavior="transfer">
+        <header>
+          ${inProgress ? (
+            '<span class="loader" style="font-size: 0.75em; margin: -0.5em 0 0 -0.7em">in progress:</span>'
+          ) : (
+            `<span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>`
+          )}
+          <span>${transfer.amount}</span>
+          <span>${transfer.erc20Name}</span>
+          <span class="arrow ${
+            inProgress ? 'animate' : transfer.outcome
+          }">→</span>
+          <span>${'n' + transfer.erc20Name}</span>
+        </header>
+        <div>
+          <p>${window.humanStatusFor(transfer)}</p>
+        </div>
+        ${inProgress ? '' : `
+          <footer>
+            ${transfer.outcome === 'success' ? `
+              <button data-behavior="delete-transfer">
+                <span class="visually-hidden">clear</span>
+                <span aria-hidden="true">⨉</span>
+              </button>
+            ` : `
+              <button data-behavior="retry-transfer">
+                <span class="visually-hidden">retry</span>
+                <span aria-hidden="true" title="retry">↻</span>
+              </button>
+            `}
+          </footer>
+        `}
+      </div>
+    `
+  }
+
+  async function updateTransfers () {
+    const { inProgress, complete } = window.getTransfers()
+
+    if (!inProgress.length && !complete.length) {
+      show('transfers-none')
+      hide('transfers-in-progress')
+      hide('transfers-all-complete')
+    } else {
+      hide('transfers-none')
+      if (inProgress.length) {
+        show('transfers-in-progress'); hide('transfers-all-complete')
+      } else {
+        hide('transfers-in-progress'); show('transfers-all-complete')
+      }
+    }
+    fill('notification-count').with(complete.length)
+
+    fill('transfers-container').with(await Promise.all([
+      ...complete.map(t => renderTransfer(t, { inProgress: false })),
+      ...inProgress.map(t => renderTransfer(t, { inProgress: true }))
+    ]))
+  }
+
+  window.renderers.push(updateTransfers)
+</script>
+<style>
+  .menu-icon {
+    padding-top: 0.5em;
+  }
+  .menu-icon:after,
+  .menu-icon:before,
+  .menu-icon div {
+    background-color: var(--fg);
+    border-radius: 3px;
+    content: '';
+    display: block;
+    height: 2px;
+    margin: 3px 0;
+    width: 1em;
+  }
+
+  .notification-indicator {
+    background-color: var(--secondary);
+    border-radius: 50em;
+    color: var(--white);
+    font-size: 0.55em;
+    line-height: 1;
+    padding: 0.2em 0.4em;
+    position: absolute;
+    right: 0.5em;
+    top: 0.5em;
+    vertical-align: super;
+  }
+
+  .transfer {
+    background-color: var(--bg);
+    border-radius: 5px;
+    display: flex;
+    margin-bottom: 0.5em;
+    min-height: 3em;
+    padding: 0.5rem;
+    position: relative;
+    text-align: left;
+  }
+  .transfer:last-child {
+    margin-bottom: 0;
+  }
+  .transfer header {
+    align-items: center;
+    display: grid;
+    margin-right: 0.5em;
+    grid-template-columns: repeat(5, auto);
+    grid-gap: 0.2em;
+  }
+  .transfer header .arrow {
+    font-weight: 200;
+    color: var(--secondary);
+  }
+  .transfer header .arrow.failed {
+    color: var(--error);
+  }
+  .transfer header .arrow.success {
+    color: var(--success);
+  }
+  .transfer header .arrow.animate {
+    animation: rainbow 1.5s ease-in-out infinite;
+  }
+  .transfer header + * {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    text-align: center;
+    flex: 1;
+  }
+  .transfer p {
+    margin: 0;
+  }
+  .transfer footer {
+    font-size: 0.8em;
+    margin-right: -0.5rem;
+    margin-top: -0.5rem;
+  }
+  .transfer footer button {
+    background: none;
+    box-shadow: none;
+    color: var(--fg);
+    border: 1px solid var(--bg);
+    padding: 0 0.25em;
+    text-decoration: none;
+  }
+  .transfer footer button:hover,
+  .transfer footer button:focus {
+    background: var(--shadow);
+  }
+  .transfer footer button:focus {
+    border-color: var(--light-gray);
+  }
+  .transfer footer button:active {
+    background: var(--light-gray);
+  }
+</style>

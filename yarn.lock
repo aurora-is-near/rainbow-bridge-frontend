@@ -3962,7 +3962,7 @@ debug@^3.0, debug@^3.1.0, debug@^3.2.6, debug@~3.2.6:
   dependencies:
     ms "^2.1.1"
 
-debuglog@*, debuglog@^1.0.1:
+debuglog@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/debuglog/-/debuglog-1.0.1.tgz#aa24ffb9ac3df9a2351837cfb2d279360cd78492"
   integrity sha1-qiT/uaw9+aI1GDfPstJ5NgzXhJI=
@@ -4970,9 +4970,8 @@ eth-lib@^0.1.26:
     ws "^3.0.0"
     xhr-request-promise "^0.1.2"
 
-"eth-object@github:near/eth-object#54e03b8aac8208cf724e206d49ffb8bdd30451d7", eth-object@near/eth-object#54e03b8aac8208cf724e206d49ffb8bdd30451d7:
+eth-object@near/eth-object#54e03b8aac8208cf724e206d49ffb8bdd30451d7:
   version "1.0.3"
-  uid "54e03b8aac8208cf724e206d49ffb8bdd30451d7"
   resolved "https://codeload.github.com/near/eth-object/tar.gz/54e03b8aac8208cf724e206d49ffb8bdd30451d7"
   dependencies:
     eth-util-lite near/eth-util-lite#master
@@ -5009,9 +5008,8 @@ eth-sig-util@^1.4.2:
     ethereumjs-abi "git+https://github.com/ethereumjs/ethereumjs-abi.git"
     ethereumjs-util "^5.1.1"
 
-"eth-util-lite@github:near/eth-util-lite#master", eth-util-lite@near/eth-util-lite#master:
+eth-util-lite@near/eth-util-lite#master:
   version "1.0.1"
-  uid ae0210cbe127b4d43ba01fd7cd4898d1a3f6c96a
   resolved "https://codeload.github.com/near/eth-util-lite/tar.gz/ae0210cbe127b4d43ba01fd7cd4898d1a3f6c96a"
   dependencies:
     bn.js "^4.11.8"
@@ -5470,7 +5468,7 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
-fclone@1.0.11, fclone@~1.0.11:
+fclone@1.0.11, fclone@^1.0.11, fclone@~1.0.11:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/fclone/-/fclone-1.0.11.tgz#10e85da38bfea7fc599341c296ee1d77266ee640"
   integrity sha1-EOhdo4v+p/xZk0HClu4ddyZu5kA=
@@ -6576,7 +6574,7 @@ import-lazy@^2.1.0:
   resolved "https://registry.yarnpkg.com/import-lazy/-/import-lazy-2.1.0.tgz#05698e3d45c88e8d7e9d92cb0584e77f096f3e43"
   integrity sha1-BWmOPUXIjo1+nZLLBYTnfwlvPkM=
 
-imurmurhash@*, imurmurhash@^0.1.4:
+imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
   integrity sha1-khi5srkoojixPcT7a21XbyMUU+o=
@@ -7654,11 +7652,6 @@ lockfile@^1.0.4:
   dependencies:
     signal-exit "^3.0.2"
 
-lodash._baseindexof@*:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/lodash._baseindexof/-/lodash._baseindexof-3.1.0.tgz#fe52b53a1c6761e42618d654e4a25789ed61822c"
-  integrity sha1-/lK1OhxnYeQmGNZU5KJXie1hgiw=
-
 lodash._baseuniq@~4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash._baseuniq/-/lodash._baseuniq-4.6.0.tgz#0ebb44e456814af7905c6212fa2c9b2d51b841e8"
@@ -7667,32 +7660,10 @@ lodash._baseuniq@~4.6.0:
     lodash._createset "~4.0.0"
     lodash._root "~3.0.0"
 
-lodash._bindcallback@*:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/lodash._bindcallback/-/lodash._bindcallback-3.0.1.tgz#e531c27644cf8b57a99e17ed95b35c748789392e"
-  integrity sha1-5THCdkTPi1epnhftlbNcdIeJOS4=
-
-lodash._cacheindexof@*:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/lodash._cacheindexof/-/lodash._cacheindexof-3.0.2.tgz#3dc69ac82498d2ee5e3ce56091bafd2adc7bde92"
-  integrity sha1-PcaayCSY0u5ePOVgkbr9Ktx73pI=
-
-lodash._createcache@*:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/lodash._createcache/-/lodash._createcache-3.1.2.tgz#56d6a064017625e79ebca6b8018e17440bdcf093"
-  integrity sha1-VtagZAF2JeeevKa4AY4XRAvc8JM=
-  dependencies:
-    lodash._getnative "^3.0.0"
-
 lodash._createset@~4.0.0:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/lodash._createset/-/lodash._createset-4.0.3.tgz#0f4659fbb09d75194fa9e2b88a6644d363c9fe26"
   integrity sha1-D0ZZ+7CddRlPqeK4imZE02PJ/iY=
-
-lodash._getnative@*, lodash._getnative@^3.0.0:
-  version "3.9.1"
-  resolved "https://registry.yarnpkg.com/lodash._getnative/-/lodash._getnative-3.9.1.tgz#570bc7dede46d61cdcde687d65d3eecbaa3aaff5"
-  integrity sha1-VwvH3t5G1hzc3mh9ZdPuy6o6r/U=
 
 lodash._reinterpolate@^3.0.0:
   version "3.0.0"
@@ -7748,11 +7719,6 @@ lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
   integrity sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=
-
-lodash.restparam@*:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/lodash.restparam/-/lodash.restparam-3.6.1.tgz#936a4e309ef330a7645ed4145986c85ae5b20805"
-  integrity sha1-k2pOMJ7zMKdkXtQUWYbIWuWyCAU=
 
 lodash.sortby@^4.7.0:
   version "4.7.0"
@@ -10099,6 +10065,24 @@ postcss@^7.0.0, postcss@^7.0.1, postcss@^7.0.11, postcss@^7.0.17, postcss@^7.0.2
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
+posthtml-expressions@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/posthtml-expressions/-/posthtml-expressions-1.5.0.tgz#e73f3fdf8a2dfe72205fc87a32f0c6504001156f"
+  integrity sha512-fjdaZTexW783E8W7ozfARX9sFHqldCZbsSkJJNkC6fcXT+55raZtSSLOTACbCwk1kVu5KGQy1ugw3QA0ekDa4Q==
+  dependencies:
+    fclone "^1.0.11"
+    posthtml-parser "^0.5.0"
+    posthtml-render "^1.2.3"
+
+posthtml-include@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/posthtml-include/-/posthtml-include-1.5.0.tgz#720410ed7bae16c37b5898d8e4454ee1e838afb0"
+  integrity sha512-YRsPuUD1r0OsJGmG2/9dD998ccbpeMwVO6YWxaVlcyVcA71UtGt/VSqf8ZHqYLggaMHcLi4/1E7aVZON7Mnj9A==
+  dependencies:
+    posthtml "^0.13.3"
+    posthtml-expressions "^1.5.0"
+    posthtml-parser "^0.5.0"
+
 posthtml-parser@^0.4.0, posthtml-parser@^0.4.1:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/posthtml-parser/-/posthtml-parser-0.4.2.tgz#a132bbdf0cd4bc199d34f322f5c1599385d7c6c1"
@@ -10126,7 +10110,7 @@ posthtml@^0.11.2:
     posthtml-parser "^0.4.1"
     posthtml-render "^1.1.5"
 
-posthtml@^0.13.4:
+posthtml@^0.13.3, posthtml@^0.13.4:
   version "0.13.4"
   resolved "https://registry.yarnpkg.com/posthtml/-/posthtml-0.13.4.tgz#ad81b3fa62b85f81ccdb5710f4ec375a4ed94934"
   integrity sha512-i2oTo/+dwXGC6zaAQSF6WZEQSbEqu10hsvg01DWzGAfZmy31Iiy9ktPh9nnXDfZiYytjxTIvxoK4TI0uk4QWpw==
@@ -10510,7 +10494,7 @@ rainbow-bridge-sol@2.0.0:
   resolved "https://registry.yarnpkg.com/rainbow-bridge-sol/-/rainbow-bridge-sol-2.0.0.tgz#a9258fff0e04743075b63a33694c6f2d1313b930"
   integrity sha512-JVDPwhCa7N1yNbv3wdfxwws00kwVoSiQYAXbPWcMGtJLf3VEnbtCiDeK7/WfUrwEQ9tgEboOOH+a/A6BBZp3Ew==
 
-"rainbow-token-connector@github:near/rainbow-token-connector#87ba0a1a8268f26ff58b67a6139ddb74f8eecce6":
+rainbow-token-connector@near/rainbow-token-connector#87ba0a1a8268f26ff58b67a6139ddb74f8eecce6:
   version "1.0.0"
   resolved "https://codeload.github.com/near/rainbow-token-connector/tar.gz/87ba0a1a8268f26ff58b67a6139ddb74f8eecce6"
 
