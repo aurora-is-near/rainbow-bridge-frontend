@@ -3,7 +3,6 @@ import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 import { checkStatuses as checkTransferStatuses } from './transfers'
 import EthOnNearClient from './borsh/ethOnNearClient'
 import render from './render'
-import { get as getParam } from './urlParams'
 
 // Create a Near config object
 const near = new Near({
@@ -43,24 +42,11 @@ async function login () {
     }
   )
 
-  const nep21Address =
-    getParam('erc20').replace('0x', '').toLowerCase() +
-    '.' +
-    process.env.nearTokenFactoryAccount
-
-  window.nep21 = await new Contract(
-    window.nearConnection.account(),
-    nep21Address,
-    {
-      // View methods are read only
-      viewMethods: ['get_balance']
-    }
-  )
-
   window.ethOnNearClient = new EthOnNearClient(await new Contract(
     window.nearConnection.account(),
     process.env.nearClientAccount,
     {
+      // View methods are read only
       viewMethods: ['last_block_number']
     }
   ))

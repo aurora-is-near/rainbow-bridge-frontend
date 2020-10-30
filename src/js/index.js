@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { utils } from 'near-api-js'
+import { Contract as NearContract, utils } from 'near-api-js'
 import './authEthereum'
 import './authNear'
 import { fill, hide, initDOMhandlers, show } from './domHelpers'
@@ -19,6 +19,7 @@ window.getTransfers = getTransfers
 window.hide = hide
 window.humanStatusFor = humanStatusFor
 window.initiateTransfer = initiateTransfer
+window.NearContract = NearContract
 window.parseNearAmount = utils.format.parseNearAmount
 window.render = render
 window.show = show

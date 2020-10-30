@@ -125,7 +125,7 @@
         await window.initiateTransfer({
           amount: amount.value,
           callback: window.render,
-          erc20: getParam('erc20')
+          erc20: window.getParam('erc20')
         })
       } catch (e) {
         alert(
@@ -149,7 +149,7 @@
     }
     document.querySelector('[data-behavior=notBridged] button').onclick = function bridgeIt () {
       window.nearFungibleTokenFactory.deploy_bridge_token(
-        { address: getParam('erc20').replace('0x', '') },
+        { address: window.getParam('erc20').replace('0x', '') },
 
         // Default gas limit used by near-api-js is 3e13, but this tx fails with
         // that number. Doubling it works. Maybe slightly less would also work,
@@ -212,7 +212,7 @@
   async function getErc20Balance () {
     const erc20Contract = new window.web3.eth.Contract(
       JSON.parse(process.env.ethErc20AbiText),
-      getParam('erc20'),
+      window.getParam('erc20'),
       { from: window.ethUserAddress }
     )
 
@@ -222,8 +222,20 @@
   }
 
   async function getNep21Balance () {
-    return window.nep21
-      .get_balance({ owner_id: window.nearUserAddress })
+    const nep21Address =
+      window.getParam('erc20').replace('0x', '').toLowerCase() +
+      '.' +
+      process.env.nearTokenFactoryAccount
+
+    const nep21 = await new window.NearContract(
+      window.nearConnection.account(),
+      nep21Address,
+      {
+        viewMethods: ['get_balance']
+      }
+    )
+
+    return nep21.get_balance({ owner_id: window.nearUserAddress })
       .then(raw => Number(raw))
       .catch(() => null)
   }
