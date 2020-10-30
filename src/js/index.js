@@ -1,3 +1,5 @@
+import BN from 'bn.js'
+import { utils } from 'near-api-js'
 import './authEthereum'
 import './authNear'
 import { fill, hide, initDOMhandlers, show } from './domHelpers'
@@ -10,12 +12,14 @@ import {
 } from './transfers'
 
 // Can't import modules in <script> tags in files included via PostHTML 😞
+window.BN = BN
 window.fill = fill
 window.getParam = getParam
 window.getTransfers = getTransfers
 window.hide = hide
 window.humanStatusFor = humanStatusFor
 window.initiateTransfer = initiateTransfer
+window.parseNearAmount = utils.format.parseNearAmount
 window.render = render
 window.show = show
 

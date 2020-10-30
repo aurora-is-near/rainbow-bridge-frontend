@@ -155,14 +155,14 @@
         // that number. Doubling it works. Maybe slightly less would also work,
         // but at min gas price of 100M yN, this will only amount to 0.006 $NEAR,
         // which is already negligible compared to the deposit.
-        new BN(3e13).mul(new BN(2)),
+        new window.BN(3e13).mul(new window.BN(2)),
 
         // Attach a deposit to compensate the BridgeTokenFactory contract for the
         // storage costs associated with deploying the new BridgeToken contract.
         // 30N for the base fee, plus .02 for for storing the name of the contract
         // Might not need full .02, but need more than .01, error message did not
         // include needed amount at time of writing.
-        new BN(utils.format.parseNearAmount('30.02'))
+        new window.BN(window.parseNearAmount('30.02'))
       )
     }
   })
