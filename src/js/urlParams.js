@@ -21,10 +21,14 @@ export function set (newParams) {
 
 export function clear (...paramNames) {
   if (paramNames.length === 0) {
-    window.history.replaceState({}, '', `${location.pathname}`)
+    window.history.replaceState({}, '', location.pathname)
   } else {
     const params = new URLSearchParams(window.location.search)
     paramNames.forEach(p => params.delete(p))
-    window.history.replaceState({}, '', `${location.pathname}?${params}`)
+    if (params.toString()) {
+      window.history.replaceState({}, '', `${location.pathname}?${params}`)
+    } else {
+      window.history.replaceState({}, '', location.pathname)
+    }
   }
 }

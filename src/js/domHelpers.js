@@ -1,25 +1,22 @@
-import BN from 'bn.js'
-import { utils } from 'near-api-js'
-import {
-  clear as clearTransfer,
-  initiate as initiateTransfer,
-  retry as retryTransfer
-} from './transfers'
-import render from './render'
-import { get as getParam } from './urlParams'
+const fillCache = {}
 
 // Update DOM elements that have a "data-behavior" attribute
 // Given `<span data-behavior="thing"></span>`
 // You can `fill('thing').with('whatever')` to set the innerHTML
 export const fill = selector => ({
-  with: content =>
-    Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
-      .forEach(n => {
-        n.innerHTML = Array.isArray(content) ? content.join('') : content
-        if (n.className.match('clip')) {
-          n.title = content
-        }
-      })
+  with: content => {
+    const contentString = Array.isArray(content) ? content.join('') : content
+    if (fillCache[selector] !== contentString) {
+      fillCache[selector] = contentString
+      Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
+        .forEach(n => {
+          n.innerHTML = contentString
+          if (n.className.match('clip')) {
+            n.title = contentString
+          }
+        })
+    }
+  }
 })
 
 // Hide DOM elements that have the given "data-behavior" attribute
