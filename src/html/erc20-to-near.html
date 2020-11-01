@@ -124,7 +124,7 @@
       fieldset.disabled = true
 
       try {
-        await window.initiateTransfer({
+        await window.transfers.initiate({
           amount: amount.value,
           callback: window.render,
           erc20: window.urlParams.get('erc20')
@@ -260,9 +260,7 @@
     const nep21 = await new window.NearContract(
       window.nearConnection.account(),
       nep21Address,
-      {
-        viewMethods: ['get_balance']
-      }
+      { viewMethods: ['get_balance'] }
     )
 
     return nep21.get_balance({ owner_id: window.nearUserAddress })

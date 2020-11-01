@@ -24,8 +24,6 @@ import { getErc20Name } from './ethHelpers'
 //   coupling with the web3.js library. Make initialized library available here.
 // * window.tokenLocker: a web3.js `Contract` instance for the TokenLocker
 //   contract at address `process.env.ethLockerAddress`
-// * window.nep21: a near-api-js `Contract` instance for the `MintableFungibleToken`
-//   contract that mints a corresponding NEP21 token on NEAR
 // * window.ethOnNearClient: similar to a near-api-js `Contract` instance, but
 //   using a custom wrapper to handle Borsh serialization. See https://borsh.io
 //   and the code in ./authNear.js. This will be streamlined and added to
@@ -84,7 +82,7 @@ export async function checkStatuses (callback) {
     const transfer = getRaw()[minting]
     if (transfer) {
       const balanceAfter = Number(
-        await window.nep21.get_balance({ owner_id: window.nearUserAddress })
+        await getBalance.erc20ToNep21(transfer.erc20Address)
       )
       if (balanceAfter - transfer.amount === Number(balanceBefore)) {
         update(transfer, { status: COMPLETE, outcome: SUCCESS })
@@ -247,6 +245,28 @@ function initiateLock ({ erc20, amount }) {
   })
 }
 
+// Helpers to get balances for bridged tokens, organized in a way to attempt to
+// reduce confusion regarding which exact kind of token you're fetching the
+// balance for
+const getBalance = {
+  erc20ToNep21: async function getBridgedErc20Balance (erc20Address) {
+    const nep21Address =
+    erc20Address.replace('0x', '').toLowerCase() +
+    '.' +
+    process.env.nearTokenFactoryAccount
+
+    const nep21 = await new window.NearContract(
+      window.nearConnection.account(),
+      nep21Address,
+      { viewMethods: ['get_balance'] }
+    )
+
+    return nep21.get_balance({ owner_id: window.nearUserAddress })
+      .then(raw => Number(raw))
+      .catch(() => null)
+  }
+}
+
 // check the status of a single transfer
 // if `callback` is provided:
 //   * it will be called after updating the status in localStorage
@@ -351,7 +371,7 @@ async function checkStatus (id, callback) {
 // window.ethOnNearClient
 async function mint (transfer) {
   const balanceBefore = Number(
-    await window.nep21.get_balance({ owner_id: window.nearUserAddress })
+    await getBalance.erc20ToNep21(transfer.erc20Address)
   )
   urlParams.set({ minting: transfer.id, balanceBefore })
 
@@ -367,8 +387,8 @@ async function mint (transfer) {
   )
 }
 
-// Compute proof that Locked event was fired in Ethereum.
-// This proof can then be passed to window.nep21, which verifies the proof
+// Compute proof that Locked event was fired in Ethereum. This proof can then
+// be passed to the FungibleTokenFactory contract, which verifies the proof
 // against a Prover contract.
 async function findProof (transfer) {
   const receipt = await window.web3.eth.getTransactionReceipt(transfer.lockReceipt.transactionHash)
