@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.4.0...v1.4.1) (2020-11-01)
+
+
+### Bug Fixes
+
+* undefined 'get_balance' ([6aee36d](https://github.com/near/rainbow-bridge-frontend/commit/6aee36dd313c02cc5d4f23d40e26204bc41c2da9))
+
 # [1.4.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.3.1...v1.4.0) (2020-11-01)
 
 
