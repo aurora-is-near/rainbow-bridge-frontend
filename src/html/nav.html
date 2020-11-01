@@ -74,7 +74,7 @@
       if (!clearTransferButton) return
 
       const transferId = clearTransferButton.closest('[data-behavior=transfer]').id
-      clearTransfer(transferId)
+      window.transfers.clear(transferId)
       render()
     })
 
@@ -87,7 +87,7 @@
       if (!retryTransferButton) return
 
       const transferId = retryTransferButton.closest('[data-behavior=transfer]').id
-      retryTransfer(transferId, render)
+      window.transfers.retry(transferId, render)
     })
   })
 
@@ -108,7 +108,7 @@
           <span>${'n' + transfer.erc20Name}</span>
         </header>
         <div>
-          <p>${window.humanStatusFor(transfer)}</p>
+          <p>${window.transfers.humanStatusFor(transfer)}</p>
         </div>
         ${inProgress ? '' : `
           <footer>
@@ -130,7 +130,7 @@
   }
 
   async function updateTransfers () {
-    const { inProgress, complete } = window.getTransfers()
+    const { inProgress, complete } = window.transfers.get()
 
     if (!inProgress.length && !complete.length) {
       show('transfers-none')
