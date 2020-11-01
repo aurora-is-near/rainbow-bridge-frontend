@@ -61,7 +61,16 @@ a:active,
   color: var(--secondary);
 }
 
-button, input {
+form {
+  margin: 3em 1em;
+}
+
+label {
+  display: block;
+  margin: -1em 0 0.1em;
+}
+
+button, input, select {
   font: inherit;
   outline: none;
 }
@@ -130,7 +139,7 @@ fieldset {
   padding: 0;
 }
 
-input {
+input, select {
   background-color: var(--shadow);
   border: none;
   border-radius: 5px 0 0 5px;

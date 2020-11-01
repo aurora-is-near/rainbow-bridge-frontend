@@ -1,0 +1,47 @@
+<form data-behavior="select-erc20" class="select-erc20" method="get">
+  <label for="erc20">
+    Select an ERC20 token to send to NEAR
+  </label>
+  <div style="display: flex">
+    <select id="erc20" name="erc20" data-behavior="erc20Selector">
+    </select>
+    <button id="submit" style="border-radius: 0 5px 5px 0">
+      Go
+    </button>
+  </div>
+</form>
+<script>
+  window.addEventListener('load', function handleSelectErc20Events () {
+    document.querySelector('[data-behavior=select-erc20]').onsubmit = e => {
+      e.preventDefault()
+      window.urlParams.set({ erc20: e.target.elements.erc20.value })
+      window.render()
+    }
+  })
+
+  async function renderSelectErc20 () {
+    if (window.urlParams.get('erc20')) window.hide('select-erc20')
+    else window.show('select-erc20')
+
+    const featuredErc20s = await Promise.all(
+      process.env.featuredErc20s.split(',').map(async address => {
+        const name = await window.getErc20Name(address)
+        return { address, name }
+      })
+    )
+
+    window.fill('erc20Selector').with(
+      featuredErc20s.map(({ address, name }) =>
+        `<option value="${address}">${name}</option>`
+      )
+    )
+  }
+
+  window.renderers.push(renderSelectErc20)
+</script>
+<style>
+  .select-erc20 {
+    margin: 4rem auto;
+    max-width: 20em;
+  }
+</style>

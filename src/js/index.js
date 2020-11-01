@@ -3,8 +3,9 @@ import { Contract as NearContract, utils } from 'near-api-js'
 import './authEthereum'
 import './authNear'
 import { fill, hide, initDOMhandlers, show } from './domHelpers'
-import { get as getParam, set as setParam } from './urlParams'
+import { getErc20Name } from './ethHelpers'
 import render from './render'
+import * as urlParams from './urlParams'
 import {
   get as getTransfers,
   initiate as initiateTransfer,
@@ -14,7 +15,7 @@ import {
 // Can't import modules in <script> tags in files included via PostHTML 😞
 window.BN = BN
 window.fill = fill
-window.getParam = getParam
+window.getErc20Name = getErc20Name
 window.getTransfers = getTransfers
 window.hide = hide
 window.humanStatusFor = humanStatusFor
@@ -23,10 +24,7 @@ window.NearContract = NearContract
 window.parseNearAmount = utils.format.parseNearAmount
 window.render = render
 window.show = show
-
-if (!getParam('erc20')) {
-  setParam({ erc20: process.env.featuredErc20s.split(',')[0] })
-}
+window.urlParams = urlParams
 
 initDOMhandlers()
 render()
