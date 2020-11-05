@@ -3,7 +3,7 @@
 
 An app that moves assets between Ethereum and NEAR. You can use this as the starting point for your own app on the [Rainbow Bridge].
 
-Try it between [Ethereum Rinkeby] & [NEAR Testnet]: https://near-examples.github.io/erc20-to-nep21/
+Try it between [Ethereum Rinkeby] & [NEAR Testnet]: https://near.github.io/rainbow-bridge-frontend
 
 
 How it works
