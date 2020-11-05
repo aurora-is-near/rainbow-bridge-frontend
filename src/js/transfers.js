@@ -30,7 +30,22 @@ import { getErc20Name } from './ethHelpers'
 //   near-api-js soon.
 // * window.ethUserAddress: address of authenticated Ethereum wallet to send from
 // * window.nearUserAddress: address of authenticated NEAR wallet to send to
-export async function initiate ({ erc20, amount, callback }) {
+export async function initiate ({ erc20, nep21FromErc20, amount, callback }) {
+  const originsProvided = [
+    erc20,
+    nep21FromErc20
+  ].reduce((n, arg) => n + Number(!!arg), 0)
+  if (originsProvided !== 1) {
+    throw new Error(`Please provide only one of:
+      • erc20: an address of a natural ERC20 to send to NEAR
+      • nep21FromErc20: address of an NEP21 to send back to Ethereum
+    `)
+  }
+
+  if (nep21FromErc20) {
+    throw new Error('nep21FromErc20 not yet supported')
+  }
+
   const approvalHash = await initiateApproval({ erc20, amount })
   const transfer = {
     amount,
