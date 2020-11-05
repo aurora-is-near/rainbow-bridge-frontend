@@ -142,7 +142,6 @@ fieldset {
 input, select {
   background-color: var(--shadow);
   border: none;
-  border-radius: 5px 0 0 5px;
   caret-color: var(--primary);
   color: inherit;
   padding: 0.25em 0.5em;

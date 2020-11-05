@@ -2,4 +2,5 @@
 .visually-hidden {
   position: absolute;
   text-indent: -9999em;
+  width: 0;
 }
