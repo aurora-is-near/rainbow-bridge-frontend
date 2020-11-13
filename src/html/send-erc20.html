@@ -192,7 +192,7 @@
       action: amount => window.transfers.initiate({
         amount,
         callback: window.render,
-        erc20: window.urlParams.get('erc20')
+        naturalErc20: window.urlParams.get('erc20')
       })
     })
 
@@ -201,7 +201,7 @@
       action: amount => window.transfers.initiate({
         amount,
         callback: window.render,
-        nep21FromErc20: getNep21Address()
+        nep21FromErc20: getNep21Address(window.urlParams.get('ethErc20Address'))
       })
     })
 
@@ -260,9 +260,9 @@
     // how to get useful details about selected network in MetaMask?
     window.fill('ethNetworkName').with(await window.web3.eth.net.getNetworkType())
 
-    const erc20Balance = await getErc20Balance()
+    const erc20Balance = await getErc20Balance(ethErc20Address)
     window.fill('erc20Balance').with(formatLargeNum(erc20Balance))
-    const nep21Balance = await getNep21Balance()
+    const nep21Balance = await getNep21Balance(ethErc20Address)
 
     if (!erc20Balance && !nep21Balance) {
       window.hide('balancePositive')
@@ -317,10 +317,10 @@
     ? n.toExponential(2)
     : new Intl.NumberFormat(undefined, { maximumSignificantDigits: 5 }).format(n)
 
-  async function getErc20Balance () {
+  async function getErc20Balance (erc20Address) {
     const erc20Contract = new window.web3.eth.Contract(
       JSON.parse(process.env.ethErc20AbiText),
-      window.urlParams.get('erc20'),
+      erc20Address,
       { from: window.ethUserAddress }
     )
 
@@ -329,10 +329,10 @@
     )
   }
 
-  async function getNep21Balance () {
+  async function getNep21Balance (erc20Address) {
     const nep21 = await new window.NearContract(
       window.nearConnection.account(),
-      getNep21Address(),
+      getNep21Address(erc20Address),
       { viewMethods: ['get_balance'] }
     )
 
@@ -341,8 +341,8 @@
       .catch(() => null)
   }
 
-  function getNep21Address () {
-    return window.urlParams.get('erc20').replace('0x', '').toLowerCase() +
+  function getNep21Address (erc20Address) {
+    return erc20Address.replace('0x', '').toLowerCase() +
       '.' +
       process.env.nearTokenFactoryAccount
   }
