@@ -4970,7 +4970,7 @@ eth-lib@^0.1.26:
     ws "^3.0.0"
     xhr-request-promise "^0.1.2"
 
-eth-object@near/eth-object#54e03b8aac8208cf724e206d49ffb8bdd30451d7:
+"eth-object@github:near/eth-object#54e03b8aac8208cf724e206d49ffb8bdd30451d7", eth-object@near/eth-object#54e03b8aac8208cf724e206d49ffb8bdd30451d7:
   version "1.0.3"
   resolved "https://codeload.github.com/near/eth-object/tar.gz/54e03b8aac8208cf724e206d49ffb8bdd30451d7"
   dependencies:
@@ -5008,7 +5008,7 @@ eth-sig-util@^1.4.2:
     ethereumjs-abi "git+https://github.com/ethereumjs/ethereumjs-abi.git"
     ethereumjs-util "^5.1.1"
 
-eth-util-lite@near/eth-util-lite#master:
+"eth-util-lite@github:near/eth-util-lite#master", eth-util-lite@near/eth-util-lite#master:
   version "1.0.1"
   resolved "https://codeload.github.com/near/eth-util-lite/tar.gz/ae0210cbe127b4d43ba01fd7cd4898d1a3f6c96a"
   dependencies:
@@ -10493,6 +10493,22 @@ rainbow-bridge-sol@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/rainbow-bridge-sol/-/rainbow-bridge-sol-2.0.0.tgz#a9258fff0e04743075b63a33694c6f2d1313b930"
   integrity sha512-JVDPwhCa7N1yNbv3wdfxwws00kwVoSiQYAXbPWcMGtJLf3VEnbtCiDeK7/WfUrwEQ9tgEboOOH+a/A6BBZp3Ew==
+
+rainbow-bridge-utils@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/rainbow-bridge-utils/-/rainbow-bridge-utils-1.0.0.tgz#ea0e14ed51f905412362b0ccf053a3ca87ac5da0"
+  integrity sha512-psjUrqjAGcktxzm8PcL8eRplRXtu89hA/oOm47iU3L78OBO8wV0nrFmNckk4huq42vjUfwpO8L6urILJSqTKNQ==
+  dependencies:
+    bn.js "^5.1.3"
+    bs58 "^4.0.1"
+    bsert "^0.0.10"
+    change-case "^4.1.1"
+    configstore "^5.0.1"
+    eth-object near/eth-object#54e03b8aac8208cf724e206d49ffb8bdd30451d7
+    eth-util-lite near/eth-util-lite#master
+    lodash "^4.17.20"
+    near-api-js "^0.26.0"
+    web3 "=1.2.6"
 
 rainbow-token-connector@near/rainbow-token-connector#87ba0a1a8268f26ff58b67a6139ddb74f8eecce6:
   version "1.0.0"

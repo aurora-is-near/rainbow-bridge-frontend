@@ -27,6 +27,7 @@ module.exports = {
   },
   development: {
     ethClientAddress: '0xF721c979db97413AA9D0F91ad531FaBF769bb09C',
+    ethNearOnEthClientAbiText: readFileSync('./nearOnEthClient.abi'),
     ethEd25519Address: '0x9003342d15B21b4C42e1702447fE2f39FfAF55C2',
     ethErc20AbiText: readFileSync('./erc20.abi'),
     featuredErc20s:
@@ -40,6 +41,7 @@ module.exports = {
     ethNetwork: 'rinkeby',
     ethNodeUrl: 'https://rinkeby.infura.io/v3/TODO',
     ethProverAddress: '0xc5D62d66B8650E6242D9936c7e50E959BA0F9E37',
+    ethProverAbiText: readFileSync('./prover.abi'),
     nearClientAccount: 'ethonnearclient10',
     nearHelperUrl: 'https://helper.testnet.near.org/',
     nearNetworkId: 'testnet',

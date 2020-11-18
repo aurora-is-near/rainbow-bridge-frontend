@@ -17,7 +17,7 @@ import * as storage from './storage'
 import { COMPLETE, FAILED, LOCKED, SUCCESS } from './statuses'
 
 // Call contract given by `erc20` contract, requesting
-// permission for window.tokenLocker to transfer 'amount' tokens
+// permission for window.ethTokenLocker to transfer 'amount' tokens
 // on behalf of the default erc20 user set up in authEthereum.js.
 // Only wait for transaction to have dependable transactionHash created. Avoid
 // blocking to wait for transaction to be mined. Status of transactionHash
@@ -168,10 +168,11 @@ export async function retry (transfer) {
       mint(transfer)
       break
     default:
-      alert(`Do not know how to retry transfer that failed at ${transfer.status} 😞`)
+      alert(`Do not know how to retry naturalErc20ToNep21 transfer that failed at ${transfer.status} 😞`)
   }
 }
 
+// custom statuses
 const INITIATED_APPROVAL = 'initiated_approval'
 const INITIATED_LOCK = 'initiated_lock'
 
@@ -202,13 +203,13 @@ async function getNep21Balance (erc20Address) {
     .catch(() => null)
 }
 
-// Call window.tokenLocker, locking 'amount' tokens.
+// Call window.ethTokenLocker, locking 'amount' tokens.
 // Only wait for transaction to have dependable transactionHash created. Avoid
 // blocking to wait for transaction to be mined. Status of transactionHash
 // being mined is then checked in checkStatus.
 function initiateLock (erc20, amount) {
   return new Promise((resolve, reject) => {
-    window.tokenLocker.methods
+    window.ethTokenLocker.methods
       .lockToken(erc20, amount, window.nearUserAddress).send()
       .on('transactionHash', resolve)
       .catch(reject)
@@ -216,7 +217,7 @@ function initiateLock (erc20, amount) {
 }
 
 // Mint NEP21 tokens to window.nearUserAddress after successfully locking them
-// in window.tokenLocker and waiting for neededConfirmations to propogate into
+// in window.ethTokenLocker and waiting for neededConfirmations to propogate into
 // window.ethOnNearClient
 async function mint (transfer) {
   const balanceBefore = Number(
@@ -249,7 +250,7 @@ async function findProof (transfer) {
     receipt.transactionIndex
   )
 
-  const [lockedEvent] = await window.tokenLocker.getPastEvents('Locked', {
+  const [lockedEvent] = await window.ethTokenLocker.getPastEvents('Locked', {
     filter: { transactionHash: transfer.lockHash },
     fromBlock: transfer.lockReceipt.blockNumber
   })

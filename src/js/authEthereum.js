@@ -30,7 +30,19 @@ async function login (provider) {
   window.web3 = new Web3(provider)
   window.ethUserAddress = (await window.web3.eth.getAccounts())[0]
 
-  window.tokenLocker = new window.web3.eth.Contract(
+  window.nearOnEthClient = window.web3.eth.Contract(
+    JSON.parse(process.env.ethNearOnEthClientAbiText),
+    process.env.ethClientAddress,
+    { from: window.ethUserAddress }
+  )
+
+  window.ethProver = window.web3.eth.Contract(
+    JSON.parse(process.env.ethProverAbiText),
+    process.env.ethProverAddress,
+    { from: window.ethUserAddress }
+  )
+
+  window.ethTokenLocker = new window.web3.eth.Contract(
     JSON.parse(process.env.ethLockerAbiText),
     process.env.ethLockerAddress,
     { from: window.ethUserAddress }

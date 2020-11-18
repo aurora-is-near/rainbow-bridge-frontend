@@ -1,5 +1,6 @@
 import { ulid } from 'ulid'
 import * as naturalErc20ToNep21 from './natural-erc20-to-nep21'
+import * as bridgedNep21ToErc20 from './bridged-nep21-to-erc20'
 import * as urlParams from '../urlParams'
 import * as storage from './storage'
 import { COMPLETE } from './statuses'
@@ -13,7 +14,7 @@ import { COMPLETE } from './statuses'
 //
 // * window.web3: constructing a Proof of the `Locked` event currently has deep
 //   coupling with the web3.js library. Make initialized library available here.
-// * window.tokenLocker: a web3.js `Contract` instance for the TokenLocker
+// * window.ethTokenLocker: a web3.js `Contract` instance for the TokenLocker
 //   contract at address `process.env.ethLockerAddress`
 // * window.ethOnNearClient: similar to a near-api-js `Contract` instance, but
 //   using a custom wrapper to handle Borsh serialization. See https://borsh.io
@@ -33,14 +34,12 @@ export async function initiate ({ naturalErc20, nep21FromErc20, amount, callback
     `)
   }
 
-  if (nep21FromErc20) {
-    throw new Error('nep21FromErc20 not yet supported')
-  }
-
   let customAttributes
-
   if (naturalErc20) {
     customAttributes = await naturalErc20ToNep21.initiate(naturalErc20, amount)
+  }
+  if (nep21FromErc20) {
+    customAttributes = await bridgedNep21ToErc20.initiate(nep21FromErc20, amount)
   }
 
   const transfer = {
@@ -124,6 +123,10 @@ export async function retry (id, callback) {
 
   if (transfer.erc20Address) {
     await naturalErc20ToNep21.retry(transfer)
+  }
+
+  if (transfer.nep21FromErc20) {
+    await bridgedNep21ToErc20.retry(transfer)
   }
 
   if (callback) await callback()
