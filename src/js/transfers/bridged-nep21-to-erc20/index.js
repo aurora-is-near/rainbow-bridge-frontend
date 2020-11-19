@@ -2,9 +2,9 @@ import BN from 'bn.js'
 import bs58 from 'bs58'
 import { toBuffer } from 'eth-util-lite'
 import { Contract as NearContract } from 'near-api-js'
-import { borshifyOutcomeProof } from 'rainbow-bridge-utils'
-import { COMPLETE, FAILED, SUCCESS } from './statuses'
-import * as storage from './storage'
+import { borshifyOutcomeProof } from './borshify-proof'
+import { COMPLETE, FAILED, SUCCESS } from '../statuses'
+import * as storage from '../storage'
 
 // Call contract given by `nep21Address` to withdraw (burn) the given `amount`
 // of NEP21 tokens for window.nearUserAddress. The raw transaction info is
