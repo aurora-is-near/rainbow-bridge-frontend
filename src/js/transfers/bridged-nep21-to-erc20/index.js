@@ -18,7 +18,10 @@ export async function initiate (nep21Address, amount) {
   )
 
   const tx = await bridgeToken.withdraw(
-    { amount, recipient: window.ethUserAddress },
+    {
+      amount: String(amount),
+      recipient: window.ethUserAddress.replace('0x', '')
+    },
     new BN('3' + '0'.repeat(14)) // 10x current default from near-api-js
   )
 
