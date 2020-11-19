@@ -212,7 +212,7 @@
       action: amount => window.transfers.initiate({
         amount,
         callback: window.render,
-        nep21FromErc20: getNep21Address(window.urlParams.get('ethErc20Address'))
+        nep21FromErc20: getNep21Address(window.urlParams.get('erc20'))
       }),
       after: ({ toNear }) => {
         toNear.style.display = toNear.dataset.displayBefore
