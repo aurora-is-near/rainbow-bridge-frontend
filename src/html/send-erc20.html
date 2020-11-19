@@ -147,7 +147,7 @@
 
     document.querySelector('[data-behavior=send-erc20] form').onsubmit = e => e.preventDefault()
 
-    function handleForm ({ before, action }) {
+    function handleForm ({ before, action, after }) {
       return async function onClick (event) {
         event.preventDefault()
 
@@ -176,6 +176,7 @@
         }
 
         // if the call succeeded, reset the form
+        after(formElements)
         amount.value = ''
         toEth.disabled = true
         toNear.disabled = true
@@ -188,21 +189,35 @@
     }
 
     document.querySelector('[data-behavior=send-erc20] #toNear').onclick = handleForm({
-      before: ({ toEth }) => { toEth.style.display = 'none' },
+      before: ({ toEth }) => {
+        toEth.dataset.displayBefore = toEth.style.display
+        toEth.style.display = 'none'
+      },
       action: amount => window.transfers.initiate({
         amount,
         callback: window.render,
         naturalErc20: window.urlParams.get('erc20')
-      })
+      }),
+      after: ({ toEth }) => {
+        toEth.style.display = toEth.dataset.displayBefore
+        delete toEth.dataset.displayBefore
+      }
     })
 
     document.querySelector('[data-behavior=send-erc20] #toEth').onclick = handleForm({
-      before: ({ toNear }) => { toNear.style.display = 'none' },
+      before: ({ toNear }) => {
+        toNear.dataset.displayBefore = toNear.style.display
+        toNear.style.display = 'none'
+      },
       action: amount => window.transfers.initiate({
         amount,
         callback: window.render,
         nep21FromErc20: getNep21Address(window.urlParams.get('ethErc20Address'))
-      })
+      }),
+      after: ({ toNear }) => {
+        toNear.style.display = toNear.dataset.displayBefore
+        delete toNear.dataset.displayBefore
+      }
     })
 
     document.querySelector('[data-behavior=notBridged] button').onclick = function bridgeIt () {
