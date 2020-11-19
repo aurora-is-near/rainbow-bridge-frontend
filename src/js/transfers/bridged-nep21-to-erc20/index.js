@@ -17,6 +17,7 @@ export async function initiate (nep21Address, amount) {
     { changeMethods: ['withdraw'] }
   )
 
+  // TODO: can cause redirect to NEAR Wallet, rendering `tx` inaccessible!
   const tx = await bridgeToken.withdraw(
     {
       amount: String(amount),
