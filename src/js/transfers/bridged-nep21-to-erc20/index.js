@@ -6,56 +6,73 @@ import { borshifyOutcomeProof } from './borshify-proof'
 import { COMPLETE, FAILED, SUCCESS } from '../statuses'
 import * as storage from '../storage'
 
-// Call contract given by `nep21Address` to withdraw (burn) the given `amount`
-// of NEP21 tokens for window.nearUserAddress. The raw transaction info is
-// returned. This info is then used in `checkStatus` to derive the proof needed
-// for releasing `amount` tokens to window.ethUserAddress on Ethereum.
+// Immediately return to caller, which adds an ID to the provided data, stores
+// it in localStorage, and then calls `checkStatus` (below), which will then
+// call actual `withdraw` function.
 export async function initiate (nep21Address, amount) {
+  return {
+    amount,
+    nep21Address,
+    status: INITIALIZED
+  }
+}
+
+function withdraw ({ id, nep21Address, amount }) {
   const bridgeToken = new NearContract(
     window.nearConnection.account(),
     nep21Address,
     { changeMethods: ['withdraw'] }
   )
 
-  // TODO: can cause redirect to NEAR Wallet, rendering `tx` inaccessible!
-  const tx = await bridgeToken.withdraw(
+  // This will cause a redirect to NEAR Wallet.
+  // The specified `listener` will be called when NEAR Wallet redirects back to
+  // this app, and given the output of the transaction.
+  bridgeToken.withdraw(
     {
       amount: String(amount),
       recipient: window.ethUserAddress.replace('0x', '')
     },
-    new BN('3' + '0'.repeat(14)) // 10x current default from near-api-js
+    {
+      gas: new BN('3' + '0'.repeat(14)), // 10x current default from near-api-js
+      listener: processWithdrawTx(id)
+    }
   )
+}
 
-  const receiptIds = tx.transaction_outcome.outcome.receipt_ids
+function processWithdrawTx (transferId) {
+  return async function willThisSerializeCorrectlyIDoubtIt (tx) {
+    const receiptIds = tx.transaction_outcome.outcome.receipt_ids
 
-  if (receiptIds.length !== 1) {
-    throw new Error(
-      `Withdrawal expects only one receipt, got ${receiptIds.length}. Full withdrawal transaction: ${
-        JSON.stringify(tx)
-      }`
-    )
-  }
+    if (receiptIds.length !== 1) {
+      throw new Error(
+        `Withdrawal expects only one receipt, got ${receiptIds.length}. Full withdrawal transaction: ${
+          JSON.stringify(tx)
+        }`
+      )
+    }
 
-  const txReceiptId = receiptIds[0]
+    const txReceiptId = receiptIds[0]
 
-  const successReceiptId = tx.receipts_outcome
-    .find(r => r.id === txReceiptId).outcome.status.SuccessReceiptId
-  const txReceiptBlockHash = tx.receipts_outcome
-    .find(r => r.id === successReceiptId).block_hash
+    const successReceiptId = tx.receipts_outcome
+      .find(r => r.id === txReceiptId).outcome.status.SuccessReceiptId
+    const txReceiptBlockHash = tx.receipts_outcome
+      .find(r => r.id === successReceiptId).block_hash
 
-  const receiptBlock = await window.nearConnection.provider.block({
-    blockId: txReceiptBlockHash
-  })
+    const receiptBlock = await window.nearConnection.provider.block({
+      blockId: txReceiptBlockHash
+    })
 
-  return {
-    nep21Address,
-    status: WITHDRAWN,
-    withdrawReceiptId: successReceiptId,
-    withdrawReceiptBlockHeight: Number(receiptBlock.header.height),
+    const transfer = storage.get(transferId)
 
-    // TODO: remove the below, only adding them for debugging
-    withdrawTx: tx,
-    withdrawTxReceiptId: txReceiptId // is this different than withdrawReceiptId aka successReceiptId?
+    storage.update(transfer, {
+      status: WITHDRAWN,
+      withdrawReceiptId: successReceiptId,
+      withdrawReceiptBlockHeight: Number(receiptBlock.header.height),
+
+      // TODO: remove the below, only adding them for debugging
+      withdrawTx: tx,
+      withdrawTxReceiptId: txReceiptId // is this different than withdrawReceiptId aka successReceiptId?
+    })
   }
 }
 
@@ -64,6 +81,11 @@ export function humanStatusFor (transfer) {
 }
 
 export async function checkStatus (transfer) {
+  if (transfer.status === INITIALIZED) {
+    // causes redirect to NEAR Wallet and subsequent update of transfer
+    withdraw(transfer)
+  }
+
   if (transfer.status === WITHDRAWN) {
     try {
       const outcomeBlock = await findOutcomeBlock(transfer)
@@ -164,6 +186,7 @@ export async function retry (transfer) {
 }
 
 // custom statuses
+const INITIALIZED = 'initialized'
 const WITHDRAWN = 'withdrawn'
 const FOUND_OUTCOME = 'found-outcome'
 const FOUND_ETH_BLOCK = 'found-eth-block'
@@ -172,6 +195,7 @@ const SECURITY_WINDOW_CLOSED = 'security-window-closed'
 // statuses used in humanStatusFor.
 // Might be internationalized or moved to separate library in the future.
 const statusMessages = {
+  [INITIALIZED]: () => 'withdrawing from NEAR',
   [WITHDRAWN]: () => 'finalizing NEAR withdrawal',
   [FOUND_OUTCOME]: () => 'waiting for NEAR withdrawal to appear in Ethereum',
   [FOUND_ETH_BLOCK]: () =>
