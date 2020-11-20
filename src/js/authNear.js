@@ -1,6 +1,8 @@
 import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 
 import { checkStatuses as checkTransferStatuses } from './transfers'
+import * as storage from './transfers/storage'
+import { processWithdrawTx, INITIALIZED } from './transfers/bridged-nep21-to-erc20'
 import EthOnNearClient from './borsh/ethOnNearClient'
 import render from './render'
 
@@ -55,7 +57,16 @@ async function login () {
 
   render()
 
-  if (window.ethInitialized) checkTransferStatuses(render)
+  if (window.ethInitialized) {
+    window.nearConnection.inFlightTransactions.drain(({ meta, tx }) => {
+      const transfer = storage.get(meta.id)
+
+      if (transfer.nep21FromErc20 && transfer.status === INITIALIZED) {
+        processWithdrawTx(transfer, tx)
+      }
+    })
+    checkTransferStatuses(render)
+  }
 }
 
 // The NEAR signin flow redirects from the current URL to NEAR Wallet,
