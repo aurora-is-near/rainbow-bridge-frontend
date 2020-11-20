@@ -26,7 +26,7 @@
     "parcel-bundler": "^1.12.4",
     "posthtml-include": "^1.5.0",
     "rainbow-bridge-cli": "^3.0.0",
-    "semantic-release": "^17.1.2"
+    "semantic-release": "^17.2.4"
   },
   "dependencies": {
     "@walletconnect/web3-provider": "^1.2.1",
