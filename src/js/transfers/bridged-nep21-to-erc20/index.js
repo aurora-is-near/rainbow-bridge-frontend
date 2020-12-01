@@ -17,63 +17,69 @@ export async function initiate (nep21Address, amount) {
   }
 }
 
-function withdraw ({ id, nep21Address, amount }) {
-  const bridgeToken = new NearContract(
-    window.nearConnection.account(),
-    nep21Address,
-    { changeMethods: ['withdraw'] }
-  )
+async function withdraw ({ id, nep21Address, amount }) {
+  // Calling `bridgeToken.withdraw`, below, may cause a redirect to NEAR
+  // Wallet. Once the transaction completes, whether or not it caused a
+  // redirect, near-api-js will add transaction info to the
+  // `completedTransactions` iterator.
+  //
+  // Given that the code here will only be processed when status is
+  // INITIALIZED, if we don't find this tx id in `completedTransactions`, then
+  // we know we need to start the withdrawal.
+  const withdrawing = window.nearConnection
+    .completedTransactions.remove(tx => tx.meta.id === id)
 
-  // withdraw transaction causes a redirect to NEAR Wallet, so we use
-  // 'sendTransaction' to add it to a queue, along with some metadata to
-  // identify the transfer when we return to this app. This is processed via
-  // the `inFlightTransactions` logic in authNear, which will call
-  // `processWithdrawTx`
-  window.inFlightTransactions.push({
-    meta: { id },
-    tx: () => {
-      bridgeToken.withdraw(
-        {
-          amount: String(amount),
-          recipient: window.ethUserAddress.replace('0x', '')
-        },
-        new BN('3' + '0'.repeat(14)) // 10x current default from near-api-js
+  if (!withdrawing) {
+    const bridgeToken = new NearContract(
+      window.nearConnection.account(),
+      nep21Address,
+      { changeMethods: ['withdraw'] }
+    )
+
+    await bridgeToken.withdraw(
+      {
+        amount: String(amount),
+        recipient: window.ethUserAddress.replace('0x', '')
+      },
+      {
+        gas: new BN('3' + '0'.repeat(14)), // 10x current default from near-api-js
+        meta: { id }
+      }
+    )
+  } else {
+    // transaction includes `failed: true` and an error message if it failed
+    if (withdrawing.failed) return withdrawing
+
+    const receiptIds = withdrawing.transaction_outcome.outcome.receipt_ids
+
+    if (receiptIds.length !== 1) {
+      throw new Error(
+        `Withdrawal expects only one receipt, got ${receiptIds.length}. Full withdrawal transaction: ${
+          JSON.stringify(withdrawing)
+        }`
       )
     }
-  })
-}
 
-export async function processWithdrawTx (transfer, tx) {
-  const receiptIds = tx.transaction_outcome.outcome.receipt_ids
+    const txReceiptId = receiptIds[0]
 
-  if (receiptIds.length !== 1) {
-    throw new Error(
-      `Withdrawal expects only one receipt, got ${receiptIds.length}. Full withdrawal transaction: ${
-        JSON.stringify(tx)
-      }`
-    )
+    const successReceiptId = withdrawing.receipts_outcome
+      .find(r => r.id === txReceiptId).outcome.status.SuccessReceiptId
+    const txReceiptBlockHash = withdrawing.receipts_outcome
+      .find(r => r.id === successReceiptId).block_hash
+
+    const receiptBlock = await window.nearConnection.provider.block({
+      blockId: txReceiptBlockHash
+    })
+
+    return {
+      withdrawReceiptId: successReceiptId,
+      withdrawReceiptBlockHeight: Number(receiptBlock.header.height),
+
+      // TODO: remove the below, only adding them for debugging
+      withdrawTx: withdrawing,
+      withdrawTxReceiptId: txReceiptId // is this different than withdrawReceiptId aka successReceiptId?
+    }
   }
-
-  const txReceiptId = receiptIds[0]
-
-  const successReceiptId = tx.receipts_outcome
-    .find(r => r.id === txReceiptId).outcome.status.SuccessReceiptId
-  const txReceiptBlockHash = tx.receipts_outcome
-    .find(r => r.id === successReceiptId).block_hash
-
-  const receiptBlock = await window.nearConnection.provider.block({
-    blockId: txReceiptBlockHash
-  })
-
-  storage.update(transfer, {
-    status: WITHDRAWN,
-    withdrawReceiptId: successReceiptId,
-    withdrawReceiptBlockHeight: Number(receiptBlock.header.height),
-
-    // TODO: remove the below, only adding them for debugging
-    withdrawTx: tx,
-    withdrawTxReceiptId: txReceiptId // is this different than withdrawReceiptId aka successReceiptId?
-  })
 }
 
 export function humanStatusFor (transfer) {
@@ -83,7 +89,20 @@ export function humanStatusFor (transfer) {
 export async function checkStatus (transfer) {
   if (transfer.status === INITIALIZED) {
     // causes redirect to NEAR Wallet and subsequent update of transfer
-    await withdraw(transfer)
+    const withdrawal = await withdraw(transfer)
+    if (withdrawal.failed) {
+      transfer = storage.update(transfer, {
+        status: COMPLETE,
+        outcome: FAILED,
+        failedAt: WITHDRAWN,
+        error: transfer.error
+      })
+    } else {
+      transfer = storage.update(transfer, {
+        ...withdrawal,
+        status: WITHDRAWN
+      })
+    }
   }
 
   if (transfer.status === WITHDRAWN) {
@@ -186,7 +205,7 @@ export async function retry (transfer) {
 }
 
 // custom statuses
-export const INITIALIZED = 'bridged-nep21-to-erc20-initialized'
+const INITIALIZED = 'bridged-nep21-to-erc20-initialized'
 const WITHDRAWN = 'withdrawn'
 const FOUND_OUTCOME = 'found-outcome'
 const FOUND_ETH_BLOCK = 'found-eth-block'
