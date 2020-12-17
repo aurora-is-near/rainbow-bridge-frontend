@@ -1,9 +1,14 @@
 <form data-behavior="select-erc20" class="select-erc20" method="get">
   <label for="erc20">
-    Select an ERC20 token to send to NEAR
+    Select an ERC20 token
   </label>
   <div style="display: flex">
-    <select id="erc20" name="erc20" data-behavior="erc20Selector">
+    <select
+      data-behavior="erc20Selector"
+      id="erc20"
+      name="erc20"
+      style="border-radius: 5px 0 0 5px"
+    >
     </select>
     <button id="submit" style="border-radius: 0 5px 5px 0">
       Go

@@ -1,4 +1,4 @@
-<div class="erc20-to-near" data-behavior="erc20-to-near" style="display: none">
+<div class="send-erc20" data-behavior="send-erc20" style="display: none">
   <div class="grid">
     <section class="balance">
       <header>
@@ -64,10 +64,30 @@
           <input
             autocomplete="off"
             id="amount"
+            name="amount"
             type="number"
+            min="0"
+            style="order: 1"
           />
-          <button id="submit" aria-controls="transfers" disabled style="border-radius: 0 5px 5px 0">
-            <span class="visually-hidden">Confirm</span>
+          <button
+            aria-controls="transfers"
+            disabled
+            id="toEth"
+            name="toEth"
+            style="border-radius: 5px 0 0 5px; order: 0"
+            value="toEth"
+          >
+            <span class="visually-hidden">to Ethereum</span>
+          </button>
+          <button
+            aria-controls="transfers"
+            disabled
+            id="toNear"
+            name="toNear"
+            style="border-radius: 0 5px 5px 0; order: 2"
+            value="to NEAR"
+          >
+            <span class="visually-hidden">to NEAR</span>
           </button>
         </div>
       </fieldset>
@@ -104,52 +124,101 @@
 </div>
 <script>
   window.addEventListener('load', function addErc20ToNearHandlers () {
-    document.querySelector('input#amount').oninput = (event) => {
-      const submitButton = document.querySelector('[data-behavior=erc20-to-near] form button')
+    document.querySelector('input#amount').oninput = function enableSubmit () {
+      const amount = document.querySelector('[data-behavior=send-erc20] #amount')
+      const value = Number(amount.value)
+      const erc20Balance = Number(amount.dataset.erc20Balance)
+      const nep21Balance = Number(amount.dataset.nep21Balance)
 
-      if (event.target.value > 0) {
-        submitButton.disabled = false
+      const toNear = document.querySelector('[data-behavior=send-erc20] #toNear')
+      if (value > 0 && value <= erc20Balance) {
+        toNear.disabled = false
       } else {
-        submitButton.disabled = true
+        toNear.disabled = true
+      }
+
+      const toEth = document.querySelector('[data-behavior=send-erc20] #toEth')
+      if (value > 0 && value <= nep21Balance) {
+        toEth.disabled = false
+      } else {
+        toEth.disabled = true
       }
     }
 
-    document.querySelector('[data-behavior=erc20-to-near] form').onsubmit = async (event) => {
-      event.preventDefault()
+    document.querySelector('[data-behavior=send-erc20] form').onsubmit = e => e.preventDefault()
 
-      // get elements from the form using their id attribute
-      const { amount, fieldset, submit } = event.target.elements
+    function handleForm ({ before, action, after }) {
+      return async function onClick (event) {
+        event.preventDefault()
 
-      // disable the form while the tokens get locked in Ethereum
-      fieldset.disabled = true
+        // get elements from the form using their id attribute
+        const formElements = event.target.closest('form').elements
+        const { amount, fieldset } = formElements
 
-      try {
-        await window.transfers.initiate({
-          amount: amount.value,
-          callback: window.render,
-          erc20: window.urlParams.get('erc20')
-        })
-      } catch (e) {
-        alert(
-          'Something went wrong! ' +
-          'Maybe you need to sign out and back in? ' +
-          'Check your browser console for more info.'
-        )
-        throw e
-      } finally {
-        // re-enable the form, whether the call succeeded or failed
-        fieldset.disabled = false
+        // disable the form while the tokens get locked in Ethereum
+        fieldset.disabled = true
+
+        // allow each button, #toNear and #toEth, to do their own handling
+        before(formElements)
+
+        try {
+          await action(Number(amount.value))
+        } catch (e) {
+          alert(
+            'Something went wrong! ' +
+            'Maybe you need to sign out and back in? ' +
+            'Check your browser console for more info.'
+          )
+          throw e
+        } finally {
+          // re-enable the form, whether the call succeeded or failed
+          fieldset.disabled = false
+        }
+
+        // if the call succeeded, reset the form
+        after(formElements)
+        amount.value = ''
+        toEth.disabled = true
+        toNear.disabled = true
+        window.urlParams.clear('erc20')
+        await window.render()
+        const transfersButton = document.querySelector('#transfers button')
+        transfersButton.click()
+        transfersButton.focus()
       }
-
-      // if the call succeeded, reset the form
-      amount.value = ''
-      submit.disabled = true
-      window.urlParams.clear('erc20')
-      await render()
-      const transfersButton = document.querySelector('#transfers button')
-      transfersButton.click()
-      transfersButton.focus()
     }
+
+    document.querySelector('[data-behavior=send-erc20] #toNear').onclick = handleForm({
+      before: ({ toEth }) => {
+        toEth.dataset.displayBefore = toEth.style.display
+        toEth.style.display = 'none'
+      },
+      action: amount => window.transfers.initiate({
+        amount,
+        callback: window.render,
+        naturalErc20: window.urlParams.get('erc20')
+      }),
+      after: ({ toEth }) => {
+        toEth.style.display = toEth.dataset.displayBefore
+        delete toEth.dataset.displayBefore
+      }
+    })
+
+    document.querySelector('[data-behavior=send-erc20] #toEth').onclick = handleForm({
+      before: ({ toNear }) => {
+        toNear.dataset.displayBefore = toNear.style.display
+        toNear.style.display = 'none'
+      },
+      action: amount => window.transfers.initiate({
+        amount,
+        callback: window.render,
+        nep21FromErc20: getNep21Address(window.urlParams.get('erc20'))
+      }),
+      after: ({ toNear }) => {
+        toNear.style.display = toNear.dataset.displayBefore
+        delete toNear.dataset.displayBefore
+      }
+    })
 
     document.querySelector('[data-behavior=notBridged] button').onclick = function bridgeIt () {
       window.nearFungibleTokenFactory.deploy_bridge_token(
@@ -180,10 +249,10 @@
     const ethErc20Address = window.urlParams.get('erc20')
 
     if (ethErc20Address) {
-      window.show('erc20-to-near')
+      window.show('send-erc20')
     } else {
       // user has not selected an ERC20 to send to NEAR; return early
-      window.hide('erc20-to-near')
+      window.hide('send-erc20')
       return
     }
 
@@ -206,10 +275,11 @@
     // how to get useful details about selected network in MetaMask?
     window.fill('ethNetworkName').with(await window.web3.eth.net.getNetworkType())
 
-    const erc20Balance = await getErc20Balance()
+    const erc20Balance = await getErc20Balance(ethErc20Address)
     window.fill('erc20Balance').with(formatLargeNum(erc20Balance))
+    const nep21Balance = await getNep21Balance(ethErc20Address)
 
-    if (erc20Balance === 0) {
+    if (!erc20Balance && !nep21Balance) {
       window.hide('balancePositive')
       window.hide('notBridged')
       window.show('balanceZero')
@@ -221,7 +291,6 @@
         window.show('not-abound-token')
       }
     } else {
-      const nep21Balance = await getNep21Balance()
       if (nep21Balance === null) {
         window.hide('balancePositive')
         window.hide('balanceZero')
@@ -231,18 +300,42 @@
         window.hide('balanceZero')
         window.hide('notBridged')
         window.show('balancePositive')
+        const toEth = document.querySelector('[data-behavior=send-erc20] #toEth')
+        const toNear = document.querySelector('[data-behavior=send-erc20] #toNear')
+        const amount = document.querySelector('[data-behavior=send-erc20] #amount')
+        amount.max = Math.max(erc20Balance, nep21Balance)
+        amount.dataset.nep21Balance = nep21Balance
+        amount.dataset.erc20Balance = erc20Balance
+        if (!erc20Balance) {
+          toNear.style.display = 'none'
+          amount.style.borderTopRightRadius = '5px'
+          amount.style.borderBottomRightRadius = '5px'
+        } else {
+          toNear.style.display = ''
+          amount.style.borderTopRightRadius = 0
+          amount.style.borderBottomRightRadius = 0
+        }
+        if (!nep21Balance) {
+          toEth.style.display = 'none'
+          amount.style.borderTopLeftRadius = '5px'
+          amount.style.borderBottomLeftRadius = '5px'
+        } else {
+          toEth.style.display = ''
+          amount.style.borderTopLeftRadius = 0
+          amount.style.borderBottomLeftRadius = 0
+        }
       }
     }
   }
 
   const formatLargeNum = n => n >= 1e5 || (n < 1e-3 && n !== 0)
     ? n.toExponential(2)
-    : new Intl.NumberFormat(undefined, { maximumSignificantDigits: 3 }).format(n)
+    : new Intl.NumberFormat(undefined, { maximumSignificantDigits: 5 }).format(n)
 
-  async function getErc20Balance () {
+  async function getErc20Balance (erc20Address) {
     const erc20Contract = new window.web3.eth.Contract(
       JSON.parse(process.env.ethErc20AbiText),
-      window.urlParams.get('erc20'),
+      erc20Address,
       { from: window.ethUserAddress }
     )
 
@@ -251,15 +344,10 @@
     )
   }
 
-  async function getNep21Balance () {
-    const nep21Address =
-      window.urlParams.get('erc20').replace('0x', '').toLowerCase() +
-      '.' +
-      process.env.nearTokenFactoryAccount
-
+  async function getNep21Balance (erc20Address) {
     const nep21 = await new window.NearContract(
       window.nearConnection.account(),
-      nep21Address,
+      getNep21Address(erc20Address),
       { viewMethods: ['get_balance'] }
     )
 
@@ -268,23 +356,29 @@
       .catch(() => null)
   }
 
+  function getNep21Address (erc20Address) {
+    return erc20Address.replace('0x', '').toLowerCase() +
+      '.' +
+      process.env.nearTokenFactoryAccount
+  }
+
   window.renderers.push(renderErc20ToNear)
 </script>
 <style>
-  .erc20-to-near {
+  .send-erc20 {
     margin: 4rem auto;
     max-width: 20em;
   }
-  .erc20-to-near .grid {
+  .send-erc20 .grid {
     align-items: stretch;
     grid-template-columns: repeat(3, minmax(10em, 1fr));
   }
-  .erc20-to-near .grid > * {
+  .send-erc20 .grid > * {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
   }
-  .erc20-to-near section {
+  .send-erc20 section {
     border-radius: 5px;
     border: 1px solid var(--gray);
     display: flex;
@@ -294,36 +388,34 @@
     position: relative;
     text-align: center;
   }
-  .erc20-to-near section header {
+  .send-erc20 section header {
     position: absolute;
     top: -1.3em;
     left: 0;
   }
-  .erc20-to-near section header img {
+  .send-erc20 section header img {
     height: 1em;
   }
-  .erc20-to-near section button {
+  .send-erc20 section button {
     padding: 0 0.25em;
   }
-  .erc20-to-near section footer {
+  .send-erc20 section footer {
     font-size: 0.8em;
   }
-  .erc20-to-near section footer img {
+  .send-erc20 section footer img {
     width: 1em;
     vertical-align: bottom;
   }
-  .erc20-to-near form button:after {
-    content: '↓';
-  }
+  #toEth:after  { content: '↑' }
+  #toNear:after { content: '↓' }
   @media(min-width: 650px) {
-    .erc20-to-near {
+    .send-erc20 {
       max-width: 40em;
     }
-    .erc20-to-near .grid {
+    .send-erc20 .grid {
       display: grid;
     }
-    .erc20-to-near form button:after {
-      content: '→';
-    }
+    #toEth:after  { content: '←' }
+    #toNear:after { content: '→' }
   }
 </style>
