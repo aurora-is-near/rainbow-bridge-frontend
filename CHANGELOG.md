@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.4.1...v1.5.0) (2020-12-17)
+
+
+### Features
+
+* almost send a Bridged NEP21 back to Ethereum ([2f27b96](https://github.com/near/rainbow-bridge-frontend/commit/2f27b965faf8098b4e85cf1c01b9b9c2f4144340))
+
 ## [1.4.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.4.0...v1.4.1) (2020-11-01)
 
 
