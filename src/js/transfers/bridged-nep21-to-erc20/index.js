@@ -10,11 +10,14 @@ import * as storage from '../storage'
 // it in localStorage, and then calls `checkStatus` (below), which will then
 // call actual `withdraw` function.
 export async function initiate (nep21Address, amount) {
-  return {
-    amount,
-    nep21Address,
-    status: INITIALIZED
-  }
+  const ohno = 'Sending Bridged NEP21 back to Ethereum not yet supported!'
+  alert(ohno)
+  throw new Error(ohno)
+  // return {
+  //   amount,
+  //   nep21Address,
+  //   status: INITIALIZED
+  // }
 }
 
 async function withdraw ({ id, nep21Address, amount }) {
