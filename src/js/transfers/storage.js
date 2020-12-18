@@ -1,56 +1,42 @@
-function localStorageGet (key) {
-  try {
-    const serializedState = localStorage.getItem(key)
-    if (serializedState === null) {
-      return undefined
-    }
-    return JSON.parse(serializedState)
-  } catch (err) {
-    return undefined
-  }
-}
+import PouchDB from 'pouchdb-browser'
 
-function localStorageSet (key, state) {
-  if (!key || !state) {
-    throw new Error('expected two arguments, only got one')
-  }
-  const serializedState = JSON.stringify(state)
-  localStorage.setItem(key, serializedState)
-}
-
-const STORAGE_KEY = 'rainbow-bridge-transfers'
+const db = new PouchDB('rainbow-bridge-transfers')
+const remoteCouch = false // eslint-disable-line no-unused-vars
 
 // Get raw transfers, stored in localStorage as an object indexed by keys
-export function getAll () {
-  return localStorageGet(STORAGE_KEY) || {}
-}
-
-export function get (id) {
-  if (!id) throw new Error('must provide ID to fetch a single transfer')
-  return getAll()[id]
-}
-
-export function add (transfer) {
-  localStorageSet(STORAGE_KEY, {
-    ...getAll(),
-    [transfer.id]: transfer
+export async function getAll () {
+  const result = await db.allDocs({
+    include_docs: true,
+    descending: true
   })
+  return result.rows.map(r => r.doc)
+}
+
+export async function get (id) {
+  if (!id) {
+    console.error(new Error('tried to fetch transfer with blank id'))
+    return null
+  }
+  return await db.get(id)
+}
+
+export async function add (transfer) {
+  const { rev } = await db.put({
+    _id: transfer.id,
+    ...transfer
+  })
+  return { ...transfer, _rev: rev }
 }
 
 // update a given transfer in localStorage, returning a new object with the
 // updated version
-export function update (transfer, withData) {
+export async function update (transfer, withData) {
   const updatedTransfer = { ...transfer, ...withData }
-  localStorageSet(STORAGE_KEY, {
-    ...getAll(),
-    [transfer.id]: updatedTransfer
-  })
-  return updatedTransfer
+  const { rev } = await db.put(updatedTransfer)
+  return { ...updatedTransfer, _rev: rev }
 }
 
 // Clear a transfer from localStorage
-export function clear (id) {
-  const transfers = getAll()
-  delete transfers[id]
-  localStorageSet(STORAGE_KEY, transfers)
+export async function clear (id) {
+  return await db.remove(id)
 }

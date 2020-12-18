@@ -55,12 +55,10 @@ export async function initiate ({ naturalErc20, nep21FromErc20, amount, callback
 // The only way to retrieve a list of transfers.
 // Returns an object with 'inProgress' and 'complete' keys,
 // and an array of chronologically-ordered transfers for each
-export function get () {
-  const raw = storage.getAll()
-  return Object.keys(raw).sort().reduce(
-    (acc, id) => {
-      const transfer = raw[id]
-
+export async function get () {
+  const transfers = await storage.getAll()
+  return transfers.reduce(
+    (acc, transfer) => {
       if (transfer.status === 'complete') acc.complete.push(transfer)
       else acc.inProgress.push(transfer)
 
@@ -87,7 +85,7 @@ export async function checkStatuses (callback) {
   //   2. check retried failed transfers, which are not inProgress
   const id = urlParams.get('minting')
   if (id) {
-    const transfer = storage.get(id)
+    const transfer = await storage.get(id)
     if (transfer && transfer.erc20Address) {
       await naturalErc20ToNep21.checkCompletion(transfer)
     }
@@ -95,7 +93,7 @@ export async function checkStatuses (callback) {
     if (callback) await callback()
   }
 
-  const { inProgress } = get()
+  const { inProgress } = await get()
 
   // if all transfers successful, nothing to do
   if (!inProgress.length) return
@@ -112,9 +110,9 @@ export async function checkStatuses (callback) {
 
 // Retry a failed transfer
 export async function retry (id, callback) {
-  let transfer = storage.get(id)
+  let transfer = await storage.get(id)
 
-  transfer = storage.update(transfer, {
+  transfer = await storage.update(transfer, {
     status: transfer.failedAt,
     outcome: null,
     error: null,
@@ -134,8 +132,8 @@ export async function retry (id, callback) {
 }
 
 // Clear a transfer from localStorage
-export function clear (id) {
-  storage.clear(id)
+export async function clear (id) {
+  await storage.clear(id)
 }
 
 // Add a new transfer to the set of cached local transfers.
@@ -146,7 +144,7 @@ async function track (transferRaw, callback) {
   const id = new Date().toISOString()
   const transfer = { id, ...transferRaw }
 
-  storage.add(transfer)
+  await storage.add(transfer)
 
   if (callback) await callback()
   checkStatus(id, callback)
@@ -157,7 +155,7 @@ async function track (transferRaw, callback) {
 //   * it will be called after updating the status in localStorage
 //   * a new call to checkStatus will be scheduled for this transfer, if its status is not SUCCESS
 async function checkStatus (id, callback) {
-  let transfer = storage.get(id)
+  let transfer = await storage.get(id)
 
   if (transfer.erc20Address) {
     transfer = await naturalErc20ToNep21.checkStatus(transfer)
