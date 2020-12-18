@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.0...v1.5.1) (2020-12-18)
+
+
+### Bug Fixes
+
+* add calls to bridgedNep21ToErc20 where needed ([f8a2e44](https://github.com/near/rainbow-bridge-frontend/commit/f8a2e4456be9affd43d0bca168b67486f5686038))
+
 # [1.5.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.4.1...v1.5.0) (2020-12-17)
 
 
