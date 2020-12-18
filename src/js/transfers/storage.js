@@ -40,3 +40,10 @@ export async function update (transfer, withData) {
 export async function clear (id) {
   return await db.remove(id)
 }
+
+export function onChange (fn) {
+  db.changes({
+    since: 'now',
+    live: true
+  }).on('change', fn)
+}

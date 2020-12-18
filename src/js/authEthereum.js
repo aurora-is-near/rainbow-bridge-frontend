@@ -55,7 +55,7 @@ async function login (provider) {
   button.replaceWith(span)
   render()
 
-  if (window.nearInitialized) checkTransferStatuses(render)
+  if (window.nearInitialized) checkTransferStatuses()
 }
 
 async function loadWeb3Modal () {

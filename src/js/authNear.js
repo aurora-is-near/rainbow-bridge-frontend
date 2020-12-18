@@ -55,7 +55,7 @@ async function login () {
 
   render()
 
-  if (window.ethInitialized) checkTransferStatuses(render)
+  if (window.ethInitialized) checkTransferStatuses()
 }
 
 // The NEAR signin flow redirects from the current URL to NEAR Wallet,
