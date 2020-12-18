@@ -74,6 +74,7 @@ export function get () {
 // Return a human-readable description of the status for a given transfer
 export function humanStatusFor (transfer) {
   if (transfer.erc20Address) return naturalErc20ToNep21.humanStatusFor(transfer)
+  if (transfer.nep21Address) return bridgedNep21ToErc20.humanStatusFor(transfer)
 }
 
 // Check statuses of all inProgress transfers, and update them accordingly.
@@ -125,7 +126,7 @@ export async function retry (id, callback) {
     await naturalErc20ToNep21.retry(transfer)
   }
 
-  if (transfer.nep21FromErc20) {
+  if (transfer.nep21Address) {
     await bridgedNep21ToErc20.retry(transfer)
   }
 
@@ -161,6 +162,10 @@ async function checkStatus (id, callback) {
 
   if (transfer.erc20Address) {
     transfer = await naturalErc20ToNep21.checkStatus(transfer)
+  }
+
+  if (transfer.nep21Address) {
+    transfer = await bridgedNep21ToErc20.checkStatus(transfer)
   }
 
   // if successfully transfered, call callback and end
