@@ -1,4 +1,3 @@
-import { ulid } from 'ulid'
 import * as naturalErc20ToNep21 from './natural-erc20-to-nep21'
 import * as bridgedNep21ToErc20 from './bridged-nep21-to-erc20'
 import * as urlParams from '../urlParams'
@@ -144,7 +143,7 @@ export function clear (id) {
 // This transfer will be checked for updates, which, if given a callback, will
 // kick off timed re-checks.
 async function track (transferRaw, callback) {
-  const id = ulid()
+  const id = new Date().toISOString()
   const transfer = { id, ...transferRaw }
 
   storage.add(transfer)
