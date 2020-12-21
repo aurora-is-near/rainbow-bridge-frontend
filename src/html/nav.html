@@ -130,7 +130,7 @@
   }
 
   async function updateTransfers () {
-    const { inProgress, complete } = window.transfers.get()
+    const { inProgress, complete } = await window.transfers.get()
 
     if (!inProgress.length && !complete.length) {
       show('transfers-none')

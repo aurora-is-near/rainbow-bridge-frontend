@@ -69,7 +69,7 @@ Exploring the code
 
    * Note the imports of files named `authEthereum` & `authNear`. These imports have side effects, adding behavior to the buttons with matching `data-behavior` attributes. The Ethereum- and NEAR-specific stuff is mostly contained within these files, so you can compare the authentication & contract-initialization code side-by-side.
    * `initDOMHandlers` is a function that needs to be called once after page load, to add behavior like dropdown toggling & form submission. Check out [domHelpers.js](./src/js/domHelpers.js) to see the simple setup here.
-   * `render` is a function which doesn't truly _render_, if you're used to thinking about rendering from a framework like React. Instead, this function procedurally updates the DOM based on current app state. Open [render.js](./src/js/render.js) to see everything it does. This function gets called again in both [authEthereum](./src/js/authEthereum.js) and [authNear](./src/js/authNear.js) after login. It also gets passed as a callback to `checkTransferStatuses` – more on this next!
+   * `render` is a function which doesn't truly _render_, if you're used to thinking about rendering from a framework like React. Instead, this function procedurally updates the DOM based on current app state. Open [render.js](./src/js/render.js) to see everything it does. This function gets called again in both [authEthereum](./src/js/authEthereum.js) and [authNear](./src/js/authNear.js) after login.
 
 4. [transfers.js](./src/js/transfers.js): the main Rainbow Bridge logic!
 

@@ -4,6 +4,8 @@ import * as urlParams from '../urlParams'
 import * as storage from './storage'
 import { COMPLETE } from './statuses'
 
+export { onChange } from './storage'
+
 // Initiate a new transfer of 'amount' tokens. Must provide one of:
 //
 //   • naturalErc20: an address of a natural ERC20 to send to NEAR
@@ -21,7 +23,7 @@ import { COMPLETE } from './statuses'
 //   near-api-js soon.
 // * window.ethUserAddress: address of authenticated Ethereum wallet to send from
 // * window.nearUserAddress: address of authenticated NEAR wallet to send to
-export async function initiate ({ naturalErc20, nep21FromErc20, amount, callback }) {
+export async function initiate ({ naturalErc20, nep21FromErc20, amount }) {
   const originsProvided = [
     naturalErc20,
     nep21FromErc20
@@ -49,18 +51,16 @@ export async function initiate ({ naturalErc20, nep21FromErc20, amount, callback
     ...customAttributes
   }
 
-  track(transfer, callback)
+  track(transfer)
 }
 
 // The only way to retrieve a list of transfers.
 // Returns an object with 'inProgress' and 'complete' keys,
 // and an array of chronologically-ordered transfers for each
-export function get () {
-  const raw = storage.getAll()
-  return Object.keys(raw).sort().reduce(
-    (acc, id) => {
-      const transfer = raw[id]
-
+export async function get () {
+  const transfers = await storage.getAll()
+  return transfers.reduce(
+    (acc, transfer) => {
       if (transfer.status === 'complete') acc.complete.push(transfer)
       else acc.inProgress.push(transfer)
 
@@ -77,9 +77,7 @@ export function humanStatusFor (transfer) {
 }
 
 // Check statuses of all inProgress transfers, and update them accordingly.
-// Accepts an optional callback, which will be called after all transfers have
-// been checked & updated.
-export async function checkStatuses (callback) {
+export async function checkStatuses () {
   // First, check if we've just returned to this page from NEAR Wallet after
   // completing a transfer. Do this outside of main Promise.all to
   //
@@ -87,34 +85,30 @@ export async function checkStatuses (callback) {
   //   2. check retried failed transfers, which are not inProgress
   const id = urlParams.get('minting')
   if (id) {
-    const transfer = storage.get(id)
+    const transfer = await storage.get(id)
     if (transfer && transfer.erc20Address) {
       await naturalErc20ToNep21.checkCompletion(transfer)
     }
     urlParams.clear('minting', 'balanceBefore')
-    if (callback) await callback()
   }
 
-  const { inProgress } = get()
+  const { inProgress } = await get()
 
   // if all transfers successful, nothing to do
   if (!inProgress.length) return
 
-  // Check & update statuses for all in parallel.
-  // Do not pass callback, only call it once after all updated.
+  // Check & update statuses for all in parallel
   await Promise.all(inProgress.map(t => checkStatus(t.id)))
 
-  if (callback) await callback()
-
   // recheck statuses again soon
-  window.setTimeout(() => checkStatuses(callback), 5500)
+  window.setTimeout(() => checkStatuses(), 5500)
 }
 
 // Retry a failed transfer
-export async function retry (id, callback) {
-  let transfer = storage.get(id)
+export async function retry (id) {
+  let transfer = await storage.get(id)
 
-  transfer = storage.update(transfer, {
+  transfer = await storage.update(transfer, {
     status: transfer.failedAt,
     outcome: null,
     error: null,
@@ -129,35 +123,31 @@ export async function retry (id, callback) {
     await bridgedNep21ToErc20.retry(transfer)
   }
 
-  if (callback) await callback()
-  checkStatus(id, callback)
+  checkStatus(id)
 }
 
 // Clear a transfer from localStorage
-export function clear (id) {
-  storage.clear(id)
+export async function clear (id) {
+  await storage.clear(id)
 }
 
 // Add a new transfer to the set of cached local transfers.
 // This transfer will be given a chronologically-ordered id.
-// This transfer will be checked for updates, which, if given a callback, will
-// kick off timed re-checks.
-async function track (transferRaw, callback) {
+// This transfer will be checked for updates on a loop.
+async function track (transferRaw) {
   const id = new Date().toISOString()
   const transfer = { id, ...transferRaw }
 
-  storage.add(transfer)
+  await storage.add(transfer)
 
-  if (callback) await callback()
-  checkStatus(id, callback)
+  checkStatus(id, { loop: true })
 }
 
-// check the status of a single transfer
-// if `callback` is provided:
-//   * it will be called after updating the status in localStorage
-//   * a new call to checkStatus will be scheduled for this transfer, if its status is not SUCCESS
-async function checkStatus (id, callback) {
-  let transfer = storage.get(id)
+// Check the status of a single transfer.
+// If `loop` is provided, a new call to checkStatus will be scheduled for this
+// transfer, if transfer.status is not COMPLETE.
+async function checkStatus (id, { loop = false }) {
+  let transfer = await storage.get(id)
 
   if (transfer.erc20Address) {
     transfer = await naturalErc20ToNep21.checkStatus(transfer)
@@ -167,15 +157,8 @@ async function checkStatus (id, callback) {
     transfer = await bridgedNep21ToErc20.checkStatus(transfer)
   }
 
-  // if successfully transfered, call callback and end
-  if (transfer.status === COMPLETE) {
-    if (callback) await callback()
-    return
-  }
-
-  // if not fully transferred and callback passed in, check status again soon
-  if (callback) {
-    await callback()
-    window.setTimeout(() => checkStatus(transfer.id, callback), 5500)
+  // if not fully transferred and told to loop, check status again soon
+  if (loop && transfer.status !== COMPLETE) {
+    window.setTimeout(() => checkStatus(transfer.id, { loop }), 5500)
   }
 }

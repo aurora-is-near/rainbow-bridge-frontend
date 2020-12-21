@@ -94,14 +94,14 @@ export async function checkStatus (transfer) {
     // causes redirect to NEAR Wallet and subsequent update of transfer
     const withdrawal = await withdraw(transfer)
     if (withdrawal.failed) {
-      transfer = storage.update(transfer, {
+      transfer = await storage.update(transfer, {
         status: COMPLETE,
         outcome: FAILED,
         failedAt: WITHDRAWN,
         error: transfer.error
       })
     } else {
-      transfer = storage.update(transfer, {
+      transfer = await storage.update(transfer, {
         ...withdrawal,
         status: WITHDRAWN
       })
@@ -112,13 +112,13 @@ export async function checkStatus (transfer) {
     try {
       const outcomeBlock = await findOutcomeBlock(transfer)
       if (outcomeBlock) {
-        transfer = storage.update(transfer, {
+        transfer = await storage.update(transfer, {
           ...outcomeBlock,
           status: FOUND_OUTCOME
         })
       }
     } catch (error) {
-      transfer = storage.update(transfer, {
+      transfer = await storage.update(transfer, {
         status: COMPLETE,
         outcome: FAILED,
         failedAt: WITHDRAWN,
@@ -131,13 +131,13 @@ export async function checkStatus (transfer) {
     try {
       const ethBlockInfo = await findEthBlock(transfer)
       if (ethBlockInfo) {
-        transfer = storage.update(transfer, {
+        transfer = await storage.update(transfer, {
           ...ethBlockInfo,
           status: FOUND_ETH_BLOCK
         })
       }
     } catch (error) {
-      transfer = storage.update(transfer, {
+      transfer = await storage.update(transfer, {
         status: COMPLETE,
         outcome: FAILED,
         failedAt: FOUND_OUTCOME,
@@ -150,12 +150,12 @@ export async function checkStatus (transfer) {
     try {
       const securityWindowClosed = await checkSecurityWindowClosed(transfer)
       if (securityWindowClosed) {
-        transfer = storage.update(transfer, {
+        transfer = await storage.update(transfer, {
           status: SECURITY_WINDOW_CLOSED
         })
       }
     } catch (error) {
-      transfer = storage.update(transfer, {
+      transfer = await storage.update(transfer, {
         status: COMPLETE,
         outcome: FAILED,
         failedAt: FOUND_ETH_BLOCK,
@@ -167,12 +167,12 @@ export async function checkStatus (transfer) {
   if (transfer.status === SECURITY_WINDOW_CLOSED) {
     try {
       await unlock(transfer)
-      transfer = storage.update(transfer, {
+      transfer = await storage.update(transfer, {
         outcome: SUCCESS,
         status: COMPLETE
       })
     } catch (error) {
-      transfer = storage.update(transfer, {
+      transfer = await storage.update(transfer, {
         status: COMPLETE,
         outcome: FAILED,
         failedAt: SECURITY_WINDOW_CLOSED,
@@ -189,12 +189,12 @@ export async function retry (transfer) {
     case SECURITY_WINDOW_CLOSED:
       try {
         await unlock(transfer)
-        transfer = storage.update(transfer, {
+        transfer = await storage.update(transfer, {
           outcome: SUCCESS,
           status: COMPLETE
         })
       } catch (error) {
-        transfer = storage.update(transfer, {
+        transfer = await storage.update(transfer, {
           status: COMPLETE,
           outcome: FAILED,
           failedAt: SECURITY_WINDOW_CLOSED,
