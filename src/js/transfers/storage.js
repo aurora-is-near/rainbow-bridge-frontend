@@ -1,7 +1,14 @@
 import PouchDB from 'pouchdb-browser'
 
-const db = new PouchDB('rainbow-bridge-transfers')
-const remoteCouch = false // eslint-disable-line no-unused-vars
+const LOCAL_DB = 'rainbow-bridge-transfers'
+const REMOTE_DB = `https://apikey-a0d8c8c11d224196b7ea464c42e39a60:eb44e84a1120e186fb0af806d436cf2bb891ae58@32114ed0-9b02-4a9b-9f93-de07a5616483-bluemix.cloudant.com/rainbow-bridge-${process.env.nearNetworkId}`
+
+const db = new PouchDB(LOCAL_DB)
+
+PouchDB.replicate(REMOTE_DB, LOCAL_DB, {
+  live: true,
+  retry: true
+})
 
 // Get raw transfers, stored in localStorage as an object indexed by keys
 export async function getAll () {
