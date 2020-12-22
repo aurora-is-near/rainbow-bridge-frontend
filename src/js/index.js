@@ -22,3 +22,5 @@ window.urlParams = urlParams
 
 initDOMhandlers()
 render()
+
+transfers.onChange(render)

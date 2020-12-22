@@ -59,7 +59,7 @@ export async function checkStatus (transfer) {
     if (approvalReceipt) {
       if (approvalReceipt.status) {
         const lockHash = await initiateLock(transfer.erc20Address, transfer.amount)
-        transfer = storage.update(transfer, {
+        transfer = await storage.update(transfer, {
           status: INITIATED_LOCK,
           approvalReceipt,
           lockHash
@@ -68,7 +68,7 @@ export async function checkStatus (transfer) {
         const error = await getRevertReason(
           transfer.approvalHash, process.env.ethNetwork
         )
-        transfer = storage.update(transfer, {
+        transfer = await storage.update(transfer, {
           status: COMPLETE,
           outcome: FAILED,
           failedAt: INITIATED_APPROVAL,
@@ -86,7 +86,7 @@ export async function checkStatus (transfer) {
 
     if (lockReceipt) {
       if (lockReceipt.status) {
-        transfer = storage.update(transfer, {
+        transfer = await storage.update(transfer, {
           status: LOCKED,
           progress: 0,
           lockReceipt
@@ -95,7 +95,7 @@ export async function checkStatus (transfer) {
         const error = await getRevertReason(
           transfer.lockHash, process.env.ethNetwork
         )
-        transfer = storage.update(transfer, {
+        transfer = await storage.update(transfer, {
           status: COMPLETE,
           outcome: FAILED,
           failedAt: INITIATED_LOCK,
@@ -110,14 +110,14 @@ export async function checkStatus (transfer) {
     const eventEmittedAt = transfer.lockReceipt.blockNumber
     const syncedTo = await window.ethOnNearClient.lastBlockNumber()
     const progress = Math.max(0, syncedTo - eventEmittedAt)
-    transfer = storage.update(transfer, { progress })
+    transfer = await storage.update(transfer, { progress })
 
     if (progress >= transfer.neededConfirmations) {
       try {
         await mint(transfer)
       } catch (error) {
         console.error(error)
-        transfer = storage.update(transfer, {
+        transfer = await storage.update(transfer, {
           status: COMPLETE,
           outcome: FAILED,
           failedAt: LOCKED,
@@ -136,9 +136,9 @@ export async function checkCompletion (transfer) {
     await getNep21Balance(transfer.erc20Address)
   )
   if (balanceAfter - transfer.amount === Number(balanceBefore)) {
-    storage.update(transfer, { status: COMPLETE, outcome: SUCCESS })
+    await storage.update(transfer, { status: COMPLETE, outcome: SUCCESS })
   } else {
-    storage.update(transfer, {
+    await storage.update(transfer, {
       status: COMPLETE,
       outcome: FAILED,
       failedAt: LOCKED,
@@ -153,7 +153,7 @@ export async function retry (transfer) {
       const oldApprovalHashes = transfer.oldApprovalHashes || []
       oldApprovalHashes.push(transfer.approvalHash)
       const { approvalHash } = await initiate(transfer.erc20Address, transfer.amount)
-      transfer = storage.update(transfer, { oldApprovalHashes, approvalHash })
+      transfer = await storage.update(transfer, { oldApprovalHashes, approvalHash })
       break
     }
     case INITIATED_LOCK: {

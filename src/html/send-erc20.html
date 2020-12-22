@@ -195,7 +195,6 @@
       },
       action: amount => window.transfers.initiate({
         amount,
-        callback: window.render,
         naturalErc20: window.urlParams.get('erc20')
       }),
       after: ({ toEth }) => {
@@ -211,7 +210,6 @@
       },
       action: amount => window.transfers.initiate({
         amount,
-        callback: window.render,
         nep21FromErc20: getNep21Address(window.urlParams.get('erc20'))
       }),
       after: ({ toNear }) => {
