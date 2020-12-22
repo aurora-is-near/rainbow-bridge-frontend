@@ -1,12 +1,18 @@
 .title {
-  margin-top: 0;
-  padding: 3.5em 0 0;
+  text-align: center;
 }
 
-.title:before {
-  content: '🌈';
-  position: absolute;
-  width: 100%;
-  top: 1.25em;
-  left: 0;
+.title > * {
+  display: block;
+}
+
+.title > svg {
+  margin: calc(0.5 * var(--space)) auto;
+}
+
+.title > small {
+  color: var(--gray);
+  font-size: 0.5em;
+  margin-bottom: 0.5em;
+  font-weight: 400;
 }
