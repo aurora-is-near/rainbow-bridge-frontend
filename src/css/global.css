@@ -87,10 +87,11 @@ button, input, select {
 }
 
 button {
-  background-color: var(--secondary);
+  background-color: var(--fg-bold);
   border-radius: 5px;
   border: none;
-  color: #efefef;
+  color: var(--bg);
+  font-weight: 500;
   cursor: pointer;
   padding: 0.3em 0.75em;
   transition: transform 30ms;
