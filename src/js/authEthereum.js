@@ -50,7 +50,7 @@ async function login (provider) {
   window.ethInitialized = true
 
   const span = document.createElement('span')
-  span.innerHTML = `<span class="connected-account">${window.ethUserAddress}<span>`
+  span.innerHTML = `<span class="connected-account" title="${window.ethUserAddress}">${window.ethUserAddress}<span>`
   find('authEthereum').replaceWith(span)
   render()
 

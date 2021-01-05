@@ -19,6 +19,7 @@
   window.addEventListener('load', function handleSelectErc20Events () {
     document.querySelector('[data-behavior=select-erc20]').onsubmit = e => {
       e.preventDefault()
+      window.urlParams.clear('send')
       window.urlParams.set({ erc20: e.target.elements.erc20.value })
       window.render()
     }

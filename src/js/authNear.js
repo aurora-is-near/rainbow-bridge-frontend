@@ -29,7 +29,7 @@ onClick('authNear', () => {
 
 async function login () {
   const span = document.createElement('span')
-  span.innerHTML = `<span class="connected-account">${window.nearUserAddress}</span>`
+  span.innerHTML = `<span class="connected-account" title="${window.nearUserAddress}">${window.nearUserAddress}</span>`
   find('authNear').replaceWith(span)
 
   window.nearFungibleTokenFactory = await new Contract(
