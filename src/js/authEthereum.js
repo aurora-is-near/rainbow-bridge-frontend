@@ -4,6 +4,7 @@ import Web3 from 'web3'
 
 import { checkStatuses as checkTransferStatuses } from './transfers'
 import render from './render'
+import { find, onClick } from './domHelpers'
 
 // SWAP IN YOUR OWN INFURA_ID FROM https://infura.io/dashboard/ethereum
 const INFURA_ID = '9c91979e95cb4ef8a61eb029b4217a1a'
@@ -23,8 +24,6 @@ window.web3Modal = new Web3Modal({
     }
   }
 })
-
-const button = document.querySelector('[data-behavior=authEthereum]')
 
 async function login (provider) {
   window.web3 = new Web3(provider)
@@ -51,8 +50,8 @@ async function login (provider) {
   window.ethInitialized = true
 
   const span = document.createElement('span')
-  span.innerHTML = `Connected to Ethereum as <code>${window.ethUserAddress}</code>`
-  button.replaceWith(span)
+  span.innerHTML = `<span class="connected-account">${window.ethUserAddress}<span>`
+  find('authEthereum').replaceWith(span)
   render()
 
   if (window.nearInitialized) checkTransferStatuses()
@@ -68,7 +67,7 @@ async function loadWeb3Modal () {
   login(provider)
 }
 
-button.onclick = loadWeb3Modal
+onClick('authEthereum', loadWeb3Modal)
 
 // on page load, check if user has already signed in via MetaMask
 if (window.web3Modal.cachedProvider) {

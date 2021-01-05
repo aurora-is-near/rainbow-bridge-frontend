@@ -36,11 +36,9 @@
 <body>
   <!-- using posthtml to separate page into multiple files; see .posthtmlrc -->
   <include src="nav.html"></include>
-  <include src="signed-out.html"></include>
-  <main data-behavior="signed-in" style="display: none">
-    <include src="select-erc20.html"></include>
-    <include src="send-erc20.html"></include>
-  </main>
+  <include src="landing.html"></include>
+  <include src="select-erc20.html"></include>
+  <include src="send-erc20.html"></include>
 
   <script src="./js/index.js"></script>
 </body>

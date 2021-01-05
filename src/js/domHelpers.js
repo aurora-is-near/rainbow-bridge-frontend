@@ -19,14 +19,30 @@ export const fill = selector => ({
   }
 })
 
+// Attach a click event handler to elements with the specified
+// "data-behavior" attribute
+export function onClick (behavior, fn) {
+  document.querySelector('body').addEventListener('click', e => {
+    if (e.target.dataset.behavior === behavior) fn()
+  })
+}
+
+// Find element with the given "data-behavior" attribute
+export const find = selector =>
+  document.querySelector(`[data-behavior="${selector}"]`)
+
+// Find all elements with the given "data-behavior" attribute
+// returns as array
+export const findAll = selector =>
+  Array.from(document.querySelectorAll(`[data-behavior="${selector}"]`))
+
 // Hide DOM elements that have the given "data-behavior" attribute
 export const hide = selector =>
-  Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
-    .forEach(n => { n.style.display = 'none' })
+  findAll(selector).forEach(n => { n.style.display = 'none' })
 
 // Hide DOM elements that have the given "data-behavior" attribute
 export const show = (selector, display) =>
-  Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
+  findAll(selector)
     .forEach(n => {
       if (display) {
         n.style.display = display

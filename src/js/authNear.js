@@ -3,6 +3,7 @@ import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 import { checkStatuses as checkTransferStatuses } from './transfers'
 import EthOnNearClient from './borsh/ethOnNearClient'
 import render from './render'
+import { find, onClick } from './domHelpers'
 
 // Create a Near config object
 const near = new Near({
@@ -19,19 +20,17 @@ window.nearConnection = new WalletConnection(near)
 // Getting the Account ID. If still unauthorized, it's an empty string
 window.nearUserAddress = window.nearConnection.getAccountId()
 
-const button = document.querySelector('[data-behavior=authNear]')
-
-button.onclick = function login () {
-  // Allow the current app to make calls to the specified contract on the
-  // user's behalf. This works by creating a new access key for the user's
-  // account and storing the private key in localStorage.
+// Allow the current app to make calls to the specified contract on the
+// user's behalf. This works by creating a new access key for the user's
+// account and storing the private key in localStorage.
+onClick('authNear', () => {
   window.nearConnection.requestSignIn(process.env.nearFunTokenAccount)
-}
+})
 
 async function login () {
   const span = document.createElement('span')
-  span.innerHTML = `Connected to NEAR as <code>${window.nearUserAddress}</code>`
-  button.replaceWith(span)
+  span.innerHTML = `<span class="connected-account">${window.nearUserAddress}</span>`
+  find('authNear').replaceWith(span)
 
   window.nearFungibleTokenFactory = await new Contract(
     window.nearConnection.account(),

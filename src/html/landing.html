@@ -1,0 +1,154 @@
+<div data-behavior="landing">
+  <h1 class="title">
+    <include src="rainbow-bridge.svg.html"></include>
+    <small>
+      ETH
+      <img alt="to and from" src="img/swap-lr.svg" style="vertical-align: bottom">
+      NEAR
+    </small>
+    <div>Rainbow</div>
+    <div>Bridge</div>
+  </h1>
+  <div style="margin: 0 auto 2.5em; max-width: 25em; text-align: center">
+    <p>
+      From
+      <a
+        href="https://eips.ethereum.org/EIPS/eip-20"
+        rel="nofollow"
+        class="concept-ethereum"
+      >ERC20</a>
+      to
+      <a
+        href="https://github.com/nearprotocol/NEPs/pull/21"
+        rel="nofollow"
+        class="concept-near"
+      >NEP21</a>
+      and back! Connect your NEAR and Ethereum accounts to get started.
+    </p>
+    <div class="panel">
+      <div class="account" data-behavior="account">
+        <label for="authEthereum">
+          <!-- filled in with CSS -->
+        </label>
+        <div>
+          <span class="concept-ethereum">
+            <img src="img/ethereum.svg" alt="">
+            <span>Ethereum</span>
+          </span>
+          <button id="authEthereum" data-behavior="authEthereum">
+            Connect
+          </button>
+        </div>
+      </div>
+      <button class="swap" data-behavior="swap-accounts">
+        <span class="visually-hidden">swap</span>
+      </button>
+      <div class="account" data-behavior="account">
+        <label for="authNear">
+          <!-- filled in with CSS -->
+        </label>
+        <div>
+          <span style="color: var(--fg-bold)">
+            <img src="img/near.svg" alt="">
+            <span>NEAR</span>
+          </span>
+          <button id="authNear" data-behavior="authNear">
+            Connect
+          </button>
+        </div>
+      </div>
+      <button
+        disabled
+        data-behavior="start-erc20-transfer"
+        style="width: 100%; margin-top: 2em; padding: 0.75em; border-radius: 0.5em"
+      >
+        Begin transfer
+      </button>
+    </div>
+  </div>
+</div>
+<style>
+  .panel {
+    border-radius: 1em;
+    box-shadow: 0 1em 2em rgba(0,0,0,0.2);
+    margin: 0 auto;
+    padding: 1em;
+  }
+
+  /**
+   * Fill in labels with CSS to simplify swapping order with JS
+   */
+  .account:first-child label:after {
+    content: 'From'
+  }
+  .account:nth-child(3) label:after {
+    content: 'To'
+  }
+
+  .account {
+    font-size: 0.8em;
+  }
+  .account label {
+    margin-left: calc(1em + 1px);
+    margin-bottom: 0.5em;
+    text-align: left;
+  }
+
+  .account > div {
+    border: 1px solid var(--shadow);
+    border-radius: 0.5em;
+    padding: 1em;
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: auto auto;
+    grid-gap: 3em;
+  }
+
+  .account > div > span {
+    display: grid;
+    align-items: center;
+    grid-gap: 0.5em;
+    grid-template-columns: auto auto;
+  }
+
+  .swap {
+    background-color: transparent;
+    background: url('img/swap-vert.svg') no-repeat;
+    background-position: center center;
+    background-size: 1.3em;
+    border-radius: 1000em;
+    border: 1px solid var(--light-gray);
+    height: 2em;
+    margin: 1em auto 0em;
+    width: 3.5em;
+  }
+</style>
+<script>
+window.addEventListener('load', function addLandingHandlers () {
+  window.onClick('swap-accounts', function swapAccountOrder () {
+    const [from, to] = window.findAll('account')
+    fromInner = from.innerHTML
+    toInner = to.innerHTML
+    from.innerHTML = toInner
+    to.innerHTML = fromInner
+  })
+  window.onClick('start-erc20-transfer', function startErc20Transfer () {
+    window.urlParams.set({ send: 'erc20' })
+    window.render()
+  })
+})
+function renderLanding () {
+  if (window.ethInitialized && window.nearInitialized) {
+    window.find('start-erc20-transfer').disabled = false
+  } else {
+    window.find('start-erc20-transfer').disabled = true
+  }
+
+  if (Object.keys(window.urlParams.get()).length) {
+    window.hide('landing')
+  } else {
+    window.show('landing')
+  }
+}
+window.renderers.push(renderLanding)
+</script>

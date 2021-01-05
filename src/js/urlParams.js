@@ -1,6 +1,10 @@
 export function get (...paramNames) {
   const params = new URLSearchParams(window.location.search)
 
+  if (paramNames.length === 0) {
+    return Object.fromEntries(params.entries())
+  }
+
   if (paramNames.length === 1) {
     return params.get(paramNames[0])
   }
