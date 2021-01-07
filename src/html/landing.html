@@ -1,4 +1,4 @@
-<div data-behavior="landing" style="padding:1em">
+<div class="landing" data-behavior="landing" style="padding:1em">
   <h1 class="title">
     <include src="rainbow-bridge.svg.html">{ "width": "2.3em" }</include>
     <small>
@@ -9,7 +9,7 @@
     <div>Rainbow</div>
     <div>Bridge</div>
   </h1>
-  <div style="margin: 0 auto 2.5em; max-width: 25em; text-align: center">
+  <div style="margin: 0 auto 2.5em; max-width: 22em; text-align: center">
     <p>
       From
       <a
@@ -74,8 +74,15 @@
 </div>
 <style>
   .panel {
+    background-color: var(--bg);
     border-radius: 1em;
-    box-shadow: 0 1em 2em var(--shadow);
+    box-shadow:
+      0px 51px 121px rgba(0, 0, 0, 0.05),
+      0px 21.3066px 50.5509px rgba(0, 0, 0, 0.0359427),
+      0px 11.3915px 27.0269px rgba(0, 0, 0, 0.0298054),
+      0px 6.38599px 15.1511px rgba(0, 0, 0, 0.025),
+      0px 3.39155px 8.04662px rgba(0, 0, 0, 0.0201946),
+      0px 1.4113px 3.34838px rgba(0, 0, 0, 0.0140573);
     margin: 0 auto;
     padding: 1em;
   }
@@ -100,7 +107,7 @@
   }
 
   .account > div {
-    border: 1px solid var(--shadow);
+    border: 1px solid var(--light-gray);
     border-radius: 0.5em;
     padding: 1em;
     display: grid;
@@ -181,6 +188,20 @@
   }
   .transfer footer button:active {
     background: var(--light-gray);
+  }
+
+  @media (min-width: 928px) {
+    .landing .panel {
+      margin-top: 6em;
+    }
+    .landing {
+      background:
+        url(img/landing-bg-left.svg) no-repeat,
+        url(img/landing-bg-right.svg) no-repeat;
+      background-position:
+        top 18.5em left calc(50% - 17em),
+        top 24em right calc(50% - 16em);
+    }
   }
 </style>
 <script>
