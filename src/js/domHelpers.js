@@ -40,7 +40,7 @@ export const findAll = selector =>
 export const hide = selector =>
   findAll(selector).forEach(n => { n.style.display = 'none' })
 
-// Hide DOM elements that have the given "data-behavior" attribute
+// Show DOM elements that have the given "data-behavior" attribute
 export const show = (selector, display) =>
   findAll(selector)
     .forEach(n => {

@@ -1,0 +1,361 @@
+<form data-behavior="erc20Form" class="erc20" style="display:none">
+  <nav>
+    <button type="button" data-behavior="erc20Cancel" class="link">
+      <include src="rainbow-bridge.svg.html">{ "width": "2em" }</include>
+    </button>
+  </nav>
+  <header>
+    <h2>New Transfer</h2>
+    <p>Select a token and enter an amount to transfer.</p>
+  </header>
+  <div>
+    <header>
+      <strong>From</strong>
+      <span class="account-tag">
+        <span data-behavior="ethUser"></span>
+        <img src="img/ethereum.svg" alt="ETH address"/>
+      </span>
+    </header>
+    <div class="inputs">
+      <select
+        data-behavior="erc20Selector"
+        id="erc20"
+        name="erc20"
+      >
+      </select>
+      <input
+        autoComplete="off"
+        data-behavior="erc20Amount"
+        disabled
+        min="0"
+        placeholder="0"
+        type="number"
+      />
+    </div>
+    <p class="erc20-info" data-behavior="erc20Info" style="margin: 0.5rem 0 0">
+      <span>Available to transfer</span>
+      <span>
+        <span data-behavior="erc20Balance"></span>
+        <span data-behavior="erc20Name"></span>
+      </span>
+    </p>
+  </div>
+  <button type="button" data-behavior="erc20Swap" class="swap-vert" style="margin: 1em auto">
+    <span class="visually-hidden">swap</span>
+  </button>
+  <div>
+    <header>
+      <strong>To</strong>
+      <span class="account-tag">
+        <span data-behavior="nearUser"></span>
+        <include src="near.svg.html">{
+          "alt": "NEAR address"
+        }</include>
+      </span>
+    </header>
+  </div>
+  <p class="erc20-info" data-behavior="erc20Info">
+    <span>Receive as</span>
+    <strong data-behavior="nep21Name"></strong>
+  </p>
+  <p class="erc20-info" data-behavior="erc20Info">
+    <span>Current balance</span>
+    <strong>
+      <span data-behavior="nep21Balance"></span>
+      <span data-behavior="nep21Name"></span>
+    </strong>
+  </p>
+  <footer>
+    <button disabled data-behavior="erc20Submit" class="cta">
+      Submit transfer
+    </button>
+  </footer>
+</form>
+
+<style>
+.account-tag {
+  align-items: center;
+  background-color: var(--light-gray);
+  padding: 0.25em;
+  padding-left: 0.75em;
+  border-radius: 1000em;
+  display: grid;
+  grid-gap: 0.5em;
+  grid-template-columns: 1fr auto;
+}
+.account-tag > *:first-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8em;
+}
+.account-tag > *:last-child {
+  width: 1.5em;
+}
+form.erc20 {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+form.erc20 > nav {
+  border-bottom: 1px solid var(--light-gray);
+  margin: 0 0 2em;
+  padding: 1em 1em 0.5em;
+}
+form.erc20 > header {
+  margin: 0 auto;
+  max-width: 15em;
+  text-align: center;
+}
+form.erc20 > div {
+  background-color: var(--shadow);
+  margin: 0 auto;
+  max-width: 25em;
+  padding: 1em;
+  width: 100%;
+}
+form.erc20 > div > header {
+  align-items: center;
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: auto auto;
+  grid-gap: 3em;
+}
+form.erc20 .erc20-info {
+  display: none;
+  font-size: 0.8em;
+  justify-content: space-between;
+  margin: 0;
+}
+form.erc20 > .erc20-info {
+  background-color: var(--shadow);
+  border-top: 1px solid var(--light-gray);
+  padding: 1rem;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 25rem;
+}
+form.erc20 strong {
+  font-weight: 500;
+  color: var(--fg-bold);
+}
+form.erc20 .inputs {
+  background-color: var(--light-gray);
+  border-radius: 0.75em;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: grid;
+  grid-gap: 1px;
+  grid-template-columns: auto 1fr;
+  margin-top: 0.5em;
+}
+form.erc20 .inputs > * {
+  background-color: var(--bg);
+  color: var(--fg-bold);
+  padding: 0.5em;
+}
+form.erc20 .inputs > *:focus {
+  box-shadow: none;
+}
+form.erc20 .inputs select {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+form.erc20 .inputs input {
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 1.4em;
+  font-weight: 900;
+}
+form.erc20 .inputs *:disabled {
+  color: var(--gray);
+  cursor: not-allowed;
+}
+form.erc20 .inputs input[type=number]::-webkit-inner-spin-button, 
+form.erc20 .inputs input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+form.erc20 input {
+  text-align: right;
+}
+form.erc20 > footer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: flex-end;
+  margin: 2em auto 1em;
+  max-width:  25em;
+  padding: 1em;
+  width: 100%;
+}
+@media (min-width: 25em) {
+  form.erc20 > div {
+    border-radius: 4px;
+  }
+  form.erc20 > footer {
+    display: block;
+  }
+}
+@media (min-width: 58em) {
+  form.erc20 {
+    background:
+      url('img/form-bg-bottom-left.svg') no-repeat,
+      url('img/form-bg-bottom-right.svg') no-repeat;
+    background-position:
+      bottom left,
+      bottom right;
+  }
+}
+</style>
+
+<script>
+  const formatLargeNum = n => n >= 1e5 || (n < 1e-3 && n !== 0)
+    ? n.toExponential(2)
+    : new Intl.NumberFormat(undefined, { maximumSignificantDigits: 5 }).format(n)
+
+  async function getErc20Balance (erc20Address) {
+    const erc20Contract = new window.web3.eth.Contract(
+      JSON.parse(process.env.ethErc20AbiText),
+      erc20Address,
+      { from: window.ethUserAddress }
+    )
+
+    return Number(
+      await erc20Contract.methods.balanceOf(window.ethUserAddress).call()
+    )
+  }
+
+  function getNep21Address (erc20Address) {
+    return erc20Address.replace('0x', '').toLowerCase() +
+      '.' +
+      process.env.nearTokenFactoryAccount
+  }
+
+  async function getNep21Balance (erc20Address) {
+    const nep21 = await new window.NearContract(
+      window.nearConnection.account(),
+      getNep21Address(erc20Address),
+      { viewMethods: ['get_balance'] }
+    )
+
+    return nep21.get_balance({ owner_id: window.nearUserAddress })
+      .then(raw => Number(raw))
+      .catch(() => null)
+  }
+
+  window.addEventListener('load', function handleSelectErc20Events () {
+    const amount = window.find('erc20Amount')
+    const select = window.find('erc20Selector')
+    const submit = window.find('erc20Submit')
+
+    function disableForm () {
+      amount.disabled = true
+      select.disabled = true
+      submit.disabled = true
+    }
+
+    function enableForm () {
+      amount.disabled = false
+      select.disabled = false
+      submit.disabled = false
+    }
+
+    window.find('erc20Cancel').onclick = function backToLanding () {
+       window.urlParams.clear()
+       window.render()
+    }
+
+    window.find('erc20Swap').onclick = function swapErc20 () {
+      alert('Not yet supported, try again next week')
+    }
+
+    select.onchange = async function selectErc20 (e) {
+      amount.value = ''
+
+      // if "Select token" selected, nullify form
+      if (e.target.value.slice(0,2) !== '0x') {
+        amount.disabled = true
+        window.hide('erc20Info')
+        return
+      }
+
+      const [erc20Name, erc20Balance, nep21Balance] = await Promise.all([
+        window.getErc20Name(e.target.value),
+        getErc20Balance(e.target.value),
+        getNep21Balance(e.target.value)
+      ])
+      window.fill('erc20Name').with(erc20Name)
+      window.fill('erc20Balance').with(formatLargeNum(erc20Balance))
+      window.fill('nep21Name').with('n' + erc20Name)
+      window.fill('nep21Balance').with(formatLargeNum(nep21Balance))
+
+      amount.disabled = false
+      amount.max = erc20Balance
+      window.show('erc20Info', 'flex')
+      amount.focus()
+    }
+
+    amount.onkeyup = function enableOrDisable (e) {
+      if (Number(e.target.value)) submit.disabled = false
+      else submit.disabled = true
+    }
+
+    window.find('erc20Form').onsubmit = async function transferErc20 (e) {
+      e.preventDefault()
+
+      disableForm()
+
+      try {
+        await window.transfers.initiate({
+          amount: Number(amount.value),
+          naturalErc20: select.value
+        })
+      } catch (e) {
+        alert(
+          'Something went wrong! ' +
+          'Maybe you need to sign out and back in? ' +
+          'Check your browser console for more info.'
+        )
+        throw e
+      } finally {
+        // re-enable the form, whether the call succeeded or failed
+        enableForm()
+      }
+
+      // if the call succeeded, reset and close the form
+      amount.value = ''
+      window.urlParams.clear()
+      window.render()
+    }
+  })
+
+
+  function hideOrShowTransferForm () {
+    if (window.urlParams.get('send') === 'erc20') window.show('erc20Form')
+    else window.hide('erc20Form')
+  }
+
+  let featuredErc20s
+  async function fillFeaturedErc20s () {
+    if (featuredErc20s) {
+      // only need to do this once, skip
+      return
+    }
+
+    featuredErc20s = await Promise.all(
+      process.env.featuredErc20s.split(',').map(async address => {
+        const name = await window.getErc20Name(address)
+        return { address, name }
+      })
+    )
+
+    window.fill('erc20Selector').with(
+      '<option>Select token</option>' +
+      featuredErc20s.map(({ address, name }) =>
+        `<option value="${address}">${name}</option>`
+      )
+    )
+  }
+
+  window.renderers.push(hideOrShowTransferForm)
+  window.renderers.push(fillFeaturedErc20s)
+</script>

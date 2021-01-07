@@ -13,6 +13,9 @@ export default async function render () {
   // if not signed in with both eth & near, stop here
   if (!window.ethUserAddress || !window.nearUserAddress) return
 
+  window.fill('ethUser').with(window.ethUserAddress)
+  window.fill('nearUser').with(window.nearUserAddress)
+
   await Promise.all(window.renderers.map(r => r()))
 
   hide('signed-out')

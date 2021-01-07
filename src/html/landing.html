@@ -1,6 +1,6 @@
-<div data-behavior="landing">
+<div data-behavior="landing" style="padding:1em">
   <h1 class="title">
-    <include src="rainbow-bridge.svg.html"></include>
+    <include src="rainbow-bridge.svg.html">{ "width": "2.3em" }</include>
     <small>
       ETH
       <img alt="to and from" src="img/swap-lr.svg" style="vertical-align: bottom">
@@ -40,7 +40,7 @@
           </button>
         </div>
       </div>
-      <button class="swap" data-behavior="swap-accounts">
+      <button class="swap-vert" data-behavior="swap-accounts" style="margin: 1em auto 0em">
         <span class="visually-hidden">swap</span>
       </button>
       <div class="account" data-behavior="account">
@@ -49,7 +49,7 @@
         </label>
         <div>
           <span style="color: var(--fg-bold)">
-            <include src="near.svg.html"></include>
+            <include src="near.svg.html">{ "width": "1.5em" }</include>
             <span>NEAR</span>
           </span>
           <button id="authNear" data-behavior="authNear">
@@ -60,7 +60,8 @@
       <button
         disabled
         data-behavior="start-erc20-transfer"
-        style="width: 100%; margin-top: 2em; padding: 0.75em; border-radius: 0.5em"
+        class="cta"
+        style="margin-top: 2em"
       >
         Begin transfer
       </button>
@@ -113,18 +114,6 @@
     align-items: center;
     grid-gap: 0.5em;
     grid-template-columns: auto auto;
-  }
-
-  .swap {
-    background-color: transparent;
-    background: url('img/swap-vert.svg') no-repeat;
-    background-position: center center;
-    background-size: 1.3em;
-    border-radius: 1000em;
-    border: 1px solid var(--light-gray);
-    height: 2em;
-    margin: 1em auto 0em;
-    width: 3.5em;
   }
 
   .transfer {
