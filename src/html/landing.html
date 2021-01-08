@@ -366,7 +366,7 @@ async function renderTransfer (transfer, { inProgress }) {
             `<span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>`
           )}</div>
         </div>
-        ${window.String(!inProgress && transfer.outcome !== 'success' && `
+        ${window.toString(!inProgress && transfer.outcome !== 'success' && `
           <div>
             <button data-behavior="transferRetry">
               Retry

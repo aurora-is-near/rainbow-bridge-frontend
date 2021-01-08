@@ -19,11 +19,11 @@ export const fill = selector => ({
   }
 })
 
-// A better String coercion
-export function String (whatever) {
+// A better String coercion than `String()`
+export function toString (whatever) {
   if (!whatever) return ''
 
-  return `${whatever}`
+  return String(whatever)
 }
 
 // Attach a click event handler to elements with the specified
