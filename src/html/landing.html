@@ -1,4 +1,4 @@
-<div class="landing" data-behavior="landing" style="padding:1em">
+<div class="landing" data-behavior="landing">
   <h1 class="title">
     <include src="rainbow-bridge.svg.html">{ "width": "2.3em" }</include>
     <small>
@@ -9,7 +9,7 @@
     <div>Rainbow</div>
     <div>Bridge</div>
   </h1>
-  <div style="margin: 0 auto 2.5em; max-width: 22em; text-align: center">
+  <div style="margin: 0 auto 2.5em; max-width: 22em; text-align: center; padding: 1em">
     <p>
       From
       <a
@@ -67,12 +67,26 @@
       </button>
     </div>
   </div>
-  <div data-behavior="recent-transfers" style="display: none; margin-top: 4em">
-    <h2>Recent transfers</h2>
+  <div class="transfers" data-behavior="recent-transfers" style="display:none">
+    <header>
+      <h2>Recent transfers</h2>
+      <!-- TODO: <nav> -->
+    </header>
     <div data-behavior="transfers-container"></div>
   </div>
 </div>
 <style>
+  .transfers {
+    margin-top: 4em;
+    width: 100%;
+    margin: 4em auto 2em;
+  }
+  .transfers > header {
+    padding: 0 1em;
+  }
+  .transfers nav button {
+    border-radius: 100em;
+  }
   .panel {
     background-color: var(--bg);
     border-radius: 1em;
@@ -123,71 +137,152 @@
     grid-template-columns: auto auto;
   }
 
+  .transfer.in-progress {
+    --fg-dark: #452500;
+    --fg-medium: #995200;
+    --fg-light: #E78513;
+    --bg-dark: #FFDBB2;
+    --bg-medium: #FFECD6;
+    --bg-light: #FFF6ED;
+
+    /* remove these? */
+    --view-details: #995200;
+    --chevron: #E78513;
+  }
+  .transfer.success {
+    --fg-dark: #00261C;
+    --fg-medium: #005A46;
+    --fg-light: #008D6A;
+    --bg-dark: #90E9C5;
+    --bg-medium: #C2FCE0;
+    --bg-light: #ECFDF5;
+
+    /* remove these? */
+    --view-details: #008D6A;
+    --chevron: #00C08B;
+  }
+  .transfer.failure {
+    --fg-dark: #450002;
+    --fg-medium: #A00005;
+    --fg-light: #FF585D;
+    --bg-dark: #FFBDBE;
+    --bg-medium: #FFDEDF;
+    --bg-light: #FEF2F2;
+
+    /* remove these? */
+    --view-details: #DC1F25;
+    --chevron: #FF585D;
+  }
+  .transfer.action-needed {
+    --fg-dark: #001729;
+    --fg-medium: #003560;
+    --fg-light: #0072CE;
+    --bg-dark: #8FCDFF;
+    --bg-medium: #C2E4FF;
+    --bg-light: #F0F9FF;
+
+    /* remove these? */
+    --view-details: #005497;
+    --chevron: #0072CE;
+  }
   .transfer {
-    background-color: var(--bg);
-    border-radius: 5px;
-    display: flex;
-    margin-bottom: 0.5em;
-    min-height: 3em;
-    padding: 0.5rem;
-    position: relative;
-    text-align: left;
+    color: var(--fg-medium);
   }
-  .transfer:last-child {
-    margin-bottom: 0;
+  .transfer h3 {
+    color: var(--fg-dark);
   }
-  .transfer header {
-    align-items: center;
+  .transfer > header {
+    background-color: var(--bg-dark);
+  }
+  .transfer > header button {
+    background-color: var(--fg-light);
+  }
+  .transfer > div {
+    background-color: var(--bg-light);
+    border-color: var(--bg-medium);
+  }
+  .transfer > div > *:first-child {
+    color: var(--fg-light);
+  }
+  .transfer > footer > button {
+    background-color: var(--bg-medium);
+  }
+  .transfer > footer button {
+    color: var(--fg-medium);
+    color: var(--view-details); /* remove this? */
+  }
+
+  .transfer {
+    overflow: hidden;
+    margin: 1rem auto;
+    font-size: 0.75em;
+  }
+
+  .transfer h3 {
+    font-size: 1.333em;
+    margin: 0 0 0.75rem;
+  }
+  .transfer > header {
+    padding: 1.5rem 1rem 1rem;
+  }
+  .transfer > div {
+    padding: 0.5rem 1rem;
     display: grid;
-    margin-right: 0.5em;
-    grid-template-columns: repeat(5, auto);
-    grid-gap: 0.2em;
+    grid-gap: 3rem;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    align-items: center;
   }
-  .transfer header .arrow {
-    font-weight: 200;
-    color: var(--secondary);
+  .transfer > div > *:last-child {
+    font-size: 1.1667em;
   }
-  .transfer header .arrow.failed {
-    color: var(--error);
+  .transfer > div + div {
+    border-top: 1px solid var(--bg-medium);
   }
-  .transfer header .arrow.success {
-    color: var(--success);
-  }
-  .transfer header .arrow.animate {
-    animation: rainbow 1.5s ease-in-out infinite;
-  }
-  .transfer header + * {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+  .transfer > footer button {
+    width: 100%;
     text-align: center;
-    flex: 1;
+    padding: 0.5rem 1rem;
+    border-radius: 0;
   }
-  .transfer p {
-    margin: 0;
-  }
-  .transfer footer {
-    font-size: 0.8em;
-    margin-right: -0.5rem;
-    margin-top: -0.5rem;
-  }
-  .transfer footer button {
-    background: none;
-    box-shadow: none;
-    color: var(--fg);
-    border: 1px solid var(--bg);
-    padding: 0 0.25em;
+  .transfer > footer button:hover,
+  .transfer > footer button:focus {
     text-decoration: none;
+    background-color: var(--bg-dark);
+    box-shadow: 0 0 10em rgba(255,255,255,0.3) inset;
   }
-  .transfer footer button:hover,
-  .transfer footer button:focus {
-    background: var(--shadow);
+  .transfer > footer button:active {
+    color: var(--view-details);
+    box-shadow: none;
   }
-  .transfer footer button:focus {
-    border-color: var(--light-gray);
+  .transfer > footer button:before {
+    display: inline-block;
+    content: ' ';
+    height: 0.3em;
+    width: 0.3em;
+    border: 2.5px solid var(--fg-light);
+    border: 2.5px solid var(--chevron); /* remove this? */
+    border-left-color: transparent;
+    border-top-color: transparent;
+    transform: rotate(45deg);
+    margin-right: 0.5em;
+    position: relative;
+    top: -0.1em;
   }
-  .transfer footer button:active {
-    background: var(--light-gray);
+
+  @media (min-width: 25em) {
+    .transfers {
+      max-width: 22em;
+    }
+    .transfers > header {
+      padding: 0;
+    }
+    .transfer {
+      border-radius: 0.5em;
+    }
+    .transfer > * {
+      max-width: 22rem;
+    }
   }
 
   @media (min-width: 928px) {
@@ -217,6 +312,26 @@ window.addEventListener('load', function addLandingHandlers () {
     window.urlParams.set({ send: 'erc20' })
     window.render()
   })
+
+  // transfers are rendered after page load, so we add one click handler to the
+  // body tag to handle clicking each kind of button on a transfer
+  document.querySelector('body').addEventListener('click', event => {
+    const retryTransferButton = event.target.closest('[data-behavior=transferRetry]')
+
+    // no retry button clicked, end here
+    if (!retryTransferButton) return
+
+    const transferId = retryTransferButton.closest('[data-behavior=transfer]').id
+    window.transfers.retry(transferId, render)
+  })
+  document.querySelector('body').addEventListener('click', event => {
+    const transferDetailsButton = event.target.closest('[data-behavior=transferDetails]')
+
+    // no retry button clicked, end here
+    if (!transferDetailsButton) return
+
+    alert('Not yet implemented, try again tomorrow')
+  })
 })
 
 function renderLanding () {
@@ -236,38 +351,36 @@ window.renderers.push(renderLanding)
 
 async function renderTransfer (transfer, { inProgress }) {
   return `
-    <div class="transfer" id="${transfer.id}" data-behavior="transfer">
+    <div
+      class="transfer ${inProgress ? 'in-progress' : transfer.outcome}"
+      id="${transfer.id}"
+      data-behavior="transfer"
+    >
       <header>
-        ${inProgress ? (
-          '<span class="loader" style="font-size: 0.75em; margin: -0.5em 0 0 -0.7em">in progress:</span>'
-        ) : (
-          `<span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>`
-        )}
-        <span>${transfer.amount}</span>
-        <span>${transfer.erc20Name}</span>
-        <span class="arrow ${
-          inProgress ? 'animate' : transfer.outcome
-        }">→</span>
-        <span>${'n' + transfer.erc20Name}</span>
+        <div>
+          <h3>${transfer.amount} ${transfer.erc20Name}</h3>
+          <div>${inProgress ? (
+            '<span class="loader" style="border-top-color: var(--fg-medium); font-size: 0.75em; margin-left: -0.4em; top: -1.2em;display:inline-block"></span> ' +
+              window.transfers.humanStatusFor(transfer)
+          ) : (
+            `<span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>`
+          )}</div>
+        </div>
+        ${window.String(!inProgress && transfer.outcome !== 'success' && `
+          <div>
+            <button data-behavior="transferRetry">
+              Retry
+            </button>
+          </div>
+        `)}
       </header>
-      <div>
-        <p>${window.transfers.humanStatusFor(transfer)}</p>
-      </div>
-      ${inProgress ? '' : `
-        <footer>
-          ${transfer.outcome === 'success' ? `
-            <button data-behavior="delete-transfer">
-              <span class="visually-hidden">clear</span>
-              <span aria-hidden="true">⨉</span>
-            </button>
-          ` : `
-            <button data-behavior="retry-transfer">
-              <span class="visually-hidden">retry</span>
-              <span aria-hidden="true" title="retry">↻</span>
-            </button>
-          `}
-        </footer>
-      `}
+      <div><span>From</span><span>${transfer.sender}</span></div>
+      <div><span>To</span><span>${transfer.recipient}</span></div>
+      <footer>
+        <button class="link" data-behavior="transferDetails">
+          View details
+        </button>
+      </footer>
     </div>
   `
 }

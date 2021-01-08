@@ -42,7 +42,9 @@ export async function initiate (erc20, amount) {
     erc20Name: await getErc20Name(erc20),
     // currently hard-coding neededConfirmations until MintableFungibleToken is
     // updated with this information
-    status: INITIATED_APPROVAL
+    status: INITIATED_APPROVAL,
+    sender: window.ethUserAddress,
+    recipient: window.nearUserAddress
   }
 }
 

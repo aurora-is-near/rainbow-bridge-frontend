@@ -133,9 +133,8 @@ button.cta {
   height: 0.8em;
   border-radius: 50%;
   border: 0.15em solid transparent;
-  border-top-color: var(--secondary);
-  animation: spin 1.5s ease-in-out infinite,
-          rainbow 1.5s ease-in-out infinite;
+  border-top-color: var(--fg);
+  animation: spin 1.5s ease-in-out infinite;
   position: absolute;
   top: 0.35em;
   right: 0.4em;
@@ -143,10 +142,6 @@ button.cta {
 @keyframes spin {
   0% { transform: rotate(0deg) }
   100% { transform: rotate(360deg) }
-}
-@keyframes rainbow {
-  0% { filter: hue-rotate(0deg) }
-  100% { filter: hue-rotate(360deg) }
 }
 
 fieldset {

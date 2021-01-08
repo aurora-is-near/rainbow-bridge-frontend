@@ -2,7 +2,7 @@ import BN from 'bn.js'
 import { Contract as NearContract, utils } from 'near-api-js'
 import './authEthereum'
 import './authNear'
-import { find, findAll, fill, hide, initDOMhandlers, onClick, show } from './domHelpers'
+import { find, findAll, fill, hide, initDOMhandlers, onClick, show, String } from './domHelpers'
 import { getErc20Name } from './ethHelpers'
 import render from './render'
 import * as urlParams from './urlParams'
@@ -20,6 +20,7 @@ window.onClick = onClick
 window.parseNearAmount = utils.format.parseNearAmount
 window.render = render
 window.show = show
+window.String = String
 window.transfers = transfers
 window.urlParams = urlParams
 

@@ -23,31 +23,6 @@
       window.nearConnection.signOut()
       setTimeout(() => window.location.reload())
     }
-
-    // transfers are rendered after page load, so we add one click handler to the
-    // body tag to handle clicking the "delete" button on any of them
-    document.querySelector('body').addEventListener('click', event => {
-      const clearTransferButton = event.target.closest('[data-behavior=delete-transfer]')
-
-      // no delete button clicked, end here
-      if (!clearTransferButton) return
-
-      const transferId = clearTransferButton.closest('[data-behavior=transfer]').id
-      window.transfers.clear(transferId)
-      render()
-    })
-
-    // transfers are rendered after page load, so we add one click handler to the
-    // body tag to handle clicking the "retry" button on any of them
-    document.querySelector('body').addEventListener('click', event => {
-      const retryTransferButton = event.target.closest('[data-behavior=retry-transfer]')
-
-      // no retry button clicked, end here
-      if (!retryTransferButton) return
-
-      const transferId = retryTransferButton.closest('[data-behavior=transfer]').id
-      window.transfers.retry(transferId, render)
-    })
   })
 </script>
 <style>

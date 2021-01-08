@@ -146,7 +146,7 @@ async function track (transferRaw) {
 // Check the status of a single transfer.
 // If `loop` is provided, a new call to checkStatus will be scheduled for this
 // transfer, if transfer.status is not COMPLETE.
-async function checkStatus (id, { loop = false }) {
+async function checkStatus (id, { loop = false } = {}) {
   let transfer = await storage.get(id)
 
   if (transfer.erc20Address) {

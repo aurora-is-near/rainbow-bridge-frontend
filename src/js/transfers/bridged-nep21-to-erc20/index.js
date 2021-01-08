@@ -16,7 +16,9 @@ export async function initiate (nep21Address, amount) {
   // return {
   //   amount,
   //   nep21Address,
-  //   status: INITIALIZED
+  //   status: INITIALIZED,
+  //   sender: window.nearUserAddress,
+  //   recipient: window.ethUserAddress
   // }
 }
 

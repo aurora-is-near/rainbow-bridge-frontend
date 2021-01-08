@@ -19,6 +19,13 @@ export const fill = selector => ({
   }
 })
 
+// A better String coercion
+export function String (whatever) {
+  if (!whatever) return ''
+
+  return `${whatever}`
+}
+
 // Attach a click event handler to elements with the specified
 // "data-behavior" attribute
 export function onClick (behavior, fn) {
