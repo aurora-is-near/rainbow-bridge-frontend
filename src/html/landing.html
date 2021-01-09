@@ -185,6 +185,10 @@
     /* necessary to override `html { color: var(--fg) }` 🤷🏻 */
     color: var(--fg);
   }
+  .transfer h3 {
+    /* necessary to override @media(prefers-color-scheme: dark)` variable */
+    color: var(--fg-bold);
+  }
   .transfer > header {
     background-color: var(--bg-dark);
   }
