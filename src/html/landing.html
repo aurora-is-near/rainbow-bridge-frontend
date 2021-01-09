@@ -138,58 +138,52 @@
   }
 
   .transfer.in-progress {
-    --fg-dark: #452500;
-    --fg-medium: #995200;
-    --fg-light: #E78513;
     --bg-dark: #FFDBB2;
     --bg-medium: #FFECD6;
     --bg-light: #FFF6ED;
 
-    /* remove these? */
-    --view-details: #995200;
-    --chevron: #E78513;
+    --fg-bold: #452500;
+    --fg: #995200;
+    --fg-light: #E78513;
+    --fg-details: #995200;
+    --fg-chevron: #E78513;
   }
   .transfer.success {
-    --fg-dark: #00261C;
-    --fg-medium: #005A46;
-    --fg-light: #008D6A;
     --bg-dark: #90E9C5;
     --bg-medium: #C2FCE0;
     --bg-light: #ECFDF5;
 
-    /* remove these? */
-    --view-details: #008D6A;
-    --chevron: #00C08B;
+    --fg-bold: #00261C;
+    --fg: #005A46;
+    --fg-light: #008D6A;
+    --fg-details: #008D6A;
+    --fg-chevron: #00C08B;
   }
   .transfer.failure {
-    --fg-dark: #450002;
-    --fg-medium: #A00005;
-    --fg-light: #FF585D;
     --bg-dark: #FFBDBE;
     --bg-medium: #FFDEDF;
     --bg-light: #FEF2F2;
 
-    /* remove these? */
-    --view-details: #DC1F25;
-    --chevron: #FF585D;
+    --fg-bold: #450002;
+    --fg: #A00005;
+    --fg-light: #FF585D;
+    --fg-details: #DC1F25;
+    --fg-chevron: #FF585D;
   }
   .transfer.action-needed {
-    --fg-dark: #001729;
-    --fg-medium: #003560;
-    --fg-light: #0072CE;
     --bg-dark: #8FCDFF;
     --bg-medium: #C2E4FF;
     --bg-light: #F0F9FF;
 
-    /* remove these? */
-    --view-details: #005497;
-    --chevron: #0072CE;
+    --fg-bold: #001729;
+    --fg: #003560;
+    --fg-light: #0072CE;
+    --fg-details: #005497;
+    --fg-chevron: #0072CE;
   }
   .transfer {
-    color: var(--fg-medium);
-  }
-  .transfer h3 {
-    color: var(--fg-dark);
+    /* necessary to override `html { color: var(--fg) }` 🤷🏻 */
+    color: var(--fg);
   }
   .transfer > header {
     background-color: var(--bg-dark);
@@ -208,8 +202,7 @@
     background-color: var(--bg-medium);
   }
   .transfer > footer button {
-    color: var(--fg-medium);
-    color: var(--view-details); /* remove this? */
+    color: var(--fg-details);
   }
 
   .transfer {
@@ -252,7 +245,7 @@
     box-shadow: 0 0 10em rgba(255,255,255,0.3) inset;
   }
   .transfer > footer button:active {
-    color: var(--view-details);
+    color: var(--fg-details);
     box-shadow: none;
   }
   .transfer > footer button:before {
@@ -260,8 +253,7 @@
     content: ' ';
     height: 0.3em;
     width: 0.3em;
-    border: 2.5px solid var(--fg-light);
-    border: 2.5px solid var(--chevron); /* remove this? */
+    border: 2.5px solid var(--fg-chevron);
     border-left-color: transparent;
     border-top-color: transparent;
     transform: rotate(45deg);
@@ -360,7 +352,7 @@ async function renderTransfer (transfer, { inProgress }) {
         <div>
           <h3>${transfer.amount} ${transfer.erc20Name}</h3>
           <div>${inProgress ? (
-            '<span class="loader" style="border-top-color: var(--fg-medium); font-size: 0.75em; margin-left: -0.4em; top: -1.2em;display:inline-block"></span> ' +
+            '<span class="loader" style="font-size: 0.75em; margin-left: -0.4em; top: -1.2em;display:inline-block"></span> ' +
               window.transfers.humanStatusFor(transfer)
           ) : (
             `<span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>`
