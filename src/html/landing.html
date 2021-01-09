@@ -221,13 +221,17 @@
   .transfer > div {
     padding: 0.5rem 1rem;
     display: grid;
-    grid-gap: 3rem;
+    grid-gap: 7rem;
     grid-template-columns: auto auto;
     justify-content: space-between;
     align-items: center;
   }
   .transfer > div > *:last-child {
+    align-items: center;
+    display: grid;
     font-size: 1.1667em;
+    grid-gap: 0.5em;
+    grid-template-columns: 1fr auto;
   }
   .transfer > div + div {
     border-top: 1px solid var(--bg-medium);
@@ -366,8 +370,8 @@ async function renderTransfer (transfer, { inProgress }) {
           </div>
         `)}
       </header>
-      <div><span>From</span><span>${transfer.sender}</span></div>
-      <div><span>To</span><span>${transfer.recipient}</span></div>
+      <div><span>From</span><span><span class="ellipsis">${transfer.sender.address}</span> <img src="${transfer.sender.network}.svg"></span></div>
+      <div><span>To</span><span><span class="ellipsis">${transfer.recipient.address}</span> <img src="${transfer.recipient.network}.svg"></span></div>
       <footer>
         <button class="link" data-behavior="transferDetails">
           View details

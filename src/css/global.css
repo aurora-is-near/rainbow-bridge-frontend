@@ -219,6 +219,12 @@ li {
   color: var(--purple);
 }
 
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .connected-account {
   white-space: nowrap;
   overflow: hidden;

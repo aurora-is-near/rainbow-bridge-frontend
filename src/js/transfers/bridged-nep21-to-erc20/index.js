@@ -17,8 +17,14 @@ export async function initiate (nep21Address, amount) {
   //   amount,
   //   nep21Address,
   //   status: INITIALIZED,
-  //   sender: window.nearUserAddress,
-  //   recipient: window.ethUserAddress
+  //   sender: {
+  //     address: window.nearUserAddress,
+  //     network: 'near'
+  //   },
+  //   recipient: {
+  //     address: window.ethUserAddress,
+  //     network: 'ethereum'
+  //   }
   // }
 }
 

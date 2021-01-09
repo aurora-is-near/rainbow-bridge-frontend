@@ -12,7 +12,7 @@
     <header>
       <strong>From</strong>
       <span class="account-tag">
-        <span data-behavior="ethUser"></span>
+        <span class="ellipsis" data-behavior="ethUser"></span>
         <img src="img/ethereum.svg" alt="ETH address"/>
       </span>
     </header>
@@ -47,7 +47,7 @@
     <header>
       <strong>To</strong>
       <span class="account-tag">
-        <span data-behavior="nearUser"></span>
+        <span class="ellipsis" data-behavior="nearUser"></span>
         <include src="near.svg.html">{
           "alt": "NEAR address"
         }</include>
@@ -84,9 +84,6 @@
   grid-template-columns: 1fr auto;
 }
 .account-tag > *:first-child {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   font-size: 0.8em;
 }
 .account-tag > *:last-child {

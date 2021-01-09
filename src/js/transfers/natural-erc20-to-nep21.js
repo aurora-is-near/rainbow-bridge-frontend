@@ -43,8 +43,14 @@ export async function initiate (erc20, amount) {
     // currently hard-coding neededConfirmations until MintableFungibleToken is
     // updated with this information
     status: INITIATED_APPROVAL,
-    sender: window.ethUserAddress,
-    recipient: window.nearUserAddress
+    sender: {
+      address: window.ethUserAddress,
+      network: 'ethereum'
+    },
+    recipient: {
+      address: window.nearUserAddress,
+      network: 'near'
+    }
   }
 }
 
