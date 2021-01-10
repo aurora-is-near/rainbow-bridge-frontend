@@ -217,10 +217,18 @@
 
   .transfer h3 {
     font-size: 1.333em;
-    margin: 0 0 0.75rem;
+    margin: 0 0 0.5rem;
   }
   .transfer > header {
-    padding: 1.5rem 1rem 1rem;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    align-items: center;
+    grid-gap: 1em;
+  }
+  .transfer > header button {
+    padding: 0.5em 1em;
   }
   .transfer > div {
     padding: 0.5rem 1rem;
@@ -359,19 +367,21 @@ async function renderTransfer (transfer, { inProgress }) {
       <header>
         <div>
           <h3>${transfer.amount} ${transfer.erc20Name}</h3>
-          <div>${inProgress ? (
-            '<span class="loader" style="font-size: 0.75em; margin-left: -0.4em; top: -1.3em;display:inline-block"></span> ' +
-              window.transfers.humanStatusFor(transfer)
-          ) : (
-            `<span>${transfer.outcome === 'success' ? '🌈' : '😞'}</span>`
-          )}</div>
+          <div style="display: flex; align-items: center">
+            ${inProgress ? (
+              '<span class="loader" style="font-size: 0.6em; margin-left: -0.4em; top: -0.8em"></span>'
+            ) : (
+              transfer.outcome === 'success'
+                ? '<img src="checkmark.svg" alt="" />'
+                : '<img src="alert-circle.svg" alt="" />'
+            )}
+            <span style="margin-left: 0.5em">${window.transfers.humanStatusFor(transfer)}</span>
+          </div>
         </div>
         ${window.toString(!inProgress && transfer.outcome !== 'success' && `
-          <div>
-            <button data-behavior="transferRetry">
-              Retry
-            </button>
-          </div>
+          <button data-behavior="transferRetry">
+            Retry
+          </button>
         `)}
       </header>
       <div><span>From</span><span><span class="ellipsis">${transfer.sender.address}</span> <img src="${transfer.sender.network}.svg"></span></div>
