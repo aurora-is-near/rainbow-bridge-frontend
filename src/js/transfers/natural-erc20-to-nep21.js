@@ -90,12 +90,22 @@ export async function checkStatus (transfer) {
 
     if (approvalReceipt) {
       if (approvalReceipt.status) {
-        const lockHash = await initiateLock(transfer.erc20Address, transfer.amount)
-        transfer = await storage.update(transfer, {
-          status: INITIATED_LOCK,
-          approvalReceipt,
-          lockHash
-        })
+        try {
+          const lockHash = await initiateLock(transfer.erc20Address, transfer.amount)
+          transfer = await storage.update(transfer, {
+            status: INITIATED_LOCK,
+            approvalReceipt,
+            lockHash
+          })
+        } catch (error) {
+          transfer = await storage.update(transfer, {
+            status: COMPLETE,
+            outcome: FAILED,
+            failedAt: INITIATED_LOCK,
+            error: error.message,
+            approvalReceipt
+          })
+        }
       } else {
         const error = await getRevertReason(
           transfer.approvalHash, process.env.ethNetwork

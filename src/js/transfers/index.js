@@ -153,13 +153,8 @@ export async function retry (id) {
     failedAt: null
   })
 
-  if (transfer.erc20Address) {
-    await naturalErc20ToNep21.retry(transfer)
-  }
-
-  if (transfer.nep21Address) {
-    await bridgedNep21ToErc20.retry(transfer)
-  }
+  if (transfer.erc20Address) await naturalErc20ToNep21.retry(transfer)
+  if (transfer.nep21Address) await bridgedNep21ToErc20.retry(transfer)
 
   checkStatus(id)
 }
