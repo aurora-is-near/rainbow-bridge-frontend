@@ -159,7 +159,7 @@
     --fg-details: #008D6A;
     --fg-chevron: #00C08B;
   }
-  .transfer.failure {
+  .transfer.failed {
     --bg-dark: #FFBDBE;
     --bg-medium: #FFDEDF;
     --bg-light: #FEF2F2;
@@ -248,11 +248,18 @@
   .transfer > div + div {
     border-top: 1px solid var(--bg-medium);
   }
+  .transfer > footer {
+    position: relative;
+    transition: height 0.2s;
+  }
   .transfer > footer button {
     width: 100%;
     text-align: center;
     padding: 0.5rem 1rem;
     border-radius: 0;
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
   }
   .transfer > footer button:hover,
   .transfer > footer button:focus {
@@ -276,6 +283,85 @@
     margin-right: 0.5em;
     position: relative;
     top: -0.1em;
+  }
+  .transfer > footer button span:before {
+    content: 'View ';
+  }
+  .transfer > footer.open button span:before {
+    content: 'Hide ';
+  }
+  .transfer > footer.open button:before {
+    top: 0.1em;
+    transform: rotate(225deg);
+  }
+
+  .transfer-details {
+    --bg: #272729;
+    --fg: #A1A1A9;
+    background-color: var(--bg);
+    color: var(--fg);
+    list-style: none;
+    margin: 0;
+    padding: 1.5rem 1rem;
+  }
+  .transfer-details li {
+    position: relative;
+    padding-bottom: 1.5em;
+  }
+  .transfer-details li:last-child {
+    padding-bottom: 0;
+  }
+  .transfer-details li span {
+    display: flex;
+  }
+  .transfer-details li span:before {
+    background-color: var(--bg);
+    content: '•';
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    margin-right: 0.5rem;
+    text-align: center;
+    font-size: 1.7em;
+    line-height: 0.7;
+    z-index: 1;
+  }
+  /* error message shown in a p */
+  .transfer-details li p {
+    background-color: #111618;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin: 1rem 0 0 1.5rem;
+    padding: 1rem;
+  }
+  /* if very first step pending, bold it. otherwise, bold first pending
+     step that comes after a completed step. */
+  .transfer-details li.pending:first-child span,
+  .transfer-details li.completed + li:not(.completed) span {
+    color: white;
+  }
+  .transfer-details li.pending:first-child span:before,
+  .transfer-details li.completed + li:not(.completed) span:before {
+    color: #2B9AF4;
+  }
+  .transfer-details li.completed span:before {
+    background-image: url(img/checkmark-48DBA7.svg);
+    content: ' ';
+  }
+  .transfer-details li.completed:after {
+    content: ' ';
+    height: 100%;
+    width: 1px;
+    border-left: 1px solid #3F4045;
+    position: absolute;
+    top: 0;
+    left: 0.43rem;
+  }
+  .transfer-details li.failed span:before {
+    background-image: url(img/alert-circle.svg);
+    content: ' ' !important;
   }
 
   @media (min-width: 25em) {
@@ -333,12 +419,16 @@ window.addEventListener('load', function addLandingHandlers () {
     window.transfers.retry(transferId, render)
   })
   document.querySelector('body').addEventListener('click', event => {
-    const transferDetailsButton = event.target.closest('[data-behavior=transferDetails]')
+    const transferDetailsButton = event.target.closest('[data-behavior=openTransferDetails]')
 
     // no retry button clicked, end here
     if (!transferDetailsButton) return
 
-    alert('Not yet implemented, try again tomorrow')
+    const transferId = transferDetailsButton.closest('[data-behavior=transfer]').id
+    const footer = transferDetailsButton.closest('footer')
+    openTransferDetails[transferId] = !openTransferDetails[transferId]
+    footer.classList.toggle('open')
+    adjustTransferDetailsHeights()
   })
 })
 
@@ -357,6 +447,9 @@ function renderLanding () {
 }
 window.renderers.push(renderLanding)
 
+// tracks UI state for which transfers have "view details" open
+const openTransferDetails = {}
+
 async function renderTransfer (transfer, { inProgress }) {
   return `
     <div
@@ -366,7 +459,7 @@ async function renderTransfer (transfer, { inProgress }) {
     >
       <header>
         <div>
-          <h3>${transfer.amount} ${transfer.erc20Name}</h3>
+          <h3>${transfer.amount} ${transfer.sourceTokenName}</h3>
           <div style="display: flex; align-items: center">
             ${inProgress ? (
               '<span class="loader" style="font-size: 0.6em; margin-left: -0.4em; top: -0.8em"></span>'
@@ -375,7 +468,10 @@ async function renderTransfer (transfer, { inProgress }) {
                 ? '<img src="checkmark.svg" alt="" />'
                 : '<img src="alert-circle.svg" alt="" />'
             )}
-            <span style="margin-left: 0.5em">${window.transfers.humanStatusFor(transfer)}</span>
+            <span style="margin-left: 0.5em">${
+              transfer.outcome === 'failed' ? 'Failed' :
+                window.transfers.humanStatusFor(transfer)
+            }</span>
           </div>
         </div>
         ${window.toString(!inProgress && transfer.outcome !== 'success' && `
@@ -384,11 +480,25 @@ async function renderTransfer (transfer, { inProgress }) {
           </button>
         `)}
       </header>
-      <div><span>From</span><span><span class="ellipsis">${transfer.sender.address}</span> <img src="${transfer.sender.network}.svg"></span></div>
-      <div><span>To</span><span><span class="ellipsis">${transfer.recipient.address}</span> <img src="${transfer.recipient.network}.svg"></span></div>
-      <footer>
-        <button class="link" data-behavior="transferDetails">
-          View details
+      <div><span>From</span><span><span class="ellipsis" title="${transfer.sender.address}">${transfer.sender.address}</span> <img src="${transfer.sender.network}.svg"></span></div>
+      <div><span>To</span><span><span class="ellipsis" title="${transfer.recipient.address}">${transfer.recipient.address}</span> <img src="${transfer.recipient.network}.svg"></span></div>
+      <footer class="${
+        window.toString(openTransferDetails[transfer.id] && 'open'
+      )}">
+        <ol class="transfer-details">
+          ${window.transfers.stepsFor(transfer).map(step => (
+            `<li class="${step.status}">${
+              `<span>${step.description}</span>` +
+              window.toString(step.status === 'failed' &&
+                `<p class="error">${
+                  window.transfers.humanStatusFor(transfer)
+                }</p>`
+              )
+            }</li>`
+          )).join('')}
+        </ol>
+        <button class="link" data-behavior="openTransferDetails">
+          <span>details</span>
         </button>
       </footer>
     </div>
@@ -408,6 +518,20 @@ async function updateTransfers () {
     ...complete.map(t => renderTransfer(t, { inProgress: false })),
     ...inProgress.map(t => renderTransfer(t, { inProgress: true }))
   ]))
+
+  adjustTransferDetailsHeights()
+}
+
+// adjust hard-coded heights for transfers details panels, to enable slide-out animation
+function adjustTransferDetailsHeights () {
+  window.findAll('transfer').map(transfer => {
+    const footer = transfer.querySelector('footer')
+    const button = footer.querySelector('button').getBoundingClientRect().height
+    const details = footer.querySelector('ol').getBoundingClientRect().height
+    footer.style.height = footer.classList.contains('open')
+      ? `${button + details}px`
+      : `${button}px`
+  })
 }
 
 window.renderers.push(updateTransfers)

@@ -36,10 +36,13 @@ export async function initiate (erc20, amount) {
       .catch(reject)
   })
 
+  const sourceTokenName = await getErc20Name(erc20)
+
   return {
     approvalHash,
     erc20Address: erc20,
-    erc20Name: await getErc20Name(erc20),
+    sourceTokenName,
+    destinationTokenName: 'n' + sourceTokenName,
     // currently hard-coding neededConfirmations until MintableFungibleToken is
     // updated with this information
     status: INITIATED_APPROVAL,
@@ -56,6 +59,27 @@ export async function initiate (erc20, amount) {
 
 export function humanStatusFor (transfer) {
   return statusMessages[transfer.status](transfer)
+}
+
+// custom statuses
+const INITIATED_APPROVAL = 'initiated_approval'
+const INITIATED_LOCK = 'initiated_lock'
+
+// statuses used in humanStatusFor.
+// Might be internationalized or moved to separate library in the future.
+const statusMessages = {
+  [INITIATED_APPROVAL]: () => 'Approving Token Locker',
+  [INITIATED_LOCK]: () => 'Locking in Ethereum',
+  [LOCKED]: ({ progress, neededConfirmations }) =>
+    `Syncing block ${progress + 1}/${neededConfirmations}`,
+  [COMPLETE]: ({ outcome, error }) => outcome === SUCCESS ? 'Success!' : error
+}
+
+export const steps = {
+  [INITIATED_APPROVAL]: t => `Approve Token Locker to spend ${t.amount} ${t.sourceTokenName}`,
+  [INITIATED_LOCK]: t => `Lock ${t.amount} ${t.sourceTokenName} in Token Locker`,
+  [LOCKED]: t => `Sync ${t.neededConfirmations} blocks from Ethereum to NEAR`,
+  [COMPLETE]: t => `Mint ${t.amount} ${t.destinationTokenName} in NEAR`
 }
 
 export async function checkStatus (transfer) {
@@ -150,7 +174,7 @@ export async function checkCompletion (transfer) {
       status: COMPLETE,
       outcome: FAILED,
       failedAt: LOCKED,
-      error: `Minting ${'n' + transfer.erc20Name} failed`
+      error: `Minting ${transfer.destinationTokenName} failed`
     })
   }
 }
@@ -178,20 +202,6 @@ export async function retry (transfer) {
     default:
       alert(`Do not know how to retry naturalErc20ToNep21 transfer that failed at ${transfer.status} 😞`)
   }
-}
-
-// custom statuses
-const INITIATED_APPROVAL = 'initiated_approval'
-const INITIATED_LOCK = 'initiated_lock'
-
-// statuses used in humanStatusFor.
-// Might be internationalized or moved to separate library in the future.
-const statusMessages = {
-  [INITIATED_APPROVAL]: () => 'approving TokenLocker',
-  [INITIATED_LOCK]: () => 'locking',
-  [LOCKED]: ({ progress, neededConfirmations }) =>
-    `${progress}/${neededConfirmations} blocks synced`,
-  [COMPLETE]: ({ outcome, error }) => outcome === SUCCESS ? 'Success!' : error
 }
 
 async function getNep21Balance (erc20Address) {

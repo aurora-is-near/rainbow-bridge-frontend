@@ -76,6 +76,44 @@ export function humanStatusFor (transfer) {
   if (transfer.nep21Address) return bridgedNep21ToErc20.humanStatusFor(transfer)
 }
 
+/**
+ * Get a list of all steps that this transfer must complete.
+ * The `transfer.status` will correspond to one of these.
+ * A difference from `humanStatusFor` is that `steps` are phrased in imperative
+ * tense ("sync 10 blocks") while `humanStatusFor` returns current status
+ * ("syncing block 5/10")
+ */
+export function stepsFor (transfer) {
+  let steps
+  if (transfer.erc20Address) steps = naturalErc20ToNep21.steps
+  if (transfer.nep21Address) steps = bridgedNep21ToErc20.steps
+
+  if (!steps) {
+    throw new Error(
+      `Can't determine steps for transfer: ${JSON.stringify(transfer)}`
+    )
+  }
+
+  const stepNames = Object.keys(steps)
+  const currentStepIndex = stepNames.findIndex(
+    step => step === transfer.failedAt || step === transfer.status
+  )
+
+  return stepNames.reduce(
+    (acc, step, i) => {
+      let status = 'pending'
+      if (i < currentStepIndex) status = 'completed'
+      if (transfer.failedAt === step) status = 'failed'
+      acc.push({
+        description: steps[step](transfer),
+        status
+      })
+      return acc
+    },
+    []
+  )
+}
+
 // Check statuses of all inProgress transfers, and update them accordingly.
 export async function checkStatuses () {
   // First, check if we've just returned to this page from NEAR Wallet after
