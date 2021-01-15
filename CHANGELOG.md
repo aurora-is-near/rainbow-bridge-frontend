@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.1...v1.5.2) (2021-01-15)
+
+
+### Bug Fixes
+
+* **retries:** respond to MetaMask→Reject for lock ([d15d16e](https://github.com/near/rainbow-bridge-frontend/commit/d15d16e95ff93d63e9b47340b3ed9df08dae3981))
+
 ## [1.5.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.0...v1.5.1) (2020-12-18)
 
 
