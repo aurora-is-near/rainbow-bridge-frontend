@@ -302,9 +302,12 @@ form.erc20 > footer {
       disableForm()
 
       try {
-        await window.transfers.initiate({
+        await window.erc20Xnep21.naturalErc20ToNep21({
           amount: Number(amount.value),
-          naturalErc20: select.value
+          erc20Address: select.value,
+          sender: window.ethUserAddress,
+          recipient: window.nearUserAddress,
+          advanceEvery: window.LOOP_INTERVAL
         })
       } catch (e) {
         alert(

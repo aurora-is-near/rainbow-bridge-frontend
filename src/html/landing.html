@@ -194,6 +194,7 @@
   }
   .transfer > header button {
     background-color: var(--fg-light);
+    color: white;
   }
   .transfer > div {
     background-color: var(--bg-light);
@@ -226,6 +227,43 @@
     justify-content: space-between;
     align-items: center;
     grid-gap: 1em;
+  }
+  .transfer > header .status-message {
+    display: flex;
+    align-items: center;
+  }
+  .transfer > header .status-message .icon {
+    margin-right: 0.5em;
+    background-size: contain;
+    background-position: center;
+    width: 1.2em; height: 1.2em;
+  }
+  .transfer.failed > header .status-message .icon {
+    background-image: url(img/alert-circle.svg);
+  }
+  .transfer.success > header .status-message .icon {
+    background-image: url(img/checkmark.svg);
+  }
+  .transfer.action-needed > header .status-message .icon:before {
+    content: '→';
+  }
+  .transfer.in-progress > header .status-message .icon {
+    margin-right: 0.8em;
+    position: relative;
+    width: 0.8em; height: 0.8em;
+  }
+  .transfer.in-progress > header .status-message .icon:before {
+    animation: spin 1.5s ease-in-out infinite;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    border-top-color: var(--fg);
+    content: ' ';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg) }
+    100% { transform: rotate(360deg) }
   }
   .transfer > header button {
     padding: 0.5em 1em;
@@ -341,12 +379,16 @@
   /* if very first step pending, bold it. otherwise, bold first pending
      step that comes after a completed step. */
   .transfer-details li.pending:first-child span,
-  .transfer-details li.completed + li:not(.completed) span {
+  .transfer-details li.completed + li.pending span {
     color: white;
   }
   .transfer-details li.pending:first-child span:before,
-  .transfer-details li.completed + li:not(.completed) span:before {
+  .transfer-details li.completed + li.pending span:before {
     color: #2B9AF4;
+  }
+  .transfer-details li.failed span:before {
+    background-image: url(img/alert-circle.svg);
+    content: ' ';
   }
   .transfer-details li.completed span:before {
     background-image: url(img/checkmark-48DBA7.svg);
@@ -360,10 +402,6 @@
     position: absolute;
     top: 0;
     left: 0.43rem;
-  }
-  .transfer-details li.failed span:before {
-    background-image: url(img/alert-circle.svg);
-    content: ' ' !important;
   }
 
   @media (min-width: 25em) {
@@ -416,13 +454,13 @@ window.addEventListener('load', function addLandingHandlers () {
   // transfers are rendered after page load, so we add one click handler to the
   // body tag to handle clicking each kind of button on a transfer
   document.querySelector('body').addEventListener('click', event => {
-    const retryTransferButton = event.target.closest('[data-behavior=transferRetry]')
+    const callToAction = event.target.closest('[data-behavior=transferCallToAction]')
 
     // no retry button clicked, end here
-    if (!retryTransferButton) return
+    if (!callToAction) return
 
-    const transferId = retryTransferButton.closest('[data-behavior=transfer]').id
-    window.transfers.retry(transferId, render)
+    const transferId = callToAction.closest('[data-behavior=transfer]').id
+    window.transfers.act(transferId)
   })
   document.querySelector('body').addEventListener('click', event => {
     const transferDetailsButton = event.target.closest('[data-behavior=openTransferDetails]')
@@ -456,53 +494,51 @@ window.renderers.push(renderLanding)
 // tracks UI state for which transfers have "view details" open
 const openTransferDetails = {}
 
-async function renderTransfer (transfer, { inProgress }) {
+function renderTransfer (transfer, { inProgress }) {
+  transfer = window.transfers.decorate(transfer, { locale: 'en_US' })
   return `
     <div
-      class="transfer ${inProgress ? 'in-progress' : transfer.outcome}"
+      class="transfer ${transfer.status}"
       id="${transfer.id}"
       data-behavior="transfer"
     >
       <header>
         <div>
           <h3>${transfer.amount} ${transfer.sourceTokenName}</h3>
-          <div style="display: flex; align-items: center">
-            ${inProgress ? (
-              '<span class="loader" style="font-size: 0.6em; margin-left: -0.4em; top: -0.8em"></span>'
-            ) : (
-              transfer.outcome === 'success'
-                ? '<img src="checkmark.svg" alt="" />'
-                : '<img src="alert-circle.svg" alt="" />'
-            )}
-            <span style="margin-left: 0.5em">${
-              transfer.outcome === 'failed' ? 'Failed' :
-                window.transfers.humanStatusFor(transfer)
-            }</span>
+          <div class="status-message">
+            <span class="icon"></span>
+            <span>${transfer.statusMessage}</span>
           </div>
         </div>
-        ${window.toString(!inProgress && transfer.outcome !== 'success' && `
-          <button data-behavior="transferRetry">
-            Retry
-          </button>
-        `)}
+        ${window.toString(transfer.callToAction &&
+          `<button data-behavior="transferCallToAction">${
+            transfer.callToAction
+          }</button>`
+        )}
       </header>
-      <div><span>From</span><span><span class="ellipsis" title="${transfer.sender.address}">${transfer.sender.address}</span> <img src="${transfer.sender.network}.svg"></span></div>
-      <div><span>To</span><span><span class="ellipsis" title="${transfer.recipient.address}">${transfer.recipient.address}</span> <img src="${transfer.recipient.network}.svg"></span></div>
-      <footer class="${
-        window.toString(openTransferDetails[transfer.id] && 'open'
-      )}">
-        <ol class="transfer-details">
-          ${window.transfers.stepsFor(transfer).map(step => (
-            `<li class="${step.status}">${
-              `<span>${step.description}</span>` +
-              window.toString(step.status === 'failed' &&
-                `<p class="error">${
-                  window.transfers.humanStatusFor(transfer)
-                }</p>`
-              )
-            }</li>`
-          )).join('')}
-        </ol>
+      <div>
+        <span>From</span>
+        <span>
+          <span class="ellipsis" title="${transfer.sender}">${transfer.sender}</span>
+          <img src="${transfer.sourceNetwork}.svg">
+        </span>
+      </div>
+      <div>
+        <span>To</span>
+        <span>
+          <span class="ellipsis" title="${transfer.recipient}">${transfer.recipient}</span>
+          <img src="${transfer.destinationNetwork}.svg">
+        </span>
+      </div>
+      <footer class="${openTransferDetails[transfer.id] ? 'open' : ''}">
+        <ol class="transfer-details">${transfer.steps.map(step => (
+          `<li class="${step.status}">
+            <span>${step.description}</span>
+            ${window.toString(step.status === 'failed' &&
+              `<p class="error">${transfer.error}</p>`
+            )}
+          </li>`
+        )).join('')}</ol>
         <button class="link" data-behavior="openTransferDetails">
           <span>details</span>
         </button>
@@ -512,18 +548,17 @@ async function renderTransfer (transfer, { inProgress }) {
 }
 
 async function updateTransfers () {
-  const { inProgress, complete } = await window.transfers.get()
+  const { all: transfers } = await window.transfers.get()
 
-  if (!inProgress.length && !complete.length) {
+  if (!transfers.length) {
     window.hide('recent-transfers')
   } else {
     window.show('recent-transfers')
   }
 
-  fill('transfers-container').with(await Promise.all([
-    ...complete.map(t => renderTransfer(t, { inProgress: false })),
-    ...inProgress.map(t => renderTransfer(t, { inProgress: true }))
-  ]))
+  fill('transfers-container').with([
+    ...transfers.map(t => renderTransfer(t, { inProgress: true }))
+  ])
 
   adjustTransferDetailsHeights()
 }

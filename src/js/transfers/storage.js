@@ -47,7 +47,10 @@ export async function add (transfer) {
 
 // update a given transfer in localStorage, returning a new object with the
 // updated version
-export async function update (transfer, withData) {
+export async function update (transfer, withData = {}) {
+  if (!transfer.id) {
+    throw new Error('Cannot update transfer with no ID')
+  }
   const updatedTransfer = { ...transfer, ...withData }
   localStorageSet(STORAGE_KEY, {
     ...getAllRaw(),

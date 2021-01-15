@@ -2,7 +2,7 @@ import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Web3 from 'web3'
 
-import { checkStatuses as checkTransferStatuses } from './transfers'
+import { checkStatusAll as checkTransferStatuses } from './transfers'
 import render from './render'
 import { find, onClick } from './domHelpers'
 
@@ -54,7 +54,7 @@ async function login (provider) {
   find('authEthereum').replaceWith(span)
   render()
 
-  if (window.nearInitialized) checkTransferStatuses()
+  if (window.nearInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
 }
 
 async function loadWeb3Modal () {

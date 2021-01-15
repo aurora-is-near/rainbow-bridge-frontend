@@ -122,31 +122,6 @@ button.cta {
   cursor: not-allowed;
   transform: none;
 }
-[disabled] button,
-.loader {
-  display: block;
-  text-indent: -900em;
-  width: 2em;
-  position: relative;
-}
-[disabled] button:after,
-.loader:after {
-  content: " ";
-  display: block;
-  width: 0.8em;
-  height: 0.8em;
-  border-radius: 50%;
-  border: 0.15em solid transparent;
-  border-top-color: var(--fg);
-  animation: spin 1.5s ease-in-out infinite;
-  position: absolute;
-  top: 0.35em;
-  right: 0.4em;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg) }
-  100% { transform: rotate(360deg) }
-}
 
 fieldset {
   border: none;
