@@ -3,8 +3,8 @@ import bs58 from 'bs58'
 import { toBuffer } from 'eth-util-lite'
 import { Contract as NearContract } from 'near-api-js'
 import { borshifyOutcomeProof } from './borshify-proof'
-import { COMPLETE, FAILED, SUCCESS } from '../statuses'
-import * as storage from '../storage'
+import { COMPLETE, FAILED, SUCCESS } from '../../statuses'
+import * as storage from '../../storage'
 
 // Immediately return to caller, which adds an ID to the provided data, stores
 // it in localStorage, and then calls `checkStatus` (below), which will then

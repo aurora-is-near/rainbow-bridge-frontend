@@ -1,6 +1,6 @@
 import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 
-import { checkStatuses as checkTransferStatuses } from './transfers'
+import { checkStatusAll as checkTransferStatuses } from './transfers'
 import EthOnNearClient from './borsh/ethOnNearClient'
 import render from './render'
 import { find, onClick } from './domHelpers'
@@ -54,7 +54,7 @@ async function login () {
 
   render()
 
-  if (window.ethInitialized) checkTransferStatuses()
+  if (window.ethInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
 }
 
 // The NEAR signin flow redirects from the current URL to NEAR Wallet,

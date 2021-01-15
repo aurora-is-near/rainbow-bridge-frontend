@@ -1,5 +1,4 @@
-// common transfer statuses & outcomes
-export const LOCKED = 'locked'
-export const COMPLETE = 'complete'
-export const SUCCESS = 'success'
+export const IN_PROGRESS = 'in-progress'
+export const ACTION_NEEDED = 'action-needed'
+export const COMPLETE = 'completed'
 export const FAILED = 'failed'

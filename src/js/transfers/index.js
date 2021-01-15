@@ -1,121 +1,93 @@
-import * as naturalErc20ToNep21 from './natural-erc20-to-nep21'
-import * as bridgedNep21ToErc20 from './bridged-nep21-to-erc20'
+import * as naturalErc20ToNep21 from './erc20+nep21/natural-erc20-to-nep21'
 import * as urlParams from '../urlParams'
 import * as storage from './storage'
-import { COMPLETE } from './statuses'
+import * as status from './statuses'
 
 export { onChange } from './storage'
 
-// Initiate a new transfer of 'amount' tokens. Must provide one of:
-//
-//   • naturalErc20: an address of a natural ERC20 to send to NEAR
-//   • nep21FromErc20: address of an NEP21 to send back to Ethereum
-//
-// Currently depends on many global variables:
-//
-// * window.web3: constructing a Proof of the `Locked` event currently has deep
-//   coupling with the web3.js library. Make initialized library available here.
-// * window.ethTokenLocker: a web3.js `Contract` instance for the TokenLocker
-//   contract at address `process.env.ethLockerAddress`
-// * window.ethOnNearClient: similar to a near-api-js `Contract` instance, but
-//   using a custom wrapper to handle Borsh serialization. See https://borsh.io
-//   and the code in ./authNear.js. This will be streamlined and added to
-//   near-api-js soon.
-// * window.ethUserAddress: address of authenticated Ethereum wallet to send from
-// * window.nearUserAddress: address of authenticated NEAR wallet to send to
-export async function initiate ({ naturalErc20, nep21FromErc20, amount }) {
-  const originsProvided = [
-    naturalErc20,
-    nep21FromErc20
-  ].reduce((n, arg) => n + Number(!!arg), 0)
-  if (originsProvided !== 1) {
-    throw new Error(`Please provide only one of:
-      • naturalErc20: an address of a natural ERC20 to send to NEAR
-      • nep21FromErc20: address of an NEP21 to send back to Ethereum
-    `)
-  }
-
-  let customAttributes
-  if (naturalErc20) {
-    customAttributes = await naturalErc20ToNep21.initiate(naturalErc20, amount)
-  }
-  if (nep21FromErc20) {
-    customAttributes = await bridgedNep21ToErc20.initiate(nep21FromErc20, amount)
-  }
-
-  const transfer = {
-    amount,
-    // currently hard-coding neededConfirmations until MintableFungibleToken is
-    // updated with this information
-    neededConfirmations: 10,
-    ...customAttributes
-  }
-
-  track(transfer)
+function dashToCamelCase (str) {
+  return str.replace(/-./g, match =>
+    match.toUpperCase().replace('-', '')
+  )
 }
 
 // The only way to retrieve a list of transfers.
-// Returns an object with 'inProgress' and 'complete' keys,
-// and an array of chronologically-ordered transfers for each
+// Returns an object with keys for each transfer status plus 'all',
+// with array of chronologically-ordered transfers for each
 export async function get () {
   const transfers = await storage.getAll()
   return transfers.reduce(
     (acc, transfer) => {
-      if (transfer.status === 'complete') acc.complete.push(transfer)
-      else acc.inProgress.push(transfer)
-
+      const status = dashToCamelCase(transfer.status)
+      acc[status].push(transfer)
+      acc.all.push(transfer)
       return acc
     },
-    { inProgress: [], complete: [] }
+    { all: [], inProgress: [], actionNeeded: [], failed: [], complete: [] }
   )
 }
 
-// Return a human-readable description of the status for a given transfer
-export function humanStatusFor (transfer) {
-  if (transfer.erc20Address) return naturalErc20ToNep21.humanStatusFor(transfer)
-  if (transfer.nep21Address) return bridgedNep21ToErc20.humanStatusFor(transfer)
-}
-
-/**
- * Get a list of all steps that this transfer must complete.
- * The `transfer.status` will correspond to one of these.
- * A difference from `humanStatusFor` is that `steps` are phrased in imperative
- * tense ("sync 10 blocks") while `humanStatusFor` returns current status
- * ("syncing block 5/10")
+/*
+ * Decorate a transfer with human- and app-friendly attributes.
+ *
+ * For storage efficiency, raw transfers don't include various attributes. This
+ * returns a new object with all original attributes of provided `transfer`,
+ * and also adds:
+ *
+ * - sourceNetwork: either 'ethereum' or 'near'
+ * - destinationNetwork: either 'near' or 'ethereum'
+ * - error: if status === 'failed', gets set to most recent error encountered
+ *     by transfer (raw transfer has `errors` key which stores all errors
+ *     encountered throughout life of transfer)
+ * - steps: array, with each entry of the form `{ key: String, status:
+ *     'pending' | 'complete' | 'failed', description: i18n'd String }`
+ * - statusMessage: i18n'd present-tense version of in-progress step, or
+ *     "Failed" if transfer.status === 'failed' (check transfer.error for error
+ *     message)
+ * - callToAction: something like 'Mint' or 'Confirm'; only added if
+ *     transfer.status === 'action-needed'
+ *
+ * If you provide no `locale` or one unsupported by the underlying transfer
+ * type, the transfer type's first locale will be used.
  */
-export function stepsFor (transfer) {
-  let steps
-  if (transfer.erc20Address) steps = naturalErc20ToNep21.steps
-  if (transfer.nep21Address) steps = bridgedNep21ToErc20.steps
+export function decorate (transfer, { locale } = {}) {
+  const type = getTransferType(transfer)
 
-  if (!steps) {
-    throw new Error(
-      `Can't determine steps for transfer: ${JSON.stringify(transfer)}`
-    )
+  let localized = type.i18n[locale]
+  if (!localized) {
+    const availableLocales = Object.keys(type.i18n)
+    const fallback = availableLocales[0]
+    if (locale) {
+      console.warn(
+        `Requested locale ${locale} not available for ${transfer.type
+        }. Available locales: \n\n  • ${availableLocales.join('\n  • ')
+        }\n\nFalling back to ${fallback}`
+      )
+    }
+    localized = type.i18n[fallback]
   }
 
-  const stepNames = Object.keys(steps)
-  const currentStepIndex = stepNames.findIndex(
-    step => step === transfer.failedAt || step === transfer.status
-  )
+  const decorated = { ...transfer }
+  decorated.sourceNetwork = type.SOURCE_NETWORK
+  decorated.destinationNetwork = type.DESTINATION_NETWORK
+  decorated.error = transfer.status === status.FAILED &&
+    transfer.errors[transfer.errors.length - 1]
+  decorated.steps = localized.steps(transfer)
+  decorated.statusMessage = localized.statusMessage(transfer)
+  decorated.callToAction = localized.callToAction(transfer)
 
-  return stepNames.reduce(
-    (acc, step, i) => {
-      let status = 'pending'
-      if (i < currentStepIndex) status = 'completed'
-      if (transfer.failedAt === step) status = 'failed'
-      acc.push({
-        description: steps[step](transfer),
-        status
-      })
-      return acc
-    },
-    []
-  )
+  return decorated
 }
 
-// Check statuses of all inProgress transfers, and update them accordingly.
-export async function checkStatuses () {
+/*
+ * Check statuses of all inProgress transfers, and update them accordingly.
+ *
+ * Can provide a `loop` frequency, in milliseconds, to call repeatedly while
+ * inProgress transfers remain
+ */
+export async function checkStatusAll ({ loop } = {}) {
+  checkIsInt({ loop, error: 'must be frequency, in milliseconds' })
+
   // First, check if we've just returned to this page from NEAR Wallet after
   // completing a transfer. Do this outside of main Promise.all to
   //
@@ -124,8 +96,8 @@ export async function checkStatuses () {
   const id = urlParams.get('minting')
   if (id) {
     const transfer = await storage.get(id)
-    if (transfer && transfer.erc20Address) {
-      await naturalErc20ToNep21.checkCompletion(transfer)
+    if (transfer && transfer.type === '@eth+near/erc20+nep21/natural-erc20-to-nep21') {
+      storage.update(await naturalErc20ToNep21.checkCompletion(transfer))
     }
     urlParams.clear('minting', 'balanceBefore')
   }
@@ -138,30 +110,35 @@ export async function checkStatuses () {
   // Check & update statuses for all in parallel
   await Promise.all(inProgress.map(t => checkStatus(t.id)))
 
-  // recheck statuses again soon
-  window.setTimeout(() => checkStatuses(), 5500)
+  // loop, if told to loop
+  if (loop) window.setTimeout(() => checkStatusAll({ loop }), loop)
 }
 
-// Retry a failed transfer
-export async function retry (id) {
-  let transfer = await storage.get(id)
-
-  transfer = await storage.update(transfer, {
-    status: transfer.failedAt,
-    outcome: null,
-    error: null,
-    failedAt: null
-  })
-
-  if (transfer.erc20Address) {
-    await naturalErc20ToNep21.retry(transfer)
+/*
+ * Act on a transfer! That is, start whatever comes next.
+ *
+ * If a transfer step requires user confirmation before proceeding, this gets
+ * called when the user confirms they're ready. Whatever next action is
+ * appropriate for the transfer with given id, this will take it.
+ *
+ * If the transfer failed, this will retry it.
+ */
+export async function act (id) {
+  const transfer = await storage.get(id)
+  if (![status.FAILED, status.ACTION_NEEDED].includes(transfer.status)) {
+    console.warn('No action needed for transfer with status', transfer.status)
+    return
   }
+  const type = getTransferType(transfer)
 
-  if (transfer.nep21Address) {
-    await bridgedNep21ToErc20.retry(transfer)
+  try {
+    storage.update(await type.act(transfer))
+  } catch (error) {
+    await storage.update(transfer, {
+      status: status.FAILED,
+      errors: [...transfer.errors, error.message]
+    })
   }
-
-  checkStatus(id)
 }
 
 // Clear a transfer from localStorage
@@ -172,31 +149,56 @@ export async function clear (id) {
 // Add a new transfer to the set of cached local transfers.
 // This transfer will be given a chronologically-ordered id.
 // This transfer will be checked for updates on a loop.
-async function track (transferRaw) {
+export async function track (transferRaw, { checkStatusEvery }) {
+  checkIsInt({ checkStatusEvery, error: 'must be frequency, in milliseconds' })
   const id = new Date().toISOString()
   const transfer = { id, ...transferRaw }
 
   await storage.add(transfer)
 
-  checkStatus(id, { loop: true })
+  if (checkStatusEvery) checkStatus(id, { loop: checkStatusEvery })
 }
 
 // Check the status of a single transfer.
 // If `loop` is provided, a new call to checkStatus will be scheduled for this
 // transfer, if transfer.status is not COMPLETE.
-async function checkStatus (id, { loop = false } = {}) {
+async function checkStatus (id, { loop } = {}) {
+  checkIsInt({ loop, error: 'must be frequency, in milliseconds' })
+
   let transfer = await storage.get(id)
-
-  if (transfer.erc20Address) {
-    transfer = await naturalErc20ToNep21.checkStatus(transfer)
+  if (transfer.status !== status.IN_PROGRESS) {
+    console.warn('Can only checkStatus of an in-progress transfer')
+    return transfer
   }
 
-  if (transfer.nep21Address) {
-    transfer = await bridgedNep21ToErc20.checkStatus(transfer)
-  }
+  const type = getTransferType(transfer)
+
+  transfer = storage.update(await type.checkStatus(transfer))
 
   // if not fully transferred and told to loop, check status again soon
-  if (loop && transfer.status !== COMPLETE) {
-    window.setTimeout(() => checkStatus(transfer.id, { loop }), 5500)
+  if (loop && transfer.status !== status.COMPLETE) {
+    window.setTimeout(() => checkStatus(transfer.id, { loop }), loop)
   }
+}
+
+function getTransferType (transfer) {
+  try {
+    return require(transfer.type)
+  } catch (depLoadError) {
+    try {
+      return require(`./${transfer.type.split('/').slice(-2).join('/')}`)
+    } catch (localLoadError) {
+      console.error(depLoadError)
+      console.error(localLoadError)
+      throw new Error(`Can't determine type for transfer: ${JSON.stringify(transfer)}`)
+    }
+  }
+}
+
+function checkIsInt ({ error = 'must be integer', ...attrs }) {
+  Object.keys(attrs).forEach(key => {
+    if (attrs[key] && !Number.isInteger(attrs[key])) {
+      throw new Error(`\`${key}\` ${error}`)
+    }
+  })
 }
