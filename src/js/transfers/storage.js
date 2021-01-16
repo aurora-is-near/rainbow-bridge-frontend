@@ -52,6 +52,7 @@ export async function update (transfer, withData = {}) {
     throw new Error('Cannot update transfer with no ID')
   }
   const updatedTransfer = { ...transfer, ...withData }
+  // TODO: only update if !deepEqual(get(transfer.id), updatedTransfer)
   localStorageSet(STORAGE_KEY, {
     ...getAllRaw(),
     [transfer.id]: updatedTransfer

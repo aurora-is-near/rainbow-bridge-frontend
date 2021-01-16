@@ -35,8 +35,8 @@ export const i18n = {
       if (transfer.status === status.FAILED) return 'Failed'
       if (transfer.status === status.ACTION_NEEDED) {
         switch (transfer.completedStep) {
-          case APPROVE: return 'Ready to lock'
-          case SYNC: return 'Ready to mint'
+          case APPROVE: return 'Ready to lock in Ethereum'
+          case SYNC: return 'Ready to mint in NEAR'
         }
       }
       switch (transfer.completedStep) {
@@ -58,6 +58,7 @@ export const i18n = {
   }
 }
 
+// Called when status is ACTION_NEEDED or FAILED
 export function act (transfer) {
   switch (transfer.completedStep) {
     case null: return approve(transfer)
@@ -67,6 +68,7 @@ export function act (transfer) {
   }
 }
 
+// Called when status is IN_PROGRESS
 export function checkStatus (transfer) {
   switch (transfer.completedStep) {
     case null: return checkApprove(transfer)
@@ -86,7 +88,7 @@ export async function initiate ({
   amount,
   sender,
   recipient,
-  advanceEvery
+  checkStatusEvery
 }) {
   // TODO: move to core 'decorate'; get both from contracts
   const sourceTokenName = await getErc20Name(erc20Address)
@@ -103,7 +105,7 @@ export async function initiate ({
     sender,
     sourceToken: erc20Address,
     sourceTokenName,
-    status: status.IN_PROGRESS,
+    status: status.ACTION_NEEDED,
     type: '@eth+near/erc20+nep21/natural-erc20-to-nep21',
 
     // attributes specific to natural-erc20-to-nep21 transfers
@@ -117,7 +119,7 @@ export async function initiate ({
 
   transfer = await approve(transfer)
 
-  track(transfer, { advanceEvery })
+  track(transfer, { checkStatusEvery })
 }
 
 async function approve (transfer) {

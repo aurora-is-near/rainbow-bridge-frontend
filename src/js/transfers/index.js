@@ -157,6 +157,8 @@ export async function track (transferRaw, { checkStatusEvery }) {
   await storage.add(transfer)
 
   if (checkStatusEvery) checkStatus(id, { loop: checkStatusEvery })
+
+  return transfer
 }
 
 // Check the status of a single transfer.
@@ -166,18 +168,24 @@ async function checkStatus (id, { loop } = {}) {
   checkIsInt({ loop, error: 'must be frequency, in milliseconds' })
 
   let transfer = await storage.get(id)
-  if (transfer.status !== status.IN_PROGRESS) {
-    console.warn('Can only checkStatus of an in-progress transfer')
-    return transfer
-  }
-
   const type = getTransferType(transfer)
 
-  transfer = storage.update(await type.checkStatus(transfer))
+  // only in-progress transfers need to be checked on
+  if (transfer.status === status.IN_PROGRESS) {
+    try {
+      transfer = await type.checkStatus(transfer)
+      await storage.update(transfer)
+    } catch (e) {
+      await storage.update(transfer, {
+        status: status.FAILED,
+        errors: [...transfer.errors, e.message]
+      })
+    }
+  }
 
   // if not fully transferred and told to loop, check status again soon
   if (loop && transfer.status !== status.COMPLETE) {
-    window.setTimeout(() => checkStatus(transfer.id, { loop }), loop)
+    window.setTimeout(() => checkStatus(id, { loop }), loop)
   }
 }
 
