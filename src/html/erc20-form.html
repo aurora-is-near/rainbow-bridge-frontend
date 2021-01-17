@@ -97,7 +97,7 @@
 </form>
 <div data-behavior="invalidErc20" class="invalidErc20" style="display:none">
   <h1>Invalid ERC20 Address</h1>
-  <p data-behavior="erc20AddressError"></p>
+  <p data-behavior="erc20AddressError" style="word-break: break-word"></p>
 </div>
 
 <style>
@@ -119,7 +119,7 @@
 }
 .erc20Nav {
   border-bottom: 1px solid var(--light-gray);
-  margin: 0 0 2em;
+  margin: 0;
   padding: 1em 1em 0.5em;
 }
 .bridgeErc20Form,
@@ -128,6 +128,7 @@
   max-width: 33em;
   margin: 0 auto;
   text-align: center;
+  padding: 1em;
 }
 .bridgeErc20Form h1 {
   background: url(img/unbridged.svg) top center no-repeat;
@@ -137,6 +138,7 @@
 .sendErc20Form {
   display: flex;
   flex-direction: column;
+  margin-top: 2rem;
   min-height: 100vh;
   width: 100%;
 }
