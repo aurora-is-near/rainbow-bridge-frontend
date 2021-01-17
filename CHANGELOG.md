@@ -1,3 +1,10 @@
+## [1.5.4](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.3...v1.5.4) (2021-01-17)
+
+
+### Bug Fixes
+
+* re-add "token not yet bridged; bridge it" UI ([3cbb91b](https://github.com/near/rainbow-bridge-frontend/commit/3cbb91b4fb3a53f99ad6f1f963cbaa2e8e2d0183))
+
 ## [1.5.3](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.2...v1.5.3) (2021-01-17)
 
 
