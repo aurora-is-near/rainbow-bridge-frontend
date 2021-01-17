@@ -270,25 +270,11 @@ form.erc20 > footer {
 
       // if "Select token" selected, nullify form
       if (e.target.value.slice(0,2) !== '0x') {
-        amount.disabled = true
-        window.hide('erc20Info')
-        return
+        window.urlParams.set({ erc20: '' })
+      } else {
+        window.urlParams.set({ erc20: e.target.value })
       }
-
-      const [erc20Name, erc20Balance, nep21Balance] = await Promise.all([
-        window.getErc20Name(e.target.value),
-        getErc20Balance(e.target.value),
-        getNep21Balance(e.target.value)
-      ])
-      window.fill('erc20Name').with(erc20Name)
-      window.fill('erc20Balance').with(formatLargeNum(erc20Balance))
-      window.fill('nep21Name').with('n' + erc20Name)
-      window.fill('nep21Balance').with(formatLargeNum(nep21Balance))
-
-      amount.disabled = false
-      amount.max = erc20Balance
-      window.show('erc20Info', 'flex')
-      amount.focus()
+      window.render()
     }
 
     amount.onkeyup = function enableOrDisable (e) {
@@ -330,32 +316,68 @@ form.erc20 > footer {
 
 
   function hideOrShowTransferForm () {
-    if (window.urlParams.get('send') === 'erc20') window.show('erc20Form')
-    else window.hide('erc20Form')
+    if (window.urlParams.get('erc20') !== null) {
+      window.show('erc20Form')
+    } else {
+      window.hide('erc20Form')
+    }
   }
 
-  let featuredErc20s
   async function fillFeaturedErc20s () {
-    if (featuredErc20s) {
-      // only need to do this once, skip
-      return
-    }
-
-    featuredErc20s = await Promise.all(
+    const featuredErc20s = await Promise.all(
       process.env.featuredErc20s.split(',').map(async address => {
         const name = await window.getErc20Name(address)
         return { address, name }
       })
     )
 
+    const selected = window.urlParams.get('erc20')
+
     window.fill('erc20Selector').with(
       '<option>Select token</option>' +
       featuredErc20s.map(({ address, name }) =>
-        `<option value="${address}">${name}</option>`
+        `<option
+          value="${address}"
+          ${window.toString(selected === address && 'selected')}
+        >
+          ${name}
+        </option>`
       )
     )
   }
 
+  let erc20Address
+  async function renderBalances () {
+    if (window.urlParams.get('erc20') === erc20Address) {
+      // don't want to refocus the 'amount' field on every render pass
+      return
+    }
+
+    erc20Address = window.urlParams.get('erc20')
+    const amount = window.find('erc20Amount')
+
+    if (!erc20Address) {
+      amount.disabled = true
+      window.hide('erc20Info')
+    } else {
+      const [erc20Name, erc20Balance, nep21Balance] = await Promise.all([
+        window.getErc20Name(erc20Address),
+        getErc20Balance(erc20Address),
+        getNep21Balance(erc20Address)
+      ])
+      window.fill('erc20Name').with(erc20Name)
+      window.fill('erc20Balance').with(formatLargeNum(erc20Balance))
+      window.fill('nep21Name').with('n' + erc20Name)
+      window.fill('nep21Balance').with(formatLargeNum(nep21Balance))
+
+      amount.disabled = false
+      amount.max = erc20Balance
+      window.show('erc20Info', 'flex')
+      amount.focus()
+    }
+  }
+
   window.renderers.push(hideOrShowTransferForm)
   window.renderers.push(fillFeaturedErc20s)
+  window.renderers.push(renderBalances)
 </script>

@@ -447,7 +447,7 @@ window.addEventListener('load', function addLandingHandlers () {
     to.innerHTML = fromInner
   })
   window.onClick('start-erc20-transfer', function startErc20Transfer () {
-    window.urlParams.set({ send: 'erc20' })
+    window.urlParams.set({ erc20: '' })
     window.render()
   })
 
