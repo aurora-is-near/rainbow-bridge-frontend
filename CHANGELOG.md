@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.2...v1.5.3) (2021-01-17)
+
+
+### Bug Fixes
+
+* re-enable passing own erc20 by address in URL ([b75ac41](https://github.com/near/rainbow-bridge-frontend/commit/b75ac411669cbb915299cc8ed96f50fd7a184dbc))
+
 ## [1.5.2](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.1...v1.5.2) (2021-01-15)
 
 
