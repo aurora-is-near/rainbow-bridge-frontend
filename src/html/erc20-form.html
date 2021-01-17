@@ -1,9 +1,9 @@
-<form data-behavior="erc20Form" class="erc20" style="display:none">
-  <nav>
-    <button type="button" data-behavior="erc20Cancel" class="link">
-      <include src="rainbow-bridge.svg.html">{ "width": "2em" }</include>
-    </button>
-  </nav>
+<nav data-behavior="erc20Nav" class="erc20Nav">
+  <button type="button" data-behavior="erc20Cancel" class="link">
+    <include src="rainbow-bridge.svg.html">{ "width": "2em" }</include>
+  </button>
+</nav>
+<form data-behavior="sendErc20Form" class="sendErc20Form" style="display:none">
   <header>
     <h2>New Transfer</h2>
     <p>Select a token and enter an amount to transfer.</p>
@@ -71,6 +71,34 @@
     </button>
   </footer>
 </form>
+<form data-behavior="bridgeErc20Form" class="bridgeErc20Form" style="display:none">
+  <h1>Token not yet bridged</h1>
+  <p>
+    The <strong data-behavior="erc20Name"></strong>
+    <a
+      href="https://eips.ethereum.org/EIPS/eip-20"
+      rel="nofollow"
+    >ERC20</a>
+    token has not yet been bridged.
+  </p>
+  <p>
+    The
+    <a href="https://github.com/near/rainbow-token-connector" target="_blank">Fungible Token Connector</a>
+    allows sending any ERC20 token to NEAR, but requires an initial one-time deploy of a "BridgeToken"
+    <a href="https://docs.near.org/docs/roles/developer/contracts/intro#get-started" target="_blank">smart contract</a>.
+  </p>
+  <button style="padding: 0.75em 2.5em; margin: 3em 0 2em">
+    Bridge it!
+  </button>
+  <p style="font-size: 0.75em">
+    Deploying a new "Bridge Token" smart contract requires ~30 NEAR to cover
+    <a href="https://docs.near.org/docs/concepts/storage" target="_blank">storage fees</a>.
+  </p>
+</form>
+<div data-behavior="invalidErc20" class="invalidErc20" style="display:none">
+  <h1>Invalid ERC20 Address</h1>
+  <p data-behavior="erc20AddressError"></p>
+</div>
 
 <style>
 .account-tag {
@@ -89,43 +117,55 @@
 .account-tag > *:last-child {
   width: 1.5em;
 }
-form.erc20 {
+.erc20Nav {
+  border-bottom: 1px solid var(--light-gray);
+  margin: 0 0 2em;
+  padding: 1em 1em 0.5em;
+}
+.bridgeErc20Form,
+.invalidErc20 {
+  width: 100%;
+  max-width: 33em;
+  margin: 0 auto;
+  text-align: center;
+}
+.bridgeErc20Form h1 {
+  background: url(img/unbridged.svg) top center no-repeat;
+  font-size: 1.5em;
+  padding: 12rem 0 2.5rem;
+}
+.sendErc20Form {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   width: 100%;
 }
-form.erc20 > nav {
-  border-bottom: 1px solid var(--light-gray);
-  margin: 0 0 2em;
-  padding: 1em 1em 0.5em;
-}
-form.erc20 > header {
+.sendErc20Form > header {
   margin: 0 auto;
   max-width: 15em;
   text-align: center;
 }
-form.erc20 > div {
+.sendErc20Form > div {
   background-color: var(--shadow);
   margin: 0 auto;
   max-width: 25em;
   padding: 1em;
   width: 100%;
 }
-form.erc20 > div > header {
+.sendErc20Form > div > header {
   align-items: center;
   display: grid;
   justify-content: space-between;
   grid-template-columns: auto auto;
   grid-gap: 3em;
 }
-form.erc20 .erc20-info {
+.sendErc20Form .erc20-info {
   display: none;
   font-size: 0.8em;
   justify-content: space-between;
   margin: 0;
 }
-form.erc20 > .erc20-info {
+.sendErc20Form > .erc20-info {
   background-color: var(--shadow);
   border-top: 1px solid var(--light-gray);
   padding: 1rem;
@@ -133,11 +173,11 @@ form.erc20 > .erc20-info {
   width: 100%;
   max-width: 25rem;
 }
-form.erc20 strong {
+.sendErc20Form strong {
   font-weight: 500;
   color: var(--fg-bold);
 }
-form.erc20 .inputs {
+.sendErc20Form .inputs {
   background-color: var(--light-gray);
   border-radius: 0.75em;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -146,35 +186,35 @@ form.erc20 .inputs {
   grid-template-columns: auto 1fr;
   margin-top: 0.5em;
 }
-form.erc20 .inputs > * {
+.sendErc20Form .inputs > * {
   background-color: var(--bg);
   color: var(--fg-bold);
   padding: 0.5em;
 }
-form.erc20 .inputs > *:focus {
+.sendErc20Form .inputs > *:focus {
   box-shadow: none;
 }
-form.erc20 .inputs select {
+.sendErc20Form .inputs select {
   border-radius: 0.5rem 0 0 0.5rem;
 }
-form.erc20 .inputs input {
+.sendErc20Form .inputs input {
   border-radius: 0 0.5rem 0.5rem 0;
   font-size: 1.4em;
   font-weight: 900;
 }
-form.erc20 .inputs *:disabled {
+.sendErc20Form .inputs *:disabled {
   color: var(--gray);
   cursor: not-allowed;
 }
-form.erc20 .inputs input[type=number]::-webkit-inner-spin-button, 
-form.erc20 .inputs input[type=number]::-webkit-outer-spin-button { 
+.sendErc20Form .inputs input[type=number]::-webkit-inner-spin-button, 
+.sendErc20Form .inputs input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   margin: 0; 
 }
-form.erc20 input {
+.sendErc20Form input {
   text-align: right;
 }
-form.erc20 > footer {
+.sendErc20Form > footer {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -185,15 +225,15 @@ form.erc20 > footer {
   width: 100%;
 }
 @media (min-width: 25em) {
-  form.erc20 > div {
+  .sendErc20Form > div {
     border-radius: 4px;
   }
-  form.erc20 > footer {
+  .sendErc20Form > footer {
     display: block;
   }
 }
 @media (min-width: 928px) {
-  form.erc20 {
+  .sendErc20Form {
     background:
       url('img/form-bg-bottom-left.svg') no-repeat,
       url('img/form-bg-bottom-right.svg') no-repeat;
@@ -282,7 +322,27 @@ form.erc20 > footer {
       else submit.disabled = true
     }
 
-    window.find('erc20Form').onsubmit = async function transferErc20 (e) {
+    window.find('bridgeErc20Form').onsubmit = function bridgeIt (e) {
+      e.preventDefault()
+      window.nearFungibleTokenFactory.deploy_bridge_token(
+        { address: window.urlParams.get('erc20').replace('0x', '') },
+
+        // Default gas limit used by near-api-js is 3e13, but this tx fails with
+        // that number. Doubling it works. Maybe slightly less would also work,
+        // but at min gas price of 100M yN, this will only amount to 0.006 $NEAR,
+        // which is already negligible compared to the deposit.
+        new BN(3e13).mul(new BN(2)),
+
+        // Attach a deposit to compensate the BridgeTokenFactory contract for the
+        // storage costs associated with deploying the new BridgeToken contract.
+        // 30N for the base fee, plus .02 for for storing the name of the contract
+        // Might not need full .02, but need more than .01, error message did not
+        // include needed amount at time of writing.
+        new BN(window.parseNearAmount('30.02'))
+      )
+    }
+
+    window.find('sendErc20Form').onsubmit = async function transferErc20 (e) {
       e.preventDefault()
 
       disableForm()
@@ -314,28 +374,21 @@ form.erc20 > footer {
     }
   })
 
-
-  function hideOrShowTransferForm () {
-    if (window.urlParams.get('erc20') !== null) {
-      window.show('erc20Form')
-    } else {
-      window.hide('erc20Form')
-    }
-  }
-
-  async function fillFeaturedErc20s () {
-    const featuredErc20s = await Promise.all(
+  async function getFeaturedErc20s () {
+    return await Promise.all(
       process.env.featuredErc20s.split(',').map(async address => {
         const name = await window.getErc20Name(address)
         return { address, name }
       })
     )
+  }
 
+  async function fillFeaturedErc20s () {
     const selected = window.urlParams.get('erc20')
 
     window.fill('erc20Selector').with(
       '<option>Select token</option>' +
-      featuredErc20s.map(({ address, name }) =>
+      (await getFeaturedErc20s()).map(({ address, name }) =>
         `<option
           value="${address}"
           ${window.toString(selected === address && 'selected')}
@@ -347,11 +400,19 @@ form.erc20 > footer {
   }
 
   let erc20Address
-  async function renderBalances () {
+  async function renderErc20Form () {
     if (window.urlParams.get('erc20') === erc20Address) {
-      // don't want to refocus the 'amount' field on every render pass
       return
     }
+
+    if (window.urlParams.get('erc20') === null) {
+      window.hide('bridgeErc20Form')
+      window.hide('sendErc20Form')
+      window.hide('erc20Nav')
+      return
+    }
+
+    window.show('erc20Nav')
 
     erc20Address = window.urlParams.get('erc20')
     const amount = window.find('erc20Amount')
@@ -359,25 +420,56 @@ form.erc20 > footer {
     if (!erc20Address) {
       amount.disabled = true
       window.hide('erc20Info')
-    } else {
-      const [erc20Name, erc20Balance, nep21Balance] = await Promise.all([
-        window.getErc20Name(erc20Address),
-        getErc20Balance(erc20Address),
-        getNep21Balance(erc20Address)
-      ])
-      window.fill('erc20Name').with(erc20Name)
-      window.fill('erc20Balance').with(formatLargeNum(erc20Balance))
-      window.fill('nep21Name').with('n' + erc20Name)
-      window.fill('nep21Balance').with(formatLargeNum(nep21Balance))
-
-      amount.disabled = false
-      amount.max = erc20Balance
-      window.show('erc20Info', 'flex')
-      amount.focus()
+      window.show('sendErc20Form')
+      return
     }
+
+    let erc20Name
+    try {
+      erc20Name = await window.getErc20Name(erc20Address)
+      window.hide('invalidErc20')
+      window.fill('erc20Name').with(erc20Name)
+    } catch (e) {
+      window.hide('sendErc20Form')
+      window.hide('bridgeErc20Form')
+      window.show('invalidErc20')
+      window.fill('erc20AddressError').with(e.message)
+    }
+
+    if (!(await getFeaturedErc20s()).map(f => f.address).includes(erc20Address)) {
+      const option = document.createElement('option')
+      option.value = erc20Address
+      option.selected = true
+      option.innerText = erc20Name
+      window.find('erc20Selector').appendChild(option)
+    }
+
+    const [erc20Balance, nep21Balance] = await Promise.all([
+      getErc20Balance(erc20Address),
+      getNep21Balance(erc20Address)
+    ])
+
+    if (nep21Balance === null) {
+      window.hide('sendErc20Form')
+      window.show('bridgeErc20Form')
+      return
+    }
+
+    window.hide('bridgeErc20Form')
+    window.show('sendErc20Form')
+
+    window.fill('erc20Balance').with(formatLargeNum(erc20Balance))
+    window.fill('nep21Name').with('n' + erc20Name)
+    window.fill('nep21Balance').with(formatLargeNum(nep21Balance))
+
+    if (erc20Balance) amount.disabled = false
+    else amount.disabled = true
+
+    amount.max = erc20Balance
+    window.show('erc20Info', 'flex')
+    amount.focus()
   }
 
-  window.renderers.push(hideOrShowTransferForm)
   window.renderers.push(fillFeaturedErc20s)
-  window.renderers.push(renderBalances)
+  window.renderers.push(renderErc20Form)
 </script>

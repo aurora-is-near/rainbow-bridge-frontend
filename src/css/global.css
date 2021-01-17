@@ -26,8 +26,8 @@ html, body {
   --shadow: #fafafa;
   --error: #FF585D;
   --success: var(--green);
-  --primary: var(--red);
-  --secondary: var(--blue);
+  --primary: var(--blue);
+  --secondary: var(--red);
 
   --space: 1em;
 
@@ -79,6 +79,11 @@ a:active,
   color: var(--secondary);
 }
 
+strong {
+  color: var(--fg-bold);
+  font-weight: 900;
+}
+
 label {
   display: block;
 }
@@ -90,7 +95,7 @@ button, input, select {
 
 button {
   background-color: var(--fg-bold);
-  border-radius: 5px;
+  border-radius: 0.5em;
   border: none;
   color: var(--bg);
   font-weight: 500;
