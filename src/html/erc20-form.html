@@ -139,7 +139,6 @@
   display: flex;
   flex-direction: column;
   margin-top: 2rem;
-  min-height: 100vh;
   width: 100%;
 }
 .sendErc20Form > header {
@@ -235,13 +234,17 @@
   }
 }
 @media (min-width: 928px) {
-  .sendErc20Form {
+  .erc20Nav:before {
+    position: fixed;
+    top: 0; bottom: 0; right: 0; left: 0;
+    content: ' ';
     background:
       url('img/form-bg-bottom-left.svg') no-repeat,
       url('img/form-bg-bottom-right.svg') no-repeat;
     background-position:
       bottom left,
       bottom right;
+    z-index: -1;
   }
 }
 </style>
