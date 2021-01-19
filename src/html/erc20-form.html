@@ -379,13 +379,18 @@
     }
   })
 
+  let featuredErc20s
   async function getFeaturedErc20s () {
-    return await Promise.all(
+    if (featuredErc20s) return featuredErc20s
+
+    featuredErc20s = await Promise.all(
       process.env.featuredErc20s.split(',').map(async address => {
         const name = await window.getErc20Name(address)
         return { address, name }
       })
     )
+
+    return featuredErc20s
   }
 
   async function fillFeaturedErc20s () {
