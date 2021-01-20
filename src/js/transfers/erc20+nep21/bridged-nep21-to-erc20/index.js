@@ -87,8 +87,7 @@ export async function initiate ({
   nep21Address,
   amount,
   sender,
-  recipient,
-  advanceEvery
+  recipient
 }) {
   // TODO: move to core 'decorate'; get both from contracts
   const [erc20HexAddr] = nep21Address.split('.')
