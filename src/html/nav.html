@@ -1,3 +1,8 @@
+<nav data-behavior="topbar" class="topbar" style="display:none">
+  <button type="button" data-behavior="erc20Cancel" class="link">
+    <include src="rainbow-bridge.svg.html">{ "width": "2em" }</include>
+  </button>
+</nav>
 <nav style="display: flex; align-items: stretch; position: absolute; right: 0.5em; top: 0.5em; z-index: 2">
   <div id="menu" class="dropdown" aria-live="polite" style="font-size: 0.8em">
     <button class="menu-icon" aria-controls="menu">
@@ -26,6 +31,26 @@
   })
 </script>
 <style>
+  .topbar {
+    border-bottom: 1px solid var(--light-gray);
+    margin: 0;
+    padding: 1em 1em 0.5em;
+  }
+  @media (min-width: 928px) {
+    .topbar:before {
+      position: fixed;
+      top: 0; bottom: 0; right: 0; left: 0;
+      content: ' ';
+      background:
+        url('img/form-bg-bottom-left.svg') no-repeat,
+        url('img/form-bg-bottom-right.svg') no-repeat;
+      background-position:
+        bottom left,
+        bottom right;
+      z-index: -1;
+    }
+  }
+
   .menu-icon {
     padding-top: 0.5em;
   }
@@ -41,3 +66,16 @@
     width: 1em;
   }
 </style>
+<script>
+  async function renderNav () {
+    const { all: transfers } = await window.transfers.get()
+    const params = Object.keys(window.urlParams.get())
+
+    if (transfers.length || params.length) {
+      window.show('topbar')
+    } else {
+      window.hide('topbar')
+    }
+  }
+  window.renderers.push(renderNav)
+</script>

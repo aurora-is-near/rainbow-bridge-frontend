@@ -1,8 +1,3 @@
-<nav data-behavior="erc20Nav" class="erc20Nav">
-  <button type="button" data-behavior="erc20Cancel" class="link">
-    <include src="rainbow-bridge.svg.html">{ "width": "2em" }</include>
-  </button>
-</nav>
 <form data-behavior="sendErc20Form" class="sendErc20Form" style="display:none">
   <header>
     <h2>New Transfer</h2>
@@ -117,11 +112,6 @@
 .account-tag > *:last-child {
   width: 1.5em;
 }
-.erc20Nav {
-  border-bottom: 1px solid var(--light-gray);
-  margin: 0;
-  padding: 1em 1em 0.5em;
-}
 .bridgeErc20Form,
 .invalidErc20 {
   width: 100%;
@@ -207,10 +197,10 @@
   color: var(--gray);
   cursor: not-allowed;
 }
-.sendErc20Form .inputs input[type=number]::-webkit-inner-spin-button, 
-.sendErc20Form .inputs input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+.sendErc20Form .inputs input[type=number]::-webkit-inner-spin-button,
+.sendErc20Form .inputs input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 .sendErc20Form input {
   text-align: right;
@@ -231,20 +221,6 @@
   }
   .sendErc20Form > footer {
     display: block;
-  }
-}
-@media (min-width: 928px) {
-  .erc20Nav:before {
-    position: fixed;
-    top: 0; bottom: 0; right: 0; left: 0;
-    content: ' ';
-    background:
-      url('img/form-bg-bottom-left.svg') no-repeat,
-      url('img/form-bg-bottom-right.svg') no-repeat;
-    background-position:
-      bottom left,
-      bottom right;
-    z-index: -1;
   }
 }
 </style>
@@ -415,16 +391,15 @@
       return
     }
 
+    erc20Address = window.urlParams.get('erc20')
+
     if (window.urlParams.get('erc20') === null) {
       window.hide('bridgeErc20Form')
+      window.hide('invalidErc20')
       window.hide('sendErc20Form')
-      window.hide('erc20Nav')
       return
     }
 
-    window.show('erc20Nav')
-
-    erc20Address = window.urlParams.get('erc20')
     const amount = window.find('erc20Amount')
 
     if (!erc20Address) {
