@@ -155,14 +155,6 @@ code {
   color: var(--gray);
   padding: 0 0.25em;
 }
-code.clip {
-  display: inline-block;
-  max-width: 10em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  vertical-align: top;
-  white-space: nowrap;
-}
 
 li {
   padding-bottom: 1em;

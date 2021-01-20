@@ -13,8 +13,8 @@ export default async function render () {
   // if not signed in with both eth & near, stop here
   if (!window.ethUserAddress || !window.nearUserAddress) return
 
-  window.findAll('ethUser').forEach(l => { l.title = window.ethUserAddress })
-  window.findAll('nearUser').forEach(l => { l.title = window.nearUserAddress })
+  window.fill('ethUser').with({ title: window.ethUserAddress })
+  window.fill('nearUser').with({ title: window.nearUserAddress })
 
   await Promise.all(window.renderers.map(r => r()))
 

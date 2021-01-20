@@ -1,21 +1,32 @@
+const isObject = x =>
+  Object.prototype.toString.call(x) === '[object Object]'
+
 const fillCache = {}
 
 // Update DOM elements that have a "data-behavior" attribute
 // Given `<span data-behavior="thing"></span>`
 // You can `fill('thing').with('whatever')` to set the innerHTML
+// You can pass an array, and it will be joined with empty string
+// You can `fill('thing').with({ title: 'whatever' }) to set any other attribute
+//
+// The values filled are cached, so attempts to fill the same content multiple
+// times will not cause unnecessary DOM manipulations
 export const fill = selector => ({
-  with: content => {
-    const contentString = Array.isArray(content) ? content.join('') : content
-    if (fillCache[selector] !== contentString) {
-      fillCache[selector] = contentString
-      Array.from(document.querySelectorAll(`[data-behavior=${selector}]`))
-        .forEach(n => {
-          n.innerHTML = contentString
-          if (n.className.match('clip')) {
-            n.title = contentString
-          }
+  with: (contentOrAttrObj) => {
+    const attrs = isObject(contentOrAttrObj)
+      ? contentOrAttrObj
+      : { innerHTML: contentOrAttrObj }
+    Object.entries(attrs).forEach(([attr, content]) => {
+      const contentString = Array.isArray(content)
+        ? content.join('')
+        : content
+      if (fillCache[`${selector}:${attr}`] !== contentString) {
+        fillCache[`${selector}:${attr}`] = contentString
+        findAll(selector).forEach(n => {
+          n[attr] = contentString
         })
-    }
+      }
+    })
   }
 })
 
