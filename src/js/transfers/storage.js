@@ -28,9 +28,10 @@ function getAllRaw () {
 }
 
 // Get raw transfers, stored in localStorage as an object indexed by keys
+// Default sort: descending by ID, which corresponds with time created
 export async function getAll () {
   const raw = getAllRaw()
-  return Object.keys(raw).sort().map(id => raw[id])
+  return Object.keys(raw).sort((a, b) => b < a ? -1 : 1).map(id => raw[id])
 }
 
 export async function get (id) {
