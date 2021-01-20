@@ -1,3 +1,10 @@
+## [1.5.5](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.4...v1.5.5) (2021-01-20)
+
+
+### Bug Fixes
+
+* auto-recheck status for new transfers ([a79fe34](https://github.com/near/rainbow-bridge-frontend/commit/a79fe349d23d679856174638b3c1623cea6450f6))
+
 ## [1.5.4](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.3...v1.5.4) (2021-01-17)
 
 
