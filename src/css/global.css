@@ -218,20 +218,23 @@ li {
   white-space: nowrap;
 }
 .account-with-icon:after {
-  content: ' ';
-  width: 1.5em;
-  height: 1.5em;
-  background-size: contain;
   background-repeat: no-repeat;
+  background-size: contain;
+  height: 1.5em;
+  overflow: hidden;
+  text-indent: -10em;
+  width: 1.5em;
 }
 .account-with-icon.reverse:after {
   grid-column: 1;
   grid-row: 1;
 }
 .account-with-icon.ethereum:after {
+  content: 'on Ethereum';
   background-image: url(/img/ethereum.svg);
 }
 .account-with-icon.near:after {
+  content: 'on NEAR';
   background-image: url(/img/near.svg);
 }
 @media (prefers-color-scheme: dark) {
