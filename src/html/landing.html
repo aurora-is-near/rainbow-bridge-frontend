@@ -76,6 +76,22 @@
     padding: 1em;
   }
 
+  .connected-account {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    padding-left: 1em;
+  }
+  .connected-account:before {
+    color: var(--green);
+    content: '•';
+    font-size: 1.5em;
+    left: 0;
+    line-height: 0.8;
+    position: absolute;
+  }
+
   /**
    * Fill in labels with CSS to simplify swapping order with JS
    */

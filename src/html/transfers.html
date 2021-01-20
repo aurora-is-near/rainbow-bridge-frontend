@@ -161,13 +161,6 @@
     justify-content: space-between;
     align-items: center;
   }
-  .transfer > div > *:last-child {
-    align-items: center;
-    display: grid;
-    font-size: 1.1667em;
-    grid-gap: 0.5em;
-    grid-template-columns: 1fr auto;
-  }
   .transfer > div + div {
     border-top: 1px solid var(--bg-medium);
   }
@@ -361,17 +354,11 @@ function renderTransfer (transfer, { inProgress }) {
       </header>
       <div>
         <span>From</span>
-        <span>
-          <span class="ellipsis" title="${transfer.sender}">${transfer.sender}</span>
-          <img src="${transfer.sourceNetwork}.svg">
-        </span>
+        <span class="account-with-icon ${transfer.sourceNetwork}" title="${transfer.sender}"></span>
       </div>
       <div>
         <span>To</span>
-        <span>
-          <span class="ellipsis" title="${transfer.recipient}">${transfer.recipient}</span>
-          <img src="${transfer.destinationNetwork}.svg">
-        </span>
+        <span class="account-with-icon ${transfer.destinationNetwork}" title="${transfer.recipient}"></span>
       </div>
       <footer class="${openTransferDetails[transfer.id] ? 'open' : ''}">
         <ol class="transfer-details">${transfer.steps.map(step => (

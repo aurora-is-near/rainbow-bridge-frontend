@@ -6,10 +6,7 @@
   <div>
     <header>
       <strong>From</strong>
-      <span class="account-tag">
-        <span class="ellipsis" data-behavior="ethUser"></span>
-        <img src="img/ethereum.svg" alt="ETH address"/>
-      </span>
+      <span class="account-tag account-with-icon ethereum" data-behavior="ethUser"></span>
     </header>
     <div class="inputs">
       <select
@@ -41,12 +38,7 @@
   <div>
     <header>
       <strong>To</strong>
-      <span class="account-tag">
-        <span class="ellipsis" data-behavior="nearUser"></span>
-        <include src="near.svg.html">{
-          "alt": "NEAR address"
-        }</include>
-      </span>
+      <span class="account-tag account-with-icon near" data-behavior="nearUser"></span>
     </header>
   </div>
   <p class="erc20-info" data-behavior="erc20Info">
@@ -97,20 +89,13 @@
 
 <style>
 .account-tag {
-  align-items: center;
   background-color: var(--light-gray);
   padding: 0.25em;
   padding-left: 0.75em;
   border-radius: 1000em;
-  display: grid;
-  grid-gap: 0.5em;
-  grid-template-columns: 1fr auto;
 }
-.account-tag > *:first-child {
+.account-tag:before {
   font-size: 0.8em;
-}
-.account-tag > *:last-child {
-  width: 1.5em;
 }
 .bridgeErc20Form,
 .invalidErc20 {
