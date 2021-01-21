@@ -1,4 +1,4 @@
-import { fill, hide, show } from './domHelpers'
+import { fill } from './domHelpers'
 
 // update the html based on user & data state
 export default async function render () {
@@ -11,10 +11,16 @@ export default async function render () {
   fill('nearClientAccount').with(process.env.nearClientAccount)
 
   if (window.ethUserAddress) {
-    window.fill('ethUser').with({ title: window.ethUserAddress })
+    window.fill('ethUser').with({
+      innerHTML: window.ethUserAddress,
+      title: window.ethUserAddress
+    })
   }
   if (window.nearUserAddress) {
-    window.fill('nearUser').with({ title: window.nearUserAddress })
+    window.fill('nearUser').with({
+      innerHTML: window.nearUserAddress,
+      title: window.nearUserAddress
+    })
   }
 
   await Promise.all(window.renderers.map(r => r()))

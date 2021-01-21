@@ -201,31 +201,31 @@ li {
 }
 
 .account-with-icon {
-  align-items: center;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-gap: 0.5em;
-}
-.account-with-icon:before {
-  content: attr(title);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  position: relative;
+  padding-right: 2em !important;
 }
 .account-with-icon:after {
   background-repeat: no-repeat;
   background-size: contain;
-  height: 1.5em;
+  background-position: center;
   overflow: hidden;
   text-indent: -10em;
-  width: 1.5em;
+  width: 1.4em;
+  position: absolute;
+  right: 0.25em;
+  top: 0;
+  bottom: 0;
 }
 .account-with-icon.reverse {
-  grid-template-columns: auto 1fr;
+  padding-right: unset;
+  padding-left: 2em !important;
 }
 .account-with-icon.reverse:after {
-  grid-column: 1;
-  grid-row: 1;
+  left: 0;
+  right: unset;
 }
 .account-with-icon.ethereum:after {
   content: 'on Ethereum';

@@ -350,6 +350,8 @@
   }
 
   async function fillFeaturedErc20s () {
+    if (!window.ethInitialized) return
+
     const selected = window.urlParams.get('erc20')
 
     window.fill('erc20Selector').with(
@@ -367,10 +369,10 @@
 
   let erc20Address
   async function renderErc20Form () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
     if (window.urlParams.get('erc20') === erc20Address) return
     else erc20Address = window.urlParams.get('erc20')
-
-    if (!(window.ethInitialized && window.nearInitialized)) return
 
     if (window.urlParams.get('erc20') === null) {
       window.hide('bridgeErc20Form')
