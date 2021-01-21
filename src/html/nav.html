@@ -1,9 +1,10 @@
 <nav data-behavior="topbar" class="topbar" style="display:none">
-  <button data-behavior="goHome" class="link">
-    <picture>
-      <source srcset="/img/rainbow-bridge-dark.svg" media="(prefers-color-scheme: dark)">
-      <img src="/img/rainbow-bridge.svg" style="height: 2.4em">
-    </picture>
+  <picture>
+    <source srcset="/img/rainbow-bridge-dark.svg" media="(prefers-color-scheme: dark)">
+    <img src="/img/rainbow-bridge.svg" style="height: 2.4em">
+  </picture>
+  <button data-behavior="goHome" class="link" title="Go home">
+    <span class="visually-hidden">Home</span>
   </button>
 </nav>
 <nav data-behavior="accountsDropdown" class="accounts-nav" style="display: none">
@@ -35,6 +36,16 @@
     border-bottom: 1px solid var(--light-gray);
     margin: 0;
     padding: 1em 1em 0.5em;
+    position: relative;
+  }
+  .topbar button {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 6em;
+  }
+  .topbar button:hover,
+  .topbar button:focus {
+    border: 1px solid var(--gray);
   }
   @media (min-width: 928px) {
     .topbar:before {
@@ -178,6 +189,9 @@
 
     const { all: transfers } = await window.transfers.get()
     const params = Object.keys(window.urlParams.get())
+
+    if (params.length) window.show('goHome')
+    else window.hide('goHome')
 
     if (transfers.length || params.length) {
       window.show('topbar')
