@@ -1,9 +1,12 @@
 <div class="landing" data-behavior="landing">
   <h1 class="title">
-    <include src="rainbow-bridge.svg.html">{ "width": "2.3em" }</include>
+    <picture>
+      <source srcset="/img/rainbow-bridge-dark.svg" media="(prefers-color-scheme: dark)">
+      <img src="/img/rainbow-bridge.svg" style="width: 2.3em; display: inline; margin-top: 2em">
+    </picture>
     <small>
       ETH
-      <img alt="to and from" src="img/swap-lr.svg" style="vertical-align: bottom">
+      <img alt="to and from" src="img/swap-lr.svg" style="display: inline; vertical-align: bottom">
       NEAR
     </small>
     <div>Rainbow</div>
@@ -137,8 +140,8 @@
         url(img/landing-bg-left.svg) no-repeat,
         url(img/landing-bg-right.svg) no-repeat;
       background-position:
-        top 18.5em left calc(50% - 17em),
-        top 24em right calc(50% - 16em);
+        top 20em left calc(50% - 17em),
+        top 26em right calc(50% - 16em);
     }
   }
 </style>
@@ -154,14 +157,16 @@ window.addEventListener('load', function addLandingHandlers () {
 })
 
 async function renderLanding () {
-  const { all: transfers } = await window.transfers.get()
-  const params = Object.keys(window.urlParams.get())
-
   if (window.ethInitialized && window.nearInitialized) {
     window.find('new-transfer-button').disabled = false
   } else {
+    window.show('landing')
     window.find('new-transfer-button').disabled = true
+    return
   }
+
+  const { all: transfers } = await window.transfers.get()
+  const params = Object.keys(window.urlParams.get())
 
   if (transfers.length || params.length) {
     window.hide('landing')

@@ -1,5 +1,4 @@
 @import './a11y.css';
-@import './dropdown.css';
 @import './swap-vert.css';
 @import './title.css';
 
@@ -60,6 +59,10 @@ h1, h2, h3, h4, h5, h6 {
 
 p {
   margin: 0 0 1em;
+}
+
+img, picture {
+  display: block;
 }
 
 a,
@@ -216,6 +219,9 @@ li {
   overflow: hidden;
   text-indent: -10em;
   width: 1.5em;
+}
+.account-with-icon.reverse {
+  grid-template-columns: auto 1fr;
 }
 .account-with-icon.reverse:after {
   grid-column: 1;

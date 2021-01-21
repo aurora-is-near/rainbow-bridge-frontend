@@ -1,35 +1,35 @@
 <nav data-behavior="topbar" class="topbar" style="display:none">
-  <button type="button" data-behavior="erc20Cancel" class="link">
-    <include src="rainbow-bridge.svg.html">{ "width": "2em" }</include>
+  <button data-behavior="goHome" class="link">
+    <picture>
+      <source srcset="/img/rainbow-bridge-dark.svg" media="(prefers-color-scheme: dark)">
+      <img src="/img/rainbow-bridge.svg" style="height: 2.4em">
+    </picture>
   </button>
 </nav>
-<nav style="display: flex; align-items: stretch; position: absolute; right: 0.5em; top: 0.5em; z-index: 2">
-  <div id="menu" class="dropdown" aria-live="polite" style="font-size: 0.8em">
-    <button class="menu-icon" aria-controls="menu">
-      <div></div>
-      <span class="visually-hidden">menu</span>
+<nav data-behavior="accountsDropdown" class="accounts-nav" style="display: none">
+  <div id="accounts-dropdown" class="dropdown" aria-live="polite">
+    <button aria-controls="accounts-dropdown" class="accounts-button">
+      <img data-behavior="ethConnected" style="width: 1.5rem" alt="Ethereum" src="img/ethereum.svg">
+      <picture data-behavior="nearConnected">
+        <source srcset="img/near-dark.svg" media="(prefers-color-scheme: dark)">
+        <img style="width: 1.5rem" alt="NEAR" src="img/near.svg">
+      </picture>
+      <span class="green-dot">
+        <span class="visually-hidden">Connected</span>
+      </span>
     </button>
-    <div class="right" style="width: 7em">
-      <div>
-        <a href="https://github.com/near/rainbow-bridge-frontend">View source</a>
+    <div class="right accounts-list">
+      <div data-behavior="ethConnected">
+        <span class="account-with-icon reverse ethereum" data-behavior="ethUser"></span>
+        <button class="link" data-behavior="disconnectEthereum">Disconnect</button>
       </div>
-      <div data-behavior="signed-in" style="display: none; margin-top: 0.5em">
-        <button class="link" data-behavior="logout">
-          Sign out
-        </button>
+      <div data-behavior="nearConnected">
+        <span class="account-with-icon reverse near" data-behavior="nearUser"></span>
+        <button class="link" data-behavior="disconnectNear">Disconnect</button>
       </div>
     </div>
   </div>
 </nav>
-<script>
-  window.addEventListener('load', function addNavEventHandlers () {
-    document.querySelector('[data-behavior=logout]').onclick = async function logout () {
-      await window.web3Modal.clearCachedProvider()
-      window.nearConnection.signOut()
-      setTimeout(() => window.location.reload())
-    }
-  })
-</script>
 <style>
   .topbar {
     border-bottom: 1px solid var(--light-gray);
@@ -51,23 +51,131 @@
     }
   }
 
-  .menu-icon {
-    padding-top: 0.5em;
+  .accounts-nav {
+    font-size: 0.75em;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    z-index: 2;
   }
-  .menu-icon:after,
-  .menu-icon:before,
-  .menu-icon div {
-    background-color: var(--fg);
-    border-radius: 3px;
-    content: '';
+  .accounts-button {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  .accounts-button > * {
+    margin-left: -0.3rem;
+  }
+  .accounts-button > *:last-child {
+    margin-left: 0;
+  }
+  .accounts-button .green-dot {
+    background-color: #00C08B;
+    border-radius: 10em;
+    width: 8px; height: 8px;
+  }
+
+  .dropdown {
+    background: var(--bg);
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+  }
+  .dropdown > button {
+    background: var(--bg);
+    border: 1px solid var(--light-gray);
+    border-radius: 0.5rem;
+    position: relative;
+    padding-right: 1.5rem;
+    z-index: 2;
+  }
+  .dropdown > button:after {
+    content: ' ';
+    background-image: url(/img/chevron-down.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 1rem;
+    position: absolute;
+    right: 0.25rem;
+    top: 0;
+    bottom: 0;
+  }
+  .dropdown > button:hover,
+  .dropdown > button:focus {
+    border: 1px solid var(--gray);
+    box-shadow: none;
+  }
+  .dropdown > button + * {
+    display: none;
+  }
+  .dropdown.active > button + * {
+    background-color: var(--bg);
     display: block;
-    height: 2px;
-    margin: 3px 0;
-    width: 1em;
+    padding: 1rem;
+    position: absolute;
+    border-radius: 0.5rem;
+    border: 1px solid var(--light-gray);
+    max-width: calc(100vw - 2em);
+    top: calc(100% + 0.25rem);
+    z-index: 1;
+  }
+  .dropdown.active > button + .right {
+    right: 0;
+  }
+
+  .accounts-list {
+    color: var(--fg-bold);
+    width: 21em;
+    padding-bottom: 0 !important;
+  }
+  .accounts-list > * {
+    display: grid;
+    grid-gap: 2em;
+    grid-template-columns: 1fr auto;
+    margin-bottom: 1rem;
+  }
+  .accounts-list button {
+    color: var(--fg);
+    font-weight: 400;
   }
 </style>
 <script>
-  async function renderNav () {
+  window.addEventListener('load', function addNavEventHandlers () {
+    window.find('goHome').onclick = function backToLanding () {
+       window.urlParams.clear()
+       window.render()
+    }
+    window.find('disconnectEthereum').onclick = async function disconnectEthereum () {
+      await window.web3Modal.clearCachedProvider()
+      setTimeout(() => window.location.reload())
+    }
+    window.find('disconnectNear').onclick = function disconnectNear () {
+      window.nearConnection.signOut()
+      setTimeout(() => window.location.reload())
+    }
+    document.querySelectorAll('.dropdown').forEach(d => {
+      document.querySelector('body').addEventListener('click', event => {
+        const button = d.querySelector('button')
+        const clickedButton = button.contains(event.target)
+        const clickedInDropdown = d.contains(event.target)
+        const classNames = Array.from(d.classList)
+        const active = classNames.includes('active')
+
+        if (!active) {
+          if (clickedButton) {
+            d.className = [...classNames, 'active'].join(' ')
+          }
+        } else {
+          if (clickedButton || !clickedInDropdown) {
+            d.className = classNames.filter(c => c !== 'active').join(' ')
+          }
+        }
+      })
+    })
+  })
+  async function renderTopBar () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
     const { all: transfers } = await window.transfers.get()
     const params = Object.keys(window.urlParams.get())
 
@@ -77,5 +185,19 @@
       window.hide('topbar')
     }
   }
-  window.renderers.push(renderNav)
+  function renderAccountsDropdown () {
+    if (window.ethInitialized) window.show('ethConnected')
+    else window.hide('ethConnected')
+
+    if (window.nearInitialized) window.show('nearConnected')
+    else window.hide('nearConnected')
+
+    if (window.ethInitialized || window.nearInitialized) {
+      window.show('accountsDropdown')
+    } else {
+      window.hide('accountsDropdown')
+    }
+  }
+  window.renderers.push(renderTopBar)
+  window.renderers.push(renderAccountsDropdown)
 </script>

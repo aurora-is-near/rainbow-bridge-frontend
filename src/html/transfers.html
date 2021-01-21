@@ -378,6 +378,8 @@ function renderTransfer (transfer, { inProgress }) {
 }
 
 async function updateTransfers () {
+  if (!(window.ethInitialized && window.nearInitialized)) return
+
   const { all: transfers } = await window.transfers.get()
 
   if (!transfers.length) {
@@ -406,6 +408,8 @@ function adjustTransferDetailsHeights () {
 }
 
 async function hideShowTransfers () {
+  if (!(window.ethInitialized && window.nearInitialized)) return
+
   const { all: transfers } = await window.transfers.get()
   const params = Object.keys(window.urlParams.get())
 

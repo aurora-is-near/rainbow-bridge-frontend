@@ -75,23 +75,4 @@ export const initDOMhandlers = () => {
     window.urlParams.set({ erc20: '' })
     window.render()
   })
-  document.querySelectorAll('.dropdown').forEach(d => {
-    document.querySelector('body').addEventListener('click', event => {
-      const button = d.querySelector('button')
-      const clickedButton = button.contains(event.target)
-      const clickedInDropdown = d.contains(event.target)
-      const classNames = Array.from(d.classList)
-      const active = classNames.includes('active')
-
-      if (!active) {
-        if (clickedButton) {
-          d.className = [...classNames, 'active'].join(' ')
-        }
-      } else {
-        if (clickedButton || !clickedInDropdown) {
-          d.className = classNames.filter(c => c !== 'active').join(' ')
-        }
-      }
-    })
-  })
 }

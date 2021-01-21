@@ -262,11 +262,6 @@
       submit.disabled = false
     }
 
-    window.find('erc20Cancel').onclick = function backToLanding () {
-       window.urlParams.clear()
-       window.render()
-    }
-
     window.find('erc20Swap').onclick = function swapErc20 () {
       alert('Not yet supported, try again next week')
     }
@@ -372,11 +367,10 @@
 
   let erc20Address
   async function renderErc20Form () {
-    if (window.urlParams.get('erc20') === erc20Address) {
-      return
-    }
+    if (window.urlParams.get('erc20') === erc20Address) return
+    else erc20Address = window.urlParams.get('erc20')
 
-    erc20Address = window.urlParams.get('erc20')
+    if (!(window.ethInitialized && window.nearInitialized)) return
 
     if (window.urlParams.get('erc20') === null) {
       window.hide('bridgeErc20Form')
