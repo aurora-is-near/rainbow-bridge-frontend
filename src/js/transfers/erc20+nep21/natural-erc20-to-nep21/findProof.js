@@ -12,9 +12,9 @@ import { serialize as serializeBorsh } from 'near-api-js/lib/utils/serialize'
 // Compute proof that Locked event was fired in Ethereum. This proof can then
 // be passed to the FungibleTokenFactory contract, which verifies the proof
 // against a Prover contract.
-export default async function findProof (transfer) {
-  const receipt = await window.web3.eth.getTransactionReceipt(transfer.lockReceipt.transactionHash)
-  const block = await window.web3.eth.getBlock(transfer.lockReceipt.blockNumber)
+export default async function findProof ({ lockTxHash, lockTxBlockHeight }) {
+  const receipt = await window.web3.eth.getTransactionReceipt(lockTxHash)
+  const block = await window.web3.eth.getBlock(lockTxBlockHeight)
   const tree = await buildTree(block)
   const proof = await extractProof(
     block,
@@ -22,10 +22,9 @@ export default async function findProof (transfer) {
     receipt.transactionIndex
   )
 
-  const lockHash = transfer.lockHashes[transfer.lockHashes.length - 1]
   const [lockedEvent] = await window.ethTokenLocker.getPastEvents('Locked', {
-    filter: { transactionHash: lockHash },
-    fromBlock: transfer.lockReceipt.blockNumber
+    filter: { transactionHash: lockTxHash },
+    fromBlock: lockTxBlockHeight
   })
   // `log.logIndex` does not necessarily match the log's order in the array of logs
   const logIndexInArray = receipt.logs.findIndex(

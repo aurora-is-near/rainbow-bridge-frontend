@@ -255,8 +255,14 @@ async function mint (transfer) {
   )
   urlParams.set({ minting: transfer.id, balanceBefore })
 
+  const lockReceipt = transfer.lockReceipts[transfer.lockReceipts.length - 1]
+  const proof = await findProof({
+    lockTxHash: lockReceipt.transactionHash,
+    lockTxBlockHeight: lockReceipt.blockNumber
+  })
+
   await window.nearFungibleTokenFactory.deposit(
-    await findProof(transfer),
+    proof,
     new BN('300000000000000'),
     // We need to attach tokens because minting increases the contract state, by <600 bytes, which
     // requires an additional 0.06 NEAR to be deposited to the account for state staking.
