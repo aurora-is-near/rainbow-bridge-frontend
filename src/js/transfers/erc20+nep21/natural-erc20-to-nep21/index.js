@@ -87,8 +87,7 @@ export async function initiate ({
   erc20Address,
   amount,
   sender,
-  recipient,
-  checkStatusEvery
+  recipient
 }) {
   // TODO: move to core 'decorate'; get both from contracts
   const sourceTokenName = await getErc20Name(erc20Address)
@@ -119,7 +118,7 @@ export async function initiate ({
 
   transfer = await approve(transfer)
 
-  track(transfer, { checkStatusEvery })
+  track(transfer)
 }
 
 async function approve (transfer) {

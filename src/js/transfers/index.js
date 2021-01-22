@@ -102,7 +102,9 @@ export function decorate (transfer, { locale } = {}) {
  * inProgress transfers remain
  */
 export async function checkStatusAll ({ loop } = {}) {
-  checkIsInt({ loop, error: 'must be frequency, in milliseconds' })
+  if (loop && !Number.isInteger(loop)) {
+    throw new Error('`loop` must be frequency, in milliseconds')
+  }
 
   // First, check if we've just returned to this page from NEAR Wallet after
   // completing a transfer. Do this outside of main Promise.all to
@@ -119,9 +121,6 @@ export async function checkStatusAll ({ loop } = {}) {
   }
 
   const { inProgress } = await get()
-
-  // if all transfers successful, nothing to do
-  if (!inProgress.length) return
 
   // Check & update statuses for all in parallel
   await Promise.all(inProgress.map(t => checkStatus(t.id)))
@@ -165,24 +164,14 @@ export async function clear (id) {
 // Add a new transfer to the set of cached local transfers.
 // This transfer will be given a chronologically-ordered id.
 // This transfer will be checked for updates on a loop.
-export async function track (transferRaw, { checkStatusEvery } = {}) {
-  checkIsInt({ checkStatusEvery, error: 'must be frequency, in milliseconds' })
+export async function track (transferRaw) {
   const id = new Date().toISOString()
   const transfer = { id, ...transferRaw }
-
-  await storage.add(transfer)
-
-  if (checkStatusEvery) checkStatus(id, { loop: checkStatusEvery })
-
-  return transfer
+  return await storage.add(transfer)
 }
 
 // Check the status of a single transfer.
-// If `loop` is provided, a new call to checkStatus will be scheduled for this
-// transfer, if transfer.status is not COMPLETE.
-async function checkStatus (id, { loop } = {}) {
-  checkIsInt({ loop, error: 'must be frequency, in milliseconds' })
-
+async function checkStatus (id) {
   let transfer = await storage.get(id)
   const type = getTransferType(transfer)
 
@@ -198,17 +187,4 @@ async function checkStatus (id, { loop } = {}) {
       })
     }
   }
-
-  // if not fully transferred and told to loop, check status again soon
-  if (loop && transfer.status !== status.COMPLETE) {
-    window.setTimeout(() => checkStatus(id, { loop }), loop)
-  }
-}
-
-function checkIsInt ({ error = 'must be integer', ...attrs }) {
-  Object.keys(attrs).forEach(key => {
-    if (attrs[key] && !Number.isInteger(attrs[key])) {
-      throw new Error(`\`${key}\` ${error}`)
-    }
-  })
 }
