@@ -148,6 +148,7 @@
 
       try {
         await window.erc20Xnep21.naturalErc20ToNep21({
+          // TODO fix for non-integers
           amount: Number(amount.value),
           erc20Address: select.value,
           sender: window.ethUserAddress,
@@ -247,8 +248,9 @@
       window.find('erc20Selector').appendChild(option)
     }
 
-    const [erc20Balance, nep21Balance] = await Promise.all([
+    const [erc20Balance, erc20Decimals, nep21Balance] = await Promise.all([
       window.utils.getErc20Balance(erc20Address),
+      window.utils.getErc20Decimals(erc20Address),
       window.utils.getNep21Balance(erc20Address)
     ])
 
@@ -268,6 +270,7 @@
     if (erc20Balance) amount.disabled = false
     else amount.disabled = true
 
+    amount.step = 10 ** -erc20Decimals
     amount.max = erc20Balance
     window.show('erc20Info', 'flex')
     amount.focus()

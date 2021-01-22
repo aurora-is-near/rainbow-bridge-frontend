@@ -47,3 +47,17 @@ export async function getErc20Name (address) {
 
   return erc20Names[address]
 }
+
+const erc20Decimals = {}
+export async function getErc20Decimals (address) {
+  if (erc20Decimals[address]) return erc20Decimals[address]
+
+  const contract = new window.web3.eth.Contract(
+    JSON.parse(process.env.ethErc20AbiText),
+    address
+  )
+
+  erc20Decimals[address] = await contract.methods.decimals().call()
+
+  return erc20Decimals[address]
+}
