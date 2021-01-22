@@ -148,7 +148,7 @@ async function withdraw (transfer) {
     () => bridgeToken.withdraw(
       {
         amount: String(transfer.amount),
-        recipient: window.ethUserAddress.replace('0x', '')
+        recipient: transfer.recipient
       },
       {
         gas: new BN('3' + '0'.repeat(14)), // 10x current default from near-api-js
