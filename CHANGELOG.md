@@ -1,3 +1,10 @@
+## [1.5.8](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.7...v1.5.8) (2021-01-22)
+
+
+### Bug Fixes
+
+* add (temp) step-size to amount inputs ([a7f7469](https://github.com/near/rainbow-bridge-frontend/commit/a7f7469a5c03d5084ca7f1546c0b661fa0882274))
+
 ## [1.5.7](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.6...v1.5.7) (2021-01-22)
 
 
