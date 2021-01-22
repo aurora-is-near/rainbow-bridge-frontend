@@ -1,3 +1,10 @@
+## [1.5.7](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.6...v1.5.7) (2021-01-22)
+
+
+### Bug Fixes
+
+* use transfer.recipient instead of window.ethUserAddress ([0c2fff7](https://github.com/near/rainbow-bridge-frontend/commit/0c2fff7e94d99f7e5fd14c9533dd29a7aecd3eb8))
+
 ## [1.5.6](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.5...v1.5.6) (2021-01-22)
 
 
