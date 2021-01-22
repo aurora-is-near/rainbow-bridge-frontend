@@ -1,0 +1,232 @@
+<form data-behavior="sendBridgedNep21Form" class="transfer-form" style="display:none">
+  <header>
+    <h2>New Transfer</h2>
+    <p>Select a token and enter an amount to transfer.</p>
+  </header>
+  <div class="account">
+    <header>
+      <strong>Transfer from</strong>
+      <span class="account-tag account-with-icon near" data-behavior="nearUser"></span>
+    </header>
+    <div class="inputs">
+      <select
+        data-behavior="erc20nSelector"
+        id="erc20n"
+        name="erc20n"
+      >
+      </select>
+      <input
+        autoComplete="off"
+        data-behavior="erc20nAmount"
+        disabled
+        min="0"
+        placeholder="0"
+        type="number"
+      />
+    </div>
+    <p class="token-details" data-behavior="erc20nInfo" style="margin: 0.5rem 0 0">
+      <span>Available to transfer</span>
+      <span>
+        <span data-behavior="nep21Balance"></span>
+        <span data-behavior="erc20nName"></span>
+      </span>
+    </p>
+  </div>
+  <div class="arrow"></div>
+  <div class="account">
+    <header>
+      <strong>To</strong>
+      <span class="account-tag account-with-icon ethereum" data-behavior="ethUser"></span>
+    </header>
+    <p class="token-details" data-behavior="erc20nInfo">
+      <span>Receive as</span>
+      <strong data-behavior="erc20Name"></strong>
+    </p>
+    <p class="token-details" data-behavior="erc20nInfo">
+      <span>Current balance</span>
+      <strong>
+        <span data-behavior="erc20Balance"></span>
+        <span data-behavior="erc20Name"></span>
+      </strong>
+    </p>
+  </div>
+  <footer>
+    <button disabled data-behavior="erc20nSubmit" class="cta">
+      Submit transfer
+    </button>
+  </footer>
+</form>
+<div data-behavior="invalidErc20n" class="container" style="display:none">
+  <h1>Invalid erc20n Address</h1>
+  <p data-behavior="erc20nAddressError" style="word-break: break-word"></p>
+</div>
+
+<script>
+
+  window.addEventListener('load', function sendBridgedNep21OnLoad () {
+    const amount = window.find('erc20nAmount')
+    const select = window.find('erc20nSelector')
+    const submit = window.find('erc20nSubmit')
+
+    function disableForm () {
+      amount.disabled = true
+      select.disabled = true
+      submit.disabled = true
+    }
+
+    function enableForm () {
+      amount.disabled = false
+      select.disabled = false
+      submit.disabled = false
+    }
+
+    select.onchange = async function selectErc20n (e) {
+      amount.value = ''
+
+      // if "Select token" selected, nullify form
+      if (e.target.value === '') {
+        window.urlParams.set({ erc20n: '' })
+      } else {
+        window.urlParams.set({ erc20n: e.target.value })
+      }
+      window.render()
+    }
+
+    amount.onkeyup = function enableOrDisableErc20n (e) {
+      if (Number(e.target.value)) submit.disabled = false
+      else submit.disabled = true
+    }
+
+    window.find('sendBridgedNep21Form').onsubmit = async function transferErc20n (e) {
+      e.preventDefault()
+
+      disableForm()
+
+      try {
+        await window.erc20Xnep21.bridgedNep21ToErc20({
+          amount: Number(amount.value),
+          nep21Address: window.utils.getBridgedNep21Address(select.value),
+          sender: window.nearUserAddress,
+          recipient: window.ethUserAddress
+        })
+      } catch (e) {
+        alert(
+          'Something went wrong! ' +
+          'Maybe you need to sign out and back in? ' +
+          'Check your browser console for more info.'
+        )
+        throw e
+      } finally {
+        // re-enable the form, whether the call succeeded or failed
+        enableForm()
+      }
+
+      // if the call succeeded, reset and close the form
+      amount.value = ''
+      window.urlParams.clear()
+      window.render()
+    }
+  })
+
+  let featuredErc20ns
+  async function getFeaturedErc20ns () {
+    if (featuredErc20ns) return featuredErc20ns
+
+    featuredErc20ns = await Promise.all(
+      process.env.featuredErc20s.split(',').map(async address => {
+        const erc20Name = await window.utils.getErc20Name(address)
+        return { address, name: erc20Name + 'ⁿ' }
+      })
+    )
+
+    return featuredErc20ns
+  }
+
+  async function fillFeaturedErc20ns () {
+    if (!window.ethInitialized) return
+
+    const selected = window.urlParams.get('erc20n')
+
+    window.fill('erc20nSelector').with(
+      '<option value="">Select token</option>' +
+      (await getFeaturedErc20ns()).map(({ address, name }) =>
+        `<option
+          value="${address}"
+          ${window.toString(selected === address && 'selected')}
+        >
+          ${name}
+        </option>`
+      )
+    )
+  }
+
+  let erc20nAddress
+  async function renderErc20nForm () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
+    if (window.urlParams.get('erc20n') === erc20nAddress) return
+    else erc20nAddress = window.urlParams.get('erc20n')
+
+    if (window.urlParams.get('erc20n') === null) {
+      window.hide('invalidErc20n')
+      window.hide('sendBridgedNep21Form')
+      return
+    }
+
+    const amount = window.find('erc20nAmount')
+
+    if (!erc20nAddress) {
+      amount.disabled = true
+      window.hide('erc20nInfo')
+      window.show('sendBridgedNep21Form')
+      return
+    }
+
+    let erc20nName
+    try {
+      erc20nName = await window.utils.getErc20Name(erc20nAddress)
+      window.hide('invalidErc20n')
+      window.fill('erc20nName').with(erc20nName)
+    } catch (e) {
+      window.hide('sendBridgedNep21Form')
+      window.show('invalidErc20n')
+      window.fill('erc20nAddressError').with(e.message)
+    }
+
+    if (!(await getFeaturedErc20ns()).map(f => f.address).includes(erc20nAddress)) {
+      const option = document.createElement('option')
+      option.value = erc20nAddress
+      option.selected = true
+      option.innerText = erc20nName
+      window.find('erc20nSelector').appendChild(option)
+    }
+
+    const [erc20Balance, nep21Balance] = await Promise.all([
+      window.utils.getErc20Balance(erc20nAddress),
+      window.utils.getNep21Balance(erc20nAddress)
+    ])
+
+    if (nep21Balance === null) {
+      window.hide('sendBridgedNep21Form')
+      // TODO window.show('bridgeErc20Form')
+      return
+    }
+
+    // TODO window.hide('bridgeErc20Form')
+    window.show('sendBridgedNep21Form')
+
+    window.fill('nep21Balance').with(window.utils.formatLargeNum(nep21Balance))
+    window.fill('erc20Balance').with(window.utils.formatLargeNum(erc20Balance))
+    window.fill('erc20Name').with(erc20nName.replace('ⁿ', ''))
+
+    if (nep21Balance) amount.disabled = false
+    else amount.disabled = true
+
+    amount.max = nep21Balance
+    window.show('erc20nInfo', 'flex')
+    amount.focus()
+  }
+
+  window.renderers.push(fillFeaturedErc20ns)
+  window.renderers.push(renderErc20nForm)
+</script>

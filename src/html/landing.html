@@ -98,23 +98,23 @@
   /**
    * Fill in labels with CSS to simplify swapping order with JS
    */
-  .account:first-child label:after {
+  .landing .account:first-child label:after {
     content: 'From'
   }
-  .account:nth-child(3) label:after {
+  .landing .account:nth-child(3) label:after {
     content: 'To'
   }
 
-  .account {
+  .landing .account {
     font-size: 0.8em;
   }
-  .account label {
+  .landing .account label {
     margin-left: calc(1em + 1px);
     margin-bottom: 0.5em;
     text-align: left;
   }
 
-  .account > div {
+  .landing .account > div {
     border: 1px solid var(--light-gray);
     border-radius: 0.5em;
     padding: 1em;
@@ -124,7 +124,7 @@
     grid-gap: 3em;
   }
 
-  .account > div > span {
+  .landing .account > div > span {
     display: grid;
     align-items: center;
     grid-gap: 0.5em;

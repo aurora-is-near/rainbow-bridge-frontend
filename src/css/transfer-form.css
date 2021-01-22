@@ -1,0 +1,104 @@
+.transfer-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  width: 100%;
+}
+.transfer-form > header {
+  margin: 0 auto;
+  max-width: 15em;
+  text-align: center;
+}
+.transfer-form > .account {
+  background-color: var(--shadow);
+  margin: 0 auto;
+  max-width: 25em;
+  padding: 1em;
+  width: 100%;
+}
+.transfer-form > .account > header {
+  align-items: center;
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: auto auto;
+  grid-gap: 3em;
+}
+.transfer-form .token-details {
+  display: none;
+
+  border-top: 1px solid var(--light-gray);
+  font-size: 0.8em;
+  justify-content: space-between;
+  margin: 1rem -1rem -1rem;
+  padding: 1rem;
+}
+.transfer-form .inputs + .token-details {
+  border-top: none;
+  padding: 0;
+}
+.transfer-form strong {
+  font-weight: 500;
+  color: var(--fg-bold);
+}
+.transfer-form .inputs {
+  background-color: var(--light-gray);
+  border-radius: 0.75em;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: grid;
+  grid-gap: 1px;
+  grid-template-columns: auto 1fr;
+  margin-top: 0.5em;
+}
+.transfer-form .inputs > * {
+  background-color: var(--bg);
+  color: var(--fg-bold);
+  padding: 0.5em;
+}
+.transfer-form .inputs > *:focus {
+  box-shadow: none;
+}
+.transfer-form .inputs select {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+.transfer-form .inputs input {
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 1.4em;
+  font-weight: 900;
+}
+.transfer-form .inputs *:disabled {
+  color: var(--gray);
+  cursor: not-allowed;
+}
+.transfer-form .inputs input[type=number]::-webkit-inner-spin-button,
+.transfer-form .inputs input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.transfer-form input {
+  text-align: right;
+}
+.transfer-form > footer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: flex-end;
+  margin: 2em auto 1em;
+  max-width:  25em;
+  padding: 1em;
+  width: 100%;
+}
+.transfer-form > .arrow {
+  background: url('../img/arrow-down.svg') no-repeat;
+  background-size: contain;
+  height: 1.5em;
+  width: 1.5em;
+  margin: 1em auto;
+}
+@media (min-width: 25em) {
+  .transfer-form > .account {
+    border-radius: 4px;
+  }
+  .transfer-form > footer {
+    display: block;
+  }
+}

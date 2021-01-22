@@ -1,9 +1,25 @@
+// TODO find way to make getTransferType work without importing each of these
+import './erc20+nep21/bridged-nep21-to-erc20'
 import * as naturalErc20ToNep21 from './erc20+nep21/natural-erc20-to-nep21'
 import * as urlParams from '../urlParams'
 import * as storage from './storage'
 import * as status from './statuses'
 
 export { onChange } from './storage'
+
+function getTransferType (transfer) {
+  try {
+    return require(transfer.type)
+  } catch (depLoadError) {
+    try {
+      return require(`./${transfer.type.split('/').slice(-2).join('/')}`)
+    } catch (localLoadError) {
+      console.error(depLoadError)
+      console.error(localLoadError)
+      throw new Error(`Can't determine type for transfer: ${JSON.stringify(transfer)}`)
+    }
+  }
+}
 
 function dashToCamelCase (str) {
   return str.replace(/-./g, match =>
@@ -149,7 +165,7 @@ export async function clear (id) {
 // Add a new transfer to the set of cached local transfers.
 // This transfer will be given a chronologically-ordered id.
 // This transfer will be checked for updates on a loop.
-export async function track (transferRaw, { checkStatusEvery }) {
+export async function track (transferRaw, { checkStatusEvery } = {}) {
   checkIsInt({ checkStatusEvery, error: 'must be frequency, in milliseconds' })
   const id = new Date().toISOString()
   const transfer = { id, ...transferRaw }
@@ -186,20 +202,6 @@ async function checkStatus (id, { loop } = {}) {
   // if not fully transferred and told to loop, check status again soon
   if (loop && transfer.status !== status.COMPLETE) {
     window.setTimeout(() => checkStatus(id, { loop }), loop)
-  }
-}
-
-function getTransferType (transfer) {
-  try {
-    return require(transfer.type)
-  } catch (depLoadError) {
-    try {
-      return require(`./${transfer.type.split('/').slice(-2).join('/')}`)
-    } catch (localLoadError) {
-      console.error(depLoadError)
-      console.error(localLoadError)
-      throw new Error(`Can't determine type for transfer: ${JSON.stringify(transfer)}`)
-    }
   }
 }
 

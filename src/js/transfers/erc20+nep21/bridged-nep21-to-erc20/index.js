@@ -3,7 +3,7 @@ import bs58 from 'bs58'
 import getRevertReason from 'eth-revert-reason'
 import { toBuffer } from 'eth-util-lite'
 import { Contract as NearContract } from 'near-api-js'
-import { getErc20Name } from '../../../ethHelpers'
+import { getErc20Name } from '../../../utils'
 import * as status from '../../statuses'
 import { stepsFor } from '../../i18nHelpers'
 import { track } from '../..'
@@ -92,7 +92,7 @@ export async function initiate ({
   // TODO: move to core 'decorate'; get both from contracts
   const [erc20HexAddr] = nep21Address.split('.')
   const destinationTokenName = await getErc20Name('0x' + erc20HexAddr)
-  const sourceTokenName = 'n' + destinationTokenName
+  const sourceTokenName = destinationTokenName + 'ⁿ'
 
   // various attributes stored as arrays, to keep history of retries
   let transfer = {

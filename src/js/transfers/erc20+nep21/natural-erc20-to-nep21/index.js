@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import getRevertReason from 'eth-revert-reason'
 import { Contract as NearContract } from 'near-api-js'
-import { getErc20Name } from '../../../ethHelpers'
+import { getErc20Name } from '../../../utils'
 import * as urlParams from '../../../urlParams'
 import { stepsFor } from '../../i18nHelpers'
 import * as status from '../../statuses'
@@ -92,7 +92,7 @@ export async function initiate ({
 }) {
   // TODO: move to core 'decorate'; get both from contracts
   const sourceTokenName = await getErc20Name(erc20Address)
-  const destinationTokenName = 'n' + sourceTokenName
+  const destinationTokenName = sourceTokenName + 'ⁿ'
 
   // various attributes stored as arrays, to keep history of retries
   let transfer = {
