@@ -1,3 +1,11 @@
+## [1.5.6](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.5...v1.5.6) (2021-01-22)
+
+
+### Bug Fixes
+
+* add missing from/to addresses in transfers ([6c07caf](https://github.com/near/rainbow-bridge-frontend/commit/6c07cafd9aa860a4bb8473478fc59a4aa6722429))
+* **findProof:** accept limited (& correct) args ([553167d](https://github.com/near/rainbow-bridge-frontend/commit/553167d6aac768710664e2612da00b045e0be32d))
+
 ## [1.5.5](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.4...v1.5.5) (2021-01-20)
 
 
