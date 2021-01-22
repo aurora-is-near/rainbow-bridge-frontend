@@ -354,11 +354,15 @@ function renderTransfer (transfer, { inProgress }) {
       </header>
       <div>
         <span>From</span>
-        <span class="account-with-icon ${transfer.sourceNetwork}" title="${transfer.sender}"></span>
+        <span class="account-with-icon ${transfer.sourceNetwork}" title="${transfer.sender}">
+          ${transfer.sender}
+        </span>
       </div>
       <div>
         <span>To</span>
-        <span class="account-with-icon ${transfer.destinationNetwork}" title="${transfer.recipient}"></span>
+        <span class="account-with-icon ${transfer.destinationNetwork}" title="${transfer.recipient}">
+          ${transfer.recipient}
+        </span>
       </div>
       <footer class="${openTransferDetails[transfer.id] ? 'open' : ''}">
         <ol class="transfer-details">${transfer.steps.map(step => (
