@@ -152,15 +152,15 @@
 </style>
 <script>
   window.addEventListener('load', function addNavEventHandlers () {
-    window.find('goHome').onclick = function backToLanding () {
+    window.dom.find('goHome').onclick = function backToLanding () {
        window.urlParams.clear()
        window.render()
     }
-    window.find('disconnectEthereum').onclick = async function disconnectEthereum () {
+    window.dom.find('disconnectEthereum').onclick = async function disconnectEthereum () {
       await window.web3Modal.clearCachedProvider()
       setTimeout(() => window.location.reload())
     }
-    window.find('disconnectNear').onclick = function disconnectNear () {
+    window.dom.find('disconnectNear').onclick = function disconnectNear () {
       window.nearConnection.signOut()
       setTimeout(() => window.location.reload())
     }
@@ -190,26 +190,26 @@
     const { all: transfers } = await window.transfers.get()
     const params = Object.keys(window.urlParams.get())
 
-    if (params.length) window.show('goHome')
-    else window.hide('goHome')
+    if (params.length) window.dom.show('goHome')
+    else window.dom.hide('goHome')
 
     if (transfers.length || params.length) {
-      window.show('topbar')
+      window.dom.show('topbar')
     } else {
-      window.hide('topbar')
+      window.dom.hide('topbar')
     }
   }
   function renderAccountsDropdown () {
-    if (window.ethInitialized) window.show('ethConnected')
-    else window.hide('ethConnected')
+    if (window.ethInitialized) window.dom.show('ethConnected')
+    else window.dom.hide('ethConnected')
 
-    if (window.nearInitialized) window.show('nearConnected')
-    else window.hide('nearConnected')
+    if (window.nearInitialized) window.dom.show('nearConnected')
+    else window.dom.hide('nearConnected')
 
     if (window.ethInitialized || window.nearInitialized) {
-      window.show('accountsDropdown')
+      window.dom.show('accountsDropdown')
     } else {
-      window.hide('accountsDropdown')
+      window.dom.hide('accountsDropdown')
     }
   }
   window.renderers.push(renderTopBar)

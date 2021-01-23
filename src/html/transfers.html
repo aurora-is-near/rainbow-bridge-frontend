@@ -305,7 +305,7 @@
 </style>
 <script>
 window.addEventListener('load', function addLandingHandlers () {
-  window.onClick('newTransfer', function startErc20Transfer () {
+  window.dom.onClick('newTransfer', function startErc20Transfer () {
     window.urlParams.set({ erc20: '' })
     window.render()
   })
@@ -352,7 +352,7 @@ function renderTransfer (transfer, { inProgress }) {
             <span>${transfer.statusMessage}</span>
           </div>
         </div>
-        ${window.toString(transfer.callToAction &&
+        ${window.dom.toString(transfer.callToAction &&
           `<button data-behavior="transferCallToAction">${
             transfer.callToAction
           }</button>`
@@ -374,7 +374,7 @@ function renderTransfer (transfer, { inProgress }) {
         <ol class="transfer-details">${transfer.steps.map(step => (
           `<li class="${step.status}">
             <span>${step.description}</span>
-            ${window.toString(step.status === 'failed' &&
+            ${window.dom.toString(step.status === 'failed' &&
               `<p class="error">${transfer.error}</p>`
             )}
           </li>`
@@ -393,12 +393,12 @@ async function updateTransfers () {
   const { all: transfers } = await window.transfers.get()
 
   if (!transfers.length) {
-    window.hide('recent-transfers')
+    window.dom.hide('recent-transfers')
   } else {
-    window.show('recent-transfers')
+    window.dom.show('recent-transfers')
   }
 
-  fill('transfers-container').with([
+  window.dom.fill('transfers-container').with([
     ...transfers.map(t => renderTransfer(t, { inProgress: true }))
   ])
 
@@ -407,7 +407,7 @@ async function updateTransfers () {
 
 // adjust hard-coded heights for transfers details panels, to enable slide-out animation
 function adjustTransferDetailsHeights () {
-  window.findAll('transfer').map(transfer => {
+  window.dom.findAll('transfer').map(transfer => {
     const footer = transfer.querySelector('footer')
     const button = footer.querySelector('button').getBoundingClientRect().height
     const details = footer.querySelector('ol').getBoundingClientRect().height
@@ -424,9 +424,9 @@ async function hideShowTransfers () {
   const params = Object.keys(window.urlParams.get())
 
   if (transfers.length && !params.length) {
-    window.show('recent-transfers')
+    window.dom.show('recent-transfers')
   } else {
-    window.hide('recent-transfers')
+    window.dom.hide('recent-transfers')
   }
 }
 

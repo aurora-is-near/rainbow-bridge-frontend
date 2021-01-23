@@ -89,9 +89,9 @@
 
 <script>
   window.addEventListener('load', function handleSelectErc20Events () {
-    const amount = window.find('erc20Amount')
-    const select = window.find('erc20Selector')
-    const submit = window.find('erc20Submit')
+    const amount = window.dom.find('erc20Amount')
+    const select = window.dom.find('erc20Selector')
+    const submit = window.dom.find('erc20Submit')
 
     function disableForm () {
       amount.disabled = true
@@ -121,7 +121,7 @@
       else submit.disabled = true
     }
 
-    window.find('bridgeErc20Form').onsubmit = function bridgeIt (e) {
+    window.dom.find('bridgeErc20Form').onsubmit = function bridgeIt (e) {
       e.preventDefault()
       window.nearFungibleTokenFactory.deploy_bridge_token(
         { address: window.urlParams.get('erc20').replace('0x', '') },
@@ -141,7 +141,7 @@
       )
     }
 
-    window.find('sendNaturalErc20Form').onsubmit = async function transferErc20 (e) {
+    window.dom.find('sendNaturalErc20Form').onsubmit = async function transferErc20 (e) {
       e.preventDefault()
 
       disableForm()
@@ -192,12 +192,12 @@
 
     const selected = window.urlParams.get('erc20')
 
-    window.fill('erc20Selector').with(
+    window.dom.fill('erc20Selector').with(
       '<option value="">Select token</option>' +
       (await getFeaturedErc20s()).map(({ address, name }) =>
         `<option
           value="${address}"
-          ${window.toString(selected === address && 'selected')}
+          ${window.dom.toString(selected === address && 'selected')}
         >
           ${name}
         </option>`
@@ -213,31 +213,31 @@
     else erc20Address = window.urlParams.get('erc20')
 
     if (window.urlParams.get('erc20') === null) {
-      window.hide('bridgeErc20Form')
-      window.hide('invalidErc20')
-      window.hide('sendNaturalErc20Form')
+      window.dom.hide('bridgeErc20Form')
+      window.dom.hide('invalidErc20')
+      window.dom.hide('sendNaturalErc20Form')
       return
     }
 
-    const amount = window.find('erc20Amount')
+    const amount = window.dom.find('erc20Amount')
 
     if (!erc20Address) {
       amount.disabled = true
-      window.hide('erc20Info')
-      window.show('sendNaturalErc20Form')
+      window.dom.hide('erc20Info')
+      window.dom.show('sendNaturalErc20Form')
       return
     }
 
     let erc20Name
     try {
       erc20Name = await window.utils.getErc20Name(erc20Address)
-      window.hide('invalidErc20')
-      window.fill('erc20Name').with(erc20Name)
+      window.dom.hide('invalidErc20')
+      window.dom.fill('erc20Name').with(erc20Name)
     } catch (e) {
-      window.hide('sendNaturalErc20Form')
-      window.hide('bridgeErc20Form')
-      window.show('invalidErc20')
-      window.fill('erc20AddressError').with(e.message)
+      window.dom.hide('sendNaturalErc20Form')
+      window.dom.hide('bridgeErc20Form')
+      window.dom.show('invalidErc20')
+      window.dom.fill('erc20AddressError').with(e.message)
     }
 
     if (!(await getFeaturedErc20s()).map(f => f.address).includes(erc20Address)) {
@@ -245,7 +245,7 @@
       option.value = erc20Address
       option.selected = true
       option.innerText = erc20Name
-      window.find('erc20Selector').appendChild(option)
+      window.dom.find('erc20Selector').appendChild(option)
     }
 
     const [erc20Balance, erc20Decimals, nep21Balance] = await Promise.all([
@@ -255,24 +255,24 @@
     ])
 
     if (nep21Balance === null) {
-      window.hide('sendNaturalErc20Form')
-      window.show('bridgeErc20Form')
+      window.dom.hide('sendNaturalErc20Form')
+      window.dom.show('bridgeErc20Form')
       return
     }
 
-    window.hide('bridgeErc20Form')
-    window.show('sendNaturalErc20Form')
+    window.dom.hide('bridgeErc20Form')
+    window.dom.show('sendNaturalErc20Form')
 
-    window.fill('erc20Balance').with(window.utils.formatLargeNum(erc20Balance))
-    window.fill('nep21Name').with(erc20Name + 'ⁿ')
-    window.fill('nep21Balance').with(window.utils.formatLargeNum(nep21Balance))
+    window.dom.fill('erc20Balance').with(window.utils.formatLargeNum(erc20Balance))
+    window.dom.fill('nep21Name').with(erc20Name + 'ⁿ')
+    window.dom.fill('nep21Balance').with(window.utils.formatLargeNum(nep21Balance))
 
     if (erc20Balance) amount.disabled = false
     else amount.disabled = true
 
     amount.step = 10 ** -erc20Decimals
     amount.max = erc20Balance
-    window.show('erc20Info', 'flex')
+    window.dom.show('erc20Info', 'flex')
     amount.focus()
   }
 

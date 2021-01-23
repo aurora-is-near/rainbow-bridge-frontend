@@ -166,11 +166,11 @@
 </style>
 <script>
 window.addEventListener('load', function addLandingHandlers () {
-  window.onClick('swap-accounts', function swapAccountOrder () {
-    const input = window.find('transferFrom')
+  window.dom.onClick('swap-accounts', function swapAccountOrder () {
+    const input = window.dom.find('transferFrom')
     input.name = input.name === 'erc20' ? 'erc20n' : 'erc20'
 
-    const [from, to] = window.findAll('account')
+    const [from, to] = window.dom.findAll('account')
     fromInner = from.innerHTML
     toInner = to.innerHTML
     from.innerHTML = toInner
@@ -180,10 +180,10 @@ window.addEventListener('load', function addLandingHandlers () {
 
 async function renderLanding () {
   if (window.ethInitialized && window.nearInitialized) {
-    window.find('landingSubmit').disabled = false
+    window.dom.find('landingSubmit').disabled = false
   } else {
-    window.show('landing')
-    window.find('landingSubmit').disabled = true
+    window.dom.show('landing')
+    window.dom.find('landingSubmit').disabled = true
     return
   }
 
@@ -191,9 +191,9 @@ async function renderLanding () {
   const params = Object.keys(window.urlParams.get())
 
   if (transfers.length || params.length) {
-    window.hide('landing')
+    window.dom.hide('landing')
   } else {
-    window.show('landing')
+    window.dom.show('landing')
   }
 }
 window.renderers.push(renderLanding)
