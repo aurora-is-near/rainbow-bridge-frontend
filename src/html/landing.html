@@ -48,7 +48,7 @@
           </button>
         </div>
       </div>
-      <button type="button" class="swap-vert" data-behavior="swap-accounts" style="margin: 1em auto 0em">
+      <button type="button" class="swap-vert" data-behavior="swap-accounts">
         <span class="visually-hidden">swap</span>
       </button>
       <div class="account" data-behavior="account">
@@ -100,6 +100,18 @@
     left: 0;
     line-height: 0.8;
     position: absolute;
+  }
+
+  .swap-vert {
+    background-color: transparent;
+    background: url('/img/swap-vert.svg') no-repeat;
+    background-position: center center;
+    background-size: 1.3em;
+    border-radius: 1000em;
+    border: 1px solid var(--light-gray);
+    height: 2em;
+    width: 3.5em;
+    margin: 1em auto 0.8em;
   }
 
   /**
