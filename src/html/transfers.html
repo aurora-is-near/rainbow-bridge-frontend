@@ -2,7 +2,9 @@
   <header>
     <h1>Your Transfers</h1>
     <p>Manage your transfers below or begin a new one.</p>
-    <include src="new-transfer-button.html"></include>
+    <button data-behavior="newTransfer" class="cta" style="margin-top: 2em">
+      Begin new transfer
+    </button>
     <!-- TODO: <nav> -->
   </header>
   <div data-behavior="transfers-container" style="margin-top: 3rem"></div>
@@ -303,6 +305,10 @@
 </style>
 <script>
 window.addEventListener('load', function addLandingHandlers () {
+  window.onClick('newTransfer', function startErc20Transfer () {
+    window.urlParams.set({ erc20: '' })
+    window.render()
+  })
   // transfers are rendered after page load, so we add one click handler to the
   // body tag to handle clicking each kind of button on a transfer
   document.querySelector('body').addEventListener('click', event => {

@@ -27,7 +27,6 @@ window.transfers = transfers
 window.urlParams = urlParams
 window.utils = utils
 
-initDOMhandlers()
 render()
 
 transfers.onChange(render)

@@ -68,11 +68,3 @@ export const show = (selector, display) =>
         n.style.removeProperty('display')
       }
     })
-
-// DOM handlers to be added once after page load
-export const initDOMhandlers = () => {
-  window.onClick('new-transfer-button', function startErc20Transfer () {
-    window.urlParams.set({ erc20: '' })
-    window.render()
-  })
-}

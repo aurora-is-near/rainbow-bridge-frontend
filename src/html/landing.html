@@ -65,7 +65,7 @@
           </button>
         </div>
       </div>
-      <button class="cta" style="margin-top: 2em">
+      <button data-behavior="landingSubmit" class="cta" style="margin-top: 2em">
         Begin new transfer
       </button>
     </form>
@@ -168,10 +168,10 @@ window.addEventListener('load', function addLandingHandlers () {
 
 async function renderLanding () {
   if (window.ethInitialized && window.nearInitialized) {
-    window.find('new-transfer-button').disabled = false
+    window.find('landingSubmit').disabled = false
   } else {
     window.show('landing')
-    window.find('new-transfer-button').disabled = true
+    window.find('landingSubmit').disabled = true
     return
   }
 
