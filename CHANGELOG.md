@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.8...v1.6.0) (2021-01-23)
+
+
+### Features
+
+* "begin new transfer" loads correct next form ([b5630e7](https://github.com/near/rainbow-bridge-frontend/commit/b5630e7ea0c570a58b0c8023138646edead1254c))
+
 ## [1.5.8](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.7...v1.5.8) (2021-01-22)
 
 
