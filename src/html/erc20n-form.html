@@ -186,7 +186,7 @@
 
     let erc20nName
     try {
-      erc20nName = await window.utils.getErc20Name(erc20nAddress)
+      erc20nName = (await window.utils.getErc20Name(erc20nAddress)) + 'ⁿ'
       window.hide('invalidErc20n')
       window.fill('erc20nName').with(erc20nName)
     } catch (e) {
