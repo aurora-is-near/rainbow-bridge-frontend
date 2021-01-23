@@ -28,7 +28,12 @@
       >NEP21</a>
       and back! Connect your NEAR and Ethereum accounts to get started.
     </p>
-    <div class="panel">
+    <form method="get" class="panel">
+      <input
+        data-behavior="transferFrom"
+        name="erc20"
+        type="hidden"
+      />
       <div class="account" data-behavior="account">
         <label for="authEthereum">
           <!-- filled in with CSS -->
@@ -38,12 +43,12 @@
             <img src="img/ethereum.svg" alt="">
             <span>Ethereum</span>
           </span>
-          <button id="authEthereum" data-behavior="authEthereum">
+          <button type="button" id="authEthereum" data-behavior="authEthereum">
             Connect
           </button>
         </div>
       </div>
-      <button class="swap-vert" data-behavior="swap-accounts" style="margin: 1em auto 0em">
+      <button type="button" class="swap-vert" data-behavior="swap-accounts" style="margin: 1em auto 0em">
         <span class="visually-hidden">swap</span>
       </button>
       <div class="account" data-behavior="account">
@@ -55,13 +60,15 @@
             <include src="near.svg.html">{ "width": "1.5em" }</include>
             <span>NEAR</span>
           </span>
-          <button id="authNear" data-behavior="authNear">
+          <button type="button" id="authNear" data-behavior="authNear">
             Connect
           </button>
         </div>
       </div>
-      <include src="new-transfer-button.html"></include>
-    </div>
+      <button class="cta" style="margin-top: 2em">
+        Begin new transfer
+      </button>
+    </form>
   </div>
 </div>
 <style>
@@ -148,6 +155,9 @@
 <script>
 window.addEventListener('load', function addLandingHandlers () {
   window.onClick('swap-accounts', function swapAccountOrder () {
+    const input = window.find('transferFrom')
+    input.name = input.name === 'erc20' ? 'erc20n' : 'erc20'
+
     const [from, to] = window.findAll('account')
     fromInner = from.innerHTML
     toInner = to.innerHTML
