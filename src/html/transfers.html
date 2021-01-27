@@ -306,7 +306,7 @@
 <script>
 window.addEventListener('load', function addLandingHandlers () {
   window.dom.onClick('newTransfer', function startErc20Transfer () {
-    window.urlParams.set({ erc20: '' })
+    window.urlParams.set({ new: 'transfer' })
     window.render()
   })
   // transfers are rendered after page load, so we add one click handler to the

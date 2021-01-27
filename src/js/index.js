@@ -9,6 +9,8 @@ import * as transfers from './transfers'
 import * as erc20Xnep21 from './transfers/erc20+nep21'
 import * as utils from './utils'
 
+dom.init()
+
 // Can't import modules in <script> tags in files included via PostHTML 😞
 window.BN = BN
 window.dom = dom

@@ -4,7 +4,7 @@ import Web3 from 'web3'
 
 import { checkStatusAll as checkTransferStatuses } from './transfers'
 import render from './render'
-import { find, onClick } from './domHelpers'
+import { onClick } from './domHelpers'
 
 // SWAP IN YOUR OWN INFURA_ID FROM https://infura.io/dashboard/ethereum
 const INFURA_ID = '9c91979e95cb4ef8a61eb029b4217a1a'
@@ -49,9 +49,6 @@ async function login (provider) {
 
   window.ethInitialized = true
 
-  const span = document.createElement('span')
-  span.innerHTML = `<span class="connected-account" title="${window.ethUserAddress}">${window.ethUserAddress}<span>`
-  find('authEthereum').replaceWith(span)
   render()
 
   if (window.nearInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })

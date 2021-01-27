@@ -3,7 +3,7 @@ import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 import { checkStatusAll as checkTransferStatuses } from './transfers'
 import EthOnNearClient from './borsh/ethOnNearClient'
 import render from './render'
-import { find, onClick } from './domHelpers'
+import { onClick } from './domHelpers'
 
 // Create a Near config object
 const near = new Near({
@@ -28,10 +28,6 @@ onClick('authNear', () => {
 })
 
 async function login () {
-  const span = document.createElement('span')
-  span.innerHTML = `<span class="connected-account" title="${window.nearUserAddress}">${window.nearUserAddress}</span>`
-  find('authNear').replaceWith(span)
-
   window.nearFungibleTokenFactory = await new Contract(
     window.nearConnection.account(),
     process.env.nearTokenFactoryAccount,

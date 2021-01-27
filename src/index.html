@@ -32,7 +32,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/global.css">
   <script>
+    // This app is organized into multiple html files, which can each add renderers.
+    // All renderers get called via `window.render()`
     window.renderers = []
+
+    // If a section of the app (one of those html files) wants to keep track of
+    // what it did so far, it can use window.state
+    window.state = {}
   </script>
 </head>
 <body>
@@ -40,6 +46,7 @@
   <include src="nav.html"></include>
   <include src="landing.html"></include>
   <include src="transfers.html"></include>
+  <include src="new-transfer.html"></include>
   <include src="erc20-form.html"></include>
   <include src="erc20n-form.html"></include>
 

@@ -1,3 +1,6 @@
+import render from './render'
+import * as urlParams from './urlParams'
+
 const isObject = x =>
   Object.prototype.toString.call(x) === '[object Object]'
 
@@ -40,8 +43,10 @@ export function toString (whatever) {
 // Attach a click event handler to elements with the specified
 // "data-behavior" attribute
 export function onClick (behavior, fn) {
-  document.querySelector('body').addEventListener('click', e => {
-    if (e.target.dataset.behavior === behavior) fn()
+  document.querySelector('body').addEventListener('click', event => {
+    // did they click the thing?
+    const thing = event.target.closest(`[data-behavior=${behavior}]`)
+    if (thing) fn(event)
   })
 }
 
@@ -68,3 +73,20 @@ export const show = (selector, display) =>
         n.style.removeProperty('display')
       }
     })
+
+// call this once, after page load
+export function init () {
+  // avoid page refreshes when submitting "get" forms
+  document.querySelectorAll('form[method="get"]').forEach(form => {
+    form.onsubmit = e => {
+      e.preventDefault()
+
+      urlParams.clear()
+      Array.from(e.target.elements).forEach(el => {
+        if (el.name) urlParams.set({ [el.name]: el.value })
+      })
+
+      render()
+    }
+  })
+}

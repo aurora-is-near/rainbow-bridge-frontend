@@ -1,0 +1,24 @@
+<form method="get" class="transfer-form" data-behavior="newTransferForm" style="display:none">
+  <header>
+    <h2>New Transfer</h2>
+    <p>Select your transfer's origin and destination.</p>
+  </header>
+  <div class="account">
+    <include src="authenticated-accounts.html"></include>
+  </div>
+  <footer>
+    <button class="cta">Continue</button>
+  </footer>
+  <!-- TODO: cancel -->
+</form>
+
+ <script>
+ function renderNewTransferForm () {
+   if (window.urlParams.get('new') === 'transfer') {
+     window.dom.show('newTransferForm')
+   } else {
+     window.dom.hide('newTransferForm')
+   }
+ }
+ window.renderers.push(renderNewTransferForm)
+ </script>

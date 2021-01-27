@@ -29,42 +29,7 @@
       and back! Connect your NEAR and Ethereum accounts to get started.
     </p>
     <form method="get" class="panel">
-      <input
-        data-behavior="transferFrom"
-        name="erc20"
-        type="hidden"
-      />
-      <div class="account" data-behavior="account">
-        <label for="authEthereum">
-          <!-- filled in with CSS -->
-        </label>
-        <div>
-          <span class="concept-ethereum">
-            <img src="img/ethereum.svg" alt="">
-            <span>Ethereum</span>
-          </span>
-          <button type="button" id="authEthereum" data-behavior="authEthereum">
-            Connect
-          </button>
-        </div>
-      </div>
-      <button type="button" class="swap-vert" data-behavior="swap-accounts">
-        <span class="visually-hidden">swap</span>
-      </button>
-      <div class="account" data-behavior="account">
-        <label for="authNear">
-          <!-- filled in with CSS -->
-        </label>
-        <div>
-          <span style="color: var(--fg-bold)">
-            <include src="near.svg.html">{ "width": "1.5em" }</include>
-            <span>NEAR</span>
-          </span>
-          <button type="button" id="authNear" data-behavior="authNear">
-            Connect
-          </button>
-        </div>
-      </div>
+      <include src="authenticated-accounts.html"></include>
       <button data-behavior="landingSubmit" class="cta" style="margin-top: 2em">
         Begin new transfer
       </button>
@@ -85,71 +50,6 @@
     margin: 0 auto;
     padding: 1em;
   }
-
-  .connected-account {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    position: relative;
-    padding-left: 1em;
-  }
-  .connected-account:before {
-    color: var(--green);
-    content: '•';
-    font-size: 1.5em;
-    left: 0;
-    line-height: 0.8;
-    position: absolute;
-  }
-
-  .swap-vert {
-    background-color: transparent;
-    background: url('/img/swap-vert.svg') no-repeat;
-    background-position: center center;
-    background-size: 1.3em;
-    border-radius: 1000em;
-    border: 1px solid var(--light-gray);
-    height: 2em;
-    width: 3.5em;
-    margin: 1em auto 0.8em;
-  }
-
-  /**
-   * Fill in labels with CSS to simplify swapping order with JS
-   */
-  .landing .account:first-child label:after {
-    content: 'From'
-  }
-  .landing .account:nth-child(3) label:after {
-    content: 'To'
-  }
-
-  .landing .account {
-    font-size: 0.8em;
-  }
-  .landing .account label {
-    margin-left: calc(1em + 1px);
-    margin-bottom: 0.5em;
-    text-align: left;
-  }
-
-  .landing .account > div {
-    border: 1px solid var(--light-gray);
-    border-radius: 0.5em;
-    padding: 1em;
-    display: grid;
-    justify-content: space-between;
-    grid-template-columns: auto auto;
-    grid-gap: 3em;
-  }
-
-  .landing .account > div > span {
-    display: grid;
-    align-items: center;
-    grid-gap: 0.5em;
-    grid-template-columns: auto auto;
-  }
-
   @media (min-width: 928px) {
     .landing .panel {
       margin-top: 6em;
@@ -165,19 +65,6 @@
   }
 </style>
 <script>
-window.addEventListener('load', function addLandingHandlers () {
-  window.dom.onClick('swap-accounts', function swapAccountOrder () {
-    const input = window.dom.find('transferFrom')
-    input.name = input.name === 'erc20' ? 'erc20n' : 'erc20'
-
-    const [from, to] = window.dom.findAll('account')
-    fromInner = from.innerHTML
-    toInner = to.innerHTML
-    from.innerHTML = toInner
-    to.innerHTML = fromInner
-  })
-})
-
 async function renderLanding () {
   if (window.ethInitialized && window.nearInitialized) {
     window.dom.find('landingSubmit').disabled = false
@@ -196,5 +83,6 @@ async function renderLanding () {
     window.dom.show('landing')
   }
 }
+
 window.renderers.push(renderLanding)
 </script>
