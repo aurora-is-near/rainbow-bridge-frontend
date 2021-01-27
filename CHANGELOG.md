@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/near/rainbow-bridge-frontend/compare/v1.7.1...v1.7.2) (2021-01-27)
+
+
+### Bug Fixes
+
+* add cancel buttons ([f8b1706](https://github.com/near/rainbow-bridge-frontend/commit/f8b1706708fcb0c002430c1624ca11e64835c453))
+
 ## [1.7.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.7.0...v1.7.1) (2021-01-27)
 
 
