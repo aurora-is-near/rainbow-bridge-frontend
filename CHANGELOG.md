@@ -1,3 +1,11 @@
+## [1.7.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.7.0...v1.7.1) (2021-01-27)
+
+
+### Bug Fixes
+
+* **styles:** re-affix buttons to small screen bottoms ([5cecb5a](https://github.com/near/rainbow-bridge-frontend/commit/5cecb5a156c101213de2b993ca617d615b2e1f99))
+* don't show New Transfer form if not authed ([04a9a46](https://github.com/near/rainbow-bridge-frontend/commit/04a9a46db67a298c33493630ececcb15ed53dbcb))
+
 # [1.7.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.6.0...v1.7.0) (2021-01-27)
 
 
