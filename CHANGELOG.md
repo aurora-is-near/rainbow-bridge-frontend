@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.6.0...v1.7.0) (2021-01-27)
+
+
+### Features
+
+* "new transfer" form ([cc945ea](https://github.com/near/rainbow-bridge-frontend/commit/cc945eaa8fa31378d9567550dab009692372362e))
+
 # [1.6.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.5.8...v1.6.0) (2021-01-23)
 
 
