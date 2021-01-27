@@ -1,4 +1,9 @@
 .transfer-form {
+  /* body is flex-direction: column & min-height: 100vh.
+   * flex: 1 here stretches this element to fill rest of vertical viewport */
+  flex: 1;
+
+  /* also stretch this element vertically, to push footer to bottom */
   display: flex;
   flex-direction: column;
   margin-top: 2rem;
