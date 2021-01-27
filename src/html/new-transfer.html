@@ -14,6 +14,8 @@
 
  <script>
  function renderNewTransferForm () {
+   if (!(window.ethInitialized && window.nearInitialized)) return
+
    if (window.urlParams.get('new') === 'transfer') {
      window.dom.show('newTransferForm')
    } else {
