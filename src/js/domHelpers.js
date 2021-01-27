@@ -76,6 +76,11 @@ export const show = (selector, display) =>
 
 // call this once, after page load
 export function init () {
+  onClick('goHome', function goHome () {
+    urlParams.clear()
+    render()
+  })
+
   // avoid page refreshes when submitting "get" forms
   document.querySelectorAll('form[method="get"]').forEach(form => {
     form.onsubmit = e => {

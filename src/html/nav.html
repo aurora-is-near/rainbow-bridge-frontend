@@ -152,10 +152,6 @@
 </style>
 <script>
   window.addEventListener('load', function addNavEventHandlers () {
-    window.dom.find('goHome').onclick = function backToLanding () {
-       window.urlParams.clear()
-       window.render()
-    }
     window.dom.find('disconnectEthereum').onclick = async function disconnectEthereum () {
       await window.web3Modal.clearCachedProvider()
       setTimeout(() => window.location.reload())

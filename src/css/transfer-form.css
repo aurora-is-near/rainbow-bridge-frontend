@@ -87,7 +87,7 @@
   flex-direction: column;
   flex: 1;
   justify-content: flex-end;
-  margin: 2em auto 1em;
+  margin: 2em auto 0;
   max-width:  25em;
   padding: 1em;
   width: 100%;
