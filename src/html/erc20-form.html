@@ -10,7 +10,7 @@
         <span class="account-tag account-with-icon ethereum" data-behavior="ethUser"></span>
       </header>
       <div class="inputs">
-        <input type="hidden" name="erc20" />
+        <input type="hidden" name="erc20" data-behavior="erc20Address" />
         <button type="button" data-behavior="erc20SelectButton">
           Select ERC20
         </button>
@@ -175,7 +175,7 @@
         await window.erc20Xnep21.naturalErc20ToNep21({
           // TODO fix for non-integers
           amount: Number(amount.value),
-          erc20Address: select.value,
+          erc20Address: window.dom.find('erc20Address').value,
           sender: window.ethUserAddress,
           recipient: window.nearUserAddress
         })
@@ -294,6 +294,8 @@
       window.dom.show('sendNaturalErc20')
       return
     }
+
+    window.dom.find('erc20Address').value = erc20Address
 
     let token = (await getFeaturedErc20s())[erc20Address]
     try {
