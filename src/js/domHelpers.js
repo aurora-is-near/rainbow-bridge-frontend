@@ -81,6 +81,10 @@ export function init () {
     render()
   })
 
+  onClick('closeModal', function closeModal (e) {
+    e.target.closest('.modal').style.display = 'none'
+  })
+
   // avoid page refreshes when submitting "get" forms
   document.querySelectorAll('form[method="get"]').forEach(form => {
     form.onsubmit = e => {

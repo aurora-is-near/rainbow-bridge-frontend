@@ -21,6 +21,11 @@
   padding: 1em;
   width: 100%;
 }
+@media (min-width: 25em) {
+  .transfer-form > .account {
+    border-radius: 4px;
+  }
+}
 .transfer-form > .account > header {
   align-items: center;
   display: grid;
@@ -43,7 +48,6 @@
 }
 .transfer-form strong {
   font-weight: 500;
-  color: var(--fg-bold);
 }
 .transfer-form .inputs {
   background-color: var(--light-gray);
@@ -56,14 +60,31 @@
 }
 .transfer-form .inputs > * {
   background-color: var(--bg);
-  color: var(--fg-bold);
-  padding: 0.5em;
-}
-.transfer-form .inputs > *:focus {
+  border: none;
   box-shadow: none;
+  padding: 0.75rem 1rem;
 }
-.transfer-form .inputs select {
+.transfer-form .inputs button {
+  align-items: center;
   border-radius: 0.5rem 0 0 0.5rem;
+  color: var(--fg-bold);
+  display: flex;
+}
+.transfer-form .inputs button:after {
+  content: ' ';
+  background-image: url(/img/chevron-down-blue.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: block;
+
+  margin-left: 0.5em;
+  width: 1.3rem;
+  height: 2rem;
+}
+/* add "selected" class after user selects an ERC20 token */
+.transfer-form .inputs button:not(.selected) {
+  color: var(--blue);
 }
 .transfer-form .inputs input {
   border-radius: 0 0.5rem 0.5rem 0;
@@ -92,6 +113,11 @@
   padding: 1em;
   width: 100%;
 }
+@media (min-width: 25em) {
+  .transfer-form > footer {
+    display: block;
+  }
+}
 .transfer-form > .arrow {
   background: url('../img/arrow-down.svg') no-repeat;
   background-size: contain;
@@ -99,11 +125,54 @@
   width: 1.5em;
   margin: 1em auto;
 }
-@media (min-width: 25em) {
-  .transfer-form > .account {
-    border-radius: 4px;
-  }
-  .transfer-form > footer {
-    display: block;
-  }
+
+.token-selector h3 {
+  font-weight: 500;
+  font-size: 0.875em;
+  margin: 0 0 1.5rem;
+}
+.token-selector form {
+  margin: 1em;
+}
+.token-selector .separator {
+  border-top: 1px solid var(--light-gray);
+  height: 0;
+  margin: 2em 0;
+  text-align: center;
+  width: 100%;
+}
+.token-selector .separator strong {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-weight: 400;
+  padding: 0 1em;
+  position: relative;
+  top: -0.6em;
+}
+
+.token-selector .token-list input[type=radio] {
+  display: none;
+}
+
+.token-selector .token-list label {
+  border-radius: 0.5em;
+  color: var(--fg-bold);
+  cursor: pointer;
+  margin: 0 -1em;
+  padding: 1em;
+}
+
+.token-selector .token-list label:hover,
+.token-selector .token-list label:focus {
+  background-color: var(--shadow);
+}
+
+.token-selector .token-list label span {
+  display: flex;
+  align-items: center;
+}
+
+.token-selector .token-list img {
+  width: 1.5em;
+  margin-right: 1em;
 }

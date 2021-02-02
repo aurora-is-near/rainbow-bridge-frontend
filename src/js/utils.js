@@ -33,7 +33,6 @@ export async function getNep21Balance (erc20Address) {
 }
 
 const erc20Names = {}
-
 export async function getErc20Name (address) {
   if (erc20Names[address]) return erc20Names[address]
 
@@ -57,7 +56,21 @@ export async function getErc20Decimals (address) {
     address
   )
 
-  erc20Decimals[address] = await contract.methods.decimals().call()
+  erc20Decimals[address] = Number(
+    await contract.methods.decimals()
+      .call()
+      .catch(() => 0)
+  )
 
   return erc20Decimals[address]
+}
+
+export function getErc20Icon (address) {
+  const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+  return new Promise(resolve => {
+    const img = new Image()
+    img.onload = () => resolve(url)
+    img.onerror = () => resolve('/ethereum.svg')
+    img.src = url
+  })
 }

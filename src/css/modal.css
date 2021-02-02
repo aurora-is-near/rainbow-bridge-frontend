@@ -1,0 +1,36 @@
+.modal {
+  background-color: rgba(39,39,41,0.45);
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-around;
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 100;
+}
+
+/* modal expects one immediate child */
+.modal > * {
+  background-color: var(--bg);
+  border-radius: 0.5em;
+  margin: 0 auto;
+  overflow-y: scroll;
+  width: 25em;
+  max-width: 100%;
+}
+
+/* child must have nav element with one close button within */
+.modal > * > nav {
+  text-align: right;
+}
+.modal > * > nav button {
+  background: none;
+  border: 1px solid transparent;
+  box-shadow: none;
+  color: var(--fg);
+  font-size: 1.5em;
+  padding: 0.5rem 1rem;
+}
+.modal > * > nav button:hover,
+.modal > * > nav button:focus {
+  border-color: var(--light-gray);
+}

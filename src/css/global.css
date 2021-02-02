@@ -1,4 +1,5 @@
 @import './a11y.css';
+@import './modal.css';
 @import './title.css';
 @import './transfer-form.css';
 
@@ -95,6 +96,7 @@ label {
 }
 
 button, input, select {
+  color: var(--fg-bold);
   font: inherit;
   outline: none;
 }
@@ -151,16 +153,23 @@ fieldset {
 }
 
 input, select {
-  background-color: var(--shadow);
-  border: none;
-  caret-color: var(--primary);
-  color: inherit;
-  padding: 0.25em 0.5em;
+  background-color: var(--bg);
+  border: 2px solid var(--light-gray);
+  border-radius: 0.5em;
+  caret-color: var(--secondary);
+  padding: 0.75em 1em;
   width: 100%;
 }
+input.error, select.error {
+  border-color: var(--red);
+}
+.errorMessage {
+  color: var(--red);
+  word-break: break-word;
+}
 input::selection {
-  background-color: var(--secondary);
-  color: #efefef;
+  background-color: var(--primary);
+  color: #efefefk
 }
 input:focus {
   box-shadow: 0 0 10em rgba(0, 0, 0, 0.02) inset;
@@ -191,6 +200,12 @@ li {
   input:focus {
     box-shadow: 0 0 10em rgba(255, 255, 255, 0.02) inset;
   }
+}
+
+.space-between {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
 }
 
 .container {
