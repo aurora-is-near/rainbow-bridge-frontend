@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.7.2...v1.8.0) (2021-02-02)
+
+
+### Features
+
+* select erc20 with modal ([e159973](https://github.com/near/rainbow-bridge-frontend/commit/e159973b2c804eb39bf0a3ea45dbeace38aa74b2))
+
 ## [1.7.2](https://github.com/near/rainbow-bridge-frontend/compare/v1.7.1...v1.7.2) (2021-01-27)
 
 
