@@ -26,28 +26,26 @@ module.exports = {
     nearHelperUrl: 'http://localhost:3000/'
   },
   development: {
-    ethClientAddress: '0xF721c979db97413AA9D0F91ad531FaBF769bb09C',
+    ethClientAddress: '0x05af81eeb82ab7a294a9942ba01ae2d2da9f18be',
     ethNearOnEthClientAbiText: readFileSync('./nearOnEthClient.abi'),
-    ethEd25519Address: '0x9003342d15B21b4C42e1702447fE2f39FfAF55C2',
+    ethEd25519Address: '0xe729ee84db978d7971bbc5079fd32bb0ae8d1856',
     ethErc20AbiText: readFileSync('./erc20.abi'),
     featuredErc20s:
-      '0x3e13318e92F0C67Ca10f0120372E998d43E6a8E8,' + // ABND
-      '0xD959Dc6e63B9521A042A1b30003b00D0356a1cd5,' + // ABND clone
-      '0x09ff402D55096bFB134DD4a34A42579b7925becC,' + // ABND clone
-      '0x8151a8F90267bFf183E06921841C5dE774499388,' + // rainbow-bridge-cli v1
-      '0x21e7381368baa3f3e9640fe19780c4271ad96f37',   // rainbow-bridge-cli v2
+      '0x722dd3F80BAC40c951b51BdD28Dd19d435762180,' + // TST: https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180
+      '0xfab46e002bbf0b4509813474841e0716e6730136,' + // FAU: https://ropsten.etherscan.io/token/0xfab46e002bbf0b4509813474841e0716e6730136
+      '0xbf4d811e6891ed044d245cafcc4caa96c969204d',   // USDT: https://ropsten.etherscan.io/token/0xbf4d811e6891ed044d245cafcc4caa96c969204d
     ethLockerAbiText: readFileSync('./node_modules/rainbow-token-connector/res/BridgeTokenFactory.full.abi'),
-    ethLockerAddress: '0x7f66c116a4f51e43e7c1c33d3714a4acfa9c40fb',
-    ethNetwork: 'rinkeby',
+    ethLockerAddress: '0xa5289b6d5dcc13e48f2cc6382256e51589849f86',
+    ethNetwork: 'ropsten',
     ethNodeUrl: 'https://rinkeby.infura.io/v3/TODO',
-    ethProverAddress: '0xc5D62d66B8650E6242D9936c7e50E959BA0F9E37',
+    ethProverAddress: '0xd67d3102fc06a0e7abb23ad0e5a9752d9397177e',
     ethProverAbiText: readFileSync('./prover.abi'),
     nearClientAccount: 'ethonnearclient10',
     nearHelperUrl: 'https://helper.testnet.near.org/',
     nearNetworkId: 'testnet',
     nearNodeUrl: 'https://rpc.testnet.near.org',
     nearProverAccount: 'ethonnearprover10',
-    nearTokenFactoryAccount: 'ntf4.bridge2.testnet',
+    nearTokenFactoryAccount: 'f290121.ropsten.testnet',
     nearWalletUrl: 'https://wallet.testnet.near.org/',
   },
 }
