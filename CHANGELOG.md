@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.8.0...v1.8.1) (2021-02-02)
+
+
+### Bug Fixes
+
+* actually allow sending erc20 across ([6f08d5e](https://github.com/near/rainbow-bridge-frontend/commit/6f08d5e0852a5bcfd9ff9aa6de17b8c92499d24b))
+
 # [1.8.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.7.2...v1.8.0) (2021-02-02)
 
 
