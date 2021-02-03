@@ -148,22 +148,16 @@ window.addEventListener('load', function addAuthenticatedAccountHandlers () {
   }
 })
 
-async function renderEthereumAuth () {
+window.renderers.push(() => {
   if (window.ethInitialized) {
     window.dom.fill('authEthereum').with(
       `<span class="connected-account" title="${window.ethUserAddress}">${window.ethUserAddress}</span>`
     )
   }
-}
-
-async function renderNearAuth () {
   if (window.nearInitialized) {
     window.dom.fill('authNear').with(
       `<span class="connected-account" title="${window.nearUserAddress}">${window.nearUserAddress}</span>`
     )
   }
-}
-
-window.renderers.push(renderEthereumAuth)
-window.renderers.push(renderNearAuth)
+})
 </script>
