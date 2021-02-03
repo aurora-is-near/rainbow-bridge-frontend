@@ -1,3 +1,10 @@
+## [1.8.3](https://github.com/near/rainbow-bridge-frontend/compare/v1.8.2...v1.8.3) (2021-02-03)
+
+
+### Bug Fixes
+
+* simplify authenticated-accounts renderer ([dee3124](https://github.com/near/rainbow-bridge-frontend/commit/dee3124c477f83a5d70d927be9e6a0d9a07121cf))
+
 ## [1.8.2](https://github.com/near/rainbow-bridge-frontend/compare/v1.8.1...v1.8.2) (2021-02-03)
 
 
