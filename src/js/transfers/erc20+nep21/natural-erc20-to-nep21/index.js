@@ -7,6 +7,7 @@ import { stepsFor } from '../../i18nHelpers'
 import * as status from '../../statuses'
 import { track } from '../..'
 import findProof from './findProof'
+import { lastBlockNumber } from './ethOnNearClient'
 
 export const SOURCE_NETWORK = 'ethereum'
 export const DESTINATION_NETWORK = 'near'
@@ -229,7 +230,7 @@ async function checkLock (transfer) {
 async function checkSync (transfer) {
   const lockReceipt = transfer.lockReceipts[transfer.lockReceipts.length - 1]
   const eventEmittedAt = lockReceipt.blockNumber
-  const syncedTo = await window.ethOnNearClient.lastBlockNumber()
+  const syncedTo = await lastBlockNumber()
   const completedConfirmations = Math.max(0, syncedTo - eventEmittedAt)
 
   if (completedConfirmations < transfer.neededConfirmations) {

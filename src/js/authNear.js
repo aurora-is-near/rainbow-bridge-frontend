@@ -1,7 +1,6 @@
 import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
 
 import { checkStatusAll as checkTransferStatuses } from './transfers'
-import EthOnNearClient from './borsh/ethOnNearClient'
 import render from './render'
 import { onClick } from './domHelpers'
 
@@ -36,15 +35,6 @@ async function login () {
       changeMethods: ['deposit', 'deploy_bridge_token']
     }
   )
-
-  window.ethOnNearClient = new EthOnNearClient(await new Contract(
-    window.nearConnection.account(),
-    process.env.nearClientAccount,
-    {
-      // View methods are read only
-      viewMethods: ['last_block_number']
-    }
-  ))
 
   window.nearInitialized = true
 
