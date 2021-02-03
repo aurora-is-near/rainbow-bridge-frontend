@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/near/rainbow-bridge-frontend/compare/v1.8.1...v1.8.2) (2021-02-03)
+
+
+### Bug Fixes
+
+* update client & prover addresses ([d50d23c](https://github.com/near/rainbow-bridge-frontend/commit/d50d23caa0e14313e5140f1d30a779f0097472b3))
+
 ## [1.8.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.8.0...v1.8.1) (2021-02-02)
 
 
