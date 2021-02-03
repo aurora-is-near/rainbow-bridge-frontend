@@ -37,7 +37,6 @@ module.exports = {
     ethLockerAbiText: readFileSync('./node_modules/rainbow-token-connector/res/BridgeTokenFactory.full.abi'),
     ethLockerAddress: '0xa5289b6d5dcc13e48f2cc6382256e51589849f86',
     ethNetwork: 'ropsten',
-    ethNodeUrl: 'https://rinkeby.infura.io/v3/TODO',
     ethProverAddress: '0xd67d3102fc06a0e7abb23ad0e5a9752d9397177e',
     ethProverAbiText: readFileSync('./prover.abi'),
     nearClientAccount: 'ethonnearclient10',
