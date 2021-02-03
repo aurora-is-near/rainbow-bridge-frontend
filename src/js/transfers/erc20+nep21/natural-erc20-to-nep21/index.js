@@ -63,6 +63,7 @@ export function act (transfer) {
   switch (transfer.completedStep) {
     case null: return approve(transfer)
     case APPROVE: return lock(transfer)
+    case LOCK: return checkSync(transfer)
     case SYNC: return mint(transfer)
     default: throw new Error(`Don't know how to act on transfer: ${JSON.stringify(transfer)}`)
   }
@@ -234,7 +235,8 @@ async function checkSync (transfer) {
   if (completedConfirmations < transfer.neededConfirmations) {
     return {
       ...transfer,
-      completedConfirmations
+      completedConfirmations,
+      status: status.IN_PROGRESS
     }
   }
 
