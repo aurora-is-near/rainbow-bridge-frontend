@@ -1,3 +1,10 @@
+## [1.8.4](https://github.com/near/rainbow-bridge-frontend/compare/v1.8.3...v1.8.4) (2021-02-04)
+
+
+### Bug Fixes
+
+* transfers actually complete sometimes now ([b679d98](https://github.com/near/rainbow-bridge-frontend/commit/b679d98666ad0fbaed9a1f00de9b95ccfb6027c8))
+
 ## [1.8.3](https://github.com/near/rainbow-bridge-frontend/compare/v1.8.2...v1.8.3) (2021-02-03)
 
 
