@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.8.4...v1.9.0) (2021-02-04)
+
+
+### Features
+
+* document transfers-library-to-be ([2406e83](https://github.com/near/rainbow-bridge-frontend/commit/2406e832274ae38d4735702d865c4ad764823152))
+
 ## [1.8.4](https://github.com/near/rainbow-bridge-frontend/compare/v1.8.3...v1.8.4) (2021-02-04)
 
 
