@@ -3,18 +3,34 @@ import { encode } from 'eth-util-lite'
 import { Header, Proof, Receipt, Log } from 'eth-object'
 import { promisfy } from 'promisfy'
 import utils from 'ethereumjs-util'
-import {
-  Proof as BorshProof,
-  schema as proofBorshSchema
-} from '../../../borsh/mintableTokenFactory'
 import { serialize as serializeBorsh } from 'near-api-js/lib/utils/serialize'
+
+class BorshProof {
+  constructor (proof) {
+    Object.assign(this, proof)
+  }
+}
+
+const proofBorshSchema = new Map([
+  [BorshProof, {
+    kind: 'struct',
+    fields: [
+      ['log_index', 'u64'],
+      ['log_entry_data', ['u8']],
+      ['receipt_index', 'u64'],
+      ['receipt_data', ['u8']],
+      ['header_data', ['u8']],
+      ['proof', [['u8']]]
+    ]
+  }]
+])
 
 // Compute proof that Locked event was fired in Ethereum. This proof can then
 // be passed to the FungibleTokenFactory contract, which verifies the proof
 // against a Prover contract.
-export default async function findProof ({ lockTxHash, lockTxBlockHeight }) {
+export default async function findProof (lockTxHash) {
   const receipt = await window.web3.eth.getTransactionReceipt(lockTxHash)
-  const block = await window.web3.eth.getBlock(lockTxBlockHeight)
+  const block = await window.web3.eth.getBlock(receipt.blockNumber)
   const tree = await buildTree(block)
   const proof = await extractProof(
     block,
@@ -24,7 +40,7 @@ export default async function findProof ({ lockTxHash, lockTxBlockHeight }) {
 
   const [lockedEvent] = await window.ethTokenLocker.getPastEvents('Locked', {
     filter: { transactionHash: lockTxHash },
-    fromBlock: lockTxBlockHeight
+    fromBlock: receipt.blockNumber
   })
   // `log.logIndex` does not necessarily match the log's order in the array of logs
   const logIndexInArray = receipt.logs.findIndex(

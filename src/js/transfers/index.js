@@ -1,7 +1,6 @@
 // TODO find way to make getTransferType work without importing each of these
 import './erc20+nep21/bridged-nep21-to-erc20'
-import * as naturalErc20ToNep21 from './erc20+nep21/natural-erc20-to-nep21'
-import * as urlParams from '../urlParams'
+import './erc20+nep21/natural-erc20-to-nep21'
 import * as storage from './storage'
 import * as status from './statuses'
 
@@ -39,7 +38,7 @@ export async function get () {
       acc.all.push(transfer)
       return acc
     },
-    { all: [], inProgress: [], actionNeeded: [], failed: [], complete: [] }
+    { all: [], inProgress: [], actionNeeded: [], failed: [], completed: [] }
   )
 }
 
@@ -106,20 +105,6 @@ export async function checkStatusAll ({ loop } = {}) {
     throw new Error('`loop` must be frequency, in milliseconds')
   }
 
-  // First, check if we've just returned to this page from NEAR Wallet after
-  // completing a transfer. Do this outside of main Promise.all to
-  //
-  //   1. avoid race conditions
-  //   2. check retried failed transfers, which are not inProgress
-  const id = urlParams.get('minting')
-  if (id) {
-    const transfer = await storage.get(id)
-    if (transfer && transfer.type === '@eth+near/erc20+nep21/natural-erc20-to-nep21') {
-      storage.update(await naturalErc20ToNep21.checkCompletion(transfer))
-    }
-    urlParams.clear('minting', 'balanceBefore')
-  }
-
   const { inProgress } = await get()
 
   // Check & update statuses for all in parallel
@@ -153,6 +138,7 @@ export async function act (id) {
       status: status.FAILED,
       errors: [...transfer.errors, error.message]
     })
+    throw error
   }
 }
 
@@ -185,6 +171,7 @@ async function checkStatus (id) {
         status: status.FAILED,
         errors: [...transfer.errors, e.message]
       })
+      throw e
     }
   }
 }

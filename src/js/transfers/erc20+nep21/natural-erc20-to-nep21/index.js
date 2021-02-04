@@ -76,6 +76,7 @@ export function checkStatus (transfer) {
     case null: return checkApprove(transfer)
     case APPROVE: return checkLock(transfer)
     case LOCK: return checkSync(transfer)
+    case SYNC: return checkMint(transfer)
   }
 }
 
@@ -252,33 +253,53 @@ async function checkSync (transfer) {
 // Mint NEP21 tokens to transfer.recipient. Causes a redirect to NEAR Wallet,
 // currently dealt with using URL params.
 async function mint (transfer) {
-  const balanceBefore = Number(
-    await getNep21Balance(transfer.sourceToken)
-  )
-  urlParams.set({ minting: transfer.id, balanceBefore })
-
+  console.log(transfer)
   const lockReceipt = transfer.lockReceipts[transfer.lockReceipts.length - 1]
-  const proof = await findProof({
-    lockTxHash: lockReceipt.transactionHash,
-    lockTxBlockHeight: lockReceipt.blockNumber
-  })
+  const proof = await findProof(lockReceipt.transactionHash)
 
-  await window.nearFungibleTokenFactory.deposit(
-    proof,
-    new BN('300000000000000'),
-    // We need to attach tokens because minting increases the contract state, by <600 bytes, which
-    // requires an additional 0.06 NEAR to be deposited to the account for state staking.
-    // Note technically 0.0537 NEAR should be enough, but we round it up to stay on the safe side.
-    new BN('100000000000000000000').mul(new BN('600'))
-  )
+  // Calling `nearFungibleTokenFactory.deposit` causes a redirect to NEAR Wallet.
+  //
+  // This adds some info about the current transaction to the URL params, then
+  // returns to mark the transfer as in-progress, and THEN executes the
+  // `deposit` function.
+  //
+  // Since this happens very quickly in human time, a user will not have time
+  // to start two `deposit` calls at the same time, and the `checkMint` will be
+  // able to correctly identify the transfer and see if the transaction
+  // succeeded.
+  setTimeout(async () => {
+    const balanceBefore = await getNep21Balance(transfer)
+    urlParams.set({ minting: transfer.id, balanceBefore })
+    window.nearFungibleTokenFactory.deposit(
+      proof,
+      new BN('300000000000000'),
+      // We need to attach tokens because minting increases the contract state, by <600 bytes, which
+      // requires an additional 0.06 NEAR to be deposited to the account for state staking.
+      // Note technically 0.0537 NEAR should be enough, but we round it up to stay on the safe side.
+      new BN('100000000000000000000').mul(new BN('600'))
+    )
+  }, 100)
+
+  return {
+    ...transfer,
+    status: status.IN_PROGRESS
+  }
 }
 
-// Called by by core checkStatusAll logic prior to calling checkStatus for each
-// individual transfer; used to check outcome of `mint` call that caused
-// redirect to NEAR Wallet
-export async function checkCompletion (transfer) {
+export async function checkMint (transfer) {
+  const id = urlParams.get('minting')
+  if (!id || id !== transfer.id) {
+    return {
+      ...transfer,
+      status: status.FAILED,
+      errors: [...transfer.errors, "Couldn't determine transaction outcome"]
+    }
+  }
+
   const balanceBefore = Number(urlParams.get('balanceBefore'))
-  const balanceAfter = Number(await getNep21Balance(transfer.sourceToken))
+  const balanceAfter = await getNep21Balance(transfer)
+
+  urlParams.clear('minting', 'balanceBefore')
 
   if (balanceBefore + transfer.amount !== balanceAfter) {
     return {
@@ -286,7 +307,8 @@ export async function checkCompletion (transfer) {
       status: status.FAILED,
       errors: [
         ...transfer.errors,
-        `Something went wrong. Pre-transaction balance + transfer amount =
+        `Something went wrong. Pre-transaction balance (${balanceBefore})
+        + transfer amount (${transfer.amount}) =
         ${balanceBefore + transfer.amount}, but new balance is instead
         ${balanceAfter}.`
       ]
