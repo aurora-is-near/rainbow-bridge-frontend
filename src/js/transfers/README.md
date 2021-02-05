@@ -45,7 +45,7 @@ Step 2: Initiate a transfer
 
 Let's say you have a form.
 
-```js
+```html
 <form>
   <input id="erc20Address" />
   <input id="amount" />
@@ -112,7 +112,7 @@ exports from `@eth~near/core`, rather than the connector-specific library.
 
 Let's say you want to list in-progress transfers in this `ol`:
 
-```js
+```html
 <ol id="transfers-go-here"></ol>
 ```
 
@@ -153,11 +153,11 @@ function renderTransfer (transfer) {
       ${transfer.sourceTokenName} from
       ${transfer.sender} to
       ${transfer.recipient}
-      ${(transfer.status === 'failed' || transfer.status === 'action-needed' ? (
+      ${!transfer.callToAction ? '' : `
         <button class="act-on-transfer">
           ${transfer.callToAction}
         </button>
-      ) : '')}
+      `}
     </li>
   `
 })
