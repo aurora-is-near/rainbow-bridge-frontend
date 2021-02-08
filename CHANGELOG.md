@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.0...v1.9.1) (2021-02-08)
+
+
+### Bug Fixes
+
+* show unknown token icon on non-root url ([29b28bb](https://github.com/near/rainbow-bridge-frontend/commit/29b28bbf6e0405e79ea3504d8a8f5ff033b8e36b))
+
 # [1.9.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.8.4...v1.9.0) (2021-02-04)
 
 
