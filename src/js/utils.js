@@ -70,7 +70,7 @@ export function getErc20Icon (address) {
   return new Promise(resolve => {
     const img = new Image()
     img.onload = () => resolve(url)
-    img.onerror = () => resolve('/ethereum.svg')
+    img.onerror = () => resolve('ethereum.svg')
     img.src = url
   })
 }
