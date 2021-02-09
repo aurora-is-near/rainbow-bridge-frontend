@@ -138,7 +138,7 @@ If your change should show up in release notes as a feature, use `feat:`. If it 
   [NEP141]: https://github.com/near/NEPs/issues/141
   [NEAR]: https://near.org/
   [Ethereum Rinkeby]: https://support.airswap.io/en/articles/2831385-what-is-rinkeby
-  [NEAR Testnet]: https://docs.near.org/docs/roles/developer/networks#testnet
-  [storage]: https://docs.near.org/docs/concepts/storage
+  [NEAR Testnet]: https://docs.near.org/docs/concepts/networks#testnet
+  [storage]: https://docs.near.org/docs/concepts/storage-staking
   [Node.js]: https://nodejs.org/en/download/package-manager/
   [yarn]: https://yarnpkg.com/
