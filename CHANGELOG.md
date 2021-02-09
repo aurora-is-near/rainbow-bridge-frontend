@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.1...v1.9.2) (2021-02-09)
+
+
+### Bug Fixes
+
+* beautify "bridge NEP21 back to Eth" dropdown ([5de9c22](https://github.com/near/rainbow-bridge-frontend/commit/5de9c22f6c93519444673a58634a3394c8a0bdf8))
+
 ## [1.9.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.0...v1.9.1) (2021-02-08)
 
 
