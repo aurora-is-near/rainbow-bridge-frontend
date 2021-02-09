@@ -23,7 +23,7 @@ window.nearUserAddress = window.nearConnection.getAccountId()
 // user's behalf. This works by creating a new access key for the user's
 // account and storing the private key in localStorage.
 onClick('authNear', () => {
-  window.nearConnection.requestSignIn(process.env.nearFunTokenAccount)
+  window.nearConnection.requestSignIn(process.env.nearTokenFactoryAccount)
 })
 
 async function login () {
