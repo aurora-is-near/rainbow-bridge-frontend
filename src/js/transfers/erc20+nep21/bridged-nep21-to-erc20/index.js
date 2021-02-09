@@ -2,7 +2,7 @@ import BN from 'bn.js'
 import bs58 from 'bs58'
 import getRevertReason from 'eth-revert-reason'
 import { toBuffer } from 'eth-util-lite'
-import { Contract as NearContract } from 'near-api-js'
+import { parseRpcError } from 'near-api-js/lib/utils/rpc_errors'
 import { getErc20Name } from '../../../utils'
 import * as status from '../../statuses'
 import { stepsFor } from '../../i18nHelpers'
@@ -11,6 +11,9 @@ import { borshifyOutcomeProof } from './borshify-proof'
 
 export const SOURCE_NETWORK = 'near'
 export const DESTINATION_NETWORK = 'ethereum'
+
+const formatLargeNum = n =>
+  new Intl.NumberFormat(undefined).format(n)
 
 const WITHDRAW = 'withdraw-bridged-nep21-to-erc20'
 const AWAIT_FINALITY = 'await-finality-bridged-nep21-to-erc20'
@@ -46,7 +49,9 @@ export const i18n = {
       switch (transfer.completedStep) {
         case null: return 'Withdrawing from NEAR'
         case WITHDRAW: return 'Finalizing withdrawal'
-        case AWAIT_FINALITY: return 'Syncing to Ethereum'
+        case AWAIT_FINALITY: return `Syncing ${formatLargeNum(
+          transfer.finalityBlockHeight - transfer.nearOnEthClientBlockHeight
+        )} blocks to Ethereum`
         case SYNC: return `Securing, minute ${transfer.securityWindowProgress}/${transfer.securityWindow}`
         case SECURE: return 'Unlocking in Ethereum'
         case UNLOCK: return 'Transfer complete'
@@ -66,7 +71,7 @@ export const i18n = {
 // Called when status is ACTION_NEEDED or FAILED
 export function act (transfer) {
   switch (transfer.completedStep) {
-    case null: return withdraw(transfer)
+    case null: return authenticate(transfer)
     case SECURE: return unlock(transfer)
     default: throw new Error(`Don't know how to act on transfer: ${JSON.stringify(transfer)}`)
   }
@@ -75,7 +80,7 @@ export function act (transfer) {
 // Called when status is IN_PROGRESS
 export function checkStatus (transfer) {
   switch (transfer.completedStep) {
-    case null: return checkWithdraw(transfer)
+    case null: return withdraw(transfer)
     case WITHDRAW: return checkFinality(transfer)
     case AWAIT_FINALITY: return checkSync(transfer)
     case SYNC: return checkSecure(transfer)
@@ -95,7 +100,7 @@ export async function initiate ({
   const sourceTokenName = destinationTokenName + 'ⁿ'
 
   // various attributes stored as arrays, to keep history of retries
-  let transfer = {
+  const transfer = {
     // attributes common to all transfer types
     amount,
     completedStep: null,
@@ -105,7 +110,7 @@ export async function initiate ({
     sender,
     sourceToken: nep21Address,
     sourceTokenName,
-    status: status.ACTION_NEEDED,
+    status: status.IN_PROGRESS,
     type: '@eth+near/erc20+nep21/bridged-nep21-to-erc20',
 
     // attributes specific to natural-erc20-to-nep21 transfers
@@ -121,66 +126,77 @@ export async function initiate ({
   }
 
   // no need for checkStatusEvery, because:
-  // * the `withdraw` below causes a redirect to NEAR Wallet
+  // * the `authenticate`/`withdraw` flow causes a redirect to NEAR Wallet
   // * once back at app, `checkStatusAll` will cover this one
-  transfer = track(transfer)
+  await track(transfer)
 
-  withdraw(transfer)
+  authenticate(transfer)
 }
 
-async function withdraw (transfer) {
-  const bridgeToken = new NearContract(
-    window.nearConnection.account(),
-    transfer.nep21Address,
-    { changeMethods: ['withdraw'] }
-  )
+async function userAuthedAgainstTransferContract (transfer) {
+  const { accessKey } = await window.nearConnection.account().findAccessKey()
+  const authedAgainst = accessKey && accessKey.permission.FunctionCall.receiver_id
+  return authedAgainst === transfer.sourceToken
+}
 
-  // Calling `bridgeToken.withdraw` causes a redirect to NEAR Wallet. The
-  // `meta` info tells near-api-js to keep track of the transaction's outcome
-  // in a `completedTransactions` iterator, used in `checkWithdraw`.
-  //
-  // The current function is only called when transfer.status is FAILED or
-  // ACTION_NEEDED. `checkWithdraw` is only checked when status ===
-  // IN_PROGRESS. In order to update the status prior to the NEAR Wallet
-  // redirect, we set a timeout. This provides time for the `return` to trigger
-  // & complete a local storage update.
-  setTimeout(
-    () => bridgeToken.withdraw(
-      {
-        amount: String(transfer.amount),
-        recipient: transfer.recipient
+// current BridgeToken contract does not require deposit on `withdraw` function
+// call `requestSignIn` to add FunctionCall Access Key for this contract,
+// then once back at this app, can call `withdraw` without firing a redirect to NEAR Wallet.
+async function authenticate (transfer) {
+  if (!(await userAuthedAgainstTransferContract(transfer))) {
+    // setTimeout to add access key for BridgeToken contract AFTER returning, so
+    // that transfer can be updated in local storage and marked as no longer
+    // failing (if needed)
+    setTimeout(
+      async function () {
+        await window.nearConnection.signOut()
+        await window.nearConnection.requestSignIn(transfer.sourceToken)
       },
-      {
-        gas: new BN('3' + '0'.repeat(14)), // 10x current default from near-api-js
-        meta: { id: transfer.id }
-      }
-    ),
-    100
-  )
-
+      50
+    )
+  }
   return {
     ...transfer,
     status: status.IN_PROGRESS
   }
 }
 
-async function checkWithdraw (transfer) {
-  const withdrawTx = window.nearConnection
-    .completedTransactions.remove(tx => tx.meta.id === transfer.id)
-
-  if (!withdrawTx) {
+async function withdraw (transfer) {
+  // `authenticate` hasn't triggered redirect yet
+  if (!(await userAuthedAgainstTransferContract(transfer))) {
+    return transfer
+  }
+  let withdrawTx
+  try {
+    withdrawTx = await window.nearConnection.account().functionCall(
+      transfer.sourceToken,
+      'withdraw',
+      {
+        amount: String(transfer.amount),
+        recipient: transfer.recipient.replace('0x', '')
+      },
+      new BN('3' + '0'.repeat(14)) // 10x current default from near-api-js
+    )
+  } catch (e) {
+    console.error(e)
     return {
       ...transfer,
-      errors: [...transfer.errors, 'Could not process withdrawal transaction'],
+      errors: [...transfer.errors, e.message],
       status: status.FAILED
     }
   }
 
-  if (withdrawTx.failed) {
+  if (withdrawTx.status.Failure) {
+    console.error('withdrawTx.status.Failure', withdrawTx.status.Failure)
+    const errorMessage = typeof withdrawTx.status.Failure === 'object'
+      ? parseRpcError(withdrawTx.status.Failure)
+      : `Transaction <a href="${process.env.nearExplorerUrl}/transactions/${withdrawTx.transaction.hash}">${withdrawTx.transaction.hash}</a> failed`
+
     return {
       ...transfer,
-      errors: [...transfer.errors, withdrawTx.errorMessage],
-      status: status.FAILED
+      errors: [...transfer.errors, errorMessage],
+      status: status.FAILED,
+      withdrawTx
     }
   }
 
@@ -194,7 +210,8 @@ async function checkWithdraw (transfer) {
           `Withdrawal expects only one receipt, got ${receiptIds.length
           }. Full withdrawal transaction: ${JSON.stringify(withdrawTx)}`
       ],
-      status: status.FAILED
+      status: status.FAILED,
+      withdrawTx
     }
   }
 
@@ -205,7 +222,7 @@ async function checkWithdraw (transfer) {
   const txReceiptBlockHash = withdrawTx.receipts_outcome
     .find(r => r.id === successReceiptId).block_hash
 
-  const receiptBlock = await window.nearConnection.provider.block({
+  const receiptBlock = await window.nearConnection.account().connection.provider.block({
     blockId: txReceiptBlockHash
   })
 
@@ -227,7 +244,7 @@ async function checkFinality (transfer) {
     transfer.withdrawReceiptBlockHeights.length - 1
   ]
   const latestFinalizedBlock = Number((
-    await window.nearConnection.provider.block({ finality: 'final' })
+    await window.nearConnection.account().connection.provider.block({ finality: 'final' })
   ).header.height)
 
   if (latestFinalizedBlock <= withdrawReceiptBlockHeight) {
@@ -256,7 +273,12 @@ async function checkSync (transfer) {
   const nearOnEthClientBlockHeight = Number(currentHeight)
 
   if (nearOnEthClientBlockHeight <= finalityBlockHeight) {
-    return transfer
+    return {
+      ...transfer,
+      finalityBlockHeight,
+      nearOnEthClientBlockHeight,
+      status: status.IN_PROGRESS
+    }
   }
 
   const clientBlockHashB58 = bs58.encode(toBuffer(
@@ -266,7 +288,7 @@ async function checkSync (transfer) {
   const withdrawReceiptId = transfer.withdrawReceiptIds[
     transfer.withdrawReceiptIds.length - 1
   ]
-  const proof = await window.nearConnection.provider.sendJsonRpc(
+  const proof = await window.nearConnection.account().connection.provider.sendJsonRpc(
     'light_client_proof',
     {
       type: 'receipt',

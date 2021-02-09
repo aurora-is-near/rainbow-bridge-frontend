@@ -132,7 +132,7 @@
         await window.erc20Xnep21.bridgedNep21ToErc20({
           amount: Number(amount.value),
           nep21Address: window.utils.getBridgedNep21Address(
-            window.urlParams.get('erc20')
+            window.urlParams.get('erc20n')
           ),
           sender: window.nearUserAddress,
           recipient: window.ethUserAddress

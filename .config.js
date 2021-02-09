@@ -46,5 +46,6 @@ module.exports = {
     nearProverAccount: 'prover.ropsten.testnet',
     nearTokenFactoryAccount: 'f290121.ropsten.testnet',
     nearWalletUrl: 'https://wallet.testnet.near.org/',
+    nearExplorerUrl: 'https://explorer.testnet.near.org/',
   },
 }
