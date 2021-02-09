@@ -133,8 +133,9 @@ window.addEventListener('load', function addAuthenticatedAccountHandlers () {
   // to add the swap behavior only once.
   if (!window.state.authenticatedAccountsInitialized) {
     window.dom.onClick('swapAccounts', function swapAccountOrder ({ target }) {
-      const input = window.dom.find('transferFrom')
-      input.name = input.name === 'erc20' ? 'erc20n' : 'erc20'
+      window.dom.findAll('transferFrom').forEach(input => {
+        input.name = input.name === 'erc20' ? 'erc20n' : 'erc20'
+      })
 
       const from = target.closest('div').previousElementSibling
       const to = target.closest('div').nextElementSibling

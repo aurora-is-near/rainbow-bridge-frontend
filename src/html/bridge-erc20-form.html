@@ -1,0 +1,90 @@
+<form data-behavior="bridgeErc20Form" class="container" style="display:none">
+  <h1 style="background: url(img/unbridged.svg) top center no-repeat; font-size: 1.5em; padding: 12rem 0 2.5rem">
+    Token not yet bridged
+  </h1>
+  <p>
+    The <strong data-behavior="erc20Name"></strong>
+    <a
+      href="https://eips.ethereum.org/EIPS/eip-20"
+      rel="nofollow"
+    >ERC20</a>
+    token has not yet been bridged.
+  </p>
+  <p>
+    The
+    <a href="https://github.com/near/rainbow-token-connector" target="_blank">Fungible Token Connector</a>
+    allows sending any ERC20 token to NEAR, but requires an initial one-time deploy of a "BridgeToken"
+    <a href="https://docs.near.org/docs/roles/developer/contracts/intro#get-started" target="_blank">smart contract</a>.
+  </p>
+  <button style="padding: 0.75em 2.5em; margin-top: 3em">
+    Bridge it!
+  </button>
+  <button type="button" class="cancel" data-behavior="bridgeErc20Cancel">
+    Cancel
+  </button>
+  <p style="font-size: 0.75em; margin-top: 2em">
+    Deploying a new "Bridge Token" smart contract requires ~30 NEAR to cover
+    <a href="https://docs.near.org/docs/concepts/storage" target="_blank">storage fees</a>.
+  </p>
+</form>
+
+<script>
+  window.addEventListener('load', function handleSelectErc20Events () {
+    window.dom.find('bridgeErc20Form').onsubmit = function bridgeIt (e) {
+      e.preventDefault()
+      window.nearFungibleTokenFactory.deploy_bridge_token(
+        { address: window.urlParams.get('erc20').replace('0x', '') },
+
+        // Default gas limit used by near-api-js is 3e13, but this tx fails with
+        // that number. Doubling it works. Maybe slightly less would also work,
+        // but at min gas price of 100M yN, this will only amount to 0.006 $NEAR,
+        // which is already negligible compared to the deposit.
+        new BN(3e13).mul(new BN(2)),
+
+        // Attach a deposit to compensate the BridgeTokenFactory contract for the
+        // storage costs associated with deploying the new BridgeToken contract.
+        // 30N for the base fee, plus .02 for for storing the name of the contract
+        // Might not need full .02, but need more than .01, error message did not
+        // include needed amount at time of writing.
+        new BN(window.parseNearAmount('30.02'))
+      )
+    }
+
+    window.dom.find('bridgeErc20Cancel').onclick = () => {
+      window.dom.hide('bridgeErc20Form')
+      window.urlParams.clear()
+      window.render()
+    }
+  })
+
+  async function renderBridgeErc20 () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
+    const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
+    const erc20Address = erc20 || erc20n
+
+    if (erc20Address === null) {
+      window.dom.hide('bridgeErc20Form')
+      return
+    }
+
+    let token = (await window.utils.getFeaturedErc20s())[erc20Address]
+    try {
+      if (!token) token = await window.utils.getErc20Data(erc20Address)
+    } catch (e) {
+      // error message filled in by other components
+      window.dom.hide('bridgeErc20Form')
+      return
+    }
+
+    if (token.nep21Balance !== null) {
+      window.dom.hide('bridgeErc20Form')
+      return
+    }
+
+    window.dom.fill('erc20Name').with(token.name)
+    window.dom.show('bridgeErc20Form')
+  }
+
+  window.renderers.push(renderBridgeErc20)
+</script>

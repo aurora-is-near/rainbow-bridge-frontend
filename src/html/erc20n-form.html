@@ -1,76 +1,107 @@
-<form data-behavior="sendBridgedNep21Form" class="transfer-form" style="display:none">
-  <header>
-    <h2>New Transfer</h2>
-    <p>Select a token and enter an amount to transfer.</p>
-  </header>
-  <div class="account">
+<div data-behavior="sendBridgedNep21" style="display:none">
+  <form data-behavior="sendBridgedNep21Form" class="transfer-form">
     <header>
-      <strong>Transfer from</strong>
-      <span class="account-tag account-with-icon near" data-behavior="nearUser"></span>
+      <h2>New Transfer</h2>
+      <p>Select a token and enter an amount to transfer.</p>
     </header>
-    <div class="inputs">
-      <select
-        data-behavior="erc20nSelector"
-        id="erc20n"
-        name="erc20n"
-      >
-      </select>
-      <!-- TODO fix step -->
-      <input
-        autoComplete="off"
-        data-behavior="erc20nAmount"
-        disabled
-        min="0"
-        placeholder="0"
-        step="0.001"
-        type="number"
-      />
+    <div class="account">
+      <header>
+        <strong>Transfer from</strong>
+        <span class="account-tag account-with-icon near" data-behavior="nearUser"></span>
+      </header>
+      <div class="inputs">
+        <input type="hidden" name="erc20n" data-behavior="erc20nAddress" />
+        <button type="button" data-behavior="erc20nSelectButton">
+          Select token
+        </button>
+        <!-- TODO fix step -->
+        <input
+          autoComplete="off"
+          data-behavior="erc20nAmount"
+          disabled
+          min="0"
+          placeholder="0"
+          step="0.001"
+          type="number"
+        />
+      </div>
+      <p class="token-details" data-behavior="erc20nInfo" style="margin: 0.5rem 0 0">
+        <span>Available to transfer</span>
+        <span>
+          <span data-behavior="erc20nBalance"></span>
+          <span data-behavior="erc20nName"></span>
+        </span>
+      </p>
     </div>
-    <p class="token-details" data-behavior="erc20nInfo" style="margin: 0.5rem 0 0">
-      <span>Available to transfer</span>
-      <span>
-        <span data-behavior="nep21Balance"></span>
-        <span data-behavior="erc20nName"></span>
-      </span>
-    </p>
+    <div class="arrow"></div>
+    <div class="account">
+      <header>
+        <strong>To</strong>
+        <span class="account-tag account-with-icon ethereum" data-behavior="ethUser"></span>
+      </header>
+      <p class="token-details" data-behavior="erc20nInfo">
+        <span>Receive as</span>
+        <strong data-behavior="erc20Name"></strong>
+      </p>
+      <p class="token-details" data-behavior="erc20nInfo">
+        <span>Current balance</span>
+        <strong>
+          <span data-behavior="erc20Balance"></span>
+          <span data-behavior="erc20Name"></span>
+        </strong>
+      </p>
+    </div>
+    <footer>
+      <button disabled data-behavior="erc20nSubmit" class="cta">
+        Submit transfer
+      </button>
+      <button type="button" class="cancel" data-behavior="goHome">
+        Cancel
+      </button>
+    </footer>
+  </form>
+  <div data-behavior="erc20nModal" class="modal" style="display:none">
+    <div class="token-selector">
+      <nav>
+        <button type="button" data-behavior="closeModal">
+          <span class="visually-hidden">close</span>
+          ⨉
+        </button>
+      </nav>
+      <form method="get">
+        <h3>Enter token address</h3>
+        <label for="erc20n" class="visually-hidden">ERC20 Address</label>
+        <input
+          data-behavior="erc20nFreeForm"
+          name="erc20n"
+          id="erc20n"
+          placeholder="0x89d24A6b4C..."
+          autoComplete="off"
+        />
+        <div data-behavior="erc20nAddressError" class="errorMessage"></div>
+      </form>
+      <div class="separator">
+        <strong>or</strong>
+      </div>
+      <form method="get">
+        <header>
+          <h3>Select a token</h3>
+          <div class="space-between" style="font-size:.75em;margin-bottom:.5em">
+            <span>Token name</span>
+            <span>Available balance</span>
+          </div>
+        </header>
+        <div class="token-list" data-behavior="erc20nList"></div>
+      </form>
+    </div>
   </div>
-  <div class="arrow"></div>
-  <div class="account">
-    <header>
-      <strong>To</strong>
-      <span class="account-tag account-with-icon ethereum" data-behavior="ethUser"></span>
-    </header>
-    <p class="token-details" data-behavior="erc20nInfo">
-      <span>Receive as</span>
-      <strong data-behavior="erc20Name"></strong>
-    </p>
-    <p class="token-details" data-behavior="erc20nInfo">
-      <span>Current balance</span>
-      <strong>
-        <span data-behavior="erc20Balance"></span>
-        <span data-behavior="erc20Name"></span>
-      </strong>
-    </p>
-  </div>
-  <footer>
-    <button disabled data-behavior="erc20nSubmit" class="cta">
-      Submit transfer
-    </button>
-    <button type="button" class="cancel" data-behavior="goHome">
-      Cancel
-    </button>
-  </footer>
-</form>
-<div data-behavior="invalidErc20n" class="container" style="display:none">
-  <h1>Invalid erc20n Address</h1>
-  <p data-behavior="erc20nAddressError" style="word-break: break-word"></p>
 </div>
 
 <script>
 
   window.addEventListener('load', function sendBridgedNep21OnLoad () {
     const amount = window.dom.find('erc20nAmount')
-    const select = window.dom.find('erc20nSelector')
+    const select = window.dom.find('erc20nSelectButton')
     const submit = window.dom.find('erc20nSubmit')
 
     function disableForm () {
@@ -85,17 +116,7 @@
       submit.disabled = false
     }
 
-    select.onchange = async function selectErc20n (e) {
-      amount.value = ''
-
-      // if "Select token" selected, nullify form
-      if (e.target.value === '') {
-        window.urlParams.set({ erc20n: '' })
-      } else {
-        window.urlParams.set({ erc20n: e.target.value })
-      }
-      window.render()
-    }
+    select.onclick = () => window.dom.show('erc20nModal')
 
     amount.onkeyup = function enableOrDisableErc20n (e) {
       if (Number(e.target.value)) submit.disabled = false
@@ -110,7 +131,9 @@
       try {
         await window.erc20Xnep21.bridgedNep21ToErc20({
           amount: Number(amount.value),
-          nep21Address: window.utils.getBridgedNep21Address(select.value),
+          nep21Address: window.utils.getBridgedNep21Address(
+            window.urlParams.get('erc20')
+          ),
           sender: window.nearUserAddress,
           recipient: window.ethUserAddress
         })
@@ -131,38 +154,43 @@
       window.urlParams.clear()
       window.render()
     }
+
+    window.dom.onClick('featuredErc20nOption', ({ target }) => {
+      window.urlParams.set({ erc20n: target.value })
+      window.dom.hide('erc20nModal')
+      window.render()
+    })
   })
-
-  let featuredErc20ns
-  async function getFeaturedErc20ns () {
-    if (featuredErc20ns) return featuredErc20ns
-
-    featuredErc20ns = await Promise.all(
-      process.env.featuredErc20s.split(',').map(async address => {
-        const erc20Name = await window.utils.getErc20Name(address)
-        return { address, name: erc20Name + 'ⁿ' }
-      })
-    )
-
-    return featuredErc20ns
-  }
 
   async function fillFeaturedErc20ns () {
     if (!window.ethInitialized) return
 
-    const selected = window.urlParams.get('erc20n')
+    // only fill once
+    if (window.state.erc20nListFilled) return
 
-    window.dom.fill('erc20nSelector').with(
-      '<option value="">Select token</option>' +
-      (await getFeaturedErc20ns()).map(({ address, name }) =>
-        `<option
-          value="${address}"
-          ${window.dom.toString(selected === address && 'selected')}
-        >
-          ${name}
-        </option>`
-      )
+    const featured = await window.utils.getFeaturedErc20s()
+
+    window.dom.fill('erc20nList').with(
+      Object.values(featured).map(token => `
+        <label class="space-between">
+          <input
+            type="radio"
+            name="erc20n"
+            data-behavior="featuredErc20nOption"
+            value="${token.address}"
+          />
+          <span>
+            <img src="${token.nep21Icon || 'near.svg'}" alt="" />
+            ${token.nep21Name}
+          </span>
+          <span>
+            ${window.utils.formatLargeNum(token.nep21Balance)}
+          </span>
+        </label>
+      `)
     )
+
+    window.state.erc20nListFilled = true
   }
 
   let erc20nAddress
@@ -173,8 +201,9 @@
     else erc20nAddress = window.urlParams.get('erc20n')
 
     if (window.urlParams.get('erc20n') === null) {
-      window.dom.hide('invalidErc20n')
-      window.dom.hide('sendBridgedNep21Form')
+      window.dom.hide('sendBridgedNep21')
+      window.dom.hide('erc20nAddressError')
+      window.dom.find('erc20nFreeForm').classList.remove('error')
       return
     }
 
@@ -182,52 +211,51 @@
 
     if (!erc20nAddress) {
       amount.disabled = true
+      window.dom.find('erc20nSelectButton').classList.remove('selected')
+      window.dom.fill('erc20nSelectButton').with('Select token')
       window.dom.hide('erc20nInfo')
-      window.dom.show('sendBridgedNep21Form')
+      window.dom.show('sendBridgedNep21')
       return
     }
 
-    let erc20nName
+    let token = (await window.utils.getFeaturedErc20s())[erc20nAddress]
     try {
-      erc20nName = (await window.utils.getErc20Name(erc20nAddress)) + 'ⁿ'
-      window.dom.hide('invalidErc20n')
-      window.dom.fill('erc20nName').with(erc20nName)
+      if (!token) token = await window.utils.getErc20Data(erc20nAddress)
+      window.dom.find('erc20nSelectButton').classList.add('selected')
+      window.dom.fill('erc20nSelectButton').with(token.nep21Name)
+      window.dom.find('erc20nFreeForm').classList.remove('error')
+      window.dom.hide('erc20nAddressError')
+      window.dom.fill('erc20Name').with(token.name)
     } catch (e) {
-      window.dom.hide('sendBridgedNep21Form')
-      window.dom.show('invalidErc20n')
+      window.dom.find('erc20nSelectButton').classList.remove('selected')
+      const input = window.dom.find('erc20nFreeForm')
+      input.classList.add('error')
+      input.value = erc20Address
+      window.dom.find('erc20nFreeForm').classList.add('error')
       window.dom.fill('erc20nAddressError').with(e.message)
-    }
-
-    if (!(await getFeaturedErc20ns()).map(f => f.address).includes(erc20nAddress)) {
-      const option = document.createElement('option')
-      option.value = erc20nAddress
-      option.selected = true
-      option.innerText = erc20nName
-      window.dom.find('erc20nSelector').appendChild(option)
-    }
-
-    const [erc20Balance, nep21Balance] = await Promise.all([
-      window.utils.getErc20Balance(erc20nAddress),
-      window.utils.getNep21Balance(erc20nAddress)
-    ])
-
-    if (nep21Balance === null) {
-      window.dom.hide('sendBridgedNep21Form')
-      // TODO window.dom.show('bridgeErc20Form')
+      window.dom.show('erc20nAddressError')
+      window.dom.show('sendBridgedNep21')
       return
     }
 
-    // TODO window.dom.hide('bridgeErc20Form')
-    window.dom.show('sendBridgedNep21Form')
+    if (token.nep21Balance === null) {
+      window.dom.hide('sendBridgedNep21')
+      return
+    }
 
-    window.dom.fill('nep21Balance').with(window.utils.formatLargeNum(nep21Balance))
-    window.dom.fill('erc20Balance').with(window.utils.formatLargeNum(erc20Balance))
-    window.dom.fill('erc20Name').with(erc20nName.replace('ⁿ', ''))
+    window.dom.fill('erc20nName').with(token.nep21Name)
+    window.dom.fill('erc20nBalance').with(
+      window.utils.formatLargeNum(token.nep21Balance)
+    )
+    window.dom.fill('erc20Balance').with(
+      window.utils.formatLargeNum(token.balance)
+    )
 
-    if (nep21Balance) amount.disabled = false
+    window.dom.show('sendBridgedNep21')
+    if (token.nep21Balance) amount.disabled = false
     else amount.disabled = true
 
-    amount.max = nep21Balance
+    amount.max = token.nep21Balance
     window.dom.show('erc20nInfo', 'flex')
     amount.focus()
   }
