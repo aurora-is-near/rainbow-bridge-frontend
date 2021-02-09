@@ -1,6 +1,6 @@
 export function formatLargeNum (n) {
   if (!n) return 0
-  if (n >= 1e5 || (n < 1e-3 && n !== 0)) return n.toExponential(n)
+  if (n >= 1e5 || (n < 1e-3 && n !== 0)) return n.toExponential()
   return new Intl.NumberFormat(undefined, { maximumSignificantDigits: 5 }).format(n)
 }
 
