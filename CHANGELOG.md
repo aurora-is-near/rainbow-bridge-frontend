@@ -1,3 +1,12 @@
+## [1.9.3](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.2...v1.9.3) (2021-02-09)
+
+
+### Bug Fixes
+
+* [workaround] withdraw by switching auth ([678cc56](https://github.com/near/rainbow-bridge-frontend/commit/678cc56f5ba80135e5eef0c0d8ab407b9a52f98e))
+* near config & connection settings ([fd38350](https://github.com/near/rainbow-bridge-frontend/commit/fd3835016b7923b110ff900227426d2a551df93a))
+* toExponential requires no arg ([cfcce1e](https://github.com/near/rainbow-bridge-frontend/commit/cfcce1e36096deddf125bdc7f1ad1217ccdbb9d0))
+
 ## [1.9.2](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.1...v1.9.2) (2021-02-09)
 
 
