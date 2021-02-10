@@ -116,7 +116,7 @@ export async function initiate ({
     completedConfirmations: 0,
     lockHashes: [],
     lockReceipts: [],
-    neededConfirmations: 10 // hard-coding until connector contract is updated with this information
+    neededConfirmations: 30 // hard-coding until connector contract is updated with this information
   }
 
   transfer = await approve(transfer)
