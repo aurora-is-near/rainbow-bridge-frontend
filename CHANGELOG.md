@@ -1,3 +1,10 @@
+## [1.9.4](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.3...v1.9.4) (2021-02-10)
+
+
+### Bug Fixes
+
+* ropsten bridge requires 30 confirmations ([d87d386](https://github.com/near/rainbow-bridge-frontend/commit/d87d3866ca2a56ecf33f3b3bcb3c4c19eb9ef917))
+
 ## [1.9.3](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.2...v1.9.3) (2021-02-09)
 
 
