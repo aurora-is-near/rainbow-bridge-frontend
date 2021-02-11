@@ -116,8 +116,10 @@ let featuredErc20s
 export async function getFeaturedErc20s () {
   if (featuredErc20s) return featuredErc20s
 
+  const ethNetwork = await window.web3.eth.net.getNetworkType()
+
   featuredErc20s = (await Promise.all(
-    process.env.featuredErc20s.split(',').map(getErc20Data)
+    JSON.parse(process.env.featuredErc20s)[ethNetwork].map(getErc20Data)
   )).reduce(
     (acc, token) => {
       acc[token.address] = token

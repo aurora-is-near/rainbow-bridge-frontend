@@ -383,7 +383,8 @@ async function checkUnlock (transfer) {
   if (!unlockReceipt.status) {
     let error
     try {
-      error = await getRevertReason(unlockHash, process.env.ethNetwork)
+      const ethNetwork = await window.web3.eth.net.getNetworkType()
+      error = await getRevertReason(unlockHash, ethNetwork)
     } catch (e) {
       console.error(e)
       error = `Could not determine why transaction failed; encountered error: ${e.message}`

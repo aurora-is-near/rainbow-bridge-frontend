@@ -156,7 +156,8 @@ async function checkApprove (transfer) {
   if (!approvalReceipt.status) {
     let error
     try {
-      error = await getRevertReason(approvalHash, process.env.ethNetwork)
+      const ethNetwork = await window.web3.eth.net.getNetworkType()
+      error = await getRevertReason(approvalHash, ethNetwork)
     } catch (e) {
       console.error(e)
       error = `Could not determine why transaction failed; encountered error: ${e.message}`
@@ -207,7 +208,8 @@ async function checkLock (transfer) {
   if (!lockReceipt.status) {
     let error
     try {
-      error = await getRevertReason(lockHash, process.env.ethNetwork)
+      const ethNetwork = await window.web3.eth.net.getNetworkType()
+      error = await getRevertReason(lockHash, ethNetwork)
     } catch (e) {
       console.error(e)
       error = `Could not determine why transaction failed; encountered error: ${e.message}`
