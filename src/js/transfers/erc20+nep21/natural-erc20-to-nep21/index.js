@@ -12,6 +12,8 @@ import { lastBlockNumber } from './ethOnNearClient'
 export const SOURCE_NETWORK = 'ethereum'
 export const DESTINATION_NETWORK = 'near'
 
+const last = arr => arr[arr.length - 1]
+
 const APPROVE = 'approve-natural-erc20-to-nep21'
 const LOCK = 'lock-natural-erc20-to-nep21'
 const SYNC = 'sync-natural-erc20-to-nep21'
@@ -146,7 +148,7 @@ async function approve (transfer) {
 }
 
 async function checkApprove (transfer) {
-  const approvalHash = transfer.approvalHashes[transfer.approvalHashes.length - 1]
+  const approvalHash = last(transfer.approvalHashes)
   const approvalReceipt = await window.web3.eth.getTransactionReceipt(
     approvalHash
   )
@@ -198,7 +200,7 @@ async function lock (transfer) {
 }
 
 async function checkLock (transfer) {
-  const lockHash = transfer.lockHashes[transfer.lockHashes.length - 1]
+  const lockHash = last(transfer.lockHashes)
   const lockReceipt = await window.web3.eth.getTransactionReceipt(
     lockHash
   )
@@ -231,7 +233,7 @@ async function checkLock (transfer) {
 }
 
 async function checkSync (transfer) {
-  const lockReceipt = transfer.lockReceipts[transfer.lockReceipts.length - 1]
+  const lockReceipt = last(transfer.lockReceipts)
   const eventEmittedAt = lockReceipt.blockNumber
   const syncedTo = await lastBlockNumber()
   const completedConfirmations = Math.max(0, syncedTo - eventEmittedAt)
@@ -256,7 +258,7 @@ async function checkSync (transfer) {
 // currently dealt with using URL params.
 async function mint (transfer) {
   console.log(transfer)
-  const lockReceipt = transfer.lockReceipts[transfer.lockReceipts.length - 1]
+  const lockReceipt = last(transfer.lockReceipts)
   const proof = await findProof(lockReceipt.transactionHash)
 
   // Calling `nearFungibleTokenFactory.deposit` causes a redirect to NEAR Wallet.

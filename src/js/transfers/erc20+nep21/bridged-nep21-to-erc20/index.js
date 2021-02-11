@@ -12,6 +12,8 @@ import { borshifyOutcomeProof } from './borshify-proof'
 export const SOURCE_NETWORK = 'near'
 export const DESTINATION_NETWORK = 'ethereum'
 
+const last = arr => arr[arr.length - 1]
+
 const WITHDRAW = 'withdraw-bridged-nep21-to-erc20'
 const AWAIT_FINALITY = 'await-finality-bridged-nep21-to-erc20'
 const SYNC = 'sync-bridged-nep21-to-erc20'
@@ -232,9 +234,7 @@ async function withdraw (transfer) {
 // Although this may not support sharding.
 // TODO: support sharding
 async function checkFinality (transfer) {
-  const withdrawReceiptBlockHeight = transfer.withdrawReceiptBlockHeights[
-    transfer.withdrawReceiptBlockHeights.length - 1
-  ]
+  const withdrawReceiptBlockHeight = last(transfer.withdrawReceiptBlockHeights)
   const latestFinalizedBlock = Number((
     await window.nearConnection.account().connection.provider.block({ finality: 'final' })
   ).header.height)
@@ -258,9 +258,7 @@ async function checkFinality (transfer) {
 //   * window.nearOnEthClient
 //   * window.nearConnection
 async function checkSync (transfer) {
-  const finalityBlockHeight = transfer.finalityBlockHeights[
-    transfer.finalityBlockHeights.length - 1
-  ]
+  const finalityBlockHeight = last(transfer.finalityBlockHeights)
   const { currentHeight } = await window.nearOnEthClient.methods.bridgeState().call()
   const nearOnEthClientBlockHeight = Number(currentHeight)
 
@@ -276,9 +274,7 @@ async function checkSync (transfer) {
     await window.nearOnEthClient.methods
       .blockHashes(nearOnEthClientBlockHeight).call()
   ))
-  const withdrawReceiptId = transfer.withdrawReceiptIds[
-    transfer.withdrawReceiptIds.length - 1
-  ]
+  const withdrawReceiptId = last(transfer.withdrawReceiptIds)
   const proof = await window.nearConnection.account().connection.provider.sendJsonRpc(
     'light_client_proof',
     {
@@ -304,14 +300,8 @@ async function checkSync (transfer) {
 //   * window.ethProver
 //   * window.ethTokenLocker
 async function unlock (transfer) {
-  const borshProof = borshifyOutcomeProof(
-    transfer.proofs[transfer.proofs.length - 1]
-  )
-  const nearOnEthClientBlockHeight = new BN(
-    transfer.nearOnEthClientBlockHeights[
-      transfer.nearOnEthClientBlockHeights.length - 1
-    ]
-  )
+  const borshProof = borshifyOutcomeProof(last(transfer.proofs))
+  const nearOnEthClientBlockHeight = new BN(last(transfer.nearOnEthClientBlockHeights))
 
   // Copied from original core rainbow-bridge repo, but
   // This variable is never used.
@@ -336,10 +326,8 @@ async function unlock (transfer) {
 }
 
 async function checkUnlock (transfer) {
-  const unlockHash = transfer.unlockHashes[transfer.unlockHashes.length - 1]
-  const unlockReceipt = await window.web3.eth.getTransactionReceipt(
-    unlockHash
-  )
+  const unlockHash = last(transfer.unlockHashes)
+  const unlockReceipt = await window.web3.eth.getTransactionReceipt(unlockHash)
 
   if (!unlockReceipt) return transfer
 
