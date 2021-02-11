@@ -49,9 +49,15 @@ export const i18n = {
       switch (transfer.completedStep) {
         case null: return 'Withdrawing from NEAR'
         case WITHDRAW: return 'Finalizing withdrawal'
-        case AWAIT_FINALITY: return `Syncing ${formatLargeNum(
-          transfer.finalityBlockHeight - transfer.nearOnEthClientBlockHeight
-        )} blocks to Ethereum`
+        case AWAIT_FINALITY: {
+          if (!transfer.nearOnEthClientBlockHeight) return 'Syncing blocks to Ethereum'
+          const finalityBlockHeight = transfer.finalityBlockHeights[
+            transfer.finalityBlockHeights.length - 1
+          ]
+          return `Syncing ${formatLargeNum(
+            finalityBlockHeight - transfer.nearOnEthClientBlockHeight
+          )} blocks to Ethereum`
+        }
         case SYNC: return `Securing, minute ${transfer.securityWindowProgress}/${transfer.securityWindow}`
         case SECURE: return 'Unlocking in Ethereum'
         case UNLOCK: return 'Transfer complete'
@@ -115,6 +121,8 @@ export async function initiate ({
 
     // attributes specific to natural-erc20-to-nep21 transfers
     finalityBlockHeights: [],
+    finalityBlockTimestamps: [],
+    nearOnEthClientBlockHeight: null, // calculated & set to a number during checkSync
     securityWindow: 4 * 60, // in minutes. TODO: seconds instead? hours? TODO: get from connector contract? prover?
     securityWindowProgress: 0,
     unlockHashes: [],
@@ -275,7 +283,6 @@ async function checkSync (transfer) {
   if (nearOnEthClientBlockHeight <= finalityBlockHeight) {
     return {
       ...transfer,
-      finalityBlockHeight,
       nearOnEthClientBlockHeight,
       status: status.IN_PROGRESS
     }
