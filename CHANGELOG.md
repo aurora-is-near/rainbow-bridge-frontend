@@ -1,3 +1,10 @@
+## [1.9.6](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.5...v1.9.6) (2021-02-11)
+
+
+### Bug Fixes
+
+* near→eth transfers: rm security window step ([888f6f5](https://github.com/near/rainbow-bridge-frontend/commit/888f6f57a338687ef8b95e2f8cd4bfde2dbff16a))
+
 ## [1.9.5](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.4...v1.9.5) (2021-02-11)
 
 
