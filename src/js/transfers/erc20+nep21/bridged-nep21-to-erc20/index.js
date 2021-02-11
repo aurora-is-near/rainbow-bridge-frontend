@@ -12,20 +12,15 @@ import { borshifyOutcomeProof } from './borshify-proof'
 export const SOURCE_NETWORK = 'near'
 export const DESTINATION_NETWORK = 'ethereum'
 
-const formatLargeNum = n =>
-  new Intl.NumberFormat(undefined).format(n)
-
 const WITHDRAW = 'withdraw-bridged-nep21-to-erc20'
 const AWAIT_FINALITY = 'await-finality-bridged-nep21-to-erc20'
 const SYNC = 'sync-bridged-nep21-to-erc20'
-const SECURE = 'secure-bridged-nep21-to-erc20'
 const UNLOCK = 'unlock-bridged-nep21-to-erc20'
 
 const steps = [
   WITHDRAW,
   AWAIT_FINALITY,
   SYNC,
-  SECURE,
   UNLOCK
 ]
 
@@ -35,7 +30,6 @@ export const i18n = {
       [WITHDRAW]: `Withdraw ${transfer.amount} ${transfer.sourceTokenName} from NEAR`,
       [AWAIT_FINALITY]: 'Await NEAR finality for withdrawal transaction',
       [SYNC]: 'Sync withdrawal transaction to Ethereum',
-      [SECURE]: `Provide ${transfer.securityWindow}-minute security window`,
       [UNLOCK]: `Unlock ${transfer.amount} ${transfer.destinationTokenName} in Ethereum`
     }),
     statusMessage: transfer => {
@@ -43,23 +37,14 @@ export const i18n = {
       if (transfer.status === status.ACTION_NEEDED) {
         switch (transfer.completedStep) {
           case null: return 'Ready to withdraw from NEAR'
-          case SECURE: return 'Ready to unlock in Ethereum'
+          case SYNC: return 'Ready to unlock in Ethereum'
         }
       }
       switch (transfer.completedStep) {
         case null: return 'Withdrawing from NEAR'
         case WITHDRAW: return 'Finalizing withdrawal'
-        case AWAIT_FINALITY: {
-          if (!transfer.nearOnEthClientBlockHeight) return 'Syncing blocks to Ethereum'
-          const finalityBlockHeight = transfer.finalityBlockHeights[
-            transfer.finalityBlockHeights.length - 1
-          ]
-          return `Syncing ${formatLargeNum(
-            finalityBlockHeight - transfer.nearOnEthClientBlockHeight
-          )} blocks to Ethereum`
-        }
-        case SYNC: return `Securing, minute ${transfer.securityWindowProgress}/${transfer.securityWindow}`
-        case SECURE: return 'Unlocking in Ethereum'
+        case AWAIT_FINALITY: return 'Syncing to Ethereum'
+        case SYNC: return 'Unlocking in Ethereum'
         case UNLOCK: return 'Transfer complete'
       }
     },
@@ -68,7 +53,7 @@ export const i18n = {
       if (transfer.status !== status.ACTION_NEEDED) return null
       switch (transfer.completedStep) {
         case null: return 'Withdraw'
-        case SECURE: return 'Unlock'
+        case SYNC: return 'Unlock'
       }
     }
   }
@@ -78,7 +63,7 @@ export const i18n = {
 export function act (transfer) {
   switch (transfer.completedStep) {
     case null: return authenticate(transfer)
-    case SECURE: return unlock(transfer)
+    case SYNC: return unlock(transfer)
     default: throw new Error(`Don't know how to act on transfer: ${JSON.stringify(transfer)}`)
   }
 }
@@ -89,8 +74,7 @@ export function checkStatus (transfer) {
     case null: return withdraw(transfer)
     case WITHDRAW: return checkFinality(transfer)
     case AWAIT_FINALITY: return checkSync(transfer)
-    case SYNC: return checkSecure(transfer)
-    case SECURE: return checkUnlock(transfer)
+    case SYNC: return checkUnlock(transfer)
   }
 }
 
@@ -310,28 +294,6 @@ async function checkSync (transfer) {
     completedStep: SYNC,
     nearOnEthClientBlockHeights: [...transfer.nearOnEthClientBlockHeights, nearOnEthClientBlockHeight],
     proofs: [...transfer.proofs, proof],
-    status: status.IN_PROGRESS
-  }
-}
-
-// A security window is provided for a watchdog service to falsify info passed to ethProver
-// This function checks if it has closed
-async function checkSecure (transfer) {
-  // TODO: check 4hr window progress
-  const securityWindowProgress = 0
-
-  if (securityWindowProgress <= transfer.securityWindow) {
-    return {
-      ...transfer,
-      securityWindowProgress,
-      status: status.IN_PROGRESS
-    }
-  }
-
-  return {
-    ...transfer,
-    completedStep: SECURE,
-    securityWindowProgress,
     status: status.ACTION_NEEDED
   }
 }
@@ -367,13 +329,14 @@ async function unlock (transfer) {
   })
 
   return {
+    ...transfer,
     status: status.IN_PROGRESS,
     unlockHashes: [...transfer.unlockHashes, unlockHash]
   }
 }
 
 async function checkUnlock (transfer) {
-  const unlockHash = transfer.lockHashes[transfer.lockHashes.length - 1]
+  const unlockHash = transfer.unlockHashes[transfer.unlockHashes.length - 1]
   const unlockReceipt = await window.web3.eth.getTransactionReceipt(
     unlockHash
   )
