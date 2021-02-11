@@ -44,13 +44,17 @@
 </head>
 <body>
   <!-- using posthtml to separate page into multiple files; see .posthtmlrc -->
-  <include src="nav.html"></include>
-  <include src="landing.html"></include>
-  <include src="transfers.html"></include>
-  <include src="new-transfer.html"></include>
-  <include src="erc20-form.html"></include>
-  <include src="erc20n-form.html"></include>
-  <include src="bridge-erc20-form.html"></include>
+  <include src="network-banner.html"></include>
+  <!-- this div allows accounts dropdown in nav.html to use absolute positioning whether or not banner is shown -->
+  <div style="display: flex; flex-direction: column; min-height: 100vh; position: relative">
+    <include src="nav.html"></include>
+    <include src="landing.html"></include>
+    <include src="transfers.html"></include>
+    <include src="new-transfer.html"></include>
+    <include src="erc20-form.html"></include>
+    <include src="erc20n-form.html"></include>
+    <include src="bridge-erc20-form.html"></include>
+  </div>
 
   <script src="./js/index.js"></script>
 </body>

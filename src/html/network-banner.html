@@ -1,0 +1,50 @@
+<aside class="banner yellow" data-behavior="ropstenBanner" style="display:none">
+  Operating on Ropsten ↔︎ NEAR Testnet
+</aside>
+<aside class="banner red" data-behavior="unsupportedNetwork" style="display:none">
+  Unsupported Ethereum Network! Please use Ropsten.
+</aside>
+
+<script>
+  async function renderBanner () {
+    if (!window.ethInitialized) return
+
+    const network = await window.web3.eth.net.getNetworkType()
+    if (network === 'ropsten') {
+      window.dom.show('ropstenBanner')
+      window.dom.hide('unsupportedNetwork')
+    } else {
+      window.dom.hide('ropstenBanner')
+      window.dom.show('unsupportedNetwork')
+    }
+  }
+  window.renderers.push(renderBanner)
+</script>
+
+<style>
+.banner {
+  color: var(--fg-bold);
+  font-size: 0.75em;
+  font-weight: 500;
+  padding: 0.5rem;
+  text-align: center;
+}
+.banner:before {
+  content: ' ';
+  display: inline-block;
+  margin-right: 0.5em;
+  background: url(img/alert-triangle.svg) no-repeat;
+  background-size: contain;
+  width: 1rem;
+  height: 1rem;
+  position: relative;
+  top: -1px;
+  vertical-align: middle;
+}
+.banner.yellow {
+  background: var(--yellow);
+}
+.banner.red {
+  background: var(--red);
+}
+</style>

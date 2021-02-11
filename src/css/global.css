@@ -16,6 +16,7 @@ html, body {
   --black: #111618;
   --gray: #79726C;
   --red: #FF585D;
+  --yellow: #E78513;
   --blue: #0072CE;
   --purple: #627EEA;
   --green: rgb(85, 188, 143);
@@ -50,9 +51,6 @@ html {
 
 body {
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6 {
