@@ -253,9 +253,11 @@ async function checkFinality (transfer) {
   ]
   const latestFinalizedBlock = Number((
     await window.nearConnection.account().connection.provider.block({ finality: 'final' })
-  ).header.height)
+  ))
 
-  if (latestFinalizedBlock <= withdrawReceiptBlockHeight) {
+  const finalizedBlockHeight = latestFinalizedBlock.header.height
+
+  if (finalizedBlockHeight <= withdrawReceiptBlockHeight) {
     return transfer
   }
 
@@ -263,7 +265,8 @@ async function checkFinality (transfer) {
     ...transfer,
     completedStep: AWAIT_FINALITY,
     status: status.IN_PROGRESS,
-    finalityBlockHeights: [...transfer.finalityBlockHeights, latestFinalizedBlock]
+    finalityBlockHeights: [...transfer.finalityBlockHeights, finalizedBlockHeight],
+    finalityBlockTimestamps: [...transfer.finalityBlockTimestamps, latestFinalizedBlock.header.timestamp]
   }
 }
 
@@ -317,7 +320,19 @@ async function checkSync (transfer) {
 // A security window is provided for a watchdog service to falsify info passed to ethProver
 // This function checks if it has closed
 async function checkSecure (transfer) {
-  // TODO: check 4hr window progress
+  // const {
+  //   currentHeight, // Height of the current confirmed block
+  //   nextTimestamp, // Timestamp (in nanoseconds) of the current unconfirmed block
+  //   nextValidAt // Timestamp (in seconds) when the current unconfirmed block will be confirmed
+  // } = await window.nearOnEthClient.methods.bridgeState().call()
+
+  // We already know that currentHeight >= transfer.finalityBlockHeight
+  // 'nextTimestamp' & 'nextValidAt' continuously updated
+  // how do we know that the relevant security window for THIS transfer has closed?
+
+  // MAYBE: find timestamp of finalityBlockHeight, add 240 minutes, count down to that?
+  // BUT: finalityBlockTimestamp is a timestamp ON NEAR, not the timestamp of when this block was synced to Ethereum.
+  // How do I know when it was synced to Ethereum?
   const securityWindowProgress = 0
 
   if (securityWindowProgress <= transfer.securityWindow) {
