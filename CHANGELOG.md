@@ -1,3 +1,10 @@
+## [1.9.5](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.4...v1.9.5) (2021-02-11)
+
+
+### Bug Fixes
+
+* show Ropsten or "bad network" banner ([030245f](https://github.com/near/rainbow-bridge-frontend/commit/030245f5e47dd63414747cf43524215130fb7cbd))
+
 ## [1.9.4](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.3...v1.9.4) (2021-02-10)
 
 
