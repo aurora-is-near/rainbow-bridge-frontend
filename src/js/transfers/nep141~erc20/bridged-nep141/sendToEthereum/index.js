@@ -8,7 +8,7 @@ import * as status from '../../../statuses'
 import { stepsFor } from '../../../i18nHelpers'
 import { track } from '../../..'
 import { borshifyOutcomeProof } from './borshify-proof'
-import { userAuthedAgainst } from '../../utils'
+import { checkNearAuth, userAuthedAgainst } from '../../utils'
 import getNep141Address from '../getAddress'
 
 export const SOURCE_NETWORK = 'near'
@@ -132,18 +132,14 @@ export async function initiate ({
 // call `requestSignIn` to add FunctionCall Access Key for this contract,
 // then once back at this app, can call `withdraw` without firing a redirect to NEAR Wallet.
 async function authenticate (transfer) {
-  if (!(await userAuthedAgainst(transfer.sourceToken))) {
-    // setTimeout to add access key for BridgeToken contract AFTER returning, so
-    // that transfer can be updated in local storage and marked as no longer
-    // failing (if needed)
-    setTimeout(
-      async function () {
-        await window.nearConnection.signOut()
-        await window.nearConnection.requestSignIn(transfer.sourceToken)
-      },
-      50
-    )
-  }
+  // setTimeout to add access key for BridgeToken contract AFTER returning, so
+  // that transfer can be updated in local storage and marked as no longer
+  // failing (if needed)
+  setTimeout(
+    () => checkNearAuth(transfer.sourceToken, { strict: true }),
+    50
+  )
+
   return {
     ...transfer,
     status: status.IN_PROGRESS
