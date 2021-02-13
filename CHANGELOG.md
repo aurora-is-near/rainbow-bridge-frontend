@@ -1,3 +1,10 @@
+## [1.9.7](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.6...v1.9.7) (2021-02-13)
+
+
+### Bug Fixes
+
+* fix reference to undefined variable ([12965ae](https://github.com/near/rainbow-bridge-frontend/commit/12965ae12ba700a743688ebf82a248a8d0aa9a01))
+
 ## [1.9.6](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.5...v1.9.6) (2021-02-11)
 
 
