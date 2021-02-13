@@ -1,4 +1,3 @@
-import { checkNearAuth } from '../utils'
 import getNep141Address from './getAddress'
 
 /**
@@ -13,8 +12,6 @@ import getNep141Address from './getAddress'
  */
 export default async function getBalance ({ erc20Address, user }) {
   const nep141Address = getNep141Address(erc20Address)
-
-  checkNearAuth(nep141Address)
 
   try {
     const balanceAsString = await window.nearConnection.account().viewFunction(

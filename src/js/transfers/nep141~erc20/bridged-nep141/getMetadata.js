@@ -34,7 +34,7 @@ export default async function getNep141Data (erc20Address, user) {
     // to match `naturalErc20.getMetadata`
     new Promise((resolve, reject) => {
       if (!user) resolve(null)
-      getBalance({ erc20Address, user }).then(resolve).catch(reject)
+      else getBalance({ erc20Address, user }).then(resolve).catch(reject)
     }),
     getName(erc20Address)
   ])
