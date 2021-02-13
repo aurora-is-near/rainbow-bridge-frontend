@@ -1,12 +1,10 @@
 import BN from 'bn.js'
 import * as naj from 'near-api-js'
-import './authEthereum'
-import './authNear'
 import * as dom from './domHelpers'
 import render from './render'
 import * as urlParams from './urlParams'
 import * as transfers from './transfers'
-import * as erc20Xnep21 from './transfers/erc20+nep21'
+import * as nep141Xerc20 from './transfers/nep141~erc20'
 import * as utils from './utils'
 
 dom.init()
@@ -14,7 +12,7 @@ dom.init()
 // Can't import modules in <script> tags in files included via PostHTML 😞
 window.BN = BN
 window.dom = dom
-window.erc20Xnep21 = erc20Xnep21
+window.nep141Xerc20 = nep141Xerc20
 window.LOOP_INTERVAL = 5500
 window.NearContract = naj.Contract
 window.parseNearAmount = naj.utils.format.parseNearAmount
@@ -26,3 +24,8 @@ window.utils = utils
 render()
 
 transfers.onChange(render)
+
+// These have side effects and may cause `render` calls which expect all
+// `window` additions above to be in place. Load last.
+require('./authEthereum')
+require('./authNear')

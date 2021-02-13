@@ -1,4 +1,4 @@
-import { Contract, keyStores, WalletConnection, Near } from 'near-api-js'
+import { keyStores, WalletConnection, Near } from 'near-api-js'
 
 import { checkStatusAll as checkTransferStatuses } from './transfers'
 import render from './render'
@@ -26,16 +26,7 @@ onClick('authNear', () => {
   window.nearConnection.requestSignIn(process.env.nearTokenFactoryAccount)
 })
 
-async function login () {
-  window.nearFungibleTokenFactory = await new Contract(
-    window.nearConnection.account(),
-    process.env.nearTokenFactoryAccount,
-    {
-      // Change methods update contract state, but cannot return data
-      changeMethods: ['deposit', 'deploy_bridge_token']
-    }
-  )
-
+function login () {
   window.nearInitialized = true
 
   render()

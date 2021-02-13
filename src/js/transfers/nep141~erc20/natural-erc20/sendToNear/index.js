@@ -1,23 +1,22 @@
 import BN from 'bn.js'
 import getRevertReason from 'eth-revert-reason'
-import { Contract as NearContract } from 'near-api-js'
-import { getErc20Name } from '../../../utils'
-import * as urlParams from '../../../urlParams'
-import { stepsFor } from '../../i18nHelpers'
-import * as status from '../../statuses'
-import { track } from '../..'
+import getName from '../getName'
+import * as urlParams from '../../../../urlParams'
+import { stepsFor } from '../../../i18nHelpers'
+import * as status from '../../../statuses'
+import { track } from '../../..'
 import findProof from './findProof'
 import { lastBlockNumber } from './ethOnNearClient'
+import getNep141Balance from '../../bridged-nep141/getBalance'
 
 export const SOURCE_NETWORK = 'ethereum'
 export const DESTINATION_NETWORK = 'near'
+export const TRANSFER_TYPE = '@near~eth/nep141~erc20/natural-erc20/sendToNear'
 
-const last = arr => arr[arr.length - 1]
-
-const APPROVE = 'approve-natural-erc20-to-nep21'
-const LOCK = 'lock-natural-erc20-to-nep21'
-const SYNC = 'sync-natural-erc20-to-nep21'
-const MINT = 'mint-natural-erc20-to-nep21'
+const APPROVE = 'approve-natural-erc20-to-nep141'
+const LOCK = 'lock-natural-erc20-to-nep141'
+const SYNC = 'sync-natural-erc20-to-nep141'
+const MINT = 'mint-natural-erc20-to-nep141'
 
 const steps = [
   APPROVE,
@@ -95,7 +94,7 @@ export async function initiate ({
   recipient
 }) {
   // TODO: move to core 'decorate'; get both from contracts
-  const sourceTokenName = await getErc20Name(erc20Address)
+  const sourceTokenName = await getName(erc20Address)
   const destinationTokenName = sourceTokenName + 'ⁿ'
 
   // various attributes stored as arrays, to keep history of retries
@@ -110,9 +109,9 @@ export async function initiate ({
     sourceToken: erc20Address,
     sourceTokenName,
     status: status.ACTION_NEEDED,
-    type: '@eth+near/erc20+nep21/natural-erc20-to-nep21',
+    type: TRANSFER_TYPE,
 
-    // attributes specific to natural-erc20-to-nep21 transfers
+    // attributes specific to natural-erc20-to-nep141 transfers
     approvalHashes: [],
     approvalReceipts: [],
     completedConfirmations: 0,
@@ -254,7 +253,7 @@ async function checkSync (transfer) {
   }
 }
 
-// Mint NEP21 tokens to transfer.recipient. Causes a redirect to NEAR Wallet,
+// Mint NEP141 tokens to transfer.recipient. Causes a redirect to NEAR Wallet,
 // currently dealt with using URL params.
 async function mint (transfer) {
   console.log(transfer)
@@ -272,7 +271,10 @@ async function mint (transfer) {
   // able to correctly identify the transfer and see if the transaction
   // succeeded.
   setTimeout(async () => {
-    const balanceBefore = await getNep21Balance(transfer)
+    const balanceBefore = await getNep141Balance({
+      erc20Address: transfer.sourceToken,
+      user: transfer.recipient
+    })
     urlParams.set({ minting: transfer.id, balanceBefore })
     window.nearFungibleTokenFactory.deposit(
       proof,
@@ -301,7 +303,10 @@ export async function checkMint (transfer) {
   }
 
   const balanceBefore = Number(urlParams.get('balanceBefore'))
-  const balanceAfter = await getNep21Balance(transfer)
+  const balanceAfter = await getNep141Balance({
+    erc20Address: transfer.sourceToken,
+    user: transfer.recipient
+  })
 
   urlParams.clear('minting', 'balanceBefore')
 
@@ -326,19 +331,4 @@ export async function checkMint (transfer) {
   }
 }
 
-async function getNep21Balance (transfer) {
-  const nep21Address =
-    transfer.sourceToken.replace('0x', '').toLowerCase() +
-    '.' +
-    process.env.nearTokenFactoryAccount
-
-  const nep21 = await new NearContract(
-    window.nearConnection.account(),
-    nep21Address,
-    { viewMethods: ['get_balance'] }
-  )
-
-  return nep21.get_balance({ owner_id: transfer.recipient })
-    .then(raw => Number(raw))
-    .catch(() => null)
-}
+const last = arr => arr[arr.length - 1]

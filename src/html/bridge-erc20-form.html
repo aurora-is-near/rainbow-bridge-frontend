@@ -32,22 +32,7 @@
   window.addEventListener('load', function handleSelectErc20Events () {
     window.dom.find('bridgeErc20Form').onsubmit = function bridgeIt (e) {
       e.preventDefault()
-      window.nearFungibleTokenFactory.deploy_bridge_token(
-        { address: window.urlParams.get('erc20').replace('0x', '') },
-
-        // Default gas limit used by near-api-js is 3e13, but this tx fails with
-        // that number. Doubling it works. Maybe slightly less would also work,
-        // but at min gas price of 100M yN, this will only amount to 0.006 $NEAR,
-        // which is already negligible compared to the deposit.
-        new BN(3e13).mul(new BN(2)),
-
-        // Attach a deposit to compensate the BridgeTokenFactory contract for the
-        // storage costs associated with deploying the new BridgeToken contract.
-        // 30N for the base fee, plus .02 for for storing the name of the contract
-        // Might not need full .02, but need more than .01, error message did not
-        // include needed amount at time of writing.
-        new BN(window.parseNearAmount('30.02'))
-      )
+      window.nep141Xerc20.bridgedNep141.deploy(window.urlParams.get('erc20'))
     }
 
     window.dom.find('bridgeErc20Cancel').onclick = () => {
@@ -77,7 +62,7 @@
       return
     }
 
-    if (token.nep21Balance !== null) {
+    if (token.nep141.balance !== null) {
       window.dom.hide('bridgeErc20Form')
       return
     }

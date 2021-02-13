@@ -39,13 +39,13 @@
       </header>
       <p class="token-details" data-behavior="erc20Info">
         <span>Receive as</span>
-        <strong data-behavior="nep21Name"></strong>
+        <strong data-behavior="nep141Name"></strong>
       </p>
       <p class="token-details" data-behavior="erc20Info">
         <span>Current balance</span>
         <strong>
-          <span data-behavior="nep21Balance"></span>
-          <span data-behavior="nep21Name"></span>
+          <span data-behavior="nep141Balance"></span>
+          <span data-behavior="nep141Name"></span>
         </strong>
       </p>
     </div>
@@ -126,7 +126,7 @@
       disableForm()
 
       try {
-        await window.erc20Xnep21.naturalErc20ToNep21({
+        await window.nep141Xerc20.naturalErc20.sendToNear({
           // TODO fix for non-integers
           amount: Number(amount.value),
           erc20Address: window.dom.find('erc20Address').value,
@@ -236,7 +236,7 @@
       return
     }
 
-    if (token.nep21Balance === null) {
+    if (token.nep141.balance === null) {
       window.dom.hide('sendNaturalErc20')
       return
     }
@@ -244,8 +244,8 @@
     window.dom.show('sendNaturalErc20')
 
     window.dom.fill('erc20Balance').with(window.utils.formatLargeNum(token.balance))
-    window.dom.fill('nep21Name').with(token.nep21Name)
-    window.dom.fill('nep21Balance').with(window.utils.formatLargeNum(token.nep21Balance))
+    window.dom.fill('nep141Name').with(token.nep141.name)
+    window.dom.fill('nep141Balance').with(window.utils.formatLargeNum(token.nep141.balance))
 
     if (token.balance) amount.disabled = false
     else amount.disabled = true

@@ -1,5 +1,5 @@
-<div data-behavior="sendBridgedNep21" style="display:none">
-  <form data-behavior="sendBridgedNep21Form" class="transfer-form">
+<div data-behavior="sendBridgedNep141" style="display:none">
+  <form data-behavior="sendBridgedNep141Form" class="transfer-form">
     <header>
       <h2>New Transfer</h2>
       <p>Select a token and enter an amount to transfer.</p>
@@ -99,7 +99,7 @@
 
 <script>
 
-  window.addEventListener('load', function sendBridgedNep21OnLoad () {
+  window.addEventListener('load', function sendBridgedNep141OnLoad () {
     const amount = window.dom.find('erc20nAmount')
     const select = window.dom.find('erc20nSelectButton')
     const submit = window.dom.find('erc20nSubmit')
@@ -123,17 +123,15 @@
       else submit.disabled = true
     }
 
-    window.dom.find('sendBridgedNep21Form').onsubmit = async function transferErc20n (e) {
+    window.dom.find('sendBridgedNep141Form').onsubmit = async function transferErc20n (e) {
       e.preventDefault()
 
       disableForm()
 
       try {
-        await window.erc20Xnep21.bridgedNep21ToErc20({
+        await window.nep141Xerc20.bridgedNep141.sendToEthereum({
           amount: Number(amount.value),
-          nep21Address: window.utils.getBridgedNep21Address(
-            window.urlParams.get('erc20n')
-          ),
+          erc20Address: window.urlParams.get('erc20n'),
           sender: window.nearUserAddress,
           recipient: window.ethUserAddress
         })
@@ -180,11 +178,11 @@
             value="${token.address}"
           />
           <span>
-            <img src="${token.nep21Icon || 'near.svg'}" alt="" />
-            ${token.nep21Name}
+            <img src="${token.nep141.icon || 'near.svg'}" alt="" />
+            ${token.nep141.name}
           </span>
           <span>
-            ${window.utils.formatLargeNum(token.nep21Balance)}
+            ${window.utils.formatLargeNum(token.nep141.balance)}
           </span>
         </label>
       `)
@@ -201,7 +199,7 @@
     else erc20nAddress = window.urlParams.get('erc20n')
 
     if (window.urlParams.get('erc20n') === null) {
-      window.dom.hide('sendBridgedNep21')
+      window.dom.hide('sendBridgedNep141')
       window.dom.hide('erc20nAddressError')
       window.dom.find('erc20nFreeForm').classList.remove('error')
       return
@@ -214,7 +212,7 @@
       window.dom.find('erc20nSelectButton').classList.remove('selected')
       window.dom.fill('erc20nSelectButton').with('Select token')
       window.dom.hide('erc20nInfo')
-      window.dom.show('sendBridgedNep21')
+      window.dom.show('sendBridgedNep141')
       return
     }
 
@@ -222,7 +220,7 @@
     try {
       if (!token) token = await window.utils.getErc20Data(erc20nAddress)
       window.dom.find('erc20nSelectButton').classList.add('selected')
-      window.dom.fill('erc20nSelectButton').with(token.nep21Name)
+      window.dom.fill('erc20nSelectButton').with(token.nep141.name)
       window.dom.find('erc20nFreeForm').classList.remove('error')
       window.dom.hide('erc20nAddressError')
       window.dom.fill('erc20Name').with(token.name)
@@ -234,28 +232,28 @@
       window.dom.find('erc20nFreeForm').classList.add('error')
       window.dom.fill('erc20nAddressError').with(e.message)
       window.dom.show('erc20nAddressError')
-      window.dom.show('sendBridgedNep21')
+      window.dom.show('sendBridgedNep141')
       return
     }
 
-    if (token.nep21Balance === null) {
-      window.dom.hide('sendBridgedNep21')
+    if (token.nep141.balance === null) {
+      window.dom.hide('sendBridgedNep141')
       return
     }
 
-    window.dom.fill('erc20nName').with(token.nep21Name)
+    window.dom.fill('erc20nName').with(token.nep141.name)
     window.dom.fill('erc20nBalance').with(
-      window.utils.formatLargeNum(token.nep21Balance)
+      window.utils.formatLargeNum(token.nep141.balance)
     )
     window.dom.fill('erc20Balance').with(
       window.utils.formatLargeNum(token.balance)
     )
 
-    window.dom.show('sendBridgedNep21')
-    if (token.nep21Balance) amount.disabled = false
+    window.dom.show('sendBridgedNep141')
+    if (token.nep141.balance) amount.disabled = false
     else amount.disabled = true
 
-    amount.max = token.nep21Balance
+    amount.max = token.nep141.balance
     window.dom.show('erc20nInfo', 'flex')
     amount.focus()
   }

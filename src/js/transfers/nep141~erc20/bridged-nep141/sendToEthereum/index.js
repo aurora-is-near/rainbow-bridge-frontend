@@ -3,21 +3,22 @@ import bs58 from 'bs58'
 import getRevertReason from 'eth-revert-reason'
 import { toBuffer } from 'eth-util-lite'
 import { parseRpcError } from 'near-api-js/lib/utils/rpc_errors'
-import { getErc20Name } from '../../../utils'
-import * as status from '../../statuses'
-import { stepsFor } from '../../i18nHelpers'
-import { track } from '../..'
+import getErc20Name from '../../natural-erc20/getName'
+import * as status from '../../../statuses'
+import { stepsFor } from '../../../i18nHelpers'
+import { track } from '../../..'
 import { borshifyOutcomeProof } from './borshify-proof'
+import { userAuthedAgainst } from '../../utils'
+import getNep141Address from '../getAddress'
 
 export const SOURCE_NETWORK = 'near'
 export const DESTINATION_NETWORK = 'ethereum'
+export const TRANSFER_TYPE = '@near~eth/nep141~erc20/bridged-nep141/sendToEthereum'
 
-const last = arr => arr[arr.length - 1]
-
-const WITHDRAW = 'withdraw-bridged-nep21-to-erc20'
-const AWAIT_FINALITY = 'await-finality-bridged-nep21-to-erc20'
-const SYNC = 'sync-bridged-nep21-to-erc20'
-const UNLOCK = 'unlock-bridged-nep21-to-erc20'
+const WITHDRAW = 'withdraw-bridged-nep141-to-erc20'
+const AWAIT_FINALITY = 'await-finality-bridged-nep141-to-erc20'
+const SYNC = 'sync-bridged-nep141-to-erc20'
+const UNLOCK = 'unlock-bridged-nep141-to-erc20'
 
 const steps = [
   WITHDRAW,
@@ -81,15 +82,15 @@ export function checkStatus (transfer) {
 }
 
 export async function initiate ({
-  nep21Address,
+  erc20Address,
   amount,
   sender,
   recipient
 }) {
   // TODO: move to core 'decorate'; get both from contracts
-  const [erc20HexAddr] = nep21Address.split('.')
-  const destinationTokenName = await getErc20Name('0x' + erc20HexAddr)
+  const destinationTokenName = await getErc20Name(erc20Address)
   const sourceTokenName = destinationTokenName + 'ⁿ'
+  const sourceToken = getNep141Address(erc20Address)
 
   // various attributes stored as arrays, to keep history of retries
   const transfer = {
@@ -100,12 +101,12 @@ export async function initiate ({
     errors: [],
     recipient,
     sender,
-    sourceToken: nep21Address,
+    sourceToken,
     sourceTokenName,
     status: status.IN_PROGRESS,
-    type: '@eth+near/erc20+nep21/bridged-nep21-to-erc20',
+    type: TRANSFER_TYPE,
 
-    // attributes specific to natural-erc20-to-nep21 transfers
+    // attributes specific to bridged-nep141-to-erc20 transfers
     finalityBlockHeights: [],
     finalityBlockTimestamps: [],
     nearOnEthClientBlockHeight: null, // calculated & set to a number during checkSync
@@ -127,17 +128,11 @@ export async function initiate ({
   authenticate(transfer)
 }
 
-async function userAuthedAgainstTransferContract (transfer) {
-  const { accessKey } = await window.nearConnection.account().findAccessKey()
-  const authedAgainst = accessKey && accessKey.permission.FunctionCall.receiver_id
-  return authedAgainst === transfer.sourceToken
-}
-
 // current BridgeToken contract does not require deposit on `withdraw` function
 // call `requestSignIn` to add FunctionCall Access Key for this contract,
 // then once back at this app, can call `withdraw` without firing a redirect to NEAR Wallet.
 async function authenticate (transfer) {
-  if (!(await userAuthedAgainstTransferContract(transfer))) {
+  if (!(await userAuthedAgainst(transfer.sourceToken))) {
     // setTimeout to add access key for BridgeToken contract AFTER returning, so
     // that transfer can be updated in local storage and marked as no longer
     // failing (if needed)
@@ -157,7 +152,7 @@ async function authenticate (transfer) {
 
 async function withdraw (transfer) {
   // `authenticate` hasn't triggered redirect yet
-  if (!(await userAuthedAgainstTransferContract(transfer))) {
+  if (!(await userAuthedAgainst(transfer.sourceToken))) {
     return transfer
   }
   let withdrawTx
@@ -355,3 +350,5 @@ async function checkUnlock (transfer) {
     unlockReceipts: [...transfer.unlockReceipts, unlockReceipt]
   }
 }
+
+const last = arr => arr[arr.length - 1]

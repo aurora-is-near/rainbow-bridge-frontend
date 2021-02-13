@@ -1,6 +1,6 @@
 // TODO find way to make getTransferType work without importing each of these
-import './erc20+nep21/bridged-nep21-to-erc20'
-import './erc20+nep21/natural-erc20-to-nep21'
+import './nep141~erc20/bridged-nep141/sendToEthereum'
+import './nep141~erc20/natural-erc20/sendToNear'
 import * as storage from './storage'
 import * as status from './statuses'
 
@@ -11,11 +11,11 @@ function getTransferType (transfer) {
     return require(transfer.type)
   } catch (depLoadError) {
     try {
-      return require(`./${transfer.type.split('/').slice(-2).join('/')}`)
+      return require(`./${transfer.type.split('/').slice(-3).join('/')}`)
     } catch (localLoadError) {
       console.error(depLoadError)
       console.error(localLoadError)
-      throw new Error(`Can't determine type for transfer: ${JSON.stringify(transfer)}`)
+      throw new Error(`Can't find library for transfer with type=${transfer.type}`)
     }
   }
 }

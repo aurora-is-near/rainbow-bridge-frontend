@@ -1,5 +1,5 @@
-`@eth~near/core` – the Rainbow Bridge client library 🌈🌉
-====================================================
+`@near~eth/client` – the Rainbow Bridge client library 🌈🌉
+======================================================
 
 Do you want to allow your users to send assets between [Ethereum] & [NEAR] over
 the [Rainbow Bridge]?
@@ -27,18 +27,18 @@ Add it to your browser app
 ==========================
 
 Let's say you want to allow users to send ERC20 tokens from Ethereum to NEAR,
-where they'll become NEP21 tokens.
+where they'll become NEP141 tokens.
 
 Step 1: Add Dependencies
 ------------------------
 
 You'll need to add two dependencies to your app:
 
-    npm install --save @eth~near/core @eth~near/erc20~nep21
+    npm install --save @near~eth/client @near~eth/nep141~erc20
 
 Alternatively, if using yarn:
 
-    yarn add @eth~near/core @eth~near/erc20~nep21
+    yarn add @near~eth/client @near~eth/nep141~erc20
 
 Step 2: Initiate a transfer
 ---------------------------
@@ -57,12 +57,12 @@ Let's say you have a form.
 Here's the JavaScript you'll want to make this work:
 
 ```js
-import { naturalErc20ToNep21 } from '@eth~near/erc20~nep21'
+import { naturalErc20 } from '@near~eth/nep141~erc20'
 
 document.querySelector('form').onsubmit = e => {
   e.preventDefault()
   const { erc20Address, amount, sender, recipient } = e.target.elements
-  naturalErc20ToNep21({
+  naturalErc20.sendToNear({
     erc20Address: erc20Address.value,
     amount: amount.value,
     sender: sender.value,
@@ -71,23 +71,23 @@ document.querySelector('form').onsubmit = e => {
 }
 ```
 
-What is `@eth~near/erc20~nep21`?
+What is `@near~eth/nep141~erc20`?
 
 The Rainbow Bridge between Ethereum and NEAR has [many pieces][Rainbow Bridge].
 One piece is **Connector** contracts. The connector code for converting ERC20
-tokens in Ethereum to NEP21 tokens in NEAR lives at
+tokens in Ethereum to NEP141 tokens in NEAR lives at
 [github.com/near/rainbow-token-connector][Connector].
 
 The code for using a given connector from an app has its own library. The one
-for the connector above is [`@eth~near/erc20~nep21`].
+for the connector above is [`@near~eth/nep141~erc20`].
 
 Anyone can make connector contracts, and anyone can make client libraries for
-these contracts. If they follow the format of `@eth~near/erc20~nep21`, these
+these contracts. If they follow the format of `@near~eth/nep141~erc20`, these
 client libraries will work automatically with the core Rainbow Bridge transfer
-library at `@eth~near/core`.
+library at `@near~eth/client`.
 
-Generally, each connector client library, like `@eth~near/erc20~nep21`, will
-export four main functions, which can be used to:
+Generally, each connector client library, like `@near~eth/nep141~erc20`, will
+export four main interfaces, which can be used to:
 
 1. Go from a "natural" Ethereum token to a "bridged" NEAR equivalent
 2. Go from a "bridged" NEAR token, meaning a token that started its life in
@@ -95,20 +95,20 @@ export four main functions, which can be used to:
 3. Go from a natural NEAR token to a bridged Ethereum equivalent
 4. Go from a bridged Ethereum token back to NEAR
 
-For `@eth~near/erc20~nep21`, these main exports are:
+For `@near~eth/nep141~erc20`, these main exports are:
 
-1. `naturalErc20ToNep21` – example: go from DAI (a popular ERC20 token) to DAIⁿ
-2. `bridgedNep21ToErc20` – example: convert DAIⁿ back to DAI
-3. `naturalNep21ToErc20` – example: go from a natural NEAR token, such as BNNA
+1. `naturalErc20` – example: go from DAI (a popular ERC20 token) to DAIⁿ
+2. `bridgedNep141` – example: convert DAIⁿ back to DAI
+3. `naturalNep141` – example: go from a natural NEAR token, such as BNNA
    Tokens in berryclub.io, to BNNAᵉ in Ethereum
-4. `bridgedErc20ToNep21` – example: convert BNNAᵉ back to BNNA
+4. `bridgedErc20` – example: convert BNNAᵉ back to BNNA
 
 
 Step 3: List in-progress transfers
 ----------------------------------
 
 For the rest of the lifetime of the transfer you just initiated, you will use
-exports from `@eth~near/core`, rather than the connector-specific library.
+exports from `@near~eth/client`, rather than the connector-specific library.
 
 Let's say you want to list in-progress transfers in this `ol`:
 
@@ -119,7 +119,7 @@ Let's say you want to list in-progress transfers in this `ol`:
 Here's code to render the list of transfers:
 
 ```js
-import { get, onChange } from '@eth~near/core'
+import { get, onChange } from '@near~eth/client'
 
 function renderTransfers () {
   const transfers = get({ filter: { status: 'in-progress' } })
@@ -142,7 +142,7 @@ And here's what `renderTransfer` might look like, using vanilla JS (translation
 to React is straightforward):
 
 ```js
-import { act, decorate } from '@eth~near/core'
+import { act, decorate } from '@near~eth/client'
 
 function renderTransfer (transfer) {
   // "decorate" transfer with realtime info & other data that would bloat localStorage
@@ -181,14 +181,14 @@ connector-specific behaviors. Here's some [docs about decorate][decorate], and
 attributes for [two][initiate-natural] [kinds][initiate-bridged] of raw
 transfers, prior to being decorated.
 
-  [act]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f840845217371bebd253cc64abd1/src/js/transfers/index.js#L132-L140
-  [act2]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f840845217371bebd253cc64abd1/src/js/transfers/erc20%2Bnep21/natural-erc20-to-nep21/index.js#L62-L69
-  [act3]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f840845217371bebd253cc64abd1/src/js/transfers/erc20%2Bnep21/bridged-nep21-to-erc20/index.js#L67-L73
-  [decorate]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f840845217371bebd253cc64abd1/src/js/transfers/index.js#L46-L68
-  [decorate2]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f840845217371bebd253cc64abd1/src/js/transfers/erc20%2Bnep21/natural-erc20-to-nep21/index.js#L19-L59
-  [decorate3]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f840845217371bebd253cc64abd1/src/js/transfers/erc20%2Bnep21/bridged-nep21-to-erc20/index.js#L21-L64
-  [initiate-natural]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f840845217371bebd253cc64abd1/src/js/transfers/erc20%2Bnep21/natural-erc20-to-nep21/index.js#L97-L117
-  [initiate-bridged]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f840845217371bebd253cc64abd1/src/js/transfers/erc20%2Bnep21/bridged-nep21-to-erc20/index.js#L98-L121
+  [act]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f8408451417371bebd253cc64abd1/src/js/transfers/index.js#L132-L140
+  [act2]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f8408451417371bebd253cc64abd1/src/js/transfers/erc20%2Bnep141/natural-erc20-to-nep141/index.js#L62-L69
+  [act3]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f8408451417371bebd253cc64abd1/src/js/transfers/erc20%2Bnep141/bridged-nep141-to-erc20/index.js#L67-L73
+  [decorate]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f8408451417371bebd253cc64abd1/src/js/transfers/index.js#L46-L68
+  [decorate2]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f8408451417371bebd253cc64abd1/src/js/transfers/erc20%2Bnep141/natural-erc20-to-nep141/index.js#L19-L59
+  [decorate3]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f8408451417371bebd253cc64abd1/src/js/transfers/erc20%2Bnep141/bridged-nep141-to-erc20/index.js#L141-L64
+  [initiate-natural]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f8408451417371bebd253cc64abd1/src/js/transfers/erc20%2Bnep141/natural-erc20-to-nep141/index.js#L97-L117
+  [initiate-bridged]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f8408451417371bebd253cc64abd1/src/js/transfers/erc20%2Bnep141/bridged-nep141-to-erc20/index.js#L98-L1141
 
 
 Step 4: check & update status of in-progress transfers
@@ -199,7 +199,7 @@ Your app will need to prompt users to sign in with both Ethereum
 authorization process completes for both chains, you need this:
 
 ```js
-import { checkStatusAll } from '@eth~near/core'
+import { checkStatusAll } from '@near~eth/client'
 
 checkStatusAll({ loop: 15000 })
 ```
@@ -222,8 +222,8 @@ see if transactions have been mined, synced, or finalized, and update transfers
 in localStorage accordingly. When transfers are updated, the `onChange`
 function in Step 3 will trigger a UI update.
 
-  [authEthereum]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f840845217371bebd253cc64abd1/src/js/authEthereum.js
-  [authNear]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f840845217371bebd253cc64abd1/src/js/authNear.js
+  [authEthereum]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f8408451417371bebd253cc64abd1/src/js/authEthereum.js
+  [authNear]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f8408451417371bebd253cc64abd1/src/js/authNear.js
 
 
 Step 5: there is no step 5!
@@ -235,13 +235,13 @@ just four steps. 🌈🌉🎉
 To make it more beautiful, check out [the API docs](#TODO🙃) and [example
 code][example] (implemented in vanilla/no-framework JavaScript).
 
-  [example]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f840845217371bebd253cc64abd1/src/html/transfers.html#L339-L388
+  [example]: https://github.com/near/rainbow-bridge-frontend/blob/bfcd96178316f8408451417371bebd253cc64abd1/src/html/transfers.html#L339-L388
 
 
 Author a custom connector library
 =================================
 
-1. Copy the code in the [`@eth~near/erc20~nep21`] library
+1. Copy the code in the [`@near~eth/nep141~erc20`] library
 2. Adjust for your needs
 
-  [`@eth~near/erc20~nep21`]: https://github.com/near/rainbow-bridge-frontend/tree/526ed49248974e38b438d92c12ede1b6305eb869/src/js/transfers/erc20%2Bnep21
+  [`@near~eth/nep141~erc20`]: https://github.com/near/rainbow-bridge-frontend/tree/526ed49248974e38b438d92c12ede1b6305eb869/src/js/transfers/erc20%2Bnep141

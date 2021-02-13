@@ -11,13 +11,13 @@ export default async function render () {
   fill('nearClientAccount').with(process.env.nearClientAccount)
 
   if (window.ethUserAddress) {
-    window.dom.fill('ethUser').with({
+    fill('ethUser').with({
       innerHTML: window.ethUserAddress,
       title: window.ethUserAddress
     })
   }
   if (window.nearUserAddress) {
-    window.dom.fill('nearUser').with({
+    fill('nearUser').with({
       innerHTML: window.nearUserAddress,
       title: window.nearUserAddress
     })

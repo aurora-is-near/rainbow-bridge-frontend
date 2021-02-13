@@ -28,7 +28,7 @@ Above, we see someone sending tokens from their Ethereum wallet to their NEAR ac
 3. TokenLocker contract emits `Locked` event
 4. This app waits for enough blocks to be mined on top of the one where this `Locked` event was emitted to feel confident that the transaction won't be reverted. This number could change based on the security needs of given Connector contracts.
 5. In the GIF above, it waits 25 blocks. These blocks need not only be mined in Ethereum, but also need to land in the EthOnNear Client contract. In the code, you'll see the app check progress by making calls to such a Client contract.
-6. This app makes a call to the `MintableFungibleToken` contract on NEAR to mint [NEP21] fungible tokens on NEAR. Since NEAR contracts charge the contract owner for [storage], this contract charges the user a small transaction fee, which is why you see a confirmation message on the NEAR side.
+6. This app makes a call to the `MintableFungibleToken` contract on NEAR to mint [NEP141] fungible tokens on NEAR. Since NEAR contracts charge the contract owner for [storage], this contract charges the user a small transaction fee, which is why you see a confirmation message on the NEAR side.
 7. The tokens have appeared in the user's NEAR wallet, and the app updates accordingly.
 
 Here's a schematic representation, where "Transfer script" is this app's JavaScript:
@@ -142,7 +142,7 @@ If your change should show up in release notes as a feature, use `feat:`. If it 
 
   [ERC20]: https://eips.ethereum.org/EIPS/eip-20
   [Rainbow Bridge]: https://github.com/near/rainbow-bridge
-  [NEP21]: https://github.com/nearprotocol/NEPs/blob/master/specs/Standards/Tokens/FungibleToken.md
+  [NEP141]: https://github.com/near/NEPs/issues/141
   [NEAR]: https://near.org/
   [Ethereum Rinkeby]: https://support.airswap.io/en/articles/2831385-what-is-rinkeby
   [NEAR Testnet]: https://docs.near.org/docs/roles/developer/networks#testnet
