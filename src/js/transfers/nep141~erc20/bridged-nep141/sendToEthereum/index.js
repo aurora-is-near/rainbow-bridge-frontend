@@ -9,7 +9,7 @@ import * as status from '../../../statuses'
 import { stepsFor } from '../../../i18nHelpers'
 import { track } from '../../..'
 import { borshifyOutcomeProof } from './borshify-proof'
-import { checkNearAuth, userAuthedAgainst } from '../../utils'
+import { getNearAccount, nearAuthedAgainst } from '../../../utils'
 import getNep141Address from '../getAddress'
 
 export const SOURCE_NETWORK = 'near'
@@ -137,7 +137,10 @@ async function authenticate (transfer) {
   // that transfer can be updated in local storage and marked as no longer
   // failing (if needed)
   setTimeout(
-    () => checkNearAuth(transfer.sourceToken, { strict: true }),
+    () => getNearAccount({
+      authAgainst: transfer.sourceToken,
+      strict: true
+    }),
     50
   )
 
@@ -149,12 +152,15 @@ async function authenticate (transfer) {
 
 async function withdraw (transfer) {
   // `authenticate` hasn't triggered redirect yet
-  if (!(await userAuthedAgainst(transfer.sourceToken))) {
+  if (!(await nearAuthedAgainst(transfer.sourceToken))) {
     return transfer
   }
+
+  const nearAccount = await getNearAccount()
+
   let withdrawTx
   try {
-    withdrawTx = await window.nearConnection.account().functionCall(
+    withdrawTx = await nearAccount.functionCall(
       transfer.sourceToken,
       'withdraw',
       {
@@ -208,7 +214,7 @@ async function withdraw (transfer) {
   const txReceiptBlockHash = withdrawTx.receipts_outcome
     .find(r => r.id === successReceiptId).block_hash
 
-  const receiptBlock = await window.nearConnection.account().connection.provider.block({
+  const receiptBlock = await nearAccount.connection.provider.block({
     blockId: txReceiptBlockHash
   })
 
@@ -226,9 +232,11 @@ async function withdraw (transfer) {
 // Although this may not support sharding.
 // TODO: support sharding
 async function checkFinality (transfer) {
+  const nearAccount = await getNearAccount()
+
   const withdrawReceiptBlockHeight = last(transfer.withdrawReceiptBlockHeights)
   const latestFinalizedBlock = Number((
-    await window.nearConnection.account().connection.provider.block({ finality: 'final' })
+    await nearAccount.connection.provider.block({ finality: 'final' })
   ).header.height)
 
   if (latestFinalizedBlock <= withdrawReceiptBlockHeight) {
@@ -248,6 +256,7 @@ async function checkFinality (transfer) {
 // on the Near2EthClient.
 async function checkSync (transfer) {
   const web3 = new Web3(window.ethProvider)
+  const nearAccount = await getNearAccount()
 
   const nearOnEthClient = new web3.eth.Contract(
     JSON.parse(process.env.ethNearOnEthClientAbiText),
@@ -271,7 +280,7 @@ async function checkSync (transfer) {
       .blockHashes(nearOnEthClientBlockHeight).call()
   ))
   const withdrawReceiptId = last(transfer.withdrawReceiptIds)
-  const proof = await window.nearConnection.account().connection.provider.sendJsonRpc(
+  const proof = await nearAccount.connection.provider.sendJsonRpc(
     'light_client_proof',
     {
       type: 'receipt',

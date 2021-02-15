@@ -9,7 +9,7 @@ import { track } from '../../..'
 import findProof from './findProof'
 import { lastBlockNumber } from './ethOnNearClient'
 import getNep141Balance from '../../bridged-nep141/getBalance'
-import { checkNearAuth } from '../../utils'
+import { getNearAccount } from '../../../utils'
 
 export const SOURCE_NETWORK = 'ethereum'
 export const DESTINATION_NETWORK = 'near'
@@ -272,7 +272,9 @@ async function checkSync (transfer) {
 // Mint NEP141 tokens to transfer.recipient. Causes a redirect to NEAR Wallet,
 // currently dealt with using URL params.
 async function mint (transfer) {
-  await checkNearAuth(process.env.nearTokenFactoryAccount)
+  const nearAccount = await getNearAccount({
+    authAgainst: process.env.nearTokenFactoryAccount
+  })
   const lockReceipt = last(transfer.lockReceipts)
   const proof = await findProof(lockReceipt.transactionHash)
 
@@ -292,7 +294,7 @@ async function mint (transfer) {
       user: transfer.recipient
     })
     urlParams.set({ minting: transfer.id, balanceBefore })
-    await window.nearConnection.account().functionCall(
+    await nearAccount.functionCall(
       process.env.nearTokenFactoryAccount,
       'deposit',
       proof,

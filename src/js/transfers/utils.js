@@ -5,24 +5,30 @@
  * If provided `{ strict: true }`, will ensure that user is signed in against
  * given contract address, and not just any contract address.
  *
- * @param contract The address of a NEAR contract
- * @returns void Throws an error, if no `window.nearConnection` set.
- *   Redirects to NEAR Wallet for authentication, if user not signed in.
- *   Otherwise, no action is taken.
+ * @param params Object with named arguments
+ * @param params.authAgainst string (optional) The address of a NEAR contract to authenticate against. If provided, will trigger a page redirect to NEAR Wallet if the user is not authenticated against ANY contract, whether this contract or not.
+ * @param params.strict boolean (optional) Will trigger a page redirect to NEAR Wallet if the user is not authenticated against the specific contract provided in `authAgainst`.
+ *
+ * @returns a NEAR account object, when it doesn't trigger a page redirect.
  */
-export async function checkNearAuth (contract, { strict = false } = {}) {
+export async function getNearAccount ({ authAgainst, strict = false } = {}) {
   if (!window.nearConnection) {
     throw new Error(
       'Must initialize `window.nearConnection = new WalletConnection(near)` prior to calling anything from nep141~erc20 library'
     )
   }
+
+  if (!authAgainst) return window.nearConnection.account()
+
   if (!window.nearConnection.getAccountId()) {
-    await window.nearConnection.requestSignIn(contract)
+    await window.nearConnection.requestSignIn(authAgainst)
   }
-  if (strict && !userAuthedAgainst(contract)) {
+  if (strict && !nearAuthedAgainst(authAgainst)) {
     await window.nearConnection.signOut()
-    await window.nearConnection.requestSignIn(contract)
+    await window.nearConnection.requestSignIn(authAgainst)
   }
+
+  return window.nearConnection.account()
 }
 
 /**
@@ -35,10 +41,10 @@ export async function checkNearAuth (contract, { strict = false } = {}) {
  * @param contract The address of a NEAR contract
  * @returns boolean True if the user is authenticated against this contract.
  */
-export async function userAuthedAgainst (contract) {
+export async function nearAuthedAgainst (contract) {
   if (!contract) {
     throw new Error(
-      `userAuthedAgainst expects a valid NEAR contract address.
+      `nearAuthedAgainst expects a valid NEAR contract address.
       Got: \`${contract}\``
     )
   }

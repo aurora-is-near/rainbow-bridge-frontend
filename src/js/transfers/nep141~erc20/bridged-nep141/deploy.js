@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { checkNearAuth } from '../utils'
+import { getNearAccount } from '../../utils'
 
 /**
  * Deploy a BridgeToken contract for the given erc20Address.
@@ -33,10 +33,10 @@ import { checkNearAuth } from '../utils'
  * NEAR Wallet for confirmation.
  */
 export default async function deployBridgeToken (erc20Address) {
-  await checkNearAuth(process.env.nearTokenFactoryAccount)
+  const nearAccount = await getNearAccount({ authAgainst: process.env.nearTokenFactoryAccount })
 
   // causes redirect to NEAR Wallet
-  await window.nearConnection.account().functionCall(
+  await nearAccount.functionCall(
     process.env.nearTokenFactoryAccount,
     'deploy_bridge_token',
     { address: erc20Address.replace('0x', '') },

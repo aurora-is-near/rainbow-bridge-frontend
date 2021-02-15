@@ -13,8 +13,10 @@ import getNep141Address from './getAddress'
 export default async function getBalance ({ erc20Address, user }) {
   const nep141Address = getNep141Address(erc20Address)
 
+  const nearAccount = await getNearAccount()
+
   try {
-    const balanceAsString = await window.nearConnection.account().viewFunction(
+    const balanceAsString = await nearAccount.viewFunction(
       nep141Address,
       'get_balance',
       { owner_id: user }
