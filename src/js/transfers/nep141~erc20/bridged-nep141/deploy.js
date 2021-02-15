@@ -8,25 +8,6 @@ import { checkNearAuth } from '../utils'
  * allows sending any ERC20 token to NEAR, but requires an initial one-time
  * deploy of a "BridgeToken" contract. This call will deploy such a token.
  *
- * Requires `window.nearConnection` to be initialized. Example:
- *
- *     const near = new Near({
- *       keyStore: new keyStores.BrowserLocalStorageKeyStore(),
- *       networkId: process.env.nearNetworkId,
- *       nodeUrl: process.env.nearNodeUrl,
- *       helperUrl: process.env.nearHelperUrl,
- *       walletUrl: process.env.nearWalletUrl
- *     })
- *     window.nearConnection = new WalletConnection(near)
- *
- * If user is not yet signed in, will authenticate them against the
- * BridgeTokenFactory contract. This will cause a redirect to NEAR Wallet,
- * after which the user will need to retry the action that called this
- * `bridgeErc20` function. If you want to avoid such a retry situation, make
- * sure they're signed in first. Example:
- *
- *     window.nearConnection.requestSignIn('bridge-token-factory-address')
- *
  * How do you know if you need to call this? How do you know if a given
  * erc20Address already has an existing BridgeToken contract deployed? Try to
  * check {@link getBalance} for a user; if it returns `null`, then the

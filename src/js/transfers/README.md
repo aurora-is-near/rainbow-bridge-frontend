@@ -29,16 +29,105 @@ Add it to your browser app
 Let's say you want to allow users to send ERC20 tokens from Ethereum to NEAR,
 where they'll become NEP141 tokens.
 
-Step 1: Add Dependencies
+Step 0: Add Dependencies
 ------------------------
 
 You'll need to add two dependencies to your app:
 
     npm install --save @near~eth/client @near~eth/nep141~erc20
 
-Alternatively, if using yarn:
+Or, if using yarn:
 
     yarn add @near~eth/client @near~eth/nep141~erc20
+
+### What is `@near~eth/nep141~erc20`?
+
+The Rainbow Bridge between Ethereum and NEAR has [many pieces][Rainbow Bridge]. One piece is **Connector** contracts. The connector code for converting ERC20 tokens in Ethereum to NEP141 tokens in NEAR lives at [github.com/near/rainbow-token-connector][Connector].
+
+The code for using a given connector from an app has its own library. The one for the connector above is [`@near~eth/nep141~erc20`].
+
+Anyone can make connector contracts, and anyone can make client libraries for these contracts. If they follow the format of `@near~eth/nep141~erc20`, these client libraries will work automatically with the core Rainbow Bridge transfer library at `@near~eth/client`.
+
+Generally, each connector client library, like `@near~eth/nep141~erc20`, will export four main interfaces, which can be used to:
+
+1. Go from a "natural" Ethereum token to a "bridged" NEAR equivalent
+2. Go from a "bridged" NEAR token, meaning a token that started its life in Ethereum but which now lives in NEAR, back to Ethereum
+3. Go from a natural NEAR token to a bridged Ethereum equivalent
+4. Go from a bridged Ethereum token back to NEAR
+
+For `@near~eth/nep141~erc20`, these main exports are:
+
+1. `naturalErc20` – example: go from DAI (a popular ERC20 token) to DAIⁿ
+2. `bridgedNep141` – example: convert DAIⁿ back to DAI
+3. `naturalNep141` – example: go from a natural NEAR token, such as BNNA Tokens in berryclub.io, to BNNAᵉ in Ethereum
+4. `bridgedErc20` – example: convert BNNAᵉ back to BNNA
+
+Step 1: Authenticate user with both NEAR & Ethereum
+---------------------------------------------------
+
+A full transfer will make multiple calls to both the NEAR & Ethereum blockchains, and you'll need to make sure the user has an account/wallet on both chains.
+
+### NEAR Authentication
+
+#### `window.nearConnection`
+
+Before a transfer process makes calls to NEAR (for best UX, probably before starting a transfer at all), your app will need to initiate a `window.nearConnection`. Example:
+
+```js
+import { keyStores, WalletConnection, Near } from 'near-api-js'
+
+window.nearConnection = new WalletConnection(
+  new Near({
+    keyStore: new keyStores.BrowserLocalStorageKeyStore(),
+    networkId: process.env.nearNetworkId,
+    nodeUrl: process.env.nearNodeUrl,
+    helperUrl: process.env.nearHelperUrl,
+    walletUrl: process.env.nearWalletUrl
+  })
+)
+```
+
+If you don't know what to put for those settings passed to `new Near`, you can import the sensible defaults used by `@near~eth/client`:
+
+```js
+import { WalletConnection, Near } from 'near-api-js'
+import { config } from '@near~eth/client'
+
+window.nearConnection = new WalletConnection(
+  new Near(config.ropsten.near)
+)
+```
+
+Learn [more about `config` from `@near~eth/client`](#TODO)
+
+
+#### `window.nearConnection.requestSignIn()`
+
+Additionally, you'll probably want to verify that a user has a NEAR account before they get started. Given a "Sign in with NEAR" button:
+
+```html
+<button id="authNear">Sign in with NEAR</button>
+```
+
+You can add this handler:
+
+```js
+// Note that a relevant contract address to authenticate against may come from
+// a connector library, not the core client library
+import { config } from '@near~eth/nep141~erc20'
+
+document.querySelector('#authNear').onclick = () => {
+  window.nearConnection.requestSignIn(config.ropsten.bridgeTokenFactory)
+}
+```
+
+Learn [more about `config` from `@near~eth/nep141~erc20`](#TODO)
+
+If you skip this `requestSignIn` step, everything will still work, but there will be a couple downsides:
+
+1. You won't know for sure that the user has a NEAR account before they get started, and you'll have to trust them to enter a free-form NEAR address correctly.
+2. When a transfer gets to a step where it needs to make NEAR calls, the user will need to try it twice. The first try will `requestSignIn`, and the next will actually make the contract call.
+
 
 Step 2: Initiate a transfer
 ---------------------------
@@ -50,7 +139,6 @@ Let's say you have a form.
   <input id="erc20Address" />
   <input id="amount" />
   <input id="sender" />
-  <input id="recipient" />
 </form>
 ```
 
@@ -61,47 +149,15 @@ import { naturalErc20 } from '@near~eth/nep141~erc20'
 
 document.querySelector('form').onsubmit = e => {
   e.preventDefault()
-  const { erc20Address, amount, sender, recipient } = e.target.elements
+  const { erc20Address, amount, sender } = e.target.elements
   naturalErc20.sendToNear({
     erc20Address: erc20Address.value,
     amount: amount.value,
     sender: sender.value,
-    recipient: recipient.value,
+    recipient: window.nearConnection.getAccountId()
   })
 }
 ```
-
-What is `@near~eth/nep141~erc20`?
-
-The Rainbow Bridge between Ethereum and NEAR has [many pieces][Rainbow Bridge].
-One piece is **Connector** contracts. The connector code for converting ERC20
-tokens in Ethereum to NEP141 tokens in NEAR lives at
-[github.com/near/rainbow-token-connector][Connector].
-
-The code for using a given connector from an app has its own library. The one
-for the connector above is [`@near~eth/nep141~erc20`].
-
-Anyone can make connector contracts, and anyone can make client libraries for
-these contracts. If they follow the format of `@near~eth/nep141~erc20`, these
-client libraries will work automatically with the core Rainbow Bridge transfer
-library at `@near~eth/client`.
-
-Generally, each connector client library, like `@near~eth/nep141~erc20`, will
-export four main interfaces, which can be used to:
-
-1. Go from a "natural" Ethereum token to a "bridged" NEAR equivalent
-2. Go from a "bridged" NEAR token, meaning a token that started its life in
-   Ethereum but which now lives in NEAR, back to Ethereum
-3. Go from a natural NEAR token to a bridged Ethereum equivalent
-4. Go from a bridged Ethereum token back to NEAR
-
-For `@near~eth/nep141~erc20`, these main exports are:
-
-1. `naturalErc20` – example: go from DAI (a popular ERC20 token) to DAIⁿ
-2. `bridgedNep141` – example: convert DAIⁿ back to DAI
-3. `naturalNep141` – example: go from a natural NEAR token, such as BNNA
-   Tokens in berryclub.io, to BNNAᵉ in Ethereum
-4. `bridgedErc20` – example: convert BNNAᵉ back to BNNA
 
 
 Step 3: List in-progress transfers
