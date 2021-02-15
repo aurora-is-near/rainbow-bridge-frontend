@@ -1,3 +1,10 @@
+## [1.9.8](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.7...v1.9.8) (2021-02-15)
+
+
+### Bug Fixes
+
+* avoid non-user-initiated redirects to NEAR Wallet ([52d73ac](https://github.com/near/rainbow-bridge-frontend/commit/52d73ac4420e813b976293e7ce0b253b1c697ddc))
+
 ## [1.9.7](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.6...v1.9.7) (2021-02-13)
 
 
