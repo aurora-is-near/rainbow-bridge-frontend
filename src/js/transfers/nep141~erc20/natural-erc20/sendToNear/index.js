@@ -1,5 +1,6 @@
 import BN from 'bn.js'
 import getRevertReason from 'eth-revert-reason'
+import Web3 from 'web3'
 import getName from '../getName'
 import * as urlParams from '../../../../urlParams'
 import { stepsFor } from '../../../i18nHelpers'
@@ -82,8 +83,8 @@ export function checkStatus (transfer) {
   }
 }
 
-// Call contract given by `erc20` contract, requesting
-// permission for window.ethTokenLocker to transfer 'amount' tokens
+// Call contract given by `erc20` contract, requesting permission for contract
+// at `process.env.ethLockerAddress` to transfer 'amount' tokens
 // on behalf of the default user set up in authEthereum.js.
 // Only wait for transaction to have dependable transactionHash created. Avoid
 // blocking to wait for transaction to be mined. Status of transactionHash
@@ -127,7 +128,9 @@ export async function initiate ({
 }
 
 async function approve (transfer) {
-  const erc20Contract = new window.web3.eth.Contract(
+  const web3 = new Web3(window.ethProvider)
+
+  const erc20Contract = new web3.eth.Contract(
     JSON.parse(process.env.ethErc20AbiText),
     transfer.sourceToken,
     { from: transfer.sender }
@@ -148,8 +151,10 @@ async function approve (transfer) {
 }
 
 async function checkApprove (transfer) {
+  const web3 = new Web3(window.ethProvider)
+
   const approvalHash = last(transfer.approvalHashes)
-  const approvalReceipt = await window.web3.eth.getTransactionReceipt(
+  const approvalReceipt = await web3.eth.getTransactionReceipt(
     approvalHash
   )
 
@@ -158,7 +163,7 @@ async function checkApprove (transfer) {
   if (!approvalReceipt.status) {
     let error
     try {
-      const ethNetwork = await window.web3.eth.net.getNetworkType()
+      const ethNetwork = await web3.eth.net.getNetworkType()
       error = await getRevertReason(approvalHash, ethNetwork)
     } catch (e) {
       console.error(e)
@@ -180,13 +185,23 @@ async function checkApprove (transfer) {
   }
 }
 
-// Call window.ethTokenLocker, locking 'amount' tokens.
+// Initiate "lock" transaction.
+//
 // Only wait for transaction to have dependable transactionHash created. Avoid
 // blocking to wait for transaction to be mined. Status of transactionHash
 // being mined is then checked in checkStatus.
 async function lock (transfer) {
+  const web3 = new Web3(window.ethProvider)
+  const ethUserAddress = (await web3.eth.getAccounts())[0]
+
+  const ethTokenLocker = new web3.eth.Contract(
+    JSON.parse(process.env.ethLockerAbiText),
+    process.env.ethLockerAddress,
+    { from: ethUserAddress }
+  )
+
   const lockHash = await new Promise((resolve, reject) => {
-    window.ethTokenLocker.methods
+    ethTokenLocker.methods
       .lockToken(transfer.sourceToken, transfer.amount, transfer.recipient).send()
       .on('transactionHash', resolve)
       .catch(reject)
@@ -201,7 +216,7 @@ async function lock (transfer) {
 
 async function checkLock (transfer) {
   const lockHash = last(transfer.lockHashes)
-  const lockReceipt = await window.web3.eth.getTransactionReceipt(
+  const lockReceipt = await web3.eth.getTransactionReceipt(
     lockHash
   )
 
@@ -210,7 +225,7 @@ async function checkLock (transfer) {
   if (!lockReceipt.status) {
     let error
     try {
-      const ethNetwork = await window.web3.eth.net.getNetworkType()
+      const ethNetwork = await web3.eth.net.getNetworkType()
       error = await getRevertReason(lockHash, ethNetwork)
     } catch (e) {
       console.error(e)

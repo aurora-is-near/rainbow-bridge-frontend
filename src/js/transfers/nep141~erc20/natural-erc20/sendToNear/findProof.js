@@ -4,6 +4,7 @@ import { Header, Proof, Receipt, Log } from 'eth-object'
 import { promisfy } from 'promisfy'
 import utils from 'ethereumjs-util'
 import { serialize as serializeBorsh } from 'near-api-js/lib/utils/serialize'
+import Web3 from 'web3'
 
 class BorshProof {
   constructor (proof) {
@@ -29,8 +30,15 @@ const proofBorshSchema = new Map([
 // be passed to the FungibleTokenFactory contract, which verifies the proof
 // against a Prover contract.
 export default async function findProof (lockTxHash) {
-  const receipt = await window.web3.eth.getTransactionReceipt(lockTxHash)
-  const block = await window.web3.eth.getBlock(receipt.blockNumber)
+  const web3 = new Web3(window.ethProvider)
+
+  const ethTokenLocker = new web3.eth.Contract(
+    JSON.parse(process.env.ethLockerAbiText),
+    process.env.ethLockerAddress
+  )
+
+  const receipt = await web3.eth.getTransactionReceipt(lockTxHash)
+  const block = await web3.eth.getBlock(receipt.blockNumber)
   const tree = await buildTree(block)
   const proof = await extractProof(
     block,
@@ -38,7 +46,7 @@ export default async function findProof (lockTxHash) {
     receipt.transactionIndex
   )
 
-  const [lockedEvent] = await window.ethTokenLocker.getPastEvents('Locked', {
+  const [lockedEvent] = await ethTokenLocker.getPastEvents('Locked', {
     filter: { transactionHash: lockTxHash },
     fromBlock: receipt.blockNumber
   })
@@ -61,8 +69,10 @@ export default async function findProof (lockTxHash) {
 }
 
 async function buildTree (block) {
+  const web3 = new Web3(window.ethProvider)
+
   const blockReceipts = await Promise.all(
-    block.transactions.map(t => window.web3.eth.getTransactionReceipt(t))
+    block.transactions.map(t => web3.eth.getTransactionReceipt(t))
   )
 
   // Build a Patricia Merkle Trie
@@ -79,12 +89,14 @@ async function buildTree (block) {
 }
 
 async function extractProof (block, tree, transactionIndex) {
+  const web3 = new Web3(window.ethProvider)
+
   const [, , stack] = await promisfy(
     tree.findPath,
     tree
   )(encode(transactionIndex))
 
-  const blockData = await window.web3.eth.getBlock(block.number)
+  const blockData = await web3.eth.getBlock(block.number)
   // Correctly compose and encode the header.
   const header = Header.fromWeb3(blockData)
   return {

@@ -62,6 +62,20 @@ For `@near~eth/nep141~erc20`, these main exports are:
 3. `naturalNep141` – example: go from a natural NEAR token, such as BNNA Tokens in berryclub.io, to BNNAᵉ in Ethereum
 4. `bridgedErc20` – example: convert BNNAᵉ back to BNNA
 
+You can have multiple connector libraries in your app, some which may be maintained by NEAR and are in the `@near~eth` organization, and some which are not. An example `package.json` might end up looking something like:
+
+```js
+"dependencies": {
+  "@near~eth/client": "*",
+  "@near~eth/nep141~erc20": "*",
+  "@near~eth/nep4~erc721": "*",
+  "rainbow-bridge-erc20-with-rebase-and-nep21": "*",
+}
+```
+
+(Note: `@near~eth/nep4~erc721` and `rainbow-bridge-erc20-with-rebase-and-nep21` do NOT currently exist, and are only shown to illustrate how this could work. As an aside, the current ERC20 connector does NOT support [tokens which use the `rebase` feature](https://etherscan.io/tokens/label/rebase-token) like [AMPL](https://etherscan.io/token/0xd46ba6d942050d489dbd938a2c909a5d5039a161) & [BASE](https://etherscan.io/token/0x07150e919b4de5fd6a63de1f9384828396f25fdc), which is why a hypothetical community-contributed "erc20-with-rebase" connector library is shown.)
+
+
 Step 1: Authenticate user with both NEAR & Ethereum
 ---------------------------------------------------
 
@@ -71,7 +85,7 @@ A full transfer will make multiple calls to both the NEAR & Ethereum blockchains
 
 #### `window.nearConnection`
 
-Before a transfer process makes calls to NEAR (for best UX, probably before starting a transfer at all), your app will need to initiate a `window.nearConnection`. Example:
+Your app needs to set `window.nearConnection`. Example:
 
 ```js
 import { keyStores, WalletConnection, Near } from 'near-api-js'
@@ -87,7 +101,7 @@ window.nearConnection = new WalletConnection(
 )
 ```
 
-If you don't know what to put for those settings passed to `new Near`, you can import the sensible defaults used by `@near~eth/client`:
+If you don't know what to put for the settings passed to `new Near`, you can import the sensible defaults used by `@near~eth/client`:
 
 ```js
 import { WalletConnection, Near } from 'near-api-js'
@@ -112,8 +126,9 @@ Additionally, you'll probably want to verify that a user has a NEAR account befo
 You can add this handler:
 
 ```js
-// Note that a relevant contract address to authenticate against may come from
-// a connector library, not the core client library
+// For this library's functionality, the specific contract address passed to
+// `requestSignIn` is not super important, but you may want to use a contract
+// from a connector library rather than the core client library
 import { config } from '@near~eth/nep141~erc20'
 
 document.querySelector('#authNear').onclick = () => {
@@ -123,38 +138,67 @@ document.querySelector('#authNear').onclick = () => {
 
 Learn [more about `config` from `@near~eth/nep141~erc20`](#TODO)
 
-If you skip this `requestSignIn` step, everything will still work, but there will be a couple downsides:
+### Ethereum Authentication
 
-1. You won't know for sure that the user has a NEAR account before they get started, and you'll have to trust them to enter a free-form NEAR address correctly.
-2. When a transfer gets to a step where it needs to make NEAR calls, the user will need to try it twice. The first try will `requestSignIn`, and the next will actually make the contract call.
+Your app needs to set `window.ethProvider`. Given a "Connect to Ethereum" button:
+
+```html
+<button id="authEthereum">Connect to Ethereum</button>
+```
+
+You can use [web3modal](https://github.com/web3modal/web3modal) to add this handler:
+
+```js
+import Web3Modal from 'web3modal'
+
+const web3Modal = new Web3Modal({ cacheProvider: true })
+
+async function loadWeb3Modal () {
+  window.ethProvider = await web3Modal.connect()
+}
+
+document.querySelector('#authEthereum').onclick = loadWeb3Modal
+
+// on page load, check if user has already connected
+if (web3Modal.cachedProvider) loadWeb3Modal()
+```
+
+If your app does other things with Ethereum, you may want to use [ethers.js](https://github.com/ethers-io/ethers.js/) or [web3js](https://web3js.readthedocs.io/). Either library can make use of `window.ethProvider`.
+
+Behind the scenes, `@near~eth/*` libraries use web3js. To keep your bundle size small, you may also want to use web3js.
 
 
 Step 2: Initiate a transfer
 ---------------------------
 
-Let's say you have a form.
+Great, now your user is authenticated with both NEAR & Ethereum. Now let's say you have a form.
 
 ```html
-<form>
+<form id="sendErc20ToNear>
   <input id="erc20Address" />
   <input id="amount" />
-  <input id="sender" />
 </form>
 ```
 
-Here's the JavaScript you'll want to make this work:
+Here's some JavaScript to make this work:
 
 ```js
 import { naturalErc20 } from '@near~eth/nep141~erc20'
 
-document.querySelector('form').onsubmit = e => {
+document.querySelector('#sendErc20ToNear').onsubmit = async e => {
   e.preventDefault()
-  const { erc20Address, amount, sender } = e.target.elements
+
+  const [sender] = await window.ethProvider.request({method: 'eth_requestAccounts'})
+
+  const recipient = window.nearConnection.getAccountId()
+
+  const { erc20Address, amount } = e.target.elements
+
   naturalErc20.sendToNear({
+    sender,
+    recipient,
     erc20Address: erc20Address.value,
-    amount: amount.value,
-    sender: sender.value,
-    recipient: window.nearConnection.getAccountId()
+    amount: amount.value
   })
 }
 ```

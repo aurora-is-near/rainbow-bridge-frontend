@@ -1,9 +1,12 @@
+import Web3 from 'web3'
 import getName from './getName'
 
 async function getBalance (address, user) {
   if (!user) return null
 
-  const erc20Contract = new window.web3.eth.Contract(
+  const web3 = new Web3(window.ethProvider)
+
+  const erc20Contract = new web3.eth.Contract(
     JSON.parse(process.env.ethErc20AbiText),
     address
   )
@@ -17,7 +20,9 @@ const erc20Decimals = {}
 async function getDecimals (address) {
   if (erc20Decimals[address]) return erc20Decimals[address]
 
-  const contract = new window.web3.eth.Contract(
+  const web3 = new Web3(window.ethProvider)
+
+  const contract = new web3.eth.Contract(
     JSON.parse(process.env.ethErc20AbiText),
     address
   )

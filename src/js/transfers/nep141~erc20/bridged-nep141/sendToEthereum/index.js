@@ -1,6 +1,7 @@
 import BN from 'bn.js'
 import bs58 from 'bs58'
 import getRevertReason from 'eth-revert-reason'
+import Web3 from 'web3'
 import { toBuffer } from 'eth-util-lite'
 import { parseRpcError } from 'near-api-js/lib/utils/rpc_errors'
 import getErc20Name from '../../natural-erc20/getName'
@@ -245,12 +246,16 @@ async function checkFinality (transfer) {
 // Wait for the block with the given receipt/transaction in Near2EthClient, and
 // get the outcome proof only use block merkle root that we know is available
 // on the Near2EthClient.
-// Relies on:
-//   * window.nearOnEthClient
-//   * window.nearConnection
 async function checkSync (transfer) {
+  const web3 = new Web3(window.ethProvider)
+
+  const nearOnEthClient = new web3.eth.Contract(
+    JSON.parse(process.env.ethNearOnEthClientAbiText),
+    process.env.ethClientAddress
+  )
+
   const finalityBlockHeight = last(transfer.finalityBlockHeights)
-  const { currentHeight } = await window.nearOnEthClient.methods.bridgeState().call()
+  const { currentHeight } = await nearOnEthClient.methods.bridgeState().call()
   const nearOnEthClientBlockHeight = Number(currentHeight)
 
   if (nearOnEthClientBlockHeight <= finalityBlockHeight) {
@@ -262,7 +267,7 @@ async function checkSync (transfer) {
   }
 
   const clientBlockHashB58 = bs58.encode(toBuffer(
-    await window.nearOnEthClient.methods
+    await nearOnEthClient.methods
       .blockHashes(nearOnEthClientBlockHeight).call()
   ))
   const withdrawReceiptId = last(transfer.withdrawReceiptIds)
@@ -285,25 +290,24 @@ async function checkSync (transfer) {
   }
 }
 
-// Unlock tokens stored in ethTokenLocker, passing the proof that the tokens
-// were withdrawn/burned in the corresponding NEAR BridgeToken contract.
-// Relies on:
-//   * window.ethProver
-//   * window.ethTokenLocker
+// Unlock tokens stored in the contract at process.env.ethLockerAddress,
+// passing the proof that the tokens were withdrawn/burned in the corresponding
+// NEAR BridgeToken contract.
 async function unlock (transfer) {
+  const web3 = new Web3(window.ethProvider)
+  const ethUserAddress = (await web3.eth.getAccounts())[0]
+
+  const ethTokenLocker = new web3.eth.Contract(
+    JSON.parse(process.env.ethLockerAbiText),
+    process.env.ethLockerAddress,
+    { from: ethUserAddress }
+  )
+
   const borshProof = borshifyOutcomeProof(last(transfer.proofs))
   const nearOnEthClientBlockHeight = new BN(last(transfer.nearOnEthClientBlockHeights))
 
-  // Copied from original core rainbow-bridge repo, but
-  // This variable is never used.
-  // This uses `call` instead of `send`, so sends no transaction.
-  // TODO: Do we need it? Should it use `call`?
-  // const proveOutcomeTx = await window.ethProver.methods
-  //   .proveOutcome(borshProofRes, nearOnEthClientBlockHeight)
-  //   .call()
-
   const unlockHash = await new Promise((resolve, reject) => {
-    window.ethTokenLocker.methods
+    ethTokenLocker.methods
       .unlockToken(borshProof, nearOnEthClientBlockHeight).send()
       .on('transactionHash', resolve)
       .catch(reject)
@@ -317,15 +321,17 @@ async function unlock (transfer) {
 }
 
 async function checkUnlock (transfer) {
+  const web3 = new Web3(window.ethProvider)
+
   const unlockHash = last(transfer.unlockHashes)
-  const unlockReceipt = await window.web3.eth.getTransactionReceipt(unlockHash)
+  const unlockReceipt = await web3.eth.getTransactionReceipt(unlockHash)
 
   if (!unlockReceipt) return transfer
 
   if (!unlockReceipt.status) {
     let error
     try {
-      const ethNetwork = await window.web3.eth.net.getNetworkType()
+      const ethNetwork = await web3.eth.net.getNetworkType()
       error = await getRevertReason(unlockHash, ethNetwork)
     } catch (e) {
       console.error(e)

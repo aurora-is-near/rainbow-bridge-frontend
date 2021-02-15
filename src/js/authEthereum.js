@@ -24,27 +24,9 @@ window.web3Modal = new Web3Modal({
   }
 })
 
-async function login (provider) {
-  window.web3 = new Web3(provider)
+async function login () {
+  window.web3 = new Web3(window.ethProvider)
   window.ethUserAddress = (await window.web3.eth.getAccounts())[0]
-
-  window.nearOnEthClient = new window.web3.eth.Contract(
-    JSON.parse(process.env.ethNearOnEthClientAbiText),
-    process.env.ethClientAddress,
-    { from: window.ethUserAddress }
-  )
-
-  window.ethProver = new window.web3.eth.Contract(
-    JSON.parse(process.env.ethProverAbiText),
-    process.env.ethProverAddress,
-    { from: window.ethUserAddress }
-  )
-
-  window.ethTokenLocker = new window.web3.eth.Contract(
-    JSON.parse(process.env.ethLockerAbiText),
-    process.env.ethLockerAddress,
-    { from: window.ethUserAddress }
-  )
 
   window.ethInitialized = true
 
@@ -54,13 +36,13 @@ async function login (provider) {
 }
 
 async function loadWeb3Modal () {
-  const provider = await window.web3Modal.connect()
+  window.ethProvider = await window.web3Modal.connect()
 
-  provider.on('accountsChanged', () => {
-    login(provider)
+  window.ethProvider.on('accountsChanged', () => {
+    login(window.ethProvider)
   })
 
-  login(provider)
+  login(window.ethProvider)
 }
 
 onClick('authEthereum', loadWeb3Modal)
