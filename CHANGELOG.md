@@ -1,3 +1,10 @@
+## [1.9.10](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.9...v1.9.10) (2021-02-16)
+
+
+### Bug Fixes
+
+* bridge-erc20-form trying to load nonsense ([0c9ad4c](https://github.com/near/rainbow-bridge-frontend/commit/0c9ad4cf2676e9b14b8c36a452fb4d67b49f225b))
+
 ## [1.9.9](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.8...v1.9.9) (2021-02-16)
 
 
