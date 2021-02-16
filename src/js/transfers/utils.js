@@ -100,7 +100,7 @@ export async function getNearAccount ({ authAgainst, strict = false } = {}) {
   if (!nearConnection.getAccountId()) {
     await nearConnection.requestSignIn(authAgainst)
   }
-  if (strict && !nearAuthedAgainst(authAgainst)) {
+  if (strict && !(await nearAuthedAgainst(authAgainst))) {
     await nearConnection.signOut()
     await nearConnection.requestSignIn(authAgainst)
   }
