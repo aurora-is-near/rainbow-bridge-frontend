@@ -48,7 +48,7 @@
     const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
     const erc20Address = erc20 || erc20n
 
-    if (erc20Address === null) {
+    if (!erc20Address) {
       window.dom.hide('bridgeErc20Form')
       return
     }
