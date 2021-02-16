@@ -1,3 +1,11 @@
+## [1.9.9](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.8...v1.9.9) (2021-02-16)
+
+
+### Bug Fixes
+
+* missed 'await' broke N→E transfers ([783151d](https://github.com/near/rainbow-bridge-frontend/commit/783151d3d65bddb3a90795a628dbfd562e8fcd24))
+* NEAR sign out needs window.nearConnection ([3df78f5](https://github.com/near/rainbow-bridge-frontend/commit/3df78f56b7ddebd9d11888fea73af2fef1339459))
+
 ## [1.9.8](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.7...v1.9.8) (2021-02-15)
 
 
