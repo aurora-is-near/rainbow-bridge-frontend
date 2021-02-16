@@ -83,12 +83,13 @@ A full transfer will make multiple calls to both the NEAR & Ethereum blockchains
 
 ### NEAR Authentication
 
-#### `window.nearConnection`
+#### `setNearConnection`
 
-Your app needs to set `window.nearConnection`. Example:
+Your app needs to call `setNearConnection` and pass it a `WalletConnection` instance from `near-api-js`. Example:
 
 ```js
-import { keyStores, WalletConnection, Near } from 'near-api-js'
+import { keyStores, Near, WalletConnection } from 'near-api-js'
+import { setNearConnection } from '@near~eth/client'
 
 window.nearConnection = new WalletConnection(
   new Near({
@@ -99,23 +100,27 @@ window.nearConnection = new WalletConnection(
     walletUrl: process.env.nearWalletUrl
   })
 )
+
+setNearConnection(window.nearConnection)
 ```
 
 If you don't know what to put for the settings passed to `new Near`, you can import the sensible defaults used by `@near~eth/client`:
 
 ```js
-import { WalletConnection, Near } from 'near-api-js'
-import { config } from '@near~eth/client'
+import { Near, WalletConnection } from 'near-api-js'
+import { config, setNearConnection } from '@near~eth/client'
 
 window.nearConnection = new WalletConnection(
   new Near(config.ropsten.near)
 )
+
+setNearConnection(window.nearConnection)
 ```
 
 Learn [more about `config` from `@near~eth/client`](#TODO)
 
 
-#### `window.nearConnection.requestSignIn()`
+#### `requestSignIn()`
 
 Additionally, you'll probably want to verify that a user has a NEAR account before they get started. Given a "Sign in with NEAR" button:
 
@@ -140,7 +145,7 @@ Learn [more about `config` from `@near~eth/nep141~erc20`](#TODO)
 
 ### Ethereum Authentication
 
-Your app needs to set `window.ethProvider`. Given a "Connect to Ethereum" button:
+Your app needs to call `setEthProvider`. Given a "Connect to Ethereum" button:
 
 ```html
 <button id="authEthereum">Connect to Ethereum</button>
@@ -150,11 +155,13 @@ You can use [web3modal](https://github.com/web3modal/web3modal) to add this hand
 
 ```js
 import Web3Modal from 'web3modal'
+import { setEthProvider } from '@near~eth/client'
 
 const web3Modal = new Web3Modal({ cacheProvider: true })
 
 async function loadWeb3Modal () {
   window.ethProvider = await web3Modal.connect()
+  setEthProvider(window.ethProvider)
 }
 
 document.querySelector('#authEthereum').onclick = loadWeb3Modal
@@ -162,10 +169,6 @@ document.querySelector('#authEthereum').onclick = loadWeb3Modal
 // on page load, check if user has already connected
 if (web3Modal.cachedProvider) loadWeb3Modal()
 ```
-
-If your app does other things with Ethereum, you may want to use [ethers.js](https://github.com/ethers-io/ethers.js/) or [web3js](https://web3js.readthedocs.io/). Either library can make use of `window.ethProvider`.
-
-Behind the scenes, `@near~eth/*` libraries use web3js. To keep your bundle size small, you may also want to use web3js.
 
 
 Step 2: Initiate a transfer

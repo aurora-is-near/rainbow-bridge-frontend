@@ -2,7 +2,10 @@ import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Web3 from 'web3'
 
-import { checkStatusAll as checkTransferStatuses } from './transfers'
+import {
+  checkStatusAll as checkTransferStatuses,
+  setEthProvider
+} from './transfers'
 import render from './render'
 import { onClick } from './domHelpers'
 
@@ -24,9 +27,10 @@ window.web3Modal = new Web3Modal({
   }
 })
 
-async function login () {
-  window.web3 = new Web3(window.ethProvider)
-  window.ethUserAddress = (await window.web3.eth.getAccounts())[0]
+async function login (provider) {
+  window.web3 = new Web3(provider)
+  const [ethUser] = await provider.request({ method: 'eth_requestAccounts' })
+  window.ethUserAddress = ethUser
 
   window.ethInitialized = true
 
@@ -36,13 +40,15 @@ async function login () {
 }
 
 async function loadWeb3Modal () {
-  window.ethProvider = await window.web3Modal.connect()
+  const provider = await window.web3Modal.connect()
 
-  window.ethProvider.on('accountsChanged', () => {
-    login(window.ethProvider)
+  setEthProvider(provider)
+
+  provider.on('accountsChanged', () => {
+    login(provider)
   })
 
-  login(window.ethProvider)
+  login(provider)
 }
 
 onClick('authEthereum', loadWeb3Modal)

@@ -1,6 +1,9 @@
 import { keyStores, WalletConnection, Near } from 'near-api-js'
 
-import { checkStatusAll as checkTransferStatuses } from './transfers'
+import {
+  checkStatusAll as checkTransferStatuses,
+  setNearConnection
+} from './transfers'
 import render from './render'
 import { onClick } from './domHelpers'
 
@@ -14,16 +17,18 @@ const near = new Near({
 })
 
 // Initialize main interface to NEAR network
-window.nearConnection = new WalletConnection(near)
+const walletConnection = new WalletConnection(near)
+
+setNearConnection(walletConnection)
 
 // Getting the Account ID. If still unauthorized, it's an empty string
-window.nearUserAddress = window.nearConnection.getAccountId()
+window.nearUserAddress = walletConnection.getAccountId()
 
 // Allow the current app to make calls to the specified contract on the
 // user's behalf. This works by creating a new access key for the user's
 // account and storing the private key in localStorage.
 onClick('authNear', () => {
-  window.nearConnection.requestSignIn(process.env.nearTokenFactoryAccount)
+  walletConnection.requestSignIn(process.env.nearTokenFactoryAccount)
 })
 
 function login () {

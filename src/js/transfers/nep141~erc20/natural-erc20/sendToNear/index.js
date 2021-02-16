@@ -9,7 +9,7 @@ import { track } from '../../..'
 import findProof from './findProof'
 import { lastBlockNumber } from './ethOnNearClient'
 import getNep141Balance from '../../bridged-nep141/getBalance'
-import { getNearAccount } from '../../../utils'
+import { getEthProvider, getNearAccount } from '../../../utils'
 
 export const SOURCE_NETWORK = 'ethereum'
 export const DESTINATION_NETWORK = 'near'
@@ -128,7 +128,7 @@ export async function initiate ({
 }
 
 async function approve (transfer) {
-  const web3 = new Web3(window.ethProvider)
+  const web3 = new Web3(getEthProvider())
 
   const erc20Contract = new web3.eth.Contract(
     JSON.parse(process.env.ethErc20AbiText),
@@ -151,7 +151,7 @@ async function approve (transfer) {
 }
 
 async function checkApprove (transfer) {
-  const web3 = new Web3(window.ethProvider)
+  const web3 = new Web3(getEthProvider())
 
   const approvalHash = last(transfer.approvalHashes)
   const approvalReceipt = await web3.eth.getTransactionReceipt(
@@ -191,7 +191,7 @@ async function checkApprove (transfer) {
 // blocking to wait for transaction to be mined. Status of transactionHash
 // being mined is then checked in checkStatus.
 async function lock (transfer) {
-  const web3 = new Web3(window.ethProvider)
+  const web3 = new Web3(getEthProvider())
   const ethUserAddress = (await web3.eth.getAccounts())[0]
 
   const ethTokenLocker = new web3.eth.Contract(

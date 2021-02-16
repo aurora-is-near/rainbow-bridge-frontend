@@ -5,6 +5,7 @@ import { promisfy } from 'promisfy'
 import utils from 'ethereumjs-util'
 import { serialize as serializeBorsh } from 'near-api-js/lib/utils/serialize'
 import Web3 from 'web3'
+import { getEthProvider } from '../../../utils'
 
 class BorshProof {
   constructor (proof) {
@@ -30,7 +31,7 @@ const proofBorshSchema = new Map([
 // be passed to the FungibleTokenFactory contract, which verifies the proof
 // against a Prover contract.
 export default async function findProof (lockTxHash) {
-  const web3 = new Web3(window.ethProvider)
+  const web3 = new Web3(getEthProvider())
 
   const ethTokenLocker = new web3.eth.Contract(
     JSON.parse(process.env.ethLockerAbiText),
@@ -69,7 +70,7 @@ export default async function findProof (lockTxHash) {
 }
 
 async function buildTree (block) {
-  const web3 = new Web3(window.ethProvider)
+  const web3 = new Web3(getEthProvider())
 
   const blockReceipts = await Promise.all(
     block.transactions.map(t => web3.eth.getTransactionReceipt(t))
@@ -89,7 +90,7 @@ async function buildTree (block) {
 }
 
 async function extractProof (block, tree, transactionIndex) {
-  const web3 = new Web3(window.ethProvider)
+  const web3 = new Web3(getEthProvider())
 
   const [, , stack] = await promisfy(
     tree.findPath,

@@ -9,7 +9,7 @@ import * as status from '../../../statuses'
 import { stepsFor } from '../../../i18nHelpers'
 import { track } from '../../..'
 import { borshifyOutcomeProof } from './borshify-proof'
-import { getNearAccount, nearAuthedAgainst } from '../../../utils'
+import { getEthProvider, getNearAccount, nearAuthedAgainst } from '../../../utils'
 import getNep141Address from '../getAddress'
 
 export const SOURCE_NETWORK = 'near'
@@ -255,7 +255,7 @@ async function checkFinality (transfer) {
 // get the outcome proof only use block merkle root that we know is available
 // on the Near2EthClient.
 async function checkSync (transfer) {
-  const web3 = new Web3(window.ethProvider)
+  const web3 = new Web3(getEthProvider())
   const nearAccount = await getNearAccount()
 
   const nearOnEthClient = new web3.eth.Contract(
@@ -303,7 +303,7 @@ async function checkSync (transfer) {
 // passing the proof that the tokens were withdrawn/burned in the corresponding
 // NEAR BridgeToken contract.
 async function unlock (transfer) {
-  const web3 = new Web3(window.ethProvider)
+  const web3 = new Web3(getEthProvider())
   const ethUserAddress = (await web3.eth.getAccounts())[0]
 
   const ethTokenLocker = new web3.eth.Contract(
@@ -330,7 +330,7 @@ async function unlock (transfer) {
 }
 
 async function checkUnlock (transfer) {
-  const web3 = new Web3(window.ethProvider)
+  const web3 = new Web3(getEthProvider())
 
   const unlockHash = last(transfer.unlockHashes)
   const unlockReceipt = await web3.eth.getTransactionReceipt(unlockHash)

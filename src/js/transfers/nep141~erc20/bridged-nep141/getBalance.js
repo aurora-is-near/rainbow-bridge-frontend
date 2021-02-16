@@ -1,4 +1,5 @@
 import getNep141Address from './getAddress'
+import { getNearAccount } from '../../utils'
 
 /**
  * Given an erc20 contract address, get the balance of user's equivalent NEP141.

@@ -5,6 +5,7 @@ import * as storage from './storage'
 import * as status from './statuses'
 
 export { onChange } from './storage'
+export { setEthProvider, setNearConnection } from './utils'
 
 function getTransferType (transfer) {
   try {
