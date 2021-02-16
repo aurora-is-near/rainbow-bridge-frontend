@@ -14,13 +14,10 @@ export async function getErc20Data (address) {
   return { ...erc20, nep141 }
 }
 
-let featuredErc20s
 export async function getFeaturedErc20s () {
-  if (featuredErc20s) return featuredErc20s
-
   const ethNetwork = await window.web3.eth.net.getNetworkType()
 
-  featuredErc20s = (await Promise.all(
+  return (await Promise.all(
     JSON.parse(process.env.featuredErc20s)[ethNetwork].map(getErc20Data)
   )).reduce(
     (acc, token) => {
@@ -29,5 +26,4 @@ export async function getFeaturedErc20s () {
     },
     {}
   )
-  return featuredErc20s
 }
