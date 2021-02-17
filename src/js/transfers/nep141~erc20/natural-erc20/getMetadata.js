@@ -12,9 +12,7 @@ async function getBalance (address, user) {
     address
   )
 
-  return Number(
-    await erc20Contract.methods.balanceOf(user).call()
-  )
+  return await erc20Contract.methods.balanceOf(user).call()
 }
 
 const erc20Decimals = {}
