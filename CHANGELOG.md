@@ -1,3 +1,10 @@
+## [1.9.11](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.10...v1.9.11) (2021-02-17)
+
+
+### Bug Fixes
+
+* update token balances without page refresh ([cd1b276](https://github.com/near/rainbow-bridge-frontend/commit/cd1b27683915b173bd4a1c943ea81103e150a3e9))
+
 ## [1.9.10](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.9...v1.9.10) (2021-02-16)
 
 
