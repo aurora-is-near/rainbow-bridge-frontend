@@ -1,9 +1,11 @@
 import { bridgedNep141, naturalErc20 } from './transfers/nep141~erc20'
 
 export function formatLargeNum (n) {
-  if (!n) return 0
-  if (n >= 1e5 || (n < 1e-3 && n !== 0)) return n.toExponential()
-  return new Intl.NumberFormat(undefined, { maximumSignificantDigits: 5 }).format(n)
+  // TODO abstract decimals for the user
+  // if (!n) return 0
+  // if (n >= 1e5 || (n < 1e-3 && n !== 0)) return n.toExponential()
+  // return new Intl.NumberFormat(undefined, { maximumSignificantDigits: 5 }).format(n)
+  return n
 }
 
 export async function getErc20Data (address) {

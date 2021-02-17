@@ -128,7 +128,7 @@
       try {
         await window.nep141Xerc20.naturalErc20.sendToNear({
           // TODO fix for non-integers
-          amount: Number(amount.value),
+          amount: amount.value,
           erc20Address: window.dom.find('erc20Address').value,
           sender: window.ethUserAddress,
           recipient: window.nearUserAddress

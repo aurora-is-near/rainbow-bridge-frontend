@@ -216,6 +216,7 @@ async function lock (transfer) {
 
 async function checkLock (transfer) {
   const lockHash = last(transfer.lockHashes)
+  const web3 = new Web3(getEthProvider())
   const lockReceipt = await web3.eth.getTransactionReceipt(
     lockHash
   )
@@ -322,15 +323,16 @@ export async function checkMint (transfer) {
     }
   }
 
-  const balanceBefore = Number(urlParams.get('balanceBefore'))
-  const balanceAfter = await getNep141Balance({
+  const balanceBefore = new BN(urlParams.get('balanceBefore'))
+  const balanceAfter = new BN(await getNep141Balance({
     erc20Address: transfer.sourceToken,
     user: transfer.recipient
-  })
+  }))
+  const transferAmount = new BN(transfer.amount)
 
   urlParams.clear('minting', 'balanceBefore')
 
-  if (balanceBefore + transfer.amount !== balanceAfter) {
+  if (!balanceBefore.add(transferAmount).eq(balanceAfter)) {
     return {
       ...transfer,
       status: status.FAILED,
@@ -338,7 +340,7 @@ export async function checkMint (transfer) {
         ...transfer.errors,
         `Something went wrong. Pre-transaction balance (${balanceBefore})
         + transfer amount (${transfer.amount}) =
-        ${balanceBefore + transfer.amount}, but new balance is instead
+        ${balanceBefore.add(transferAmount)}, but new balance is instead
         ${balanceAfter}.`
       ]
     }

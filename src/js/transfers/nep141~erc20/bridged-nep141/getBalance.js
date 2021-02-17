@@ -22,7 +22,7 @@ export default async function getBalance ({ erc20Address, user }) {
       'get_balance',
       { owner_id: user }
     )
-    return Number(balanceAsString)
+    return balanceAsString
   } catch (e) {
     console.warn(e)
     return null
