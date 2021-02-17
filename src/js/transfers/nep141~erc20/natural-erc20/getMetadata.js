@@ -19,7 +19,7 @@ async function getBalance (address, user) {
 
 const erc20Decimals = {}
 async function getDecimals (address) {
-  if (erc20Decimals[address]) return erc20Decimals[address]
+  if (erc20Decimals[address] !== undefined) return erc20Decimals[address]
 
   const web3 = new Web3(getEthProvider())
 
@@ -39,7 +39,7 @@ async function getDecimals (address) {
 
 const erc20Icons = {}
 async function getIcon (address) {
-  if (erc20Icons[address]) return erc20Icons[address]
+  if (erc20Icons[address] !== undefined) return erc20Icons[address]
 
   const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
   erc20Icons[address] = await new Promise(resolve => {

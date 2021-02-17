@@ -161,9 +161,6 @@
   async function fillFeaturedErc20s () {
     if (!window.ethInitialized) return
 
-    // only fill once
-    if (window.state.erc20ListFilled) return
-
     const featured = await window.utils.getFeaturedErc20s()
 
     window.dom.fill('erc20List').with(
@@ -185,8 +182,6 @@
         </label>
       `)
     )
-
-    window.state.erc20ListFilled = true
   }
 
   let erc20Address
