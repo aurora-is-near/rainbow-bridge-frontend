@@ -1,8 +1,11 @@
 import BN from 'bn.js'
+import { Decimal } from 'decimal.js'
 import getRevertReason from 'eth-revert-reason'
 import Web3 from 'web3'
 import getName from '../getName'
+import { getDecimals } from '../getMetadata'
 import * as urlParams from '../../../../urlParams'
+import { formatLargeNum } from '../../../../utils'
 import { stepsFor } from '../../../i18nHelpers'
 import * as status from '../../../statuses'
 import { track } from '../../..'
@@ -30,10 +33,10 @@ const steps = [
 export const i18n = {
   en_US: {
     steps: transfer => stepsFor(transfer, steps, {
-      [APPROVE]: `Approve Token Locker to spend ${transfer.amount} ${transfer.sourceTokenName}`,
-      [LOCK]: `Lock ${transfer.amount} ${transfer.sourceTokenName} in Token Locker`,
+      [APPROVE]: `Approve Token Locker to spend ${formatLargeNum(transfer.amount, transfer.naturalDecimals)} ${transfer.sourceTokenName}`,
+      [LOCK]: `Lock ${formatLargeNum(transfer.amount, transfer.naturalDecimals)} ${transfer.sourceTokenName} in Token Locker`,
       [SYNC]: `Sync ${transfer.neededConfirmations} blocks from Ethereum to NEAR`,
-      [MINT]: `Mint ${transfer.amount} ${transfer.destinationTokenName} in NEAR`
+      [MINT]: `Mint ${formatLargeNum(transfer.amount, transfer.naturalDecimals)} ${transfer.destinationTokenName} in NEAR`
     }),
     statusMessage: transfer => {
       if (transfer.status === status.FAILED) return 'Failed'
@@ -97,12 +100,15 @@ export async function initiate ({
 }) {
   // TODO: move to core 'decorate'; get both from contracts
   const sourceTokenName = await getName(erc20Address)
+  // NOTE getDecimals is needed here so it can't be used as a decorator
+  // like getErc20Name
+  const naturalDecimals = await getDecimals(erc20Address)
   const destinationTokenName = sourceTokenName + 'ⁿ'
 
   // various attributes stored as arrays, to keep history of retries
   let transfer = {
     // attributes common to all transfer types
-    amount,
+    amount: (new Decimal(amount).times(10 ** naturalDecimals)).toString(),
     completedStep: null,
     destinationTokenName,
     errors: [],
@@ -110,6 +116,7 @@ export async function initiate ({
     sender,
     sourceToken: erc20Address,
     sourceTokenName,
+    naturalDecimals,
     status: status.ACTION_NEEDED,
     type: TRANSFER_TYPE,
 

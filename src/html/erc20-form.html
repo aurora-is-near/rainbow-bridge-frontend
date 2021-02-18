@@ -127,7 +127,6 @@
 
       try {
         await window.nep141Xerc20.naturalErc20.sendToNear({
-          // TODO fix for non-integers
           amount: amount.value,
           erc20Address: window.dom.find('erc20Address').value,
           sender: window.ethUserAddress,
@@ -177,7 +176,7 @@
             ${token.name}
           </span>
           <span>
-            ${window.utils.formatLargeNum(token.balance)}
+            ${window.utils.formatLargeNum(token.balance, token.decimals)}
           </span>
         </label>
       `)
@@ -238,9 +237,9 @@
 
     window.dom.show('sendNaturalErc20')
 
-    window.dom.fill('erc20Balance').with(window.utils.formatLargeNum(token.balance))
+    window.dom.fill('erc20Balance').with(window.utils.formatLargeNum(token.balance, token.decimals))
     window.dom.fill('nep141Name').with(token.nep141.name)
-    window.dom.fill('nep141Balance').with(window.utils.formatLargeNum(token.nep141.balance))
+    window.dom.fill('nep141Balance').with(window.utils.formatLargeNum(token.nep141.balance, token.decimals))
 
     if (token.balance) amount.disabled = false
     else amount.disabled = true

@@ -1,12 +1,15 @@
 import BN from 'bn.js'
+import { Decimal } from 'decimal.js'
 import bs58 from 'bs58'
 import getRevertReason from 'eth-revert-reason'
 import Web3 from 'web3'
 import { toBuffer } from 'eth-util-lite'
 import { parseRpcError } from 'near-api-js/lib/utils/rpc_errors'
 import getErc20Name from '../../natural-erc20/getName'
+import { getDecimals } from '../../natural-erc20/getMetadata'
 import * as status from '../../../statuses'
 import { stepsFor } from '../../../i18nHelpers'
+import { formatLargeNum } from '../../../../utils'
 import { track } from '../../..'
 import { borshifyOutcomeProof } from './borshify-proof'
 import { getEthProvider, getNearAccount, nearAuthedAgainst } from '../../../utils'
@@ -31,10 +34,10 @@ const steps = [
 export const i18n = {
   en_US: {
     steps: transfer => stepsFor(transfer, steps, {
-      [WITHDRAW]: `Withdraw ${transfer.amount} ${transfer.sourceTokenName} from NEAR`,
+      [WITHDRAW]: `Withdraw ${formatLargeNum(transfer.amount, transfer.naturalDecimals)} ${transfer.sourceTokenName} from NEAR`,
       [AWAIT_FINALITY]: 'Await NEAR finality for withdrawal transaction',
       [SYNC]: 'Sync withdrawal transaction to Ethereum',
-      [UNLOCK]: `Unlock ${transfer.amount} ${transfer.destinationTokenName} in Ethereum`
+      [UNLOCK]: `Unlock ${formatLargeNum(transfer.amount, transfer.naturalDecimals)} ${transfer.destinationTokenName} in Ethereum`
     }),
     statusMessage: transfer => {
       if (transfer.status === status.FAILED) return 'Failed'
@@ -90,13 +93,16 @@ export async function initiate ({
 }) {
   // TODO: move to core 'decorate'; get both from contracts
   const destinationTokenName = await getErc20Name(erc20Address)
+  // NOTE getDecimals is needed here so it can't be used as a decorator
+  // like getErc20Name
+  const naturalDecimals = await getDecimals(erc20Address)
   const sourceTokenName = destinationTokenName + 'ⁿ'
   const sourceToken = getNep141Address(erc20Address)
 
   // various attributes stored as arrays, to keep history of retries
   const transfer = {
     // attributes common to all transfer types
-    amount,
+    amount: (new Decimal(amount).times(10 ** naturalDecimals)).toString(),
     completedStep: null,
     destinationTokenName,
     errors: [],
@@ -104,6 +110,7 @@ export async function initiate ({
     sender,
     sourceToken,
     sourceTokenName,
+    naturalDecimals,
     status: status.IN_PROGRESS,
     type: TRANSFER_TYPE,
 

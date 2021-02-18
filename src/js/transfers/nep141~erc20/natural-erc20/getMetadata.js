@@ -16,7 +16,7 @@ async function getBalance (address, user) {
 }
 
 const erc20Decimals = {}
-async function getDecimals (address) {
+export async function getDecimals (address) {
   if (erc20Decimals[address] !== undefined) return erc20Decimals[address]
 
   const web3 = new Web3(getEthProvider())

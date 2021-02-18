@@ -346,7 +346,7 @@ function renderTransfer (transfer, { inProgress }) {
     >
       <header>
         <div>
-          <h3>${transfer.amount} ${transfer.sourceTokenName}</h3>
+          <h3>${window.utils.formatLargeNum(transfer.amount, transfer.naturalDecimals)} ${transfer.sourceTokenName}</h3>
           <div class="status-message">
             <span class="icon"></span>
             <span>${transfer.statusMessage}</span>
