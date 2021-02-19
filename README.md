@@ -17,9 +17,9 @@ You can think of the [Rainbow Bridge] as having three main pieces:
 
 An app such as this one can then make calls to these various contracts to move assets between Ethereum and NEAR.
 
-Right now, this app only moves a specific [ERC20] fungible token from Ethereum to NEAR by making calls to a `TokenLocker` / `MintableFungibleToken` Connector contract pair. Here's how it looks (click the GIF for a YouTube video with closed captions that describe what's happening):
+Right now, this app only moves a specific [ERC20] fungible token from Ethereum to NEAR by making calls to a `TokenLocker` / `MintableFungibleToken` Connector contract pair. Here's how it looks:
 
-[![UI showing sending 10 RAIN tokens from Ethereum to NEAR. Two confirmations from MetaMask pop up at the beginning of the transaction, then a notification area shows waiting for 25 blocks to sync, then the tokens are deposited on the NEAR side and the NEAR balance increases by 10](demo.gif)](https://youtu.be/GCHAib4CUrI)
+![UI showing sending 10 RAIN tokens from Ethereum to NEAR. Two confirmations from MetaMask pop up at the beginning of the transaction, then a notification area shows waiting for 25 blocks to sync, then the tokens are deposited on the NEAR side and the NEAR balance increases by 10](demo.gif)
 
 Above, we see someone sending tokens from their Ethereum wallet to their NEAR account. Here are the steps the app goes through:
 
