@@ -34,10 +34,10 @@ const steps = [
 export const i18n = {
   en_US: {
     steps: transfer => stepsFor(transfer, steps, {
-      [WITHDRAW]: `Withdraw ${formatLargeNum(transfer.amount, transfer.naturalDecimals)} ${transfer.sourceTokenName} from NEAR`,
+      [WITHDRAW]: `Withdraw ${formatLargeNum(transfer.amount, transfer.decimals)} ${transfer.sourceTokenName} from NEAR`,
       [AWAIT_FINALITY]: 'Await NEAR finality for withdrawal transaction',
       [SYNC]: 'Sync withdrawal transaction to Ethereum',
-      [UNLOCK]: `Unlock ${formatLargeNum(transfer.amount, transfer.naturalDecimals)} ${transfer.destinationTokenName} in Ethereum`
+      [UNLOCK]: `Unlock ${formatLargeNum(transfer.amount, transfer.decimals)} ${transfer.destinationTokenName} in Ethereum`
     }),
     statusMessage: transfer => {
       if (transfer.status === status.FAILED) return 'Failed'
@@ -93,16 +93,15 @@ export async function initiate ({
 }) {
   // TODO: move to core 'decorate'; get both from contracts
   const destinationTokenName = await getErc20Name(erc20Address)
-  // NOTE getDecimals is needed here so it can't be used as a decorator
-  // like getErc20Name
-  const naturalDecimals = await getDecimals(erc20Address)
+  // TODO: call initiate with a formated amount and query decimals when decorate()
+  const decimals = await getDecimals(erc20Address)
   const sourceTokenName = destinationTokenName + 'ⁿ'
   const sourceToken = getNep141Address(erc20Address)
 
   // various attributes stored as arrays, to keep history of retries
   const transfer = {
     // attributes common to all transfer types
-    amount: (new Decimal(amount).times(10 ** naturalDecimals)).toString(),
+    amount: (new Decimal(amount).times(10 ** decimals)).toString(),
     completedStep: null,
     destinationTokenName,
     errors: [],
@@ -110,7 +109,7 @@ export async function initiate ({
     sender,
     sourceToken,
     sourceTokenName,
-    naturalDecimals,
+    decimals,
     status: status.IN_PROGRESS,
     type: TRANSFER_TYPE,
 

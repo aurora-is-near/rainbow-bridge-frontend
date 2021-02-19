@@ -33,10 +33,10 @@ const steps = [
 export const i18n = {
   en_US: {
     steps: transfer => stepsFor(transfer, steps, {
-      [APPROVE]: `Approve Token Locker to spend ${formatLargeNum(transfer.amount, transfer.naturalDecimals)} ${transfer.sourceTokenName}`,
-      [LOCK]: `Lock ${formatLargeNum(transfer.amount, transfer.naturalDecimals)} ${transfer.sourceTokenName} in Token Locker`,
+      [APPROVE]: `Approve Token Locker to spend ${formatLargeNum(transfer.amount, transfer.decimals)} ${transfer.sourceTokenName}`,
+      [LOCK]: `Lock ${formatLargeNum(transfer.amount, transfer.decimals)} ${transfer.sourceTokenName} in Token Locker`,
       [SYNC]: `Sync ${transfer.neededConfirmations} blocks from Ethereum to NEAR`,
-      [MINT]: `Mint ${formatLargeNum(transfer.amount, transfer.naturalDecimals)} ${transfer.destinationTokenName} in NEAR`
+      [MINT]: `Mint ${formatLargeNum(transfer.amount, transfer.decimals)} ${transfer.destinationTokenName} in NEAR`
     }),
     statusMessage: transfer => {
       if (transfer.status === status.FAILED) return 'Failed'
@@ -100,15 +100,14 @@ export async function initiate ({
 }) {
   // TODO: move to core 'decorate'; get both from contracts
   const sourceTokenName = await getName(erc20Address)
-  // NOTE getDecimals is needed here so it can't be used as a decorator
-  // like getErc20Name
-  const naturalDecimals = await getDecimals(erc20Address)
+  // TODO: call initiate with a formated amount and query decimals when decorate()
+  const decimals = await getDecimals(erc20Address)
   const destinationTokenName = sourceTokenName + 'ⁿ'
 
   // various attributes stored as arrays, to keep history of retries
   let transfer = {
     // attributes common to all transfer types
-    amount: (new Decimal(amount).times(10 ** naturalDecimals)).toString(),
+    amount: (new Decimal(amount).times(10 ** decimals)).toString(),
     completedStep: null,
     destinationTokenName,
     errors: [],
@@ -116,7 +115,7 @@ export async function initiate ({
     sender,
     sourceToken: erc20Address,
     sourceTokenName,
-    naturalDecimals,
+    decimals,
     status: status.ACTION_NEEDED,
     type: TRANSFER_TYPE,
 
