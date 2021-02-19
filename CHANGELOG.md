@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.11...v1.10.0) (2021-02-19)
+
+
+### Features
+
+* more robust `get` interface ([2b11783](https://github.com/near/rainbow-bridge-frontend/commit/2b11783cc67c3f975e3e982dbf033c46d04a31f0))
+
 ## [1.9.11](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.10...v1.9.11) (2021-02-17)
 
 
