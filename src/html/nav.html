@@ -183,7 +183,7 @@
   async function renderTopBar () {
     if (!(window.ethInitialized && window.nearInitialized)) return
 
-    const { all: transfers } = await window.transfers.get()
+    const transfers = await window.transfers.get()
     const params = Object.keys(window.urlParams.get())
 
     if (params.length) window.dom.show('goHome')

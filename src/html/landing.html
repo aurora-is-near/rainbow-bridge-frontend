@@ -74,7 +74,7 @@ async function renderLanding () {
     return
   }
 
-  const { all: transfers } = await window.transfers.get()
+  const transfers = await window.transfers.get()
   const params = Object.keys(window.urlParams.get())
 
   if (transfers.length || params.length) {

@@ -27,20 +27,26 @@ function dashToCamelCase (str) {
   )
 }
 
-// The only way to retrieve a list of transfers.
-// Returns an object with keys for each transfer status plus 'all',
-// with array of chronologically-ordered transfers for each
-export async function get () {
-  const transfers = await storage.getAll()
-  return transfers.reduce(
-    (acc, transfer) => {
-      const status = dashToCamelCase(transfer.status)
-      acc[status].push(transfer)
-      acc.all.push(transfer)
-      return acc
-    },
-    { all: [], inProgress: [], actionNeeded: [], failed: [], completed: [] }
-  )
+/**
+ * Return a list of transfers
+ *
+ * @param {object} params Object of options
+ * @param params.filter function Optional filter function
+ *
+ * @example
+ *
+ *     import { get } from '@near~eth/client'
+ *     import { IN_PROGRESS, ACTION_NEEDED } from '@near~eth/client/dist/statuses'
+ *     const inFlight = await get({
+ *       filter: t => [IN_PROGRESS, ACTION_NEEDED].includes(t.status)
+ *     })
+ *
+ * @returns array of transfers
+ */
+export async function get ({ filter } = {}) {
+  let transfers = await storage.getAll()
+  if (filter) transfers = transfers.filter(filter)
+  return transfers
 }
 
 /*
@@ -106,7 +112,9 @@ export async function checkStatusAll ({ loop } = {}) {
     throw new Error('`loop` must be frequency, in milliseconds')
   }
 
-  const { inProgress } = await get()
+  const inProgress = await get({
+    filter: t => t.status === status.IN_PROGRESS
+  })
 
   // Check & update statuses for all in parallel
   await Promise.all(inProgress.map(t => checkStatus(t.id)))

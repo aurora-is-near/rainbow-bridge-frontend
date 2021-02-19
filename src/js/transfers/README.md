@@ -225,7 +225,7 @@ Here's code to render the list of transfers:
 import { get, onChange } from '@near~eth/client'
 
 function renderTransfers () {
-  const transfers = get({ filter: { status: 'in-progress' } })
+  const transfers = get({ filter: t => t.status === 'in-progress' })
   document.querySelector('#transfers-go-here').innerHTML =
     transfers.map(renderTransfer).join('')
 }
