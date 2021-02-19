@@ -2,9 +2,9 @@ import { bridgedNep141, naturalErc20 } from './transfers/nep141~erc20'
 
 import { Decimal } from 'decimal.js'
 
-export function formatLargeNum (n, naturalDecimals = 18) {
-  // naturalDecimals defaults to 18 for old transfers in state that didn't record transfer.naturalDecimals
-  return new Decimal(n).dividedBy(10 ** naturalDecimals)
+export function formatLargeNum (n, decimals = 18) {
+  // decimals defaults to 18 for old transfers in state that didn't record transfer.decimals
+  return new Decimal(n).dividedBy(10 ** decimals)
 }
 
 export async function getErc20Data (address) {
