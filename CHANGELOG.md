@@ -1,3 +1,15 @@
+# [1.11.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.10.0...v1.11.0) (2021-02-19)
+
+
+### Bug Fixes
+
+* support big number transfer amounts ([023cae9](https://github.com/near/rainbow-bridge-frontend/commit/023cae9c34661907261ee93d8540c5a6d2e189b7))
+
+
+### Features
+
+* add token decimal support ([c08e23e](https://github.com/near/rainbow-bridge-frontend/commit/c08e23e1fb2428e8ad595a2321c65270e274c1bf))
+
 # [1.10.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.9.11...v1.10.0) (2021-02-19)
 
 
