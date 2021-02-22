@@ -1,4 +1,4 @@
-import { bridgedNep141, naturalErc20 } from './transfers/nep141~erc20'
+import { bridgedNep141, naturalErc20 } from '@near~eth/nep141-erc20'
 
 import { Decimal } from 'decimal.js'
 
