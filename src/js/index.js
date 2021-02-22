@@ -3,8 +3,8 @@ import * as naj from 'near-api-js'
 import * as dom from './domHelpers'
 import render from './render'
 import * as urlParams from './urlParams'
-import * as transfers from './transfers'
-import * as nep141Xerc20 from './transfers/nep141~erc20'
+import * as transfers from '@near~eth/client'
+import * as nep141Xerc20 from '@near~eth/nep141-erc20'
 import * as utils from './utils'
 
 dom.init()
