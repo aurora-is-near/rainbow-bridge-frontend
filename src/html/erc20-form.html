@@ -18,7 +18,6 @@
           autoComplete="off"
           data-behavior="erc20Amount"
           disabled
-          min="0"
           placeholder="0"
           type="number"
         />
@@ -247,6 +246,7 @@
 
     amount.step = 10 ** -token.decimals
     amount.max = token.balance
+    amount.min = 10 ** -token.decimals
     window.dom.show('erc20Info', 'flex')
     amount.focus()
   }
