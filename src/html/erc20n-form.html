@@ -219,6 +219,7 @@
       window.dom.find('erc20nFreeForm').classList.remove('error')
       window.dom.hide('erc20nAddressError')
       window.dom.fill('erc20Name').with(token.name)
+      window.dom.hide('erc20nModal')
     } catch (e) {
       window.dom.find('erc20nSelectButton').classList.remove('selected')
       const input = window.dom.find('erc20nFreeForm')
