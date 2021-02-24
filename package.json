@@ -31,8 +31,8 @@
     "semantic-release": "^17.1.2"
   },
   "dependencies": {
-    "@near~eth/client": "link:../rainbow-bridge-client/packages/client",
-    "@near~eth/nep141-erc20": "link:../rainbow-bridge-client/packages/nep141-erc20",
+    "@near-eth/client": "^0.2.1",
+    "@near-eth/nep141-erc20": "^0.2.1",
     "@walletconnect/web3-provider": "^1.2.1",
     "bs58": "^4.0.1",
     "decimal.js": "^10.2.1",

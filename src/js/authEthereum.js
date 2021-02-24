@@ -5,7 +5,7 @@ import Web3 from 'web3'
 import {
   checkStatusAll as checkTransferStatuses,
   setEthProvider
-} from '@near~eth/client'
+} from '@near-eth/client'
 import render from './render'
 import { onClick } from './domHelpers'
 

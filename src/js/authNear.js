@@ -3,7 +3,7 @@ import { keyStores, WalletConnection, Near } from 'near-api-js'
 import {
   checkStatusAll as checkTransferStatuses,
   setNearConnection
-} from '@near~eth/client'
+} from '@near-eth/client'
 import render from './render'
 import { onClick } from './domHelpers'
 
