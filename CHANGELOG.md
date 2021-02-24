@@ -1,3 +1,11 @@
+## [1.11.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.11.0...v1.11.1) (2021-02-24)
+
+
+### Bug Fixes
+
+* amount input step and min ([d950713](https://github.com/near/rainbow-bridge-frontend/commit/d950713a7a817ff5dea5dd0cd588f72ecd5453fb))
+* hide erc20 modal on new custom token selection ([76e904b](https://github.com/near/rainbow-bridge-frontend/commit/76e904b3d24490b5eddf81c12167fab197c43264))
+
 # [1.11.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.10.0...v1.11.0) (2021-02-19)
 
 
