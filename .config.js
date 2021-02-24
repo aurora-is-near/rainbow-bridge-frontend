@@ -19,7 +19,7 @@ module.exports = {
   local: {
     ...localConfig,
     ethNetwork: 'localhost:9545',
-    ethErc20AbiText: readFileSync('./erc20.abi'),
+    ethErc20AbiText: readFileSync('./abi/erc20.abi'),
     ethLockerAbiText: readFileSync('./node_modules/rainbow-token-connector/res/ERC20Locker.full.abi'),
     nearClientAccount: 'rainbow_bridge_eth_on_near_client',
     nearWalletUrl: 'http://localhost:4000/',
@@ -28,13 +28,13 @@ module.exports = {
   development: {
     // library settings
     ethClientAddress: '0x05af81eeb82ab7a294a9942ba01ae2d2da9f18be',
-    ethNearOnEthClientAbiText: readFileSync('./nearOnEthClient.abi'),
+    ethNearOnEthClientAbiText: readFileSync('./abi/nearOnEthClient.abi'),
     ethEd25519Address: '0xe729ee84db978d7971bbc5079fd32bb0ae8d1856',
-    ethErc20AbiText: readFileSync('./erc20.abi'),
+    ethErc20AbiText: readFileSync('./abi/erc20.abi'),
     ethLockerAbiText: readFileSync('./node_modules/rainbow-token-connector/res/BridgeTokenFactory.full.abi'),
     ethLockerAddress: '0xa5289b6d5dcc13e48f2cc6382256e51589849f86',
     ethProverAddress: '0xd67d3102fc06a0e7abb23ad0e5a9752d9397177e',
-    ethProverAbiText: readFileSync('./prover.abi'),
+    ethProverAbiText: readFileSync('./abi/prover.abi'),
     nearClientAccount: 'client.ropsten.testnet',
     nearHelperUrl: 'https://helper.testnet.near.org',
     nearProverAccount: 'prover.ropsten.testnet',
