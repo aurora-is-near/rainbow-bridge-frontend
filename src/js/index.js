@@ -1,4 +1,5 @@
 import BN from 'bn.js'
+import { Decimal } from 'decimal.js'
 import * as naj from 'near-api-js'
 import * as dom from './domHelpers'
 import render from './render'
@@ -11,6 +12,7 @@ dom.init()
 
 // Can't import modules in <script> tags in files included via PostHTML 😞
 window.BN = BN
+window.Decimal = Decimal
 window.dom = dom
 window.nep141Xerc20 = nep141Xerc20
 window.LOOP_INTERVAL = 5500

@@ -245,7 +245,11 @@
     else amount.disabled = true
 
     amount.step = 10 ** -token.decimals
-    amount.max = token.balance
+    // NOTE: the html input field makes the comparison on rounded numbers
+    // So the max check is not precise for very small decimals.
+    // For example if the balance is 500003.0100900000011, then the input field will allow a max of
+    // only 500003.01009
+    amount.max = Number(new window.Decimal(token.balance).times(10 ** -token.decimals).toFixed()),
     amount.min = 10 ** -token.decimals
     window.dom.show('erc20Info', 'flex')
     amount.focus()
