@@ -1281,10 +1281,10 @@
     decimal.js "^10.2.1"
     near-api-js near/near-api-js#account-type-fixes
 
-"@near-eth/nep141-erc20@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-0.2.1.tgz#af3838af37171fd5cced171d2f0d7bbc8f502d4a"
-  integrity sha512-RUsk5JBjJ/qdrNgFlV+mc0N0DTAh8/uaw1BnblkwjRqgxEryLP2Ux883TTDUcnuobJ0JaJGkyeHZ5fGIQcHPqg==
+"@near-eth/nep141-erc20@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-0.2.2.tgz#5fd0b82ec75633b55f4b1bc5d5116c52b2958f39"
+  integrity sha512-8Ip57HHFS5S2QfANAxps6n1YqqdohER2jV77aP8dP54IQPJyEIJ3QACqXzJuzfmWBDeiJeezbcGW9FGugbLRQA==
   dependencies:
     "@near-eth/client" "0.2.1"
     bn.js "^5.1.3"

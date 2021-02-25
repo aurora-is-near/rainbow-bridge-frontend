@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@near-eth/client": "^0.2.1",
-    "@near-eth/nep141-erc20": "^0.2.1",
+    "@near-eth/nep141-erc20": "^0.2.2",
     "@walletconnect/web3-provider": "^1.2.1",
     "bs58": "^4.0.1",
     "decimal.js": "^10.2.1",
