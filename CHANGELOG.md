@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/near/rainbow-bridge-frontend/compare/v2.0.0...v2.0.1) (2021-02-25)
+
+
+### Bug Fixes
+
+* improve max transfer amount ([f76e30c](https://github.com/near/rainbow-bridge-frontend/commit/f76e30ccfbd819d1144fee6da70f3abe6c8f1776))
+
 # [2.0.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.11.1...v2.0.0) (2021-02-25)
 
 
