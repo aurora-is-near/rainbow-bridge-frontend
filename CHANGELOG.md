@@ -1,3 +1,20 @@
+# [2.0.0](https://github.com/near/rainbow-bridge-frontend/compare/v1.11.1...v2.0.0) (2021-02-25)
+
+
+* refactor!: use @near-eth npm published package ([55ee5c4](https://github.com/near/rainbow-bridge-frontend/commit/55ee5c4a6bce33ea7ed55972e45e6c1113f0de5a))
+
+
+### Code Refactoring
+
+* replace transfers/ with [@near](https://github.com/near)~eth ([dafb095](https://github.com/near/rainbow-bridge-frontend/commit/dafb09566e0325c365ec40cf9c15296b919425ea))
+
+
+### BREAKING CHANGES
+
+* new TRANSFER_TYPE requires deleting localStorage
+* in @near~eth TRANSFER_TYPE is renamed (~ removed from
+nep141-erc20)
+
 ## [1.11.1](https://github.com/near/rainbow-bridge-frontend/compare/v1.11.0...v1.11.1) (2021-02-24)
 
 
