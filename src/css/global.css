@@ -167,7 +167,7 @@ input.error, select.error {
 }
 input::selection {
   background-color: var(--primary);
-  color: #efefefk
+  color: #efefef;
 }
 input:focus {
   box-shadow: 0 0 10em rgba(0, 0, 0, 0.02) inset;
