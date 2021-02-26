@@ -71,13 +71,6 @@ Exploring the code
    * `initDOMHandlers` is a function that needs to be called once after page load, to add behavior like dropdown toggling & form submission. Check out [domHelpers.js](./src/js/domHelpers.js) to see the simple setup here.
    * `render` is a function which doesn't truly _render_, if you're used to thinking about rendering from a framework like React. Instead, this function procedurally updates the DOM based on current app state. Open [render.js](./src/js/render.js) to see everything it does. This function gets called again in both [authEthereum](./src/js/authEthereum.js) and [authNear](./src/js/authNear.js) after login.
 
-4. [transfers.js](./src/js/transfers.js): the main Rainbow Bridge logic!
-
-   * This file will be extracted to a library for frontends that want to use the Rainbow Bridge. For now, if you throw away the rest of this app, keep this part! And as this repository gets updated (it uses semantic versioning), you can copy-paste the latest version of this file into your own app.
-   * The public interface of this file is small. Look for the functions that are exported at the top. You can initiate a transfer, get all transfers, check & update statuses of transfers, and retry or clear transfers.
-   * In-progress transers are saved to localStorage. After initializing a transfer, you can refresh or close the app. When you come back, it will start re-checking your transfers and moving them along. In the future, this logic might be moved to a Service Worker so that transfers continue to be checked & progressed as long as the browser is open.
-
-
 
 
 Run everything locally
