@@ -1,8 +1,5 @@
-<aside class="banner yellow" data-behavior="ropstenBanner" style="display:none">
-  Operating on Ropsten ↔︎ NEAR Testnet
-</aside>
 <aside class="banner red" data-behavior="unsupportedNetwork" style="display:none">
-  Unsupported Ethereum Network! Please use Ropsten.
+  Please change Ethereum network to use this bridge.
 </aside>
 
 <script>
@@ -10,11 +7,13 @@
     if (!window.ethInitialized) return
 
     const network = await window.web3.eth.net.getNetworkType()
-    if (network === 'ropsten') {
-      window.dom.show('ropstenBanner')
+    if (process.env.bridgeName === 'Near - Ethereum' && network === 'main') {
+      window.dom.hide('unsupportedNetwork')
+    } else if (process.env.bridgeName === 'Near Testnet - Ropsten' && network === 'ropsten') {
+      window.dom.hide('unsupportedNetwork')
+    } else if (process.env.bridgeName === 'Near Testnet - Rinkeby' && network === 'rinkeby') {
       window.dom.hide('unsupportedNetwork')
     } else {
-      window.dom.hide('ropstenBanner')
       window.dom.show('unsupportedNetwork')
     }
   }

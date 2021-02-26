@@ -7,6 +7,42 @@
     <span class="visually-hidden">Home</span>
   </button>
 </nav>
+<nav data-behavior="bridgesDropdown" class="bridges-nav">
+  <div id="bridges-dropdown" class="dropdown" aria-live="polite">
+    <button aria-controls="bridges-dropdown" class="bridges-button">
+      <span class="colored-dot" style="background-color: #29b6af">
+        <span class="visually-hidden">Connected</span>
+      </span>
+      <span data-behavior="bridgeName"></span>
+    </button>
+    <div class="bridges-list">
+      <button aria-controls="bridges-dropdown" class="bridges-button">
+        <span class="colored-dot" style="background-color: #29b6af">
+          <span class="visually-hidden">Connected</span>
+        </span>
+        <span>
+          Near - Ethereum
+        </span>
+      </button>
+      <button aria-controls="bridges-dropdown" class="bridges-button">
+        <span class="colored-dot" style="background-color: #ff4a8d">
+          <span class="visually-hidden">Connected</span>
+        </span>
+        <span>
+          Near Testnet - Ropsten
+        </span>
+      </button>
+      <button aria-controls="bridges-dropdown" class="bridges-button">
+        <span class="colored-dot" style="background-color: #f6c343">
+          <span class="visually-hidden">Connected</span>
+        </span>
+        <span>
+          Near Testnet - Rinkeby
+        </span>
+      </button>
+    </div>
+  </div>
+</nav>
 <nav data-behavior="accountsDropdown" class="accounts-nav" style="display: none">
   <div id="accounts-dropdown" class="dropdown" aria-live="polite">
     <button aria-controls="accounts-dropdown" class="accounts-button">
@@ -15,9 +51,6 @@
         <source srcset="img/near-dark.svg" media="(prefers-color-scheme: dark)">
         <img style="width: 1.5rem" alt="NEAR" src="img/near.svg">
       </picture>
-      <span class="green-dot">
-        <span class="visually-hidden">Connected</span>
-      </span>
     </button>
     <div class="right accounts-list">
       <div data-behavior="ethConnected">
@@ -47,25 +80,35 @@
   .topbar button:focus {
     border: 1px solid var(--gray);
   }
-  @media (min-width: 928px) {
-    .topbar:before {
-      position: fixed;
-      top: 0; bottom: 0; right: 0; left: 0;
-      content: ' ';
-      background:
-        url('img/form-bg-bottom-left.svg') no-repeat,
-        url('img/form-bg-bottom-right.svg') no-repeat;
-      background-position:
-        bottom left,
-        bottom right;
-      z-index: -1;
-    }
-  }
 
+  .bridges-nav {
+    font-size: 0.75em;
+    position: absolute;
+    left: 6.6rem;
+    top: 1rem;
+    z-index: 2;
+  }
+  .bridges-button {
+    background-color: var(--bg);
+    color: var(--fg-bold);
+    display: flex;
+    align-items: center;
+    height: 2.9em;
+    width: 100%;
+  }
+  .bridges-button .colored-dot {
+    border-radius: 10em;
+    width: 11px; height: 11px;
+    margin-right: 0.6rem;
+  }
+  .bridges-list {
+    width: 15em;
+    margin: 0;
+  }
   .accounts-nav {
     font-size: 0.75em;
     position: absolute;
-    right: 1rem;
+    right: 0.5rem;
     top: 1rem;
     z-index: 2;
   }
@@ -79,11 +122,6 @@
   .accounts-button > *:last-child {
     margin-left: 0;
   }
-  .accounts-button .green-dot {
-    background-color: #00C08B;
-    border-radius: 10em;
-    width: 8px; height: 8px;
-  }
 
   .dropdown {
     background: var(--bg);
@@ -96,7 +134,7 @@
     border: 1px solid var(--light-gray);
     border-radius: 0.5rem;
     position: relative;
-    padding-right: 1.5rem;
+    padding-right: 1.3rem;
     z-index: 2;
   }
   .dropdown > button:after {
@@ -120,9 +158,7 @@
     display: none;
   }
   .dropdown.active > button + * {
-    background-color: var(--bg);
     display: block;
-    padding: 1rem;
     position: absolute;
     border-radius: 0.5rem;
     border: 1px solid var(--light-gray);
@@ -136,7 +172,9 @@
 
   .accounts-list {
     color: var(--fg-bold);
+    background-color: var(--bg);
     width: 21em;
+    padding: 1rem;
     padding-bottom: 0 !important;
   }
   .accounts-list > * {
@@ -148,6 +186,29 @@
   .accounts-list button {
     color: var(--fg);
     font-weight: 400;
+  }
+  @media (min-width: 928px) {
+    .topbar:before {
+      position: fixed;
+      top: 0; bottom: 0; right: 0; left: 0;
+      content: ' ';
+      background:
+        url('img/form-bg-bottom-left.svg') no-repeat,
+        url('img/form-bg-bottom-right.svg') no-repeat;
+      background-position:
+        bottom left,
+        bottom right;
+      z-index: -1;
+    }
+    .accounts-nav {
+      right: 10.6rem;
+    }
+    .topbar {
+      padding-left: 5em;
+    }
+    .bridges-nav {
+      left: 10.6rem;
+    }
   }
 </style>
 <script>
