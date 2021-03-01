@@ -16,10 +16,5 @@ export default async function render () {
     })
   }
 
-  fill('bridgeName').with({
-    innerHTML: process.env.bridgeName,
-    title: process.env.bridgeName
-  })
-
   await Promise.all(window.renderers.map(r => r()))
 }

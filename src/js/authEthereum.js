@@ -8,6 +8,7 @@ import {
 } from '@near-eth/client'
 import render from './render'
 import { onClick } from './domHelpers'
+import { ethNetworks } from './utils'
 
 // SWAP IN YOUR OWN INFURA_ID FROM https://infura.io/dashboard/ethereum
 const INFURA_ID = '9c91979e95cb4ef8a61eb029b4217a1a'
@@ -32,6 +33,8 @@ async function login (provider) {
   const [ethUser] = await provider.request({ method: 'eth_requestAccounts' })
   window.ethUserAddress = ethUser
 
+  window.connectedEthNetwork = await window.web3.eth.net.getNetworkType()
+
   window.ethInitialized = true
 
   render()
@@ -44,8 +47,15 @@ async function loadWeb3Modal () {
 
   setEthProvider(provider)
 
-  provider.on('accountsChanged', () => {
-    login(provider)
+  provider.on('accountsChanged', (accounts) => {
+    console.log('User changed Ethereum account: ', accounts)
+    window.ethUserAddress = accounts[0]
+    render()
+  })
+  provider.on('chainChanged', (chainId) => {
+    console.log('User changed Ethereum Network: ', chainId)
+    window.connectedEthNetwork = ethNetworks[chainId]
+    render()
   })
 
   login(provider)

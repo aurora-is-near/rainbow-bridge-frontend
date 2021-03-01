@@ -16,7 +16,9 @@
       <span data-behavior="bridgeName"></span>
     </button>
     <div class="bridges-list">
-      <button aria-controls="bridges-dropdown" class="bridges-button">
+      <button aria-controls="bridges-dropdown" class="bridges-button"
+        onclick="location.href='https://bridge.near.org';"
+      >
         <span class="colored-dot" style="background-color: #29b6af">
           <span class="visually-hidden">Connected</span>
         </span>
@@ -24,7 +26,9 @@
           Near - Ethereum
         </span>
       </button>
-      <button aria-controls="bridges-dropdown" class="bridges-button">
+      <button aria-controls="bridges-dropdown" class="bridges-button"
+        onclick="location.href='https://bridge.ropsten-testnet.near.org';"
+      >
         <span class="colored-dot" style="background-color: #ff4a8d">
           <span class="visually-hidden">Connected</span>
         </span>
@@ -32,7 +36,9 @@
           Near Testnet - Ropsten
         </span>
       </button>
-      <button aria-controls="bridges-dropdown" class="bridges-button">
+      <button aria-controls="bridges-dropdown" class="bridges-button"
+        onclick="location.href='https://bridge.rinkeby-testnet.near.org';"
+      >
         <span class="colored-dot" style="background-color: #f6c343">
           <span class="visually-hidden">Connected</span>
         </span>
@@ -206,6 +212,9 @@
     .topbar {
       padding-left: 5em;
     }
+    .topbar > button {
+      left: 4rem;
+    }
     .bridges-nav {
       left: 10.6rem;
     }
@@ -241,6 +250,21 @@
       })
     })
   })
+
+  window.addEventListener('load', function displaySelectedBridge () {
+    const ethNetworkColors = {
+      'main': "#29b6af",
+      'ropsten': "#ff4a8d",
+      'rinkeby': "#f6c343"
+    }
+    window.dom.fill('bridgeName').with({
+      innerHTML: window.bridgeName,
+      title: window.bridgeName
+    })
+    document.querySelectorAll('.bridges-button > .colored-dot')[0]
+      .style.backgroundColor = ethNetworkColors[process.env.ethNetworkId]
+  })
+
   async function renderTopBar () {
     if (!(window.ethInitialized && window.nearInitialized)) return
 

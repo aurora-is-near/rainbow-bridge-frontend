@@ -58,6 +58,6 @@ module.exports = {
     nearWalletUrl: 'https://wallet.testnet.near.org',
     nearExplorerUrl: 'https://explorer.testnet.near.org',
     nearNetworkId: 'testnet',
-    bridgeName: 'Near Testnet - Ropsten',
+    ethNetworkId: 'rinkeby',
   },
 }
