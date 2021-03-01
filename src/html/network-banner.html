@@ -11,7 +11,7 @@
     if (!window.ethInitialized) return
 
     if (process.env.ethNetworkId === window.connectedEthNetwork) {
-      // correct network is selected, so enable scrolling
+      // Correct eth network is selected, so enable scrolling
       document.body.style.overflow = null;
       window.dom.hide('unsupportedNetworkBanner')
       if (window.connectedEthNetwork !== 'main') {
@@ -21,7 +21,7 @@
         window.dom.show('testnetBanner')
       }
     } else {
-      // Go to top and disable scroll until correct network selected
+      // Go to top and disable scroll until correct eth network selected
       window.scrollTo({ top: 0 });
       document.body.style.overflow = 'hidden';
       window.dom.hide('testnetBanner')
