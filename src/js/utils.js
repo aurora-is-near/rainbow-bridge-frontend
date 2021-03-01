@@ -16,10 +16,8 @@ export async function getErc20Data (address) {
 }
 
 export async function getFeaturedErc20s () {
-  const ethNetwork = await window.web3.eth.net.getNetworkType()
-
   return (await Promise.all(
-    JSON.parse(process.env.featuredErc20s)[ethNetwork].map(getErc20Data)
+    JSON.parse(process.env.featuredErc20s)[window.connectedEthNetwork].map(getErc20Data)
   )).reduce(
     (acc, token) => {
       acc[token.address] = token
@@ -27,4 +25,10 @@ export async function getFeaturedErc20s () {
     },
     {}
   )
+}
+
+export const ethNetworks = {
+  '0x1': 'main',
+  '0x3': 'ropsten',
+  '0x4': 'rinkeby'
 }

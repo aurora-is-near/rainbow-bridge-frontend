@@ -23,6 +23,19 @@ window.transfers = transfers
 window.urlParams = urlParams
 window.utils = utils
 
+if (process.env.nearNetworkId === 'testnet' &&
+    process.env.ethNetworkId === 'ropsten') {
+  window.bridgeName = 'Near Testnet - Ropsten'
+} else if (process.env.nearNetworkId === 'testnet' &&
+    process.env.ethNetworkId === 'rinkeby') {
+  window.bridgeName = 'Near Testnet - Rinkeby'
+} else if (process.env.nearNetworkId === 'mainnet' &&
+    process.env.ethNetworkId === 'main') {
+  window.bridgeName = 'Near - Ethereum'
+} else {
+  window.bridgeName = 'Unknown'
+}
+
 render()
 
 transfers.onChange(render)

@@ -1,20 +1,35 @@
-<aside class="banner red" data-behavior="unsupportedNetwork" style="display:none">
-  Please change Ethereum network to use this bridge.
+<aside class="banner yellow" data-behavior="testnetBanner" style="display:none">
+  <span data-behavior="testnetWarning"></span>
 </aside>
+<aside class="banner red" data-behavior="unsupportedNetworkBanner" style="display:none">
+  <span data-behavior="unsupportedNetwork"></span>
+</aside>
+<div class="fullScreen" data-behavior="unsupportedNetworkBanner" style="display: none"></div>
 
 <script>
   async function renderBanner () {
     if (!window.ethInitialized) return
 
-    const network = await window.web3.eth.net.getNetworkType()
-    if (process.env.bridgeName === 'Near - Ethereum' && network === 'main') {
-      window.dom.hide('unsupportedNetwork')
-    } else if (process.env.bridgeName === 'Near Testnet - Ropsten' && network === 'ropsten') {
-      window.dom.hide('unsupportedNetwork')
-    } else if (process.env.bridgeName === 'Near Testnet - Rinkeby' && network === 'rinkeby') {
-      window.dom.hide('unsupportedNetwork')
+    if (process.env.ethNetworkId === window.connectedEthNetwork) {
+      // correct network is selected, so enable scrolling
+      document.body.style.overflow = null;
+      window.dom.hide('unsupportedNetworkBanner')
+      if (window.connectedEthNetwork !== 'main') {
+        window.dom.fill('testnetWarning').with({
+          innerHTML: `Operating on the ${window.bridgeName} bridge`,
+        })
+        window.dom.show('testnetBanner')
+      }
     } else {
-      window.dom.show('unsupportedNetwork')
+      // Go to top and disable scroll until correct network selected
+      window.scrollTo({ top: 0 });
+      document.body.style.overflow = 'hidden';
+      window.dom.hide('testnetBanner')
+      window.dom.fill('unsupportedNetwork').with({
+        innerHTML: `Please change Ethereum network. Current: ${window.connectedEthNetwork}
+          => required: ${process.env.ethNetworkId}`,
+      })
+      window.dom.show('unsupportedNetworkBanner')
     }
   }
   window.renderers.push(renderBanner)
@@ -45,5 +60,12 @@
 }
 .banner.red {
   background: var(--red);
+}
+.fullScreen {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 10;
 }
 </style>
