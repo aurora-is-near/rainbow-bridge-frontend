@@ -1,6 +1,5 @@
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import Web3 from 'web3'
 
 import {
   checkStatusAll as checkTransferStatuses,
@@ -34,23 +33,8 @@ window.web3Modal = new Web3Modal({
   theme: theme
 })
 
-async function login (provider) {
-  window.web3 = new Web3(provider)
-  const [ethUser] = await provider.request({ method: 'eth_requestAccounts' })
-  window.ethUserAddress = ethUser
-
-  window.connectedEthNetwork = await window.web3.eth.net.getNetworkType()
-
-  window.ethInitialized = true
-
-  render()
-
-  if (window.nearInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
-}
-
-async function loadWeb3Modal () {
+async function login () {
   const provider = await window.web3Modal.connect()
-
   setEthProvider(provider)
 
   provider.on('accountsChanged', (accounts) => {
@@ -64,12 +48,18 @@ async function loadWeb3Modal () {
     render()
   })
 
-  login(provider)
+  window.ethUserAddress = provider.selectedAddress
+  window.connectedEthNetwork = ethNetworks[provider.chainId]
+  window.ethInitialized = true
+
+  render()
+
+  if (window.nearInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
 }
 
-onClick('authEthereum', loadWeb3Modal)
+onClick('authEthereum', login)
 
 // on page load, check if user has already signed in via MetaMask
 if (window.web3Modal.cachedProvider) {
-  loadWeb3Modal()
+  login()
 }
