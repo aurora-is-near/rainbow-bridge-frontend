@@ -1,3 +1,17 @@
+# [2.1.0](https://github.com/near/rainbow-bridge-frontend/compare/v2.0.1...v2.1.0) (2021-03-02)
+
+
+### Bug Fixes
+
+* web3 modal theme ([164608a](https://github.com/near/rainbow-bridge-frontend/commit/164608af615bade470a3956461fb339a00b31482))
+
+
+### Features
+
+* add bridge selection component ([aeae966](https://github.com/near/rainbow-bridge-frontend/commit/aeae966d832d19b1986e3fd33223f464164b93b4))
+* handle eth network change and bridge selection ([73a644c](https://github.com/near/rainbow-bridge-frontend/commit/73a644c70cad73b2577d203c35f7c98630f07d27))
+* update config.js for single bridge FE deployment ([8e1cb1a](https://github.com/near/rainbow-bridge-frontend/commit/8e1cb1ad02a3eeff62fa61a0230397a977fc240a))
+
 ## [2.0.1](https://github.com/near/rainbow-bridge-frontend/compare/v2.0.0...v2.0.1) (2021-02-25)
 
 
