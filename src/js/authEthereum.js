@@ -38,12 +38,10 @@ async function login () {
   setEthProvider(provider)
 
   provider.on('accountsChanged', (accounts) => {
-    console.log('User changed Ethereum account: ', accounts)
     window.ethUserAddress = accounts[0]
     render()
   })
   provider.on('chainChanged', (chainId) => {
-    console.log('User changed Ethereum Network: ', chainId)
     window.connectedEthNetwork = ethNetworks[chainId]
     render()
   })

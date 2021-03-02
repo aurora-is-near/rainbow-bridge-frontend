@@ -23,17 +23,11 @@ window.transfers = transfers
 window.urlParams = urlParams
 window.utils = utils
 
-if (process.env.nearNetworkId === 'testnet' &&
-    process.env.ethNetworkId === 'ropsten') {
-  window.bridgeName = 'Near Testnet - Ropsten'
-} else if (process.env.nearNetworkId === 'testnet' &&
-    process.env.ethNetworkId === 'rinkeby') {
-  window.bridgeName = 'Near Testnet - Rinkeby'
-} else if (process.env.nearNetworkId === 'mainnet' &&
-    process.env.ethNetworkId === 'main') {
-  window.bridgeName = 'Near - Ethereum'
-} else {
-  window.bridgeName = 'Unknown'
+switch (`${process.env.nearNetworkId}-${process.env.ethNetworkId}`) {
+  case 'testnet-ropsten': window.bridgeName = 'Near Testnet - Ropsten'; break
+  case 'testnet-rinkeby': window.bridgeName = 'Near Testnet - Rinkeby'; break
+  case 'mainnet-main': window.bridgeName = 'Near - Ethereum'; break
+  default: window.bridgeName = 'Unknown'
 }
 
 render()
