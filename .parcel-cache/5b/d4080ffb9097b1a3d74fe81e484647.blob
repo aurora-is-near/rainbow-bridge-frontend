@@ -1,0 +1,20 @@
+async function renderLanding () {
+  if (window.ethInitialized && window.nearInitialized) {
+    window.dom.find('landingSubmit').disabled = false
+  } else {
+    window.dom.show('landing')
+    window.dom.find('landingSubmit').disabled = true
+    return
+  }
+
+  const transfers = await window.transfers.get()
+  const params = Object.keys(window.urlParams.get())
+
+  if (transfers.length || params.length) {
+    window.dom.hide('landing')
+  } else {
+    window.dom.show('landing')
+  }
+}
+
+window.renderers.push(renderLanding)

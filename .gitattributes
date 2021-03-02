@@ -1,1 +1,3 @@
-yarn.lock linguist-generated=true -diff
+yarn.lock -diff
+.pnp.js -diff
+.yarn -diff

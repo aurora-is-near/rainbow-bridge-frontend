@@ -1,0 +1,32 @@
+.banner {
+  color: var(--fg-bold);
+  font-size: 0.75em;
+  font-weight: 500;
+  padding: 0.5rem;
+  text-align: center;
+}
+.banner:before {
+  content: ' ';
+  display: inline-block;
+  margin-right: 0.5em;
+  background: url(8f77b8d9a53c6113b1098b3587beb4a8) no-repeat;
+  background-size: contain;
+  width: 1rem;
+  height: 1rem;
+  position: relative;
+  top: -1px;
+  vertical-align: middle;
+}
+.banner.yellow {
+  background: var(--yellow);
+}
+.banner.red {
+  background: var(--red);
+}
+.fullScreen {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 10;
+}

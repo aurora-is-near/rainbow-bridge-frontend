@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bridge Ethereum to NEAR and back again</title>
+  <meta property="og:title" content="🌈 Rainbow Bridge 🌈">
+  <meta property="og:description" content="Bridge Ethereum to NEAR and back again">
+  <meta property="og:image" content="168c5c7d368af8cbb0731e2dd81b1de5">
+  <!-- <meta property="og:url" content="https://example.com/"> -->
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" sizes="57x57" href="4a9cf5ba8091d2aef7c282073c06248f">
+  <link rel="apple-touch-icon" sizes="60x60" href="5a337aa08a4c800bee927807aed57f2a">
+  <link rel="apple-touch-icon" sizes="72x72" href="09ebe8f09f93bb6e6fe42e01ef7071ea">
+  <link rel="apple-touch-icon" sizes="76x76" href="f784de00952e4d3fdd336874fd970cb9">
+  <link rel="apple-touch-icon" sizes="114x114" href="d4a79d99623ce5f09416dd73daee2672">
+  <link rel="apple-touch-icon" sizes="120x120" href="6402d8725c85efa5134f5dbb7481ef55">
+  <link rel="apple-touch-icon" sizes="144x144" href="86f1576434f366e2c351a841820325e2">
+  <link rel="apple-touch-icon" sizes="152x152" href="0b202769a9222db3b5e9928f5c49db2c">
+  <link rel="apple-touch-icon" sizes="180x180" href="5e78bfa240259c17bf62f2044f74cafc">
+  <link rel="icon" type="image/png" sizes="192x192" href="46ad1ff042bda7b72e1052b845af1569">
+  <link rel="icon" type="image/png" sizes="32x32" href="a7d6d08170064a80a21154b561348523">
+  <link rel="icon" type="image/png" sizes="96x96" href="7de23229c9c140721755365af4fbdab2">
+  <link rel="icon" type="image/png" sizes="16x16" href="41cf3cd4c92f46209326bcdc32cd0854">
+  <link rel="manifest" href="bdd83fe92cc0a05fb172f1815d10e9cd">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="0160cc0837b66f629b885e780a0ab9e1">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="2a42ce34ac9111594164ef0519854894">
+  <link rel="preconnect" href="14ada8ab65c68f849d3faab15b73409d">
+  <link rel="prerender" href="bcb5fed42dcda5748a05938e52b4d6b9">
+  <link href="843d7d32e4b8bfab477b3e30293a4fc0" rel="stylesheet">
+  <link href="86b52362ad0d7355eb208a2c8b57ff40" rel="stylesheet">
+  <link rel="stylesheet" href="219993d82684ae9ca103e499360daf99">
+  <script data-parcel-key="e27bb4a450a7e3ff450806ea7bcfc1ef">
+    // This app is organized into multiple html files, which can each add renderers.
+    // All renderers get called via `window.render()`
+    window.renderers = []
+
+    // If a section of the app (one of those html files) wants to keep track of
+    // what it did so far, it can use window.state
+    window.state = {}
+  </script>
+</head>
+<body>
+  <!-- using posthtml to separate page into multiple files; see .posthtmlrc -->
+  <aside class="banner yellow" data-behavior="testnetBanner" style="display:none">
+  <span data-behavior="testnetWarning"></span>
+</aside>
+<aside class="banner red" data-behavior="unsupportedNetworkBanner" style="display:none">
+  <span data-behavior="unsupportedNetwork"></span>
+</aside>
+<div class="fullScreen" data-behavior="unsupportedNetworkBanner" style="display: none"></div>
+
+<script data-parcel-key="98689195f6cd1f63841b0b1a94bce511">
+  async function renderBanner () {
+    if (!window.ethInitialized) return
+
+    if (process.env.ethNetworkId === window.connectedEthNetwork) {
+      // Correct eth network is selected, so enable scrolling
+      document.body.style.overflow = null;
+      window.dom.hide('unsupportedNetworkBanner')
+      if (window.connectedEthNetwork !== 'main') {
+        window.dom.fill('testnetWarning').with({
+          innerHTML: `Operating on the ${window.bridgeName} bridge`,
+        })
+        window.dom.show('testnetBanner')
+      }
+    } else {
+      // Go to top and disable scroll until correct eth network selected
+      window.scrollTo({ top: 0 });
+      document.body.style.overflow = 'hidden';
+      window.dom.hide('testnetBanner')
+      window.dom.fill('unsupportedNetwork').with({
+        innerHTML: `Please change Ethereum network. Current: ${window.connectedEthNetwork}
+          => required: ${process.env.ethNetworkId}`,
+      })
+      window.dom.show('unsupportedNetworkBanner')
+    }
+  }
+  window.renderers.push(renderBanner)
+</script>
+
+<style data-parcel-key="63b94eb3b27c0abfc7ee1e565b78f131">
+.banner {
+  color: var(--fg-bold);
+  font-size: 0.75em;
+  font-weight: 500;
+  padding: 0.5rem;
+  text-align: center;
+}
+.banner:before {
+  content: ' ';
+  display: inline-block;
+  margin-right: 0.5em;
+  background: url(img/alert-triangle.svg) no-repeat;
+  background-size: contain;
+  width: 1rem;
+  height: 1rem;
+  position: relative;
+  top: -1px;
+  vertical-align: middle;
+}
+.banner.yellow {
+  background: var(--yellow);
+}
+.banner.red {
+  background: var(--red);
+}
+.fullScreen {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 10;
+}
+</style>
+
+  <!-- this div allows accounts dropdown in nav.html to use absolute positioning whether or not banner is shown -->
+  <div style="display: flex; flex-direction: column; min-height: 100vh; position: relative">
+    <nav data-behavior="topbar" class="topbar" style="display:none">
+  <picture>
+    <source srcset="344601285ea63c6d23a031eba3836239" media="(prefers-color-scheme: dark)">
+    <img src="6b7204f3cbc512554449486b61dd2ebd" style="height: 2.4em">
+  </picture>
+  <button data-behavior="goHome" class="link" title="Go home">
+    <span class="visually-hidden">Home</span>
+  </button>
+</nav>
+<nav data-behavior="bridgesDropdown" class="bridges-nav">
+  <div id="bridges-dropdown" class="dropdown" aria-live="polite">
+    <button aria-controls="bridges-dropdown" class="bridges-button">
+      <span class="colored-dot" style="background-color: #29b6af">
+        <span class="visually-hidden">Connected</span>
+      </span>
+      <span data-behavior="bridgeName"></span>
+    </button>
+    <div class="bridges-list">
+      <button aria-controls="bridges-dropdown" class="bridges-button" onclick="location.href='https://bridge.near.org';">
+        <span class="colored-dot" style="background-color: #29b6af">
+          <span class="visually-hidden">Connected</span>
+        </span>
+        <span>
+          Near - Ethereum
+        </span>
+      </button>
+      <button aria-controls="bridges-dropdown" class="bridges-button" onclick="location.href='https://bridge.ropsten-testnet.near.org';">
+        <span class="colored-dot" style="background-color: #ff4a8d">
+          <span class="visually-hidden">Connected</span>
+        </span>
+        <span>
+          Near Testnet - Ropsten
+        </span>
+      </button>
+      <button aria-controls="bridges-dropdown" class="bridges-button" onclick="location.href='https://bridge.rinkeby-testnet.near.org';">
+        <span class="colored-dot" style="background-color: #f6c343">
+          <span class="visually-hidden">Connected</span>
+        </span>
+        <span>
+          Near Testnet - Rinkeby
+        </span>
+      </button>
+    </div>
+  </div>
+</nav>
+<nav data-behavior="accountsDropdown" class="accounts-nav" style="display: none">
+  <div id="accounts-dropdown" class="dropdown" aria-live="polite">
+    <button aria-controls="accounts-dropdown" class="accounts-button">
+      <img data-behavior="ethConnected" style="width: 1.5rem" alt="Ethereum" src="6909981766341a5ef97f80cc939fc536">
+      <picture data-behavior="nearConnected">
+        <source srcset="31b4c748fe2c8f6fd4d65c5ee0b34bdf" media="(prefers-color-scheme: dark)">
+        <img style="width: 1.5rem" alt="NEAR" src="0b96d1677454770d6e6af265d2b0422d">
+      </picture>
+    </button>
+    <div class="right accounts-list">
+      <div data-behavior="ethConnected">
+        <span class="account-with-icon reverse ethereum" data-behavior="ethUser"></span>
+        <button class="link" data-behavior="disconnectEthereum">Disconnect</button>
+      </div>
+      <div data-behavior="nearConnected">
+        <span class="account-with-icon reverse near" data-behavior="nearUser"></span>
+        <button class="link" data-behavior="disconnectNear">Disconnect</button>
+      </div>
+    </div>
+  </div>
+</nav>
+<style data-parcel-key="afbf75cedc2e562a81dbbd98e7f09dfb">
+  .topbar {
+    border-bottom: 1px solid var(--light-gray);
+    margin: 0;
+    padding: 1em 1em 0.5em;
+    position: relative;
+  }
+  .topbar button {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 6em;
+  }
+  .topbar button:hover,
+  .topbar button:focus {
+    border: 1px solid var(--gray);
+  }
+
+  .bridges-nav {
+    font-size: 0.75em;
+    position: absolute;
+    left: 6.6rem;
+    top: 1rem;
+    z-index: 2;
+  }
+  .bridges-button {
+    background-color: var(--bg);
+    color: var(--fg-bold);
+    display: flex;
+    align-items: center;
+    height: 2.9em;
+    width: 100%;
+  }
+  .bridges-button .colored-dot {
+    border-radius: 10em;
+    width: 11px; height: 11px;
+    margin-right: 0.6rem;
+  }
+  .bridges-list {
+    width: 15em;
+    margin: 0;
+  }
+  .accounts-nav {
+    font-size: 0.75em;
+    position: absolute;
+    right: 0.5rem;
+    top: 1rem;
+    z-index: 2;
+  }
+  .accounts-button {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  .accounts-button > * {
+    margin-left: -0.3rem;
+  }
+  .accounts-button > *:last-child {
+    margin-left: 0;
+  }
+
+  .dropdown {
+    background: var(--bg);
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+  }
+  .dropdown > button {
+    background: var(--bg);
+    border: 1px solid var(--light-gray);
+    border-radius: 0.5rem;
+    position: relative;
+    padding-right: 1.3rem;
+    z-index: 2;
+  }
+  .dropdown > button:after {
+    content: ' ';
+    background-image: url(/img/chevron-down.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 1rem;
+    position: absolute;
+    right: 0.25rem;
+    top: 0;
+    bottom: 0;
+  }
+  .dropdown > button:hover,
+  .dropdown > button:focus {
+    border: 1px solid var(--gray);
+    box-shadow: none;
+  }
+  .dropdown > button + * {
+    display: none;
+  }
+  .dropdown.active > button + * {
+    display: block;
+    position: absolute;
+    border-radius: 0.5rem;
+    border: 1px solid var(--light-gray);
+    max-width: calc(100vw - 2em);
+    top: calc(100% + 0.25rem);
+    z-index: 1;
+  }
+  .dropdown.active > button + .right {
+    right: 0;
+  }
+
+  .accounts-list {
+    color: var(--fg-bold);
+    background-color: var(--bg);
+    width: 21em;
+    padding: 1rem;
+    padding-bottom: 0 !important;
+  }
+  .accounts-list > * {
+    display: grid;
+    grid-gap: 2em;
+    grid-template-columns: 1fr auto;
+    margin-bottom: 1rem;
+  }
+  .accounts-list button {
+    color: var(--fg);
+    font-weight: 400;
+  }
+  @media (min-width: 928px) {
+    .topbar:before {
+      position: fixed;
+      top: 0; bottom: 0; right: 0; left: 0;
+      content: ' ';
+      background:
+        url('img/form-bg-bottom-left.svg') no-repeat,
+        url('img/form-bg-bottom-right.svg') no-repeat;
+      background-position:
+        bottom left,
+        bottom right;
+      z-index: -1;
+    }
+    .accounts-nav {
+      right: 10.6rem;
+    }
+    .topbar {
+      padding-left: 5em;
+    }
+    .topbar > button {
+      left: 4rem;
+    }
+    .bridges-nav {
+      left: 10.6rem;
+    }
+  }
+</style>
+<script data-parcel-key="d3c2e64140f0913ab603b7082dd6217c">
+  window.addEventListener('load', function addNavEventHandlers () {
+    window.dom.find('disconnectEthereum').onclick = async function disconnectEthereum () {
+      await window.web3Modal.clearCachedProvider()
+      setTimeout(() => window.location.reload())
+    }
+    window.dom.find('disconnectNear').onclick = function disconnectNear () {
+      window.nearConnection.signOut()
+      setTimeout(() => window.location.reload())
+    }
+    document.querySelectorAll('.dropdown').forEach(d => {
+      document.querySelector('body').addEventListener('click', event => {
+        const button = d.querySelector('button')
+        const clickedButton = button.contains(event.target)
+        const clickedInDropdown = d.contains(event.target)
+        const classNames = Array.from(d.classList)
+        const active = classNames.includes('active')
+
+        if (!active) {
+          if (clickedButton) {
+            d.className = [...classNames, 'active'].join(' ')
+          }
+        } else {
+          if (clickedButton || !clickedInDropdown) {
+            d.className = classNames.filter(c => c !== 'active').join(' ')
+          }
+        }
+      })
+    })
+  })
+
+  window.addEventListener('load', function displaySelectedBridge () {
+    const ethNetworkColors = {
+      'main': "#29b6af",
+      'ropsten': "#ff4a8d",
+      'rinkeby': "#f6c343"
+    }
+    window.dom.fill('bridgeName').with({
+      innerHTML: window.bridgeName,
+      title: window.bridgeName
+    })
+    document.querySelectorAll('.bridges-button > .colored-dot')[0]
+      .style.backgroundColor = ethNetworkColors[process.env.ethNetworkId]
+  })
+
+  async function renderTopBar () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
+    const transfers = await window.transfers.get()
+    const params = Object.keys(window.urlParams.get())
+
+    if (params.length) window.dom.show('goHome')
+    else window.dom.hide('goHome')
+
+    if (transfers.length || params.length) {
+      window.dom.show('topbar')
+    } else {
+      window.dom.hide('topbar')
+    }
+  }
+  function renderAccountsDropdown () {
+    if (window.ethInitialized) window.dom.show('ethConnected')
+    else window.dom.hide('ethConnected')
+
+    if (window.nearInitialized) window.dom.show('nearConnected')
+    else window.dom.hide('nearConnected')
+
+    if (window.ethInitialized || window.nearInitialized) {
+      window.dom.show('accountsDropdown')
+    } else {
+      window.dom.hide('accountsDropdown')
+    }
+  }
+  window.renderers.push(renderTopBar)
+  window.renderers.push(renderAccountsDropdown)
+</script>
+
+    <div class="landing" data-behavior="landing">
+  <h1 class="title">
+    <picture>
+      <source srcset="344601285ea63c6d23a031eba3836239" media="(prefers-color-scheme: dark)">
+      <img src="6b7204f3cbc512554449486b61dd2ebd" style="width: 2.3em; display: inline; margin-top: 2em">
+    </picture>
+    <small>
+      ETH
+      <img alt="to and from" src="6dad35772633f35da074362eaac20950" style="display: inline; vertical-align: bottom">
+      NEAR
+    </small>
+    <div>Rainbow</div>
+    <div>Bridge</div>
+  </h1>
+  <div style="margin: 0 auto 2.5em; max-width: 22em; text-align: center; padding: 1em">
+    <p>
+      From
+      <a href="a9e1eefbcb7b87054fa65fe90440b7a5" rel="nofollow" class="concept-ethereum">ERC20</a>
+      to
+      <a href="bacc8f0da088d461f14bb1cc13309991" rel="nofollow" class="concept-near">NEP141</a>
+      and back! Connect your NEAR and Ethereum accounts to get started.
+    </p>
+    <form method="get" class="panel">
+      <input data-behavior="transferFrom" class="authenticated-accounts-input" name="erc20" type="hidden">
+<div class="authenticated-account" data-behavior="authenticatedAccount">
+  <label for="authEthereum">
+    <!-- filled in with CSS -->
+  </label>
+  <div>
+    <span class="concept-ethereum">
+      <img src="6909981766341a5ef97f80cc939fc536" alt="">
+      <span>Ethereum</span>
+    </span>
+    <span data-behavior="authEthereum">
+      <button type="button" id="authEthereum">
+        Connect
+      </button>
+    </span>
+  </div>
+</div>
+<div class="authenticated-accounts-button">
+  <button type="button" data-behavior="swapAccounts">
+    <span class="visually-hidden">swap</span>
+  </button>
+</div>
+<div class="authenticated-account" data-behavior="authenticatedAccount">
+  <label for="authNear">
+    <!-- filled in with CSS -->
+  </label>
+  <div>
+    <span style="color: var(--fg-bold)">
+      <picture>
+        <source srcset="7f8dec48b548fcab4d523e59c33476ee" media="(prefers-color-scheme: dark)">
+        <img src="5b54659c9a9ed4ce2f19609727dd34da" alt="">
+      </picture>
+      <span>NEAR</span>
+    </span>
+    <span data-behavior="authNear">
+      <button type="button" id="authNear">
+        Connect
+      </button>
+    </span>
+  </div>
+</div>
+
+<style data-parcel-key="eac9751d67088ef41c64bb8dcf9b8939">
+.connected-account {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  padding-left: 1em;
+}
+.connected-account:before {
+  color: var(--green);
+  content: '•';
+  font-size: 1.5em;
+  left: 0;
+  line-height: 0.8;
+  position: absolute;
+}
+
+.authenticated-accounts-button {
+  text-align: center;
+}
+.authenticated-accounts-button button {
+  background-color: var(--bg);
+  background-image: url('/img/swap-vert.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 1.3em;
+  border-radius: 1000em;
+  border: 1px solid var(--light-gray);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.04);
+  height: 2em;
+  width: 3.5em;
+  margin-top: 1.4em;
+}
+.authenticated-accounts-button button:hover,
+.authenticated-accounts-button button:focus {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.authenticated-accounts-button button:active {
+  box-shadow: none;
+}
+
+/**
+ * Fill in labels with CSS to simplify swapping order with JS
+ */
+.authenticated-accounts-input + .authenticated-account label:after {
+  content: 'Transfer from'
+}
+.authenticated-accounts-button + .authenticated-account label:after {
+  content: 'To'
+}
+
+.authenticated-account {
+  font-size: 0.8em;
+}
+.authenticated-account label {
+  margin-left: calc(1em + 1px);
+  margin-bottom: 0.5em;
+  text-align: left;
+}
+
+.authenticated-account > div {
+  background-color: var(--bg);
+  border: 1px solid var(--light-gray);
+  border-radius: 0.5em;
+  padding: 1em;
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: auto auto;
+  grid-gap: 3em;
+}
+
+.authenticated-account > div > span {
+  display: grid;
+  align-items: center;
+  grid-gap: 0.5em;
+  grid-template-columns: auto auto;
+}
+</style>
+
+<script data-parcel-key="279af1b543a8c0b06a8549f62ed909d6">
+window.addEventListener('load', function addAuthenticatedAccountHandlers () {
+  // Parcel + PostHTML *could* extract these script tags to separate JS files and
+  // include each only once, but it does not yet. Since this "component" is
+  // included multiple times in the HTML of the page, this script tag will also
+  // get executed multiple times. But two swaps makes a no-op, so let's be careful
+  // to add the swap behavior only once.
+  if (!window.state.authenticatedAccountsInitialized) {
+    window.dom.onClick('swapAccounts', function swapAccountOrder ({ target }) {
+      window.dom.findAll('transferFrom').forEach(input => {
+        input.name = input.name === 'erc20' ? 'erc20n' : 'erc20'
+      })
+
+      const from = target.closest('div').previousElementSibling
+      const to = target.closest('div').nextElementSibling
+      fromInner = from.innerHTML
+      toInner = to.innerHTML
+      from.innerHTML = toInner
+      to.innerHTML = fromInner
+    })
+
+    window.state.authenticatedAccountsInitialized = true
+  }
+})
+
+window.renderers.push(() => {
+  if (window.ethInitialized) {
+    window.dom.fill('authEthereum').with(
+      `<span class="connected-account" title="${window.ethUserAddress}">${window.ethUserAddress}</span>`
+    )
+  }
+  if (window.nearInitialized) {
+    window.dom.fill('authNear').with(
+      `<span class="connected-account" title="${window.nearUserAddress}">${window.nearUserAddress}</span>`
+    )
+  }
+})
+</script>
+
+      <button data-behavior="landingSubmit" class="cta" style="margin-top: 2em">
+        Begin new transfer
+      </button>
+    </form>
+  </div>
+</div>
+<style data-parcel-key="a9be8a76f7013a1c9cf8654225f12541">
+  .panel {
+    background-color: var(--bg);
+    border-radius: 1em;
+    box-shadow:
+      0px 51px 121px rgba(0, 0, 0, 0.05),
+      0px 21.3066px 50.5509px rgba(0, 0, 0, 0.0359427),
+      0px 11.3915px 27.0269px rgba(0, 0, 0, 0.0298054),
+      0px 6.38599px 15.1511px rgba(0, 0, 0, 0.025),
+      0px 3.39155px 8.04662px rgba(0, 0, 0, 0.0201946),
+      0px 1.4113px 3.34838px rgba(0, 0, 0, 0.0140573);
+    margin: 0 auto;
+    padding: 1em;
+  }
+  @media (min-width: 928px) {
+    .landing .panel {
+      margin-top: 6em;
+    }
+    .landing {
+      background:
+        url(img/landing-bg-left.svg) no-repeat,
+        url(img/landing-bg-right.svg) no-repeat;
+      background-position:
+        top 20em left calc(50% - 17em),
+        top 26em right calc(50% - 16em);
+    }
+  }
+</style>
+<script data-parcel-key="68006b3990a33da2ac077c8767aa585d">
+async function renderLanding () {
+  if (window.ethInitialized && window.nearInitialized) {
+    window.dom.find('landingSubmit').disabled = false
+  } else {
+    window.dom.show('landing')
+    window.dom.find('landingSubmit').disabled = true
+    return
+  }
+
+  const transfers = await window.transfers.get()
+  const params = Object.keys(window.urlParams.get())
+
+  if (transfers.length || params.length) {
+    window.dom.hide('landing')
+  } else {
+    window.dom.show('landing')
+  }
+}
+
+window.renderers.push(renderLanding)
+</script>
+
+    <div class="transfers" data-behavior="recent-transfers" style="display:none">
+  <header>
+    <h1>Your Transfers</h1>
+    <p>Manage your transfers below or begin a new one.</p>
+    <button data-behavior="newTransfer" class="cta" style="margin-top: 2em">
+      Begin new transfer
+    </button>
+    <!-- TODO: <nav> -->
+  </header>
+  <div data-behavior="transfers-container" style="margin-top: 3rem"></div>
+</div>
+<style data-parcel-key="279232cbcba5688ce6a7141879ed102f">
+  .transfers {
+    margin-top: 4em;
+    width: 100%;
+    margin: 4em auto 2em;
+  }
+  .transfers > header {
+    padding: 0 1em;
+    margin: 0 auto;
+    max-width: 15.5em;
+    text-align: center;
+  }
+  .transfers nav button {
+    border-radius: 100em;
+  }
+  .transfer.in-progress {
+    --bg-dark: #FFDBB2;
+    --bg-medium: #FFECD6;
+    --bg-light: #FFF6ED;
+
+    --fg-bold: #452500;
+    --fg: #995200;
+    --fg-light: var(--yellow);
+    --fg-details: #995200;
+    --fg-chevron: var(--yellow);
+  }
+  .transfer.completed {
+    --bg-dark: #90E9C5;
+    --bg-medium: #C2FCE0;
+    --bg-light: #ECFDF5;
+
+    --fg-bold: #00261C;
+    --fg: #005A46;
+    --fg-light: #008D6A;
+    --fg-details: #008D6A;
+    --fg-chevron: #00C08B;
+  }
+  .transfer.failed {
+    --bg-dark: #FFBDBE;
+    --bg-medium: #FFDEDF;
+    --bg-light: #FEF2F2;
+
+    --fg-bold: #450002;
+    --fg: #A00005;
+    --fg-light: #FF585D;
+    --fg-details: #DC1F25;
+    --fg-chevron: #FF585D;
+  }
+  .transfer.action-needed {
+    --bg-dark: #8FCDFF;
+    --bg-medium: #C2E4FF;
+    --bg-light: #F0F9FF;
+
+    --fg-bold: #001729;
+    --fg: #003560;
+    --fg-light: #0072CE;
+    --fg-details: #005497;
+    --fg-chevron: #0072CE;
+  }
+  .transfer {
+    /* necessary to override `html { color: var(--fg) }` 🤷🏻 */
+    color: var(--fg);
+  }
+  .transfer h3 {
+    /* necessary to override @media(prefers-color-scheme: dark)` variable */
+    color: var(--fg-bold);
+  }
+  .transfer > header {
+    background-color: var(--bg-dark);
+  }
+  .transfer > header button {
+    background-color: var(--fg-light);
+    color: white;
+  }
+  .transfer > div {
+    background-color: var(--bg-light);
+    border-color: var(--bg-medium);
+  }
+  .transfer > div > *:first-child {
+    color: var(--fg-light);
+  }
+  .transfer > footer > button {
+    background-color: var(--bg-medium);
+  }
+  .transfer > footer button {
+    color: var(--fg-details);
+  }
+
+  .transfer {
+    overflow: hidden;
+    margin: 1rem auto;
+    font-size: 0.75em;
+  }
+
+  .transfer h3 {
+    font-size: 1.333em;
+    margin: 0 0 0.5rem;
+  }
+  .transfer > header {
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    align-items: center;
+    grid-gap: 1em;
+  }
+  .transfer > header .status-message {
+    display: flex;
+    align-items: center;
+  }
+  .transfer > header .status-message .icon {
+    margin-right: 0.5em;
+    background-size: contain;
+    background-position: center;
+    width: 1.2em; height: 1.2em;
+  }
+  .transfer.failed > header .status-message .icon {
+    background-image: url(img/alert-circle.svg);
+  }
+  .transfer.completed > header .status-message .icon {
+    background-image: url(img/completed.svg);
+  }
+  .transfer.action-needed > header .status-message .icon:before {
+    content: '→';
+  }
+  .transfer.in-progress > header .status-message .icon {
+    margin-right: 0.8em;
+    position: relative;
+    width: 0.8em; height: 0.8em;
+  }
+  .transfer.in-progress > header .status-message .icon:before {
+    animation: spin 1.5s ease-in-out infinite;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    border-top-color: var(--fg);
+    content: ' ';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg) }
+    100% { transform: rotate(360deg) }
+  }
+  .transfer > header button {
+    padding: 0.5em 1em;
+  }
+  .transfer > div {
+    padding: 0.5rem 1rem;
+    display: grid;
+    grid-gap: 7rem;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .transfer > div + div {
+    border-top: 1px solid var(--bg-medium);
+  }
+  .transfer > footer {
+    position: relative;
+    transition: height 0.2s;
+  }
+  .transfer > footer button {
+    width: 100%;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0;
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+  }
+  .transfer > footer button:hover,
+  .transfer > footer button:focus {
+    text-decoration: none;
+    background-color: var(--bg-dark);
+    box-shadow: 0 0 10em rgba(255,255,255,0.3) inset;
+  }
+  .transfer > footer button:active {
+    color: var(--fg-details);
+    box-shadow: none;
+  }
+  .transfer > footer button:before {
+    display: inline-block;
+    content: ' ';
+    height: 0.3em;
+    width: 0.3em;
+    border: 2.5px solid var(--fg-chevron);
+    border-left-color: transparent;
+    border-top-color: transparent;
+    transform: rotate(45deg);
+    margin-right: 0.5em;
+    position: relative;
+    top: -0.1em;
+  }
+  .transfer > footer button span:before {
+    content: 'View ';
+  }
+  .transfer > footer.open button span:before {
+    content: 'Hide ';
+  }
+  .transfer > footer.open button:before {
+    top: 0.1em;
+    transform: rotate(225deg);
+  }
+
+  .transfer-details {
+    --bg: #272729;
+    --fg: #A1A1A9;
+    background-color: var(--bg);
+    color: var(--fg);
+    list-style: none;
+    margin: 0;
+    padding: 1.5rem 1rem;
+    position: absolute;
+    width: 100%;
+  }
+  .transfer-details li {
+    position: relative;
+    padding-bottom: 1.5em;
+  }
+  .transfer-details li:last-child {
+    padding-bottom: 0;
+  }
+  .transfer-details li span {
+    display: flex;
+  }
+  .transfer-details li span:before {
+    background-color: var(--bg);
+    content: '•';
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    margin-right: 0.5rem;
+    text-align: center;
+    font-size: 1.7em;
+    line-height: 0.7;
+    z-index: 1;
+  }
+  /* error message shown in a p */
+  .transfer-details li p {
+    background-color: #111618;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin: 1rem 0 0 1.5rem;
+    padding: 1rem;
+  }
+  /* if very first step pending, bold it. otherwise, bold first pending
+     step that comes after a completed step. */
+  .transfer-details li.pending:first-child span,
+  .transfer-details li.completed + li.pending span {
+    color: white;
+  }
+  .transfer-details li.pending:first-child span:before,
+  .transfer-details li.completed + li.pending span:before {
+    color: #2B9AF4;
+  }
+  .transfer-details li.failed span:before {
+    background-image: url(img/alert-circle.svg);
+    content: ' ';
+  }
+  .transfer-details li.completed span:before {
+    background-image: url(img/checkmark-48DBA7.svg);
+    content: ' ';
+  }
+  .transfer-details li.completed:after {
+    content: ' ';
+    height: 100%;
+    width: 1px;
+    border-left: 1px solid #3F4045;
+    position: absolute;
+    top: 0;
+    left: 0.43rem;
+  }
+
+  @media (min-width: 25em) {
+    .transfers {
+      max-width: 22em;
+    }
+    .transfers > header {
+      padding: 0;
+    }
+    .transfer {
+      border-radius: 0.5em;
+    }
+    .transfer > * {
+      max-width: 22rem;
+    }
+  }
+
+  .landing {
+    padding-bottom: 1em;
+  }
+</style>
+<script data-parcel-key="e311f3a6edef5e892b83d9b63c415d2d">
+window.addEventListener('load', function addLandingHandlers () {
+  window.dom.onClick('newTransfer', function startErc20Transfer () {
+    window.urlParams.set({ new: 'transfer' })
+    window.render()
+  })
+  // transfers are rendered after page load, so we add one click handler to the
+  // body tag to handle clicking each kind of button on a transfer
+  document.querySelector('body').addEventListener('click', event => {
+    const callToAction = event.target.closest('[data-behavior=transferCallToAction]')
+
+    // no retry button clicked, end here
+    if (!callToAction) return
+
+    const transferId = callToAction.closest('[data-behavior=transfer]').id
+    window.transfers.act(transferId)
+  })
+  document.querySelector('body').addEventListener('click', event => {
+    const transferDetailsButton = event.target.closest('[data-behavior=openTransferDetails]')
+
+    // no retry button clicked, end here
+    if (!transferDetailsButton) return
+
+    const transferId = transferDetailsButton.closest('[data-behavior=transfer]').id
+    const footer = transferDetailsButton.closest('footer')
+    openTransferDetails[transferId] = !openTransferDetails[transferId]
+    footer.classList.toggle('open')
+    adjustTransferDetailsHeights()
+  })
+})
+// tracks UI state for which transfers have "view details" open
+const openTransferDetails = {}
+
+function renderTransfer (transfer, { inProgress }) {
+  transfer = window.transfers.decorate(transfer, { locale: 'en_US' })
+  return `
+    <div
+      class="transfer ${transfer.status}"
+      id="${transfer.id}"
+      data-behavior="transfer"
+    >
+      <header>
+        <div>
+          <h3>${window.utils.formatLargeNum(transfer.amount, transfer.decimals)} ${transfer.sourceTokenName}</h3>
+          <div class="status-message">
+            <span class="icon"></span>
+            <span>${transfer.statusMessage}</span>
+          </div>
+        </div>
+        ${window.dom.toString(transfer.callToAction &&
+          `<button data-behavior="transferCallToAction">${
+            transfer.callToAction
+          }</button>`
+        )}
+      </header>
+      <div>
+        <span>From</span>
+        <span class="account-with-icon ${transfer.sourceNetwork}" title="${transfer.sender}">
+          ${transfer.sender}
+        </span>
+      </div>
+      <div>
+        <span>To</span>
+        <span class="account-with-icon ${transfer.destinationNetwork}" title="${transfer.recipient}">
+          ${transfer.recipient}
+        </span>
+      </div>
+      <footer class="${openTransferDetails[transfer.id] ? 'open' : ''}">
+        <ol class="transfer-details">${transfer.steps.map(step => (
+          `<li class="${step.status}">
+            <span>${step.description}</span>
+            ${window.dom.toString(step.status === 'failed' &&
+              `<p class="error">${transfer.error}</p>`
+            )}
+          </li>`
+        )).join('')}</ol>
+        <button class="link" data-behavior="openTransferDetails">
+          <span>details</span>
+        </button>
+      </footer>
+    </div>
+  `
+}
+
+async function updateTransfers () {
+  if (!(window.ethInitialized && window.nearInitialized)) return
+
+  const transfers = await window.transfers.get()
+
+  if (!transfers.length) {
+    window.dom.hide('recent-transfers')
+  } else {
+    window.dom.show('recent-transfers')
+  }
+
+  window.dom.fill('transfers-container').with([
+    ...transfers.map(t => renderTransfer(t, { inProgress: true }))
+  ])
+
+  adjustTransferDetailsHeights()
+}
+
+// adjust hard-coded heights for transfers details panels, to enable slide-out animation
+function adjustTransferDetailsHeights () {
+  window.dom.findAll('transfer').map(transfer => {
+    const footer = transfer.querySelector('footer')
+    const button = footer.querySelector('button').getBoundingClientRect().height
+    const details = footer.querySelector('ol').getBoundingClientRect().height
+    footer.style.height = footer.classList.contains('open')
+      ? `${button + details}px`
+      : `${button}px`
+  })
+}
+
+async function hideShowTransfers () {
+  if (!(window.ethInitialized && window.nearInitialized)) return
+
+  const transfers = await window.transfers.get()
+  const params = Object.keys(window.urlParams.get())
+
+  if (transfers.length && !params.length) {
+    window.dom.show('recent-transfers')
+  } else {
+    window.dom.hide('recent-transfers')
+  }
+}
+
+window.renderers.push(updateTransfers)
+window.renderers.push(hideShowTransfers)
+</script>
+
+    <form method="get" class="transfer-form" data-behavior="newTransferForm" style="display:none">
+  <header>
+    <h2>New Transfer</h2>
+    <p>Select your transfer's origin and destination.</p>
+  </header>
+  <div class="account">
+    <input data-behavior="transferFrom" class="authenticated-accounts-input" name="erc20" type="hidden">
+<div class="authenticated-account" data-behavior="authenticatedAccount">
+  <label for="authEthereum">
+    <!-- filled in with CSS -->
+  </label>
+  <div>
+    <span class="concept-ethereum">
+      <img src="6909981766341a5ef97f80cc939fc536" alt="">
+      <span>Ethereum</span>
+    </span>
+    <span data-behavior="authEthereum">
+      <button type="button" id="authEthereum">
+        Connect
+      </button>
+    </span>
+  </div>
+</div>
+<div class="authenticated-accounts-button">
+  <button type="button" data-behavior="swapAccounts">
+    <span class="visually-hidden">swap</span>
+  </button>
+</div>
+<div class="authenticated-account" data-behavior="authenticatedAccount">
+  <label for="authNear">
+    <!-- filled in with CSS -->
+  </label>
+  <div>
+    <span style="color: var(--fg-bold)">
+      <picture>
+        <source srcset="7f8dec48b548fcab4d523e59c33476ee" media="(prefers-color-scheme: dark)">
+        <img src="5b54659c9a9ed4ce2f19609727dd34da" alt="">
+      </picture>
+      <span>NEAR</span>
+    </span>
+    <span data-behavior="authNear">
+      <button type="button" id="authNear">
+        Connect
+      </button>
+    </span>
+  </div>
+</div>
+
+<style data-parcel-key="b4ff60f1c85fe2d2398cb6d0be2179d8">
+.connected-account {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  padding-left: 1em;
+}
+.connected-account:before {
+  color: var(--green);
+  content: '•';
+  font-size: 1.5em;
+  left: 0;
+  line-height: 0.8;
+  position: absolute;
+}
+
+.authenticated-accounts-button {
+  text-align: center;
+}
+.authenticated-accounts-button button {
+  background-color: var(--bg);
+  background-image: url('/img/swap-vert.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 1.3em;
+  border-radius: 1000em;
+  border: 1px solid var(--light-gray);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.04);
+  height: 2em;
+  width: 3.5em;
+  margin-top: 1.4em;
+}
+.authenticated-accounts-button button:hover,
+.authenticated-accounts-button button:focus {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.authenticated-accounts-button button:active {
+  box-shadow: none;
+}
+
+/**
+ * Fill in labels with CSS to simplify swapping order with JS
+ */
+.authenticated-accounts-input + .authenticated-account label:after {
+  content: 'Transfer from'
+}
+.authenticated-accounts-button + .authenticated-account label:after {
+  content: 'To'
+}
+
+.authenticated-account {
+  font-size: 0.8em;
+}
+.authenticated-account label {
+  margin-left: calc(1em + 1px);
+  margin-bottom: 0.5em;
+  text-align: left;
+}
+
+.authenticated-account > div {
+  background-color: var(--bg);
+  border: 1px solid var(--light-gray);
+  border-radius: 0.5em;
+  padding: 1em;
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: auto auto;
+  grid-gap: 3em;
+}
+
+.authenticated-account > div > span {
+  display: grid;
+  align-items: center;
+  grid-gap: 0.5em;
+  grid-template-columns: auto auto;
+}
+</style>
+
+<script data-parcel-key="dd1e13a96f87bd2ca35d7235aae74438">
+window.addEventListener('load', function addAuthenticatedAccountHandlers () {
+  // Parcel + PostHTML *could* extract these script tags to separate JS files and
+  // include each only once, but it does not yet. Since this "component" is
+  // included multiple times in the HTML of the page, this script tag will also
+  // get executed multiple times. But two swaps makes a no-op, so let's be careful
+  // to add the swap behavior only once.
+  if (!window.state.authenticatedAccountsInitialized) {
+    window.dom.onClick('swapAccounts', function swapAccountOrder ({ target }) {
+      window.dom.findAll('transferFrom').forEach(input => {
+        input.name = input.name === 'erc20' ? 'erc20n' : 'erc20'
+      })
+
+      const from = target.closest('div').previousElementSibling
+      const to = target.closest('div').nextElementSibling
+      fromInner = from.innerHTML
+      toInner = to.innerHTML
+      from.innerHTML = toInner
+      to.innerHTML = fromInner
+    })
+
+    window.state.authenticatedAccountsInitialized = true
+  }
+})
+
+window.renderers.push(() => {
+  if (window.ethInitialized) {
+    window.dom.fill('authEthereum').with(
+      `<span class="connected-account" title="${window.ethUserAddress}">${window.ethUserAddress}</span>`
+    )
+  }
+  if (window.nearInitialized) {
+    window.dom.fill('authNear').with(
+      `<span class="connected-account" title="${window.nearUserAddress}">${window.nearUserAddress}</span>`
+    )
+  }
+})
+</script>
+
+  </div>
+  <footer>
+    <button class="cta">
+      Continue
+    </button>
+    <button type="button" class="cancel" data-behavior="goHome">
+      Cancel
+    </button>
+  </footer>
+  <!-- TODO: cancel -->
+</form>
+
+ <script data-parcel-key="50f9d740e950b5211a0563bda11705d8">
+ function renderNewTransferForm () {
+   if (!(window.ethInitialized && window.nearInitialized)) return
+
+   if (window.urlParams.get('new') === 'transfer') {
+     window.dom.show('newTransferForm')
+   } else {
+     window.dom.hide('newTransferForm')
+   }
+ }
+ window.renderers.push(renderNewTransferForm)
+ </script>
+
+    <div data-behavior="sendNaturalErc20" style="display:none">
+  <form data-behavior="sendNaturalErc20Form" class="transfer-form">
+    <header>
+      <h2>New Transfer</h2>
+      <p>Select a token and enter an amount to transfer.</p>
+    </header>
+    <div class="account">
+      <header>
+        <strong>Transfer from</strong>
+        <span class="account-tag account-with-icon ethereum" data-behavior="ethUser"></span>
+      </header>
+      <div class="inputs">
+        <input type="hidden" name="erc20" data-behavior="erc20Address">
+        <button type="button" data-behavior="erc20SelectButton">
+          Select ERC20
+        </button>
+        <input autoComplete="off" data-behavior="erc20Amount" disabled="" placeholder="0" type="number">
+      </div>
+      <p class="token-details" data-behavior="erc20Info" style="margin: 0.5rem 0 0">
+        <span>Available to transfer</span>
+        <span>
+          <span data-behavior="erc20Balance"></span>
+          <span data-behavior="erc20Name"></span>
+        </span>
+      </p>
+    </div>
+    <div class="arrow"></div>
+    <div class="account">
+      <header>
+        <strong>To</strong>
+        <span class="account-tag account-with-icon near" data-behavior="nearUser"></span>
+      </header>
+      <p class="token-details" data-behavior="erc20Info">
+        <span>Receive as</span>
+        <strong data-behavior="nep141Name"></strong>
+      </p>
+      <p class="token-details" data-behavior="erc20Info">
+        <span>Current balance</span>
+        <strong>
+          <span data-behavior="nep141Balance"></span>
+          <span data-behavior="nep141Name"></span>
+        </strong>
+      </p>
+    </div>
+    <footer>
+      <button disabled="" data-behavior="erc20Submit" class="cta">
+        Submit transfer
+      </button>
+      <button type="button" class="cancel" data-behavior="goHome">
+        Cancel
+      </button>
+    </footer>
+  </form>
+  <div data-behavior="erc20Modal" class="modal" style="display:none">
+    <div class="token-selector">
+      <nav>
+        <button type="button" data-behavior="closeModal">
+          <span class="visually-hidden">close</span>
+          ⨉
+        </button>
+      </nav>
+      <form method="get">
+        <h3>Enter token address</h3>
+        <label for="erc20" class="visually-hidden">ERC20 Address</label>
+        <input data-behavior="erc20FreeForm" name="erc20" id="erc20" placeholder="0x89d24A6b4C..." autoComplete="off">
+        <div data-behavior="erc20AddressError" class="errorMessage"></div>
+      </form>
+      <div class="separator">
+        <strong>or</strong>
+      </div>
+      <form method="get">
+        <header>
+          <h3>Select a token</h3>
+          <div class="space-between" style="font-size:.75em;margin-bottom:.5em">
+            <span>Token name</span>
+            <span>Available balance</span>
+          </div>
+        </header>
+        <div class="token-list" data-behavior="erc20List"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script data-parcel-key="d3e624736810bc9567709188f62ccdf8">
+  window.addEventListener('load', function handleSelectErc20Events () {
+    const amount = window.dom.find('erc20Amount')
+    const select = window.dom.find('erc20SelectButton')
+    const submit = window.dom.find('erc20Submit')
+
+    function disableForm () {
+      amount.disabled = true
+      select.disabled = true
+      submit.disabled = true
+    }
+
+    function enableForm () {
+      amount.disabled = false
+      select.disabled = false
+      submit.disabled = false
+    }
+
+    select.onclick = () => window.dom.show('erc20Modal')
+
+    amount.onkeyup = function enableOrDisable (e) {
+      if (Number(e.target.value)) submit.disabled = false
+      else submit.disabled = true
+    }
+
+    window.dom.find('sendNaturalErc20Form').onsubmit = async function transferErc20 (e) {
+      e.preventDefault()
+
+      disableForm()
+
+      try {
+        await window.nep141Xerc20.naturalErc20.sendToNear({
+          amount: amount.value,
+          erc20Address: window.dom.find('erc20Address').value,
+          sender: window.ethUserAddress,
+          recipient: window.nearUserAddress
+        })
+      } catch (e) {
+        alert(
+          'Something went wrong! ' +
+          'Maybe you need to sign out and back in? ' +
+          'Check your browser console for more info.'
+        )
+        throw e
+      } finally {
+        // re-enable the form, whether the call succeeded or failed
+        enableForm()
+      }
+
+      // if the call succeeded, reset and close the form
+      amount.value = ''
+      window.urlParams.clear()
+      window.render()
+    }
+
+    window.dom.onClick('featuredErc20Option', ({ target }) => {
+      window.urlParams.set({ erc20: target.value })
+      window.dom.hide('erc20Modal')
+      window.render()
+    })
+  })
+
+  async function fillFeaturedErc20s () {
+    if (!window.ethInitialized) return
+
+    const featured = await window.utils.getFeaturedErc20s()
+
+    window.dom.fill('erc20List').with(
+      Object.values(featured).map(token => `
+        <label class="space-between">
+          <input
+            type="radio"
+            name="erc20"
+            data-behavior="featuredErc20Option"
+            value="${token.address}"
+          />
+          <span>
+            <img src="${token.icon || 'ethereum.svg'}" alt="" />
+            ${token.name}
+          </span>
+          <span>
+            ${window.utils.formatLargeNum(token.balance, token.decimals)}
+          </span>
+        </label>
+      `)
+    )
+  }
+
+  let erc20Address
+  async function renderErc20Form () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
+    if (window.urlParams.get('erc20') === erc20Address) return
+    else erc20Address = window.urlParams.get('erc20')
+
+    if (window.urlParams.get('erc20') === null) {
+      window.dom.hide('sendNaturalErc20')
+      window.dom.hide('erc20AddressError')
+      window.dom.find('erc20FreeForm').classList.remove('error')
+      return
+    }
+
+    const amount = window.dom.find('erc20Amount')
+
+    if (!erc20Address) {
+      amount.disabled = true
+      window.dom.find('erc20SelectButton').classList.remove('selected')
+      window.dom.fill('erc20SelectButton').with('Select ERC20')
+      window.dom.hide('erc20Info')
+      window.dom.show('sendNaturalErc20')
+      return
+    }
+
+    window.dom.find('erc20Address').value = erc20Address
+
+    let token = (await window.utils.getFeaturedErc20s())[erc20Address]
+    try {
+      if (!token) token = await window.utils.getErc20Data(erc20Address)
+      window.dom.find('erc20SelectButton').classList.add('selected')
+      window.dom.fill('erc20SelectButton').with(token.name)
+      window.dom.find('erc20FreeForm').classList.remove('error')
+      window.dom.hide('erc20AddressError')
+      window.dom.fill('erc20Name').with(token.name)
+      window.dom.hide('erc20Modal')
+    } catch (e) {
+      window.dom.find('erc20SelectButton').classList.remove('selected')
+      const input = window.dom.find('erc20FreeForm')
+      input.classList.add('error')
+      input.value = erc20Address
+      window.dom.find('erc20FreeForm').classList.add('error')
+      window.dom.fill('erc20AddressError').with(e.message)
+      window.dom.show('erc20AddressError')
+      window.dom.show('sendNaturalErc20')
+      return
+    }
+
+    if (token.nep141.balance === null) {
+      window.dom.hide('sendNaturalErc20')
+      return
+    }
+
+    window.dom.show('sendNaturalErc20')
+
+    window.dom.fill('erc20Balance').with(window.utils.formatLargeNum(token.balance, token.decimals))
+    window.dom.fill('nep141Name').with(token.nep141.name)
+    window.dom.fill('nep141Balance').with(window.utils.formatLargeNum(token.nep141.balance, token.decimals))
+
+    if (token.balance) amount.disabled = false
+    else amount.disabled = true
+
+    amount.step = 10 ** -token.decimals
+    // NOTE: the html input field makes the comparison on rounded numbers
+    // So the max check is not precise for very small decimals.
+    // For example if the balance is 500003.0100900000011, then the input field will allow a max of
+    // only 500003.01009
+    amount.max = Number(new window.Decimal(token.balance).times(10 ** -token.decimals).toFixed()),
+    amount.min = 10 ** -token.decimals
+    window.dom.show('erc20Info', 'flex')
+    amount.focus()
+  }
+
+  window.renderers.push(fillFeaturedErc20s)
+  window.renderers.push(renderErc20Form)
+</script>
+
+    <div data-behavior="sendBridgedNep141" style="display:none">
+  <form data-behavior="sendBridgedNep141Form" class="transfer-form">
+    <header>
+      <h2>New Transfer</h2>
+      <p>Select a token and enter an amount to transfer.</p>
+    </header>
+    <div class="account">
+      <header>
+        <strong>Transfer from</strong>
+        <span class="account-tag account-with-icon near" data-behavior="nearUser"></span>
+      </header>
+      <div class="inputs">
+        <input type="hidden" name="erc20n" data-behavior="erc20nAddress">
+        <button type="button" data-behavior="erc20nSelectButton">
+          Select token
+        </button>
+        <input autoComplete="off" data-behavior="erc20nAmount" disabled="" placeholder="0" type="number">
+      </div>
+      <p class="token-details" data-behavior="erc20nInfo" style="margin: 0.5rem 0 0">
+        <span>Available to transfer</span>
+        <span>
+          <span data-behavior="erc20nBalance"></span>
+          <span data-behavior="erc20nName"></span>
+        </span>
+      </p>
+    </div>
+    <div class="arrow"></div>
+    <div class="account">
+      <header>
+        <strong>To</strong>
+        <span class="account-tag account-with-icon ethereum" data-behavior="ethUser"></span>
+      </header>
+      <p class="token-details" data-behavior="erc20nInfo">
+        <span>Receive as</span>
+        <strong data-behavior="erc20Name"></strong>
+      </p>
+      <p class="token-details" data-behavior="erc20nInfo">
+        <span>Current balance</span>
+        <strong>
+          <span data-behavior="erc20Balance"></span>
+          <span data-behavior="erc20Name"></span>
+        </strong>
+      </p>
+    </div>
+    <footer>
+      <button disabled="" data-behavior="erc20nSubmit" class="cta">
+        Submit transfer
+      </button>
+      <button type="button" class="cancel" data-behavior="goHome">
+        Cancel
+      </button>
+    </footer>
+  </form>
+  <div data-behavior="erc20nModal" class="modal" style="display:none">
+    <div class="token-selector">
+      <nav>
+        <button type="button" data-behavior="closeModal">
+          <span class="visually-hidden">close</span>
+          ⨉
+        </button>
+      </nav>
+      <form method="get">
+        <h3>Enter token address</h3>
+        <label for="erc20n" class="visually-hidden">ERC20 Address</label>
+        <input data-behavior="erc20nFreeForm" name="erc20n" id="erc20n" placeholder="0x89d24A6b4C..." autoComplete="off">
+        <div data-behavior="erc20nAddressError" class="errorMessage"></div>
+      </form>
+      <div class="separator">
+        <strong>or</strong>
+      </div>
+      <form method="get">
+        <header>
+          <h3>Select a token</h3>
+          <div class="space-between" style="font-size:.75em;margin-bottom:.5em">
+            <span>Token name</span>
+            <span>Available balance</span>
+          </div>
+        </header>
+        <div class="token-list" data-behavior="erc20nList"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script data-parcel-key="d3733b801fb81f173c484aa7cbee785e">
+
+  window.addEventListener('load', function sendBridgedNep141OnLoad () {
+    const amount = window.dom.find('erc20nAmount')
+    const select = window.dom.find('erc20nSelectButton')
+    const submit = window.dom.find('erc20nSubmit')
+
+    function disableForm () {
+      amount.disabled = true
+      select.disabled = true
+      submit.disabled = true
+    }
+
+    function enableForm () {
+      amount.disabled = false
+      select.disabled = false
+      submit.disabled = false
+    }
+
+    select.onclick = () => window.dom.show('erc20nModal')
+
+    amount.onkeyup = function enableOrDisableErc20n (e) {
+      if (Number(e.target.value)) submit.disabled = false
+      else submit.disabled = true
+    }
+
+    window.dom.find('sendBridgedNep141Form').onsubmit = async function transferErc20n (e) {
+      e.preventDefault()
+
+      disableForm()
+
+      try {
+        await window.nep141Xerc20.bridgedNep141.sendToEthereum({
+          amount: amount.value,
+          erc20Address: window.urlParams.get('erc20n'),
+          sender: window.nearUserAddress,
+          recipient: window.ethUserAddress
+        })
+      } catch (e) {
+        alert(
+          'Something went wrong! ' +
+          'Maybe you need to sign out and back in? ' +
+          'Check your browser console for more info.'
+        )
+        throw e
+      } finally {
+        // re-enable the form, whether the call succeeded or failed
+        enableForm()
+      }
+
+      // if the call succeeded, reset and close the form
+      amount.value = ''
+      window.urlParams.clear()
+      window.render()
+    }
+
+    window.dom.onClick('featuredErc20nOption', ({ target }) => {
+      window.urlParams.set({ erc20n: target.value })
+      window.dom.hide('erc20nModal')
+      window.render()
+    })
+  })
+
+  async function fillFeaturedErc20ns () {
+    if (!window.ethInitialized) return
+
+    const featured = await window.utils.getFeaturedErc20s()
+
+    window.dom.fill('erc20nList').with(
+      Object.values(featured).map(token => `
+        <label class="space-between">
+          <input
+            type="radio"
+            name="erc20n"
+            data-behavior="featuredErc20nOption"
+            value="${token.address}"
+          />
+          <span>
+            <img src="${token.nep141.icon || 'near.svg'}" alt="" />
+            ${token.nep141.name}
+          </span>
+          <span>
+            ${window.utils.formatLargeNum(token.nep141.balance, token.decimals)}
+          </span>
+        </label>
+      `)
+    )
+  }
+
+  let erc20nAddress
+  async function renderErc20nForm () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
+    if (window.urlParams.get('erc20n') === erc20nAddress) return
+    else erc20nAddress = window.urlParams.get('erc20n')
+
+    if (window.urlParams.get('erc20n') === null) {
+      window.dom.hide('sendBridgedNep141')
+      window.dom.hide('erc20nAddressError')
+      window.dom.find('erc20nFreeForm').classList.remove('error')
+      return
+    }
+
+    const amount = window.dom.find('erc20nAmount')
+
+    if (!erc20nAddress) {
+      amount.disabled = true
+      window.dom.find('erc20nSelectButton').classList.remove('selected')
+      window.dom.fill('erc20nSelectButton').with('Select token')
+      window.dom.hide('erc20nInfo')
+      window.dom.show('sendBridgedNep141')
+      return
+    }
+
+    let token = (await window.utils.getFeaturedErc20s())[erc20nAddress]
+    try {
+      if (!token) token = await window.utils.getErc20Data(erc20nAddress)
+      window.dom.find('erc20nSelectButton').classList.add('selected')
+      window.dom.fill('erc20nSelectButton').with(token.nep141.name)
+      window.dom.find('erc20nFreeForm').classList.remove('error')
+      window.dom.hide('erc20nAddressError')
+      window.dom.fill('erc20Name').with(token.name)
+      window.dom.hide('erc20nModal')
+    } catch (e) {
+      window.dom.find('erc20nSelectButton').classList.remove('selected')
+      const input = window.dom.find('erc20nFreeForm')
+      input.classList.add('error')
+      input.value = erc20Address
+      window.dom.find('erc20nFreeForm').classList.add('error')
+      window.dom.fill('erc20nAddressError').with(e.message)
+      window.dom.show('erc20nAddressError')
+      window.dom.show('sendBridgedNep141')
+      return
+    }
+
+    if (token.nep141.balance === null) {
+      window.dom.hide('sendBridgedNep141')
+      return
+    }
+
+    window.dom.fill('erc20nName').with(token.nep141.name)
+    window.dom.fill('erc20nBalance').with(
+      window.utils.formatLargeNum(token.nep141.balance, token.decimals)
+    )
+    window.dom.fill('erc20Balance').with(
+      window.utils.formatLargeNum(token.balance, token.decimals)
+    )
+
+    window.dom.show('sendBridgedNep141')
+    if (token.nep141.balance) amount.disabled = false
+    else amount.disabled = true
+
+    amount.step = 10 ** -token.decimals
+    // NOTE: the html input field makes the comparison on rounded numbers
+    // So the max check is not precise for very small decimals.
+    // For example if the balance is 500003.0100900000011, then the input field will allow a max of
+    // only 500003.01009
+    amount.max = Number(new window.Decimal(token.nep141.balance).times(10 ** -token.decimals).toFixed()),
+    amount.min = 10 ** -token.decimals
+    window.dom.show('erc20nInfo', 'flex')
+    amount.focus()
+  }
+
+  window.renderers.push(fillFeaturedErc20ns)
+  window.renderers.push(renderErc20nForm)
+</script>
+
+    <form data-behavior="bridgeErc20Form" class="container" style="display:none">
+  <h1 style="background: url(img/unbridged.svg) top center no-repeat; font-size: 1.5em; padding: 12rem 0 2.5rem">
+    Token not yet bridged
+  </h1>
+  <p>
+    The <strong data-behavior="erc20Name"></strong>
+    <a href="a9e1eefbcb7b87054fa65fe90440b7a5" rel="nofollow">ERC20</a>
+    token has not yet been bridged.
+  </p>
+  <p>
+    The
+    <a href="6737af8e5713e02b2e86b78ca4bb9d6f" target="_blank">Fungible Token Connector</a>
+    allows sending any ERC20 token to NEAR, but requires an initial one-time deploy of a "BridgeToken"
+    <a href="ce0bd27468da17a6611fd49d378fb6a5" target="_blank">smart contract</a>.
+  </p>
+  <button style="padding: 0.75em 2.5em; margin-top: 3em">
+    Bridge it!
+  </button>
+  <button type="button" class="cancel" data-behavior="bridgeErc20Cancel">
+    Cancel
+  </button>
+  <p style="font-size: 0.75em; margin-top: 2em">
+    Deploying a new "Bridge Token" smart contract requires ~30 NEAR to cover
+    <a href="6d97958f5f8acb653f3bc72b183e2f8a" target="_blank">storage fees</a>.
+  </p>
+</form>
+
+<script data-parcel-key="61f160a6497900b2afe8d0b5ba6fdc87">
+  window.addEventListener('load', function handleSelectErc20Events () {
+    window.dom.find('bridgeErc20Form').onsubmit = function bridgeIt (e) {
+      e.preventDefault()
+      window.nep141Xerc20.bridgedNep141.deploy(window.urlParams.get('erc20'))
+    }
+
+    window.dom.find('bridgeErc20Cancel').onclick = () => {
+      window.dom.hide('bridgeErc20Form')
+      window.urlParams.clear()
+      window.render()
+    }
+  })
+
+  async function renderBridgeErc20 () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
+    const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
+    const erc20Address = erc20 || erc20n
+
+    if (!erc20Address) {
+      window.dom.hide('bridgeErc20Form')
+      return
+    }
+
+    let token = (await window.utils.getFeaturedErc20s())[erc20Address]
+    try {
+      if (!token) token = await window.utils.getErc20Data(erc20Address)
+    } catch (e) {
+      // error message filled in by other components
+      window.dom.hide('bridgeErc20Form')
+      return
+    }
+
+    if (token.nep141.balance !== null) {
+      window.dom.hide('bridgeErc20Form')
+      return
+    }
+
+    window.dom.fill('erc20Name').with(token.name)
+    window.dom.show('bridgeErc20Form')
+  }
+
+  window.renderers.push(renderBridgeErc20)
+</script>
+
+  </div>
+
+  <script src="87ff09cdbc785798c72511eaec815ac7"></script>
+</body>
+</html>

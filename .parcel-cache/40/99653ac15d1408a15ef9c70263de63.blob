@@ -1,0 +1,36 @@
+window.addEventListener('load', function addAuthenticatedAccountHandlers () {
+  // Parcel + PostHTML *could* extract these script tags to separate JS files and
+  // include each only once, but it does not yet. Since this "component" is
+  // included multiple times in the HTML of the page, this script tag will also
+  // get executed multiple times. But two swaps makes a no-op, so let's be careful
+  // to add the swap behavior only once.
+  if (!window.state.authenticatedAccountsInitialized) {
+    window.dom.onClick('swapAccounts', function swapAccountOrder ({ target }) {
+      window.dom.findAll('transferFrom').forEach(input => {
+        input.name = input.name === 'erc20' ? 'erc20n' : 'erc20'
+      })
+
+      const from = target.closest('div').previousElementSibling
+      const to = target.closest('div').nextElementSibling
+      fromInner = from.innerHTML
+      toInner = to.innerHTML
+      from.innerHTML = toInner
+      to.innerHTML = fromInner
+    })
+
+    window.state.authenticatedAccountsInitialized = true
+  }
+})
+
+window.renderers.push(() => {
+  if (window.ethInitialized) {
+    window.dom.fill('authEthereum').with(
+      `<span class="connected-account" title="${window.ethUserAddress}">${window.ethUserAddress}</span>`
+    )
+  }
+  if (window.nearInitialized) {
+    window.dom.fill('authNear').with(
+      `<span class="connected-account" title="${window.nearUserAddress}">${window.nearUserAddress}</span>`
+    )
+  }
+})

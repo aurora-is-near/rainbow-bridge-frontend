@@ -1,0 +1,76 @@
+.connected-account {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  padding-left: 1em;
+}
+.connected-account:before {
+  color: var(--green);
+  content: '•';
+  font-size: 1.5em;
+  left: 0;
+  line-height: 0.8;
+  position: absolute;
+}
+
+.authenticated-accounts-button {
+  text-align: center;
+}
+.authenticated-accounts-button button {
+  background-color: var(--bg);
+  background-image: url('/img/swap-vert.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 1.3em;
+  border-radius: 1000em;
+  border: 1px solid var(--light-gray);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.04);
+  height: 2em;
+  width: 3.5em;
+  margin-top: 1.4em;
+}
+.authenticated-accounts-button button:hover,
+.authenticated-accounts-button button:focus {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.authenticated-accounts-button button:active {
+  box-shadow: none;
+}
+
+/**
+ * Fill in labels with CSS to simplify swapping order with JS
+ */
+.authenticated-accounts-input + .authenticated-account label:after {
+  content: 'Transfer from'
+}
+.authenticated-accounts-button + .authenticated-account label:after {
+  content: 'To'
+}
+
+.authenticated-account {
+  font-size: 0.8em;
+}
+.authenticated-account label {
+  margin-left: calc(1em + 1px);
+  margin-bottom: 0.5em;
+  text-align: left;
+}
+
+.authenticated-account > div {
+  background-color: var(--bg);
+  border: 1px solid var(--light-gray);
+  border-radius: 0.5em;
+  padding: 1em;
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: auto auto;
+  grid-gap: 3em;
+}
+
+.authenticated-account > div > span {
+  display: grid;
+  align-items: center;
+  grid-gap: 0.5em;
+  grid-template-columns: auto auto;
+}

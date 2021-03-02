@@ -1,0 +1,74 @@
+window.addEventListener('load', function addNavEventHandlers () {
+    window.dom.find('disconnectEthereum').onclick = async function disconnectEthereum () {
+      await window.web3Modal.clearCachedProvider()
+      setTimeout(() => window.location.reload())
+    }
+    window.dom.find('disconnectNear').onclick = function disconnectNear () {
+      window.nearConnection.signOut()
+      setTimeout(() => window.location.reload())
+    }
+    document.querySelectorAll('.dropdown').forEach(d => {
+      document.querySelector('body').addEventListener('click', event => {
+        const button = d.querySelector('button')
+        const clickedButton = button.contains(event.target)
+        const clickedInDropdown = d.contains(event.target)
+        const classNames = Array.from(d.classList)
+        const active = classNames.includes('active')
+
+        if (!active) {
+          if (clickedButton) {
+            d.className = [...classNames, 'active'].join(' ')
+          }
+        } else {
+          if (clickedButton || !clickedInDropdown) {
+            d.className = classNames.filter(c => c !== 'active').join(' ')
+          }
+        }
+      })
+    })
+  })
+
+  window.addEventListener('load', function displaySelectedBridge () {
+    const ethNetworkColors = {
+      'main': "#29b6af",
+      'ropsten': "#ff4a8d",
+      'rinkeby': "#f6c343"
+    }
+    window.dom.fill('bridgeName').with({
+      innerHTML: window.bridgeName,
+      title: window.bridgeName
+    })
+    document.querySelectorAll('.bridges-button > .colored-dot')[0]
+      .style.backgroundColor = ethNetworkColors[process.env.ethNetworkId]
+  })
+
+  async function renderTopBar () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
+    const transfers = await window.transfers.get()
+    const params = Object.keys(window.urlParams.get())
+
+    if (params.length) window.dom.show('goHome')
+    else window.dom.hide('goHome')
+
+    if (transfers.length || params.length) {
+      window.dom.show('topbar')
+    } else {
+      window.dom.hide('topbar')
+    }
+  }
+  function renderAccountsDropdown () {
+    if (window.ethInitialized) window.dom.show('ethConnected')
+    else window.dom.hide('ethConnected')
+
+    if (window.nearInitialized) window.dom.show('nearConnected')
+    else window.dom.hide('nearConnected')
+
+    if (window.ethInitialized || window.nearInitialized) {
+      window.dom.show('accountsDropdown')
+    } else {
+      window.dom.hide('accountsDropdown')
+    }
+  }
+  window.renderers.push(renderTopBar)
+  window.renderers.push(renderAccountsDropdown)

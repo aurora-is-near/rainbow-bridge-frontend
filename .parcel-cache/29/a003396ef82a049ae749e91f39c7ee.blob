@@ -1,0 +1,162 @@
+window.addEventListener('load', function handleSelectErc20Events () {
+    const amount = window.dom.find('erc20Amount')
+    const select = window.dom.find('erc20SelectButton')
+    const submit = window.dom.find('erc20Submit')
+
+    function disableForm () {
+      amount.disabled = true
+      select.disabled = true
+      submit.disabled = true
+    }
+
+    function enableForm () {
+      amount.disabled = false
+      select.disabled = false
+      submit.disabled = false
+    }
+
+    select.onclick = () => window.dom.show('erc20Modal')
+
+    amount.onkeyup = function enableOrDisable (e) {
+      if (Number(e.target.value)) submit.disabled = false
+      else submit.disabled = true
+    }
+
+    window.dom.find('sendNaturalErc20Form').onsubmit = async function transferErc20 (e) {
+      e.preventDefault()
+
+      disableForm()
+
+      try {
+        await window.nep141Xerc20.naturalErc20.sendToNear({
+          amount: amount.value,
+          erc20Address: window.dom.find('erc20Address').value,
+          sender: window.ethUserAddress,
+          recipient: window.nearUserAddress
+        })
+      } catch (e) {
+        alert(
+          'Something went wrong! ' +
+          'Maybe you need to sign out and back in? ' +
+          'Check your browser console for more info.'
+        )
+        throw e
+      } finally {
+        // re-enable the form, whether the call succeeded or failed
+        enableForm()
+      }
+
+      // if the call succeeded, reset and close the form
+      amount.value = ''
+      window.urlParams.clear()
+      window.render()
+    }
+
+    window.dom.onClick('featuredErc20Option', ({ target }) => {
+      window.urlParams.set({ erc20: target.value })
+      window.dom.hide('erc20Modal')
+      window.render()
+    })
+  })
+
+  async function fillFeaturedErc20s () {
+    if (!window.ethInitialized) return
+
+    const featured = await window.utils.getFeaturedErc20s()
+
+    window.dom.fill('erc20List').with(
+      Object.values(featured).map(token => `
+        <label class="space-between">
+          <input
+            type="radio"
+            name="erc20"
+            data-behavior="featuredErc20Option"
+            value="${token.address}"
+          />
+          <span>
+            <img src="${token.icon || 'ethereum.svg'}" alt="" />
+            ${token.name}
+          </span>
+          <span>
+            ${window.utils.formatLargeNum(token.balance, token.decimals)}
+          </span>
+        </label>
+      `)
+    )
+  }
+
+  let erc20Address
+  async function renderErc20Form () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
+    if (window.urlParams.get('erc20') === erc20Address) return
+    else erc20Address = window.urlParams.get('erc20')
+
+    if (window.urlParams.get('erc20') === null) {
+      window.dom.hide('sendNaturalErc20')
+      window.dom.hide('erc20AddressError')
+      window.dom.find('erc20FreeForm').classList.remove('error')
+      return
+    }
+
+    const amount = window.dom.find('erc20Amount')
+
+    if (!erc20Address) {
+      amount.disabled = true
+      window.dom.find('erc20SelectButton').classList.remove('selected')
+      window.dom.fill('erc20SelectButton').with('Select ERC20')
+      window.dom.hide('erc20Info')
+      window.dom.show('sendNaturalErc20')
+      return
+    }
+
+    window.dom.find('erc20Address').value = erc20Address
+
+    let token = (await window.utils.getFeaturedErc20s())[erc20Address]
+    try {
+      if (!token) token = await window.utils.getErc20Data(erc20Address)
+      window.dom.find('erc20SelectButton').classList.add('selected')
+      window.dom.fill('erc20SelectButton').with(token.name)
+      window.dom.find('erc20FreeForm').classList.remove('error')
+      window.dom.hide('erc20AddressError')
+      window.dom.fill('erc20Name').with(token.name)
+      window.dom.hide('erc20Modal')
+    } catch (e) {
+      window.dom.find('erc20SelectButton').classList.remove('selected')
+      const input = window.dom.find('erc20FreeForm')
+      input.classList.add('error')
+      input.value = erc20Address
+      window.dom.find('erc20FreeForm').classList.add('error')
+      window.dom.fill('erc20AddressError').with(e.message)
+      window.dom.show('erc20AddressError')
+      window.dom.show('sendNaturalErc20')
+      return
+    }
+
+    if (token.nep141.balance === null) {
+      window.dom.hide('sendNaturalErc20')
+      return
+    }
+
+    window.dom.show('sendNaturalErc20')
+
+    window.dom.fill('erc20Balance').with(window.utils.formatLargeNum(token.balance, token.decimals))
+    window.dom.fill('nep141Name').with(token.nep141.name)
+    window.dom.fill('nep141Balance').with(window.utils.formatLargeNum(token.nep141.balance, token.decimals))
+
+    if (token.balance) amount.disabled = false
+    else amount.disabled = true
+
+    amount.step = 10 ** -token.decimals
+    // NOTE: the html input field makes the comparison on rounded numbers
+    // So the max check is not precise for very small decimals.
+    // For example if the balance is 500003.0100900000011, then the input field will allow a max of
+    // only 500003.01009
+    amount.max = Number(new window.Decimal(token.balance).times(10 ** -token.decimals).toFixed()),
+    amount.min = 10 ** -token.decimals
+    window.dom.show('erc20Info', 'flex')
+    amount.focus()
+  }
+
+  window.renderers.push(fillFeaturedErc20s)
+  window.renderers.push(renderErc20Form)

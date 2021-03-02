@@ -1,0 +1,26 @@
+.panel {
+    background-color: var(--bg);
+    border-radius: 1em;
+    box-shadow:
+      0px 51px 121px rgba(0, 0, 0, 0.05),
+      0px 21.3066px 50.5509px rgba(0, 0, 0, 0.0359427),
+      0px 11.3915px 27.0269px rgba(0, 0, 0, 0.0298054),
+      0px 6.38599px 15.1511px rgba(0, 0, 0, 0.025),
+      0px 3.39155px 8.04662px rgba(0, 0, 0, 0.0201946),
+      0px 1.4113px 3.34838px rgba(0, 0, 0, 0.0140573);
+    margin: 0 auto;
+    padding: 1em;
+  }
+  @media (min-width: 928px) {
+    .landing .panel {
+      margin-top: 6em;
+    }
+    .landing {
+      background:
+        url(ddaabb0e0adb736a2f33827e50bef81a) no-repeat,
+        url(abcb43dc431141e68f6c983fd90ba9cb) no-repeat;
+      background-position:
+        top 20em left calc(50% - 17em),
+        top 26em right calc(50% - 16em);
+    }
+  }

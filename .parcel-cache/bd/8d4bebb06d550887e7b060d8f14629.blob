@@ -1,0 +1,10 @@
+function renderNewTransferForm () {
+   if (!(window.ethInitialized && window.nearInitialized)) return
+
+   if (window.urlParams.get('new') === 'transfer') {
+     window.dom.show('newTransferForm')
+   } else {
+     window.dom.hide('newTransferForm')
+   }
+ }
+ window.renderers.push(renderNewTransferForm)

@@ -1,0 +1,128 @@
+window.addEventListener('load', function addLandingHandlers () {
+  window.dom.onClick('newTransfer', function startErc20Transfer () {
+    window.urlParams.set({ new: 'transfer' })
+    window.render()
+  })
+  // transfers are rendered after page load, so we add one click handler to the
+  // body tag to handle clicking each kind of button on a transfer
+  document.querySelector('body').addEventListener('click', event => {
+    const callToAction = event.target.closest('[data-behavior=transferCallToAction]')
+
+    // no retry button clicked, end here
+    if (!callToAction) return
+
+    const transferId = callToAction.closest('[data-behavior=transfer]').id
+    window.transfers.act(transferId)
+  })
+  document.querySelector('body').addEventListener('click', event => {
+    const transferDetailsButton = event.target.closest('[data-behavior=openTransferDetails]')
+
+    // no retry button clicked, end here
+    if (!transferDetailsButton) return
+
+    const transferId = transferDetailsButton.closest('[data-behavior=transfer]').id
+    const footer = transferDetailsButton.closest('footer')
+    openTransferDetails[transferId] = !openTransferDetails[transferId]
+    footer.classList.toggle('open')
+    adjustTransferDetailsHeights()
+  })
+})
+// tracks UI state for which transfers have "view details" open
+const openTransferDetails = {}
+
+function renderTransfer (transfer, { inProgress }) {
+  transfer = window.transfers.decorate(transfer, { locale: 'en_US' })
+  return `
+    <div
+      class="transfer ${transfer.status}"
+      id="${transfer.id}"
+      data-behavior="transfer"
+    >
+      <header>
+        <div>
+          <h3>${window.utils.formatLargeNum(transfer.amount, transfer.decimals)} ${transfer.sourceTokenName}</h3>
+          <div class="status-message">
+            <span class="icon"></span>
+            <span>${transfer.statusMessage}</span>
+          </div>
+        </div>
+        ${window.dom.toString(transfer.callToAction &&
+          `<button data-behavior="transferCallToAction">${
+            transfer.callToAction
+          }</button>`
+        )}
+      </header>
+      <div>
+        <span>From</span>
+        <span class="account-with-icon ${transfer.sourceNetwork}" title="${transfer.sender}">
+          ${transfer.sender}
+        </span>
+      </div>
+      <div>
+        <span>To</span>
+        <span class="account-with-icon ${transfer.destinationNetwork}" title="${transfer.recipient}">
+          ${transfer.recipient}
+        </span>
+      </div>
+      <footer class="${openTransferDetails[transfer.id] ? 'open' : ''}">
+        <ol class="transfer-details">${transfer.steps.map(step => (
+          `<li class="${step.status}">
+            <span>${step.description}</span>
+            ${window.dom.toString(step.status === 'failed' &&
+              `<p class="error">${transfer.error}</p>`
+            )}
+          </li>`
+        )).join('')}</ol>
+        <button class="link" data-behavior="openTransferDetails">
+          <span>details</span>
+        </button>
+      </footer>
+    </div>
+  `
+}
+
+async function updateTransfers () {
+  if (!(window.ethInitialized && window.nearInitialized)) return
+
+  const transfers = await window.transfers.get()
+
+  if (!transfers.length) {
+    window.dom.hide('recent-transfers')
+  } else {
+    window.dom.show('recent-transfers')
+  }
+
+  window.dom.fill('transfers-container').with([
+    ...transfers.map(t => renderTransfer(t, { inProgress: true }))
+  ])
+
+  adjustTransferDetailsHeights()
+}
+
+// adjust hard-coded heights for transfers details panels, to enable slide-out animation
+function adjustTransferDetailsHeights () {
+  window.dom.findAll('transfer').map(transfer => {
+    const footer = transfer.querySelector('footer')
+    const button = footer.querySelector('button').getBoundingClientRect().height
+    const details = footer.querySelector('ol').getBoundingClientRect().height
+    footer.style.height = footer.classList.contains('open')
+      ? `${button + details}px`
+      : `${button}px`
+  })
+}
+
+async function hideShowTransfers () {
+  if (!(window.ethInitialized && window.nearInitialized)) return
+
+  const transfers = await window.transfers.get()
+  const params = Object.keys(window.urlParams.get())
+
+  if (transfers.length && !params.length) {
+    window.dom.show('recent-transfers')
+  } else {
+    window.dom.hide('recent-transfers')
+  }
+}
+
+window.renderers.push(updateTransfers)
+window.renderers.push(hideShowTransfers)

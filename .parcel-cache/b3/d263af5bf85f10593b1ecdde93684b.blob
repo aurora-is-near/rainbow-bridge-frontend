@@ -1,0 +1,26 @@
+async function renderBanner () {
+    if (!window.ethInitialized) return
+
+    if (process.env.ethNetworkId === window.connectedEthNetwork) {
+      // Correct eth network is selected, so enable scrolling
+      document.body.style.overflow = null;
+      window.dom.hide('unsupportedNetworkBanner')
+      if (window.connectedEthNetwork !== 'main') {
+        window.dom.fill('testnetWarning').with({
+          innerHTML: `Operating on the ${window.bridgeName} bridge`,
+        })
+        window.dom.show('testnetBanner')
+      }
+    } else {
+      // Go to top and disable scroll until correct eth network selected
+      window.scrollTo({ top: 0 });
+      document.body.style.overflow = 'hidden';
+      window.dom.hide('testnetBanner')
+      window.dom.fill('unsupportedNetwork').with({
+        innerHTML: `Please change Ethereum network. Current: ${window.connectedEthNetwork}
+          => required: ${process.env.ethNetworkId}`,
+      })
+      window.dom.show('unsupportedNetworkBanner')
+    }
+  }
+  window.renderers.push(renderBanner)

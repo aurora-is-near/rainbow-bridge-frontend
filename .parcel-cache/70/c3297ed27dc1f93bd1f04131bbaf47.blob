@@ -1,0 +1,43 @@
+window.addEventListener('load', function handleSelectErc20Events () {
+    window.dom.find('bridgeErc20Form').onsubmit = function bridgeIt (e) {
+      e.preventDefault()
+      window.nep141Xerc20.bridgedNep141.deploy(window.urlParams.get('erc20'))
+    }
+
+    window.dom.find('bridgeErc20Cancel').onclick = () => {
+      window.dom.hide('bridgeErc20Form')
+      window.urlParams.clear()
+      window.render()
+    }
+  })
+
+  async function renderBridgeErc20 () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+
+    const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
+    const erc20Address = erc20 || erc20n
+
+    if (!erc20Address) {
+      window.dom.hide('bridgeErc20Form')
+      return
+    }
+
+    let token = (await window.utils.getFeaturedErc20s())[erc20Address]
+    try {
+      if (!token) token = await window.utils.getErc20Data(erc20Address)
+    } catch (e) {
+      // error message filled in by other components
+      window.dom.hide('bridgeErc20Form')
+      return
+    }
+
+    if (token.nep141.balance !== null) {
+      window.dom.hide('bridgeErc20Form')
+      return
+    }
+
+    window.dom.fill('erc20Name').with(token.name)
+    window.dom.show('bridgeErc20Form')
+  }
+
+  window.renderers.push(renderBridgeErc20)
