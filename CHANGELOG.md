@@ -1,3 +1,11 @@
+## [2.1.1](https://github.com/near/rainbow-bridge-frontend/compare/v2.1.0...v2.1.1) (2021-03-04)
+
+
+### Bug Fixes
+
+* bump dependency to prevent double eth approve ([92e2204](https://github.com/near/rainbow-bridge-frontend/commit/92e2204f7f40bf26fe1d5fe53cae254d939627cf))
+* improve error msg ([b9d3154](https://github.com/near/rainbow-bridge-frontend/commit/b9d31546d7a7ce1532259f2d7364dabd4d14a5c2))
+
 # [2.1.0](https://github.com/near/rainbow-bridge-frontend/compare/v2.0.1...v2.1.0) (2021-03-02)
 
 
