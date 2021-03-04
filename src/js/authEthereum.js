@@ -7,7 +7,7 @@ import {
 } from '@near-eth/client'
 import render from './render'
 import { onClick } from './domHelpers'
-import { ethNetworks } from './utils'
+import { chainIdToEthNetwork, ethNetworkToChainId } from './utils'
 
 // SWAP IN YOUR OWN INFURA_ID FROM https://infura.io/dashboard/ethereum
 const INFURA_ID = '9c91979e95cb4ef8a61eb029b4217a1a'
@@ -42,17 +42,23 @@ async function login () {
     render()
   })
   provider.on('chainChanged', (chainId) => {
-    window.connectedEthNetwork = ethNetworks[chainId]
+    window.connectedEthNetwork = chainIdToEthNetwork[chainId]
+    window.isValidEthNetwork = window.connectedEthNetwork === process.env.ethNetworkId
     render()
   })
 
   window.ethUserAddress = provider.selectedAddress
-  window.connectedEthNetwork = ethNetworks[provider.chainId]
+  window.connectedEthNetwork = chainIdToEthNetwork[provider.chainId]
+  window.isValidEthNetwork = window.connectedEthNetwork === process.env.ethNetworkId
   window.ethInitialized = true
 
   render()
 
-  if (window.nearInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
+  if (window.nearInitialized) {
+    checkTransferStatuses(
+      { loop: window.LOOP_INTERVAL, expectedEthChainId: ethNetworkToChainId[process.env.ethNetworkId] }
+    )
+  }
 }
 
 onClick('authEthereum', login)

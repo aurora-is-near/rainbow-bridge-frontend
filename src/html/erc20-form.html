@@ -157,6 +157,7 @@
 
   async function fillFeaturedErc20s () {
     if (!window.ethInitialized) return
+    if (!window.isValidEthNetwork) return
 
     const featured = await window.utils.getFeaturedErc20s()
 
@@ -184,6 +185,7 @@
   let erc20Address
   async function renderErc20Form () {
     if (!(window.ethInitialized && window.nearInitialized)) return
+    if (!window.isValidEthNetwork) return
 
     if (window.urlParams.get('erc20') === erc20Address) return
     else erc20Address = window.urlParams.get('erc20')

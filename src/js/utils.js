@@ -27,8 +27,13 @@ export async function getFeaturedErc20s () {
   )
 }
 
-export const ethNetworks = {
+export const chainIdToEthNetwork = {
   '0x1': 'main',
   '0x3': 'ropsten',
   '0x4': 'rinkeby'
+}
+export const ethNetworkToChainId = {
+  'main': '0x1',
+  'ropsten': '0x3',
+  'rinkeby': '0x4'
 }

@@ -389,6 +389,7 @@ function renderTransfer (transfer, { inProgress }) {
 
 async function updateTransfers () {
   if (!(window.ethInitialized && window.nearInitialized)) return
+  if (!window.isValidEthNetwork) return
 
   const transfers = await window.transfers.get()
 

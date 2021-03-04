@@ -44,6 +44,7 @@
 
   async function renderBridgeErc20 () {
     if (!(window.ethInitialized && window.nearInitialized)) return
+    if (!window.isValidEthNetwork) return
 
     const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
     const erc20Address = erc20 || erc20n

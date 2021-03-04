@@ -10,7 +10,7 @@
   async function renderBanner () {
     if (!window.ethInitialized) return
 
-    if (process.env.ethNetworkId === window.connectedEthNetwork) {
+    if (window.isValidEthNetwork) {
       // Correct eth network is selected, so enable scrolling
       document.body.style.overflow = null;
       window.dom.hide('unsupportedNetworkBanner')

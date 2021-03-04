@@ -36,7 +36,11 @@ function login () {
 
   render()
 
-  if (window.ethInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
+  if (window.ethInitialized) {
+    checkTransferStatuses(
+      { loop: window.LOOP_INTERVAL, expectedEthChainId: ethNetworkToChainId[process.env.ethNetworkId] }
+    )
+  }
 }
 
 // The NEAR signin flow redirects from the current URL to NEAR Wallet,
