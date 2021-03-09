@@ -1,3 +1,11 @@
+## [2.1.2](https://github.com/near/rainbow-bridge-frontend/compare/v2.1.1...v2.1.2) (2021-03-09)
+
+
+### Bug Fixes
+
+* don't query metadata (render) if wrong eth network ([0ca2ef0](https://github.com/near/rainbow-bridge-frontend/commit/0ca2ef0b1e10f1724723f37bd3d68f4294b51bec))
+* rollback checkStatusAll api change ([6ed1a0c](https://github.com/near/rainbow-bridge-frontend/commit/6ed1a0c4fb474fe6219f96920653b9925701a15a))
+
 ## [2.1.1](https://github.com/near/rainbow-bridge-frontend/compare/v2.1.0...v2.1.1) (2021-03-04)
 
 
