@@ -32,8 +32,3 @@ export const chainIdToEthNetwork = {
   '0x3': 'ropsten',
   '0x4': 'rinkeby'
 }
-export const ethNetworkToChainId = {
-  'main': '0x1',
-  'ropsten': '0x3',
-  'rinkeby': '0x4'
-}
