@@ -1,3 +1,10 @@
+## [2.1.3](https://github.com/near/rainbow-bridge-frontend/compare/v2.1.2...v2.1.3) (2021-03-10)
+
+
+### Bug Fixes
+
+* update bridge urls ([81b40eb](https://github.com/near/rainbow-bridge-frontend/commit/81b40eb9c53c24cfff27bcc7180f8a9ce274aba3))
+
 ## [2.1.2](https://github.com/near/rainbow-bridge-frontend/compare/v2.1.1...v2.1.2) (2021-03-09)
 
 
