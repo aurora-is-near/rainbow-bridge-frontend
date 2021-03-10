@@ -4,6 +4,7 @@
   "license": "(MIT AND Apache-2.0)",
   "private": true,
   "scripts": {
+    "build": "env-cmd -e ropsten_development -r .config.js parcel build src/index.html --public-url ./",
     "build_ropsten": "env-cmd -e ropsten_development -r .config.js parcel build src/index.html --public-url ./",
     "build_rinkeby": "env-cmd -e rinkeby_development -r .config.js parcel build src/index.html --public-url ./",
     "start": "env-cmd -e ropsten_development -r .config.js parcel src/index.html",
