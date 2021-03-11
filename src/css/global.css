@@ -184,6 +184,11 @@ li {
   padding-bottom: 1em;
 }
 
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #ddd;
+  opacity: 1; /* Firefox */
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --gray: #aaa;
@@ -212,10 +217,6 @@ li {
   margin: 0 auto;
   text-align: center;
   padding: 1em;
-}
-
-.concept-near {
-  color: var(--red);
 }
 
 .concept-ethereum {

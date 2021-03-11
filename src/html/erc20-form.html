@@ -50,7 +50,7 @@
     </div>
     <footer>
       <button disabled data-behavior="erc20Submit" class="cta">
-        Submit transfer
+        Approve transfer
       </button>
       <button type="button" class="cancel" data-behavior="goHome">
         Cancel
@@ -78,11 +78,10 @@
         <div data-behavior="erc20AddressError" class="errorMessage"></div>
       </form>
       <div class="separator">
-        <strong>or</strong>
+        <strong>or choose</strong>
       </div>
       <form method="get">
         <header>
-          <h3>Select a token</h3>
           <div class="space-between" style="font-size:.75em;margin-bottom:.5em">
             <span>Token name</span>
             <span>Available balance</span>
@@ -225,7 +224,10 @@
       input.classList.add('error')
       input.value = erc20Address
       window.dom.find('erc20FreeForm').classList.add('error')
-      window.dom.fill('erc20AddressError').with(e.message)
+      console.error(e)
+      window.dom.fill('erc20AddressError').with(
+        'Sorry, the provided Ethereum address doesn\'t look like a valid ERC20 token contract'
+      )
       window.dom.show('erc20AddressError')
       window.dom.show('sendNaturalErc20')
       return
