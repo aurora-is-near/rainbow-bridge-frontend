@@ -370,7 +370,7 @@ function renderTransfer (transfer, { inProgress }) {
           ${transfer.recipient}
         </span>
       </div>
-      <footer class="${openTransferDetails[transfer.id] ? 'open' : ''}">
+      <footer class="${openTransferDetails[transfer.id] || transfer.status !== 'completed' ? 'open' : ''}">
         <ol class="transfer-details">${transfer.steps.map(step => (
           `<li class="${step.status}">
             <span>${step.description}</span>
