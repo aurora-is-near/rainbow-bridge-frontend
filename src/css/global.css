@@ -185,8 +185,8 @@ li {
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #ddd;
-  opacity: 1; /* Firefox */
+  color: #aaa;
+  opacity: 0.5; /* Firefox */
 }
 
 @media (prefers-color-scheme: dark) {
