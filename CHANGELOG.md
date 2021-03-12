@@ -1,3 +1,11 @@
+## [2.1.4](https://github.com/near/rainbow-bridge-frontend/compare/v2.1.3...v2.1.4) (2021-03-12)
+
+
+### Bug Fixes
+
+* improve placeholder opacity for darkmode ([29cf37a](https://github.com/near/rainbow-bridge-frontend/commit/29cf37ae6c719deba8c4ef6f8bd1000b4413c0d6))
+* UI improvements, add faucet link ([c400bae](https://github.com/near/rainbow-bridge-frontend/commit/c400bae85f6e0e3d97a49d598d464c835b8d51ca))
+
 ## [2.1.3](https://github.com/near/rainbow-bridge-frontend/compare/v2.1.2...v2.1.3) (2021-03-10)
 
 
