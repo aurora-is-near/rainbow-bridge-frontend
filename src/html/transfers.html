@@ -367,10 +367,13 @@ window.addEventListener('load', function addLandingHandlers () {
 
   txHashRecoveryForm.onsubmit = async function recoverTransfer(e) {
     e.preventDefault()
-    // TODO: add support for Near withdraw tx recovery
     console.log(txHashInput.value)
     try {
-      await window.nep141Xerc20.naturalErc20.recover(txHashInput.value)
+      if (/^(0x)?[0-9a-f]{64}$/i.test(txHashInput.value)) {
+        await window.nep141Xerc20.naturalErc20.recover(txHashInput.value)
+      } else {
+        await window.nep141Xerc20.bridgedNep141.recover(txHashInput.value)
+      }
       window.dom.fill('txHashError').with('')
     } catch (e) {
       console.error(e)
