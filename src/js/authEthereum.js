@@ -55,6 +55,7 @@ async function login () {
   })
   provider.on('disconnect', (code, reason) => {
     console.log(code, reason)
+    setTimeout(() => window.location.reload())
     window.web3Modal.clearCachedProvider()
     render()
   })
