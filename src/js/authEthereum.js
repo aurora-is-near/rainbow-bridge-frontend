@@ -37,18 +37,28 @@ async function login () {
   const provider = await window.web3Modal.connect()
   setEthProvider(provider)
 
+  if (provider.isMetaMask) {
+    window.ethUserAddress = provider.selectedAddress
+    window.connectedEthNetwork = chainIdToEthNetwork[parseInt(provider.chainId)]
+  } else {
+    window.ethUserAddress = provider.accounts[0]
+    window.connectedEthNetwork = chainIdToEthNetwork[provider.chainId]
+  }
   provider.on('accountsChanged', (accounts) => {
     window.ethUserAddress = accounts[0]
     render()
   })
   provider.on('chainChanged', (chainId) => {
-    window.connectedEthNetwork = chainIdToEthNetwork[chainId]
+    window.connectedEthNetwork = chainIdToEthNetwork[parseInt(chainId)]
     window.isValidEthNetwork = window.connectedEthNetwork === process.env.ethNetworkId
     render()
   })
+  provider.on('disconnect', (code, reason) => {
+    console.log(code, reason)
+    window.web3Modal.clearCachedProvider()
+    render()
+  })
 
-  window.ethUserAddress = provider.selectedAddress
-  window.connectedEthNetwork = chainIdToEthNetwork[provider.chainId]
   window.isValidEthNetwork = window.connectedEthNetwork === process.env.ethNetworkId
   window.ethInitialized = true
 

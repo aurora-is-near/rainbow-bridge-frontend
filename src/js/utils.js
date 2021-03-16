@@ -31,7 +31,7 @@ export async function getFeaturedErc20s () {
 }
 
 export const chainIdToEthNetwork = {
-  '0x1': 'main',
-  '0x3': 'ropsten',
-  '0x4': 'rinkeby'
+  1: 'main',
+  3: 'ropsten',
+  4: 'rinkeby'
 }
