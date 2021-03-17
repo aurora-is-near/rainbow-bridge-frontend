@@ -12,6 +12,18 @@
     <!-- TODO: <nav> -->
   </header>
   <div data-behavior="transfers-container" style="margin-top: 3rem"></div>
+  <div data-behavior="deleteModal" class=modal style="display:none">
+    <div class="confirm-delete">
+      <img src="/img/delete-pink.svg" alt="">
+      <h4>Are you sure you want to delete this transfer?</h4>
+      <p>Once deleted, a transfer cannot be restored without knowledge of the 1st step submit transaction hash.</p>
+      <div class="confirm-delete-buttons">
+        <button data-behavior="confirmDelete" class="cta">Delete Transfer</button>
+        <button data-behavior="closeModal" class="cta">Cancel</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 <style>
   .transfers {
@@ -119,12 +131,10 @@
     margin: 0 0 0.5rem;
   }
   .transfer > header {
-    padding: 1rem;
-    display: grid;
-    grid-template-columns: auto auto;
+    padding: 0.9rem;
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    grid-gap: 1em;
   }
   .transfer > header .status-message {
     display: flex;
@@ -163,9 +173,19 @@
     0% { transform: rotate(0deg) }
     100% { transform: rotate(360deg) }
   }
-  .transfer > header button {
-    padding: 0.5em 1em;
+  .action-buttons {
+    display: flex;
   }
+  .transfer > header > button {
+    padding: 0.5em 1.1em;
+  }
+  .delete-button {
+    background: url(/img/delete.svg) no-repeat center;
+    margin-left: 0.5em;
+    height: 2.4em;
+    padding: 1em;
+  }
+
   .transfer > div {
     padding: 0.5rem 1rem;
     display: grid;
@@ -313,8 +333,38 @@
   .landing {
     padding-bottom: 1em;
   }
+
+  .confirm-delete {
+    padding: 3em;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .confirm-delete > img {
+    margin-left: 40%;
+    margin-right: 40%;
+  }
+  .confirm-delete > h4 {
+    font-weight: 800;
+    line-height: 1.5;
+    margin-top: 2em;
+    margin-bottom: 1em;
+  }
+  .confirm-delete button {
+    margin-top: 1.2em;
+  }
+  .confirm-delete-buttons :first-child {
+    background-color: var(--red);
+    color: var(--white)
+  }
+  .confirm-delete-buttons :last-child {
+    background-color: var(--bg);
+    color: var(--fg)
+  }
 </style>
 <script>
+let transferIdToRemove = ''
 window.addEventListener('load', function addLandingHandlers () {
   window.dom.onClick('newTransfer', function startErc20Transfer () {
     window.urlParams.set({ new: 'transfer' })
@@ -329,7 +379,7 @@ window.addEventListener('load', function addLandingHandlers () {
   document.querySelector('body').addEventListener('click', event => {
     const callToAction = event.target.closest('[data-behavior=transferCallToAction]')
 
-    // no retry button clicked, end here
+    // no action button clicked, end here
     if (!callToAction) return
 
     const transferId = callToAction.closest('[data-behavior=transfer]').id
@@ -338,7 +388,7 @@ window.addEventListener('load', function addLandingHandlers () {
   document.querySelector('body').addEventListener('click', event => {
     const transferDetailsButton = event.target.closest('[data-behavior=openTransferDetails]')
 
-    // no retry button clicked, end here
+    // no details button clicked, end here
     if (!transferDetailsButton) return
 
     const transferId = transferDetailsButton.closest('[data-behavior=transfer]').id
@@ -347,6 +397,23 @@ window.addEventListener('load', function addLandingHandlers () {
     footer.classList.toggle('open')
     adjustTransferDetailsHeights()
   })
+  document.querySelector('body').addEventListener('click', event => {
+    const deleteButton = event.target.closest('[data-behavior=deleteTransfer]')
+
+    // no delete button clicked, end here
+    if (!deleteButton) return
+
+    window.dom.show('deleteModal')
+    transferIdToRemove = deleteButton.closest('[data-behavior=transfer]').id
+  })
+
+  // Delete a transfer after confirmation
+  confirmDeleteButton = window.dom.find('confirmDelete')
+  confirmDeleteButton.onclick = () => {
+    window.transfers.remove(transferIdToRemove)
+    window.dom.hide('deleteModal')
+    document.getElementById(`${transferIdToRemove}`).style.display = "none";
+  }
 })
 // tracks UI state for which transfers have "view details" open
 const openTransferDetails = {}
@@ -367,11 +434,15 @@ function renderTransfer (transfer, { inProgress }) {
             <span>${transfer.statusMessage}</span>
           </div>
         </div>
-        ${window.dom.toString(transfer.callToAction &&
-          `<button data-behavior="transferCallToAction">${
-            transfer.callToAction
-          }</button>`
-        )}
+        <div class="action-buttons">
+          ${window.dom.toString(transfer.callToAction &&
+            `<button data-behavior="transferCallToAction">${
+              transfer.callToAction
+            }</button>`
+          )}
+          <button class="delete-button" data-behavior="deleteTransfer">
+          </button
+        </div>
       </header>
       <div>
         <span>From</span>
