@@ -27,18 +27,18 @@ module.exports = {
   },
   ropsten_development: {
     // library settings
-    ethClientAddress: '0x05af81eeb82ab7a294a9942ba01ae2d2da9f18be',
+    ethClientAddress: '0x4018820687bfbf222fabd2ee014f6dc325c64084',
     ethNearOnEthClientAbiText: readFileSync('./abi/nearOnEthClient.abi'),
     ethEd25519Address: '0xe729ee84db978d7971bbc5079fd32bb0ae8d1856',
     ethErc20AbiText: readFileSync('./abi/erc20.abi'),
     ethLockerAbiText: readFileSync('./node_modules/rainbow-token-connector/res/BridgeTokenFactory.full.abi'),
-    ethLockerAddress: '0xa5289b6d5dcc13e48f2cc6382256e51589849f86',
-    ethProverAddress: '0xd67d3102fc06a0e7abb23ad0e5a9752d9397177e',
+    ethLockerAddress: '0xb48e6441524f261e141bc766a7ebd54b19ca7465',
+    ethProverAddress: '0xb3df48b0ea3e91b43226fb3c5eb335b7e3d76faa',
     ethProverAbiText: readFileSync('./abi/prover.abi'),
     nearClientAccount: 'client.ropsten.testnet',
     nearHelperUrl: 'https://helper.testnet.near.org',
     nearProverAccount: 'prover.ropsten.testnet',
-    nearTokenFactoryAccount: 'f290121.ropsten.testnet',
+    nearTokenFactoryAccount: 'f.ropsten.testnet',
 
     // frontend settings
     featuredErc20s: JSON.stringify([

@@ -1272,21 +1272,21 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@near-eth/client@0.2.1", "@near-eth/client@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-0.2.1.tgz#96bc668142f49a2065aefce28bb0a8e4f8d1f17b"
-  integrity sha512-bkDHqyVhVBc0dvfQSXFc6y2jPnrurJC0hI8g/yXzPJLUDKo0Vd3ttrANsCFq+GflS/IQhKpI5TSE06m4d0TFUA==
+"@near-eth/client@1.0.0", "@near-eth/client@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.0.0.tgz#750284d6f8b072f3f0fb2f9321bfdc9d32a6a64e"
+  integrity sha512-n1RUNXDuojaebzC3IJj5yyv0dtVUvGTf3stU1a9ovty7VeOsRGfYvMdorUfyIfEdguuvOJbmqcyR3g4BJyjrUg==
   dependencies:
     bn.js "^5.1.3"
     decimal.js "^10.2.1"
     near-api-js near/near-api-js#account-type-fixes
 
-"@near-eth/nep141-erc20@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-0.2.4.tgz#36f717f692f0173aa4bc9a7bc90fd2611a1a59ed"
-  integrity sha512-qWtBqQ0k8Zhb74tSw36rvnNO6qA14kdolXIrbRK+tjDBTQpTYB/3L5ZUP4hcQ7TiGHtrCFJzGK2nlwqz4JY+4w==
+"@near-eth/nep141-erc20@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.0.0.tgz#fc84d6cd07d25ad7e8a25aa3e8a548315a8904a8"
+  integrity sha512-i+qMO1eTHdfxZSnaQS05rkp7poAl9j2HpvFDvcln9dri3XKZwrIegNmf+r5/L9mrQsL2WgJg9h45gZ0O1itXWQ==
   dependencies:
-    "@near-eth/client" "0.2.1"
+    "@near-eth/client" "1.0.0"
     bn.js "^5.1.3"
     bs58 "^4.0.1"
     eth-object near/eth-object#54e03b8aac8208cf724e206d49ffb8bdd30451d7
