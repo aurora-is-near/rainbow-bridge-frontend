@@ -364,7 +364,6 @@
   }
 </style>
 <script>
-let transferIdToRemove = ''
 window.addEventListener('load', function addLandingHandlers () {
   window.dom.onClick('newTransfer', function startErc20Transfer () {
     window.urlParams.set({ new: 'transfer' })
@@ -404,16 +403,15 @@ window.addEventListener('load', function addLandingHandlers () {
     if (!deleteButton) return
 
     window.dom.show('deleteModal')
-    transferIdToRemove = deleteButton.closest('[data-behavior=transfer]').id
+    const transferIdToRemove = deleteButton.closest('[data-behavior=transfer]').id
+    // Delete a transfer after confirmation
+    confirmDeleteButton = window.dom.find('confirmDelete')
+    confirmDeleteButton.onclick = () => {
+      window.transfers.remove(transferIdToRemove)
+      window.dom.hide('deleteModal')
+      document.getElementById(transferIdToRemove).remove()
+    }
   })
-
-  // Delete a transfer after confirmation
-  confirmDeleteButton = window.dom.find('confirmDelete')
-  confirmDeleteButton.onclick = () => {
-    window.transfers.remove(transferIdToRemove)
-    window.dom.hide('deleteModal')
-    document.getElementById(`${transferIdToRemove}`).style.display = "none";
-  }
 })
 // tracks UI state for which transfers have "view details" open
 const openTransferDetails = {}
@@ -441,7 +439,7 @@ function renderTransfer (transfer, { inProgress }) {
             }</button>`
           )}
           <button class="delete-button" data-behavior="deleteTransfer">
-          </button
+          </button>
         </div>
       </header>
       <div>
