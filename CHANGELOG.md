@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/near/rainbow-bridge-frontend/compare/v2.1.4...v3.0.0) (2021-03-18)
+
+
+### Features
+
+* upgrade to nep141 bridge ([d2db524](https://github.com/near/rainbow-bridge-frontend/commit/d2db5244137655cbc7784f698ddf99817c3bf32d))
+
+
+### BREAKING CHANGES
+
+* new bridge
+
 ## [2.1.4](https://github.com/near/rainbow-bridge-frontend/compare/v2.1.3...v2.1.4) (2021-03-12)
 
 
