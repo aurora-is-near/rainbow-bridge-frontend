@@ -1,3 +1,11 @@
+## [3.0.1](https://github.com/near/rainbow-bridge-frontend/compare/v3.0.0...v3.0.1) (2021-03-18)
+
+
+### Bug Fixes
+
+* disconnect on walletconnect session end ([3770d33](https://github.com/near/rainbow-bridge-frontend/commit/3770d3336443504aaefc3b8df34ca0bf5178ee10))
+* walletconnect ([91649da](https://github.com/near/rainbow-bridge-frontend/commit/91649da0abe204ba8bb0f964774f20b9e314e9a0))
+
 # [3.0.0](https://github.com/near/rainbow-bridge-frontend/compare/v2.1.4...v3.0.0) (2021-03-18)
 
 
