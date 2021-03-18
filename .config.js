@@ -110,7 +110,7 @@ module.exports = {
       '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', //   WETH
       '0x0316eb71485b0ab14103307bf65a021042c6d380', //   HBTC
     ]),
-    nearNodeUrl: 'https://rpc.near.org',
+    nearNodeUrl: 'https://rpc.mainnet.near.org',
     nearWalletUrl: 'https://wallet.near.org',
     nearExplorerUrl: 'https://explorer.near.org',
     nearNetworkId: 'mainnet',
