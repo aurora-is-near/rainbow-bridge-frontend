@@ -4,6 +4,9 @@ import { Decimal } from 'decimal.js'
 
 export function formatLargeNum (n, decimals = 18) {
   // decimals defaults to 18 for old transfers in state that didn't record transfer.decimals
+  if (!n) {
+    return new Decimal(0)
+  }
   return new Decimal(n).dividedBy(10 ** decimals)
 }
 

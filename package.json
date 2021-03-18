@@ -7,7 +7,7 @@
     "build": "env-cmd -e ropsten_development -r .config.js parcel build src/index.html --public-url ./",
     "build_ropsten": "env-cmd -e ropsten_development -r .config.js parcel build src/index.html --public-url ./",
     "build_rinkeby": "env-cmd -e rinkeby_development -r .config.js parcel build src/index.html --public-url ./",
-    "start": "env-cmd -e ropsten_development -r .config.js parcel src/index.html",
+    "start": "env-cmd -e ropsten_development -r .config.js parcel src/index.html --port 3333",
     "local": "env-cmd -e local -r .config.js parcel src/index.html",
     "lint": "eslint src"
   },
@@ -33,8 +33,8 @@
     "semantic-release": "^17.1.2"
   },
   "dependencies": {
-    "@near-eth/client": "^0.2.1",
-    "@near-eth/nep141-erc20": "^0.2.4",
+    "@near-eth/client": "^1.0.0",
+    "@near-eth/nep141-erc20": "^1.0.0",
     "@walletconnect/web3-provider": "^1.2.1",
     "decimal.js": "^10.2.1",
     "near-api-js": "~0.36.3",
