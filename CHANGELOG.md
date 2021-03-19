@@ -1,3 +1,12 @@
+# [3.1.0](https://github.com/near/rainbow-bridge-frontend/compare/v3.0.1...v3.1.0) (2021-03-19)
+
+
+### Features
+
+* add tx recovery from deposit hash ([850aecf](https://github.com/near/rainbow-bridge-frontend/commit/850aecfef0c4a00cb15f84269e5854800db914e2))
+* implement new restore design ([c02fe83](https://github.com/near/rainbow-bridge-frontend/commit/c02fe831fdd0d702494780bdb20f52b9d8e84532))
+* support near and eth recovery ([404bca8](https://github.com/near/rainbow-bridge-frontend/commit/404bca800fbafd58ae3cc1f2cbd56115ffdcc46b))
+
 ## [3.0.1](https://github.com/near/rainbow-bridge-frontend/compare/v3.0.0...v3.0.1) (2021-03-18)
 
 
