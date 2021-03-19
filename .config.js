@@ -109,6 +109,7 @@ module.exports = {
       '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e', //   YFI
       '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', //   WETH
       '0x0316eb71485b0ab14103307bf65a021042c6d380', //   HBTC
+      '0x111111111117dc0aa78b770fa6a738034120c302', //   1INCH
     ]),
     nearNodeUrl: 'https://rpc.mainnet.near.org',
     nearWalletUrl: 'https://wallet.near.org',
