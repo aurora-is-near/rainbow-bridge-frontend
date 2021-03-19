@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/near/rainbow-bridge-frontend/compare/v3.1.0...v3.2.0) (2021-03-19)
+
+
+### Features
+
+* add transfer removal and confirmation ([53b54be](https://github.com/near/rainbow-bridge-frontend/commit/53b54be091033c0502fd4083ea7089fd642840ba))
+
 # [3.1.0](https://github.com/near/rainbow-bridge-frontend/compare/v3.0.1...v3.1.0) (2021-03-19)
 
 
