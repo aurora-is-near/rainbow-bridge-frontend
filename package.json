@@ -35,7 +35,7 @@
   "dependencies": {
     "@near-eth/client": "^1.1.0",
     "@near-eth/nep141-erc20": "^1.1.0",
-    "@walletconnect/web3-provider": "^1.2.1",
+    "@walletconnect/web3-provider": "^1.4.0",
     "decimal.js": "^10.2.1",
     "near-api-js": "~0.36.3",
     "web3": "^1.2.11",
