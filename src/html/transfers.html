@@ -405,7 +405,7 @@ window.addEventListener('load', function addLandingHandlers () {
     window.dom.show('deleteModal')
     const transferIdToRemove = deleteButton.closest('[data-behavior=transfer]').id
     // Delete a transfer after confirmation
-    confirmDeleteButton = window.dom.find('confirmDelete')
+    const confirmDeleteButton = window.dom.find('confirmDelete')
     confirmDeleteButton.onclick = () => {
       window.transfers.remove(transferIdToRemove)
       window.dom.hide('deleteModal')
