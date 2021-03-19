@@ -5,40 +5,15 @@
     <button data-behavior="newTransfer" class="cta" style="margin-top: 2em">
       Begin new transfer
     </button>
+    <p class="or">or</p>
+    <button data-behavior="newRecovery" class="cta">
+      Restore transfer
+    </button>
     <!-- TODO: <nav> -->
   </header>
-  <div class="recovery-container">
-    <button class="link" data-behavior="toggleRecovery">Recover with deposit tx hash</button>
-    <form data-behavior="txHashRecoveryForm" style="display:none">
-      <div class="recover">
-        <input
-          data-behavior="txHashInput"
-          placeholder="0x89d24A6b4C..."
-          autoComplete="off"
-        />
-        <button>Recover</button>
-      </div>
-      <div data-behavior="txHashError" class="errorMessage"></div>
-    </form>
-  </div>
   <div data-behavior="transfers-container" style="margin-top: 3rem"></div>
 </div>
 <style>
-  .recovery-container {
-    margin-top: 2em;
-    text-align: center;
-  }
-  .recover {
-    display: flex;
-    flex-direction: row;
-    margin-top: 1em;
-  }
-  .recover > input {
-    margin-right: 1em;
-  }
-  .errorMessage {
-    margin-top: 1em;
-  }
   .transfers {
     margin-top: 4em;
     width: 100%;
@@ -52,6 +27,13 @@
   }
   .transfers nav button {
     border-radius: 100em;
+  }
+  .transfers > header :last-child {
+    background-color: var(--light-gray);
+    color: var(--fg-bold)
+  }
+  .or {
+    margin: 1em;
   }
   .transfer.in-progress {
     --bg-dark: #FFDBB2;
@@ -338,6 +320,10 @@ window.addEventListener('load', function addLandingHandlers () {
     window.urlParams.set({ new: 'transfer' })
     window.render()
   })
+  window.dom.onClick('newRecovery', function startTransferRecovery () {
+    window.urlParams.set({ new: 'restore' })
+    window.render()
+  })
   // transfers are rendered after page load, so we add one click handler to the
   // body tag to handle clicking each kind of button on a transfer
   document.querySelector('body').addEventListener('click', event => {
@@ -360,35 +346,6 @@ window.addEventListener('load', function addLandingHandlers () {
     openTransferDetails[transferId] = !openTransferDetails[transferId]
     footer.classList.toggle('open')
     adjustTransferDetailsHeights()
-  })
-
-  const txHashInput = window.dom.find('txHashInput')
-  const txHashRecoveryForm = window.dom.find('txHashRecoveryForm')
-
-  txHashRecoveryForm.onsubmit = async function recoverTransfer(e) {
-    e.preventDefault()
-    console.log(txHashInput.value)
-    try {
-      if (/^(0x)?[0-9a-f]{64}$/i.test(txHashInput.value)) {
-        await window.nep141Xerc20.naturalErc20.recover(txHashInput.value)
-      } else {
-        await window.nep141Xerc20.bridgedNep141.recover(txHashInput.value)
-      }
-      window.dom.fill('txHashError').with('')
-    } catch (e) {
-      console.error(e)
-      window.dom.fill('txHashError').with(e.message)
-    }
-  }
-
-  window.dom.onClick('toggleRecovery', function toggleRecoveryDisplay () {
-    if (txHashRecoveryForm.style.display === 'none') {
-      txHashRecoveryForm.style.display = ''
-      window.dom.fill('txHashError').with('')
-      txHashInput.value = ''
-    } else {
-      txHashRecoveryForm.style.display = 'none'
-    }
   })
 })
 // tracks UI state for which transfers have "view details" open
