@@ -1,5 +1,9 @@
 <aside class="banner purple">
-  <span>Ledger-based Near wallets are not able to sign finalisation transactions.</span>
+  <span>
+    Ledger-protected Near wallets are not able to sign finalisation transactions.
+    You still can do the transfer to these wallets if you sign the finalisation transaction
+    with another NEAR wallet. You can create one <a href="https://faucet.paras.id/">here</a>.
+  </span>
 </aside>
 <aside class="banner yellow" data-behavior="testnetBanner" style="display:none">
   <span data-behavior="testnetWarning"></span>
@@ -66,6 +70,14 @@
 }
 .banner.purple {
   background: var(--purple);
+  font-size: large;
+  padding: 1em 5em;
+}
+.banner.purple a {
+  font-weight: bold;
+  color: white;
+  text-decoration: underline;
+  font-size: x-large;
 }
 .fullScreen {
   position: absolute;
