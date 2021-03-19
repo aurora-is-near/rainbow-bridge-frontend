@@ -1,3 +1,14 @@
+## [3.2.1](https://github.com/near/rainbow-bridge-frontend/compare/v3.2.0...v3.2.1) (2021-03-19)
+
+
+### Bug Fixes
+
+* add faucet link ([e0ce661](https://github.com/near/rainbow-bridge-frontend/commit/e0ce661ffe7931162b959e2cdd5f58482ce4f84a))
+* add telegram link ([7cfe010](https://github.com/near/rainbow-bridge-frontend/commit/7cfe010b0870af13bc3dd7b4e230a1dea5200c55))
+* mainnet launch fixes ([a9f40b3](https://github.com/near/rainbow-bridge-frontend/commit/a9f40b317dbcd4c5c236c2604a6b8fce7c121e28))
+* update ledger banner ([94e262d](https://github.com/near/rainbow-bridge-frontend/commit/94e262dc241cd6060fbbb06e5d01e82813cf3e8d))
+* update telegram link ([6066d0e](https://github.com/near/rainbow-bridge-frontend/commit/6066d0ee24023ce83908960a59dd64110429a24b))
+
 # [3.2.0](https://github.com/near/rainbow-bridge-frontend/compare/v3.1.0...v3.2.0) (2021-03-19)
 
 
