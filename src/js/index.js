@@ -30,6 +30,19 @@ switch (`${process.env.nearNetworkId}-${process.env.ethNetworkId}`) {
   default: window.bridgeName = 'Unknown'
 }
 
+window.addEventListener('load', function cleanUrlParams () {
+  // When signing a Near tx, if user clicks goBack, then the dapp will think
+  // it is waiting for the redirect to Near wallet, so clear url params so the
+  // transfer can be marked FAILED and retried.
+  const params = Object.keys(window.urlParams.get())
+  if (
+    (params.includes('withdrawing') || params.includes('minting')) &&
+    !(params.includes('transactionHashes') || params.includes('errorCode'))
+  ) {
+    window.urlParams.clear()
+  }
+})
+
 render()
 
 transfers.onChange(render)
