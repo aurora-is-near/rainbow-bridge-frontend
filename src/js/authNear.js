@@ -24,11 +24,9 @@ setNearConnection(window.nearConnection)
 // Getting the Account ID. If still unauthorized, it's an empty string
 window.nearUserAddress = window.nearConnection.getAccountId()
 
-// Allow the current app to make calls to the specified contract on the
-// user's behalf. This works by creating a new access key for the user's
-// account and storing the private key in localStorage.
 onClick('authNear', () => {
-  window.nearConnection.requestSignIn(process.env.nearTokenFactoryAccount)
+  // sign in without access keys
+  window.nearConnection.requestSignIn()
 })
 
 function login () {
