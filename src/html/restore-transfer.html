@@ -148,7 +148,7 @@ window.addEventListener('load', function handleInputTxHashEvents () {
     txHashInput.classList.remove('error')
     window.dom.fill('txHashError').with('')
     restoreSubmit.disabled = true
-    urlParams.clear()
+    window.urlParams.clear()
     window.render()
     window.dom.show('locateTransfer')
     window.dom.hide('transferFound')

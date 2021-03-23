@@ -29,6 +29,13 @@
           <span data-behavior="erc20Name"></span>
         </span>
       </p>
+      <p class="token-details allowance" data-behavior="erc20Info">
+        <span>Available allowance</span>
+        <span>
+          <span data-behavior="erc20Allowance"></span>
+          <span data-behavior="erc20Name"></span>
+        </span>
+      </p>
     </div>
     <div class="arrow"></div>
     <div class="account">
@@ -92,6 +99,13 @@
     </div>
   </div>
 </div>
+<style>
+  .token-details.allowance {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+  }
+</style>
 
 <script>
   window.addEventListener('load', function handleSelectErc20Events () {
@@ -114,8 +128,12 @@
     select.onclick = () => window.dom.show('erc20Modal')
 
     amount.onkeyup = function enableOrDisable (e) {
-      if (Number(e.target.value)) submit.disabled = false
+      const balance = Number(window.dom.find('erc20Balance').innerHTML)
+      const allowance = Number(window.dom.find('erc20Allowance').innerHTML)
+      if (e.target.value && Number(e.target.value) <= balance) submit.disabled = false
       else submit.disabled = true
+      if (Number(e.target.value) <= allowance) submit.innerHTML = 'Submit transfer'
+      else submit.innerHTML = 'Approve transfer'
     }
 
     window.dom.find('sendNaturalErc20Form').onsubmit = async function transferErc20 (e) {
@@ -157,6 +175,7 @@
   async function fillFeaturedErc20s () {
     if (!window.ethInitialized) return
     if (!window.isValidEthNetwork) return
+    if (window.urlParams.get('erc20') === null) return
 
     const featured = await window.utils.getFeaturedErc20s()
 
@@ -193,6 +212,11 @@
       window.dom.hide('sendNaturalErc20')
       window.dom.hide('erc20AddressError')
       window.dom.find('erc20FreeForm').classList.remove('error')
+      window.dom.find('erc20FreeForm').value = ''
+      window.dom.find('erc20Amount').value = ''
+      const submit = window.dom.find('erc20Submit')
+      submit.disabled = true
+      submit.innerHTML = 'Approve transfer'
       return
     }
 
@@ -209,17 +233,14 @@
 
     window.dom.find('erc20Address').value = erc20Address
 
-    let token = (await window.utils.getFeaturedErc20s())[erc20Address]
+    let token
     try {
-      if (!token) token = await window.utils.getErc20Data(erc20Address)
-      window.dom.find('erc20SelectButton').classList.add('selected')
-      window.dom.fill('erc20SelectButton').with(token.name)
-      window.dom.find('erc20FreeForm').classList.remove('error')
-      window.dom.hide('erc20AddressError')
-      window.dom.fill('erc20Name').with(token.name)
-      window.dom.hide('erc20Modal')
+      token = await window.utils.getErc20Data(erc20Address)
     } catch (e) {
       window.dom.find('erc20SelectButton').classList.remove('selected')
+      window.dom.fill('erc20SelectButton').with('Select ERC20')
+      window.dom.find('erc20Amount').value = ''
+      window.dom.find('erc20Amount').disabled = true
       const input = window.dom.find('erc20FreeForm')
       input.classList.add('error')
       input.value = erc20Address
@@ -240,7 +261,16 @@
 
     window.dom.show('sendNaturalErc20')
 
+    window.dom.find('erc20Amount').disabled = false
+    window.dom.find('erc20SelectButton').classList.add('selected')
+    window.dom.fill('erc20SelectButton').with(token.name)
+    window.dom.find('erc20FreeForm').classList.remove('error')
+    window.dom.find('erc20FreeForm').value = ''
+    window.dom.hide('erc20AddressError')
+    window.dom.fill('erc20Name').with(token.name)
+    window.dom.hide('erc20Modal')
     window.dom.fill('erc20Balance').with(window.utils.formatLargeNum(token.balance, token.decimals))
+    window.dom.fill('erc20Allowance').with(window.utils.formatLargeNum(token.allowance, token.decimals))
     window.dom.fill('nep141Name').with(token.nep141.name)
     window.dom.fill('nep141Balance').with(window.utils.formatLargeNum(token.nep141.balance, token.decimals))
 
