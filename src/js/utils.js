@@ -11,11 +11,14 @@ export function formatLargeNum (n, decimals = 18) {
 }
 
 export async function getErc20Data (address) {
-  const [erc20, nep141] = await Promise.all([
+  const [erc20, allowance, nep141] = await Promise.all([
     naturalErc20.getMetadata(address, window.ethUserAddress),
+    naturalErc20.getAllowance(
+      address, window.ethUserAddress, process.env.ethLockerAddress
+    ),
     bridgedNep141.getMetadata(address, window.nearUserAddress)
   ])
-  return { ...erc20, nep141 }
+  return { ...erc20, allowance, nep141 }
 }
 
 export async function getFeaturedErc20s () {

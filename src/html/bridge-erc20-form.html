@@ -54,9 +54,9 @@
       return
     }
 
-    let token = (await window.utils.getFeaturedErc20s())[erc20Address]
+    let token
     try {
-      if (!token) token = await window.utils.getErc20Data(erc20Address)
+      token = await window.utils.getErc20Data(erc20Address)
     } catch (e) {
       // error message filled in by other components
       window.dom.hide('bridgeErc20Form')

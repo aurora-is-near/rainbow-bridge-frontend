@@ -115,7 +115,8 @@
     select.onclick = () => window.dom.show('erc20nModal')
 
     amount.onkeyup = function enableOrDisableErc20n (e) {
-      if (Number(e.target.value)) submit.disabled = false
+      const balance = Number(window.dom.find('erc20nBalance').innerHTML)
+      if (e.target.value && Number(e.target.value) <= balance) submit.disabled = false
       else submit.disabled = true
     }
 
@@ -159,6 +160,7 @@
   async function fillFeaturedErc20ns () {
     if (!window.ethInitialized) return
     if (!window.isValidEthNetwork) return
+    if (window.urlParams.get('erc20n') === null) return
 
     const featured = await window.utils.getFeaturedErc20s()
 
@@ -195,6 +197,9 @@
       window.dom.hide('sendBridgedNep141')
       window.dom.hide('erc20nAddressError')
       window.dom.find('erc20nFreeForm').classList.remove('error')
+      window.dom.find('erc20nFreeForm').value = ''
+      window.dom.find('erc20nAmount').value = ''
+      window.dom.find('erc20nSubmit').disabled = true
       return
     }
 
@@ -209,20 +214,17 @@
       return
     }
 
-    let token = (await window.utils.getFeaturedErc20s())[erc20nAddress]
+    let token
     try {
-      if (!token) token = await window.utils.getErc20Data(erc20nAddress)
-      window.dom.find('erc20nSelectButton').classList.add('selected')
-      window.dom.fill('erc20nSelectButton').with(token.nep141.name)
-      window.dom.find('erc20nFreeForm').classList.remove('error')
-      window.dom.hide('erc20nAddressError')
-      window.dom.fill('erc20Name').with(token.name)
-      window.dom.hide('erc20nModal')
+      token = await window.utils.getErc20Data(erc20nAddress)
     } catch (e) {
       window.dom.find('erc20nSelectButton').classList.remove('selected')
+      window.dom.fill('erc20nSelectButton').with('Select ERC20')
+      window.dom.find('erc20nAmount').value = ''
+      window.dom.find('erc20nAmount').disabled = true
       const input = window.dom.find('erc20nFreeForm')
       input.classList.add('error')
-      input.value = erc20Address
+      input.value = erc20nAddress
       window.dom.find('erc20nFreeForm').classList.add('error')
       console.error(e)
       window.dom.fill('erc20nAddressError').with(
@@ -238,6 +240,13 @@
       return
     }
 
+    window.dom.find('erc20nSelectButton').classList.add('selected')
+    window.dom.fill('erc20nSelectButton').with(token.nep141.name)
+    window.dom.find('erc20nFreeForm').classList.remove('error')
+    window.dom.find('erc20nFreeForm').value = ''
+    window.dom.hide('erc20nAddressError')
+    window.dom.fill('erc20Name').with(token.name)
+    window.dom.hide('erc20nModal')
     window.dom.fill('erc20nName').with(token.nep141.name)
     window.dom.fill('erc20nBalance').with(
       window.utils.formatLargeNum(token.nep141.balance, token.decimals)
