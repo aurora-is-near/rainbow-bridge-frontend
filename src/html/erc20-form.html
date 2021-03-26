@@ -130,7 +130,8 @@
     amount.onkeyup = function enableOrDisable (e) {
       const balance = Number(window.dom.find('erc20Balance').innerHTML)
       const allowance = Number(window.dom.find('erc20Allowance').innerHTML)
-      if (e.target.value && Number(e.target.value) <= balance) submit.disabled = false
+      const val = e.target.value
+      if (val && Number(val) <= balance && Number(val) > 0) submit.disabled = false
       else submit.disabled = true
       if (Number(e.target.value) <= allowance) submit.innerHTML = 'Submit transfer'
       else submit.innerHTML = 'Approve transfer'
