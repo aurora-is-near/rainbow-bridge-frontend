@@ -116,7 +116,8 @@
 
     amount.onkeyup = function enableOrDisableErc20n (e) {
       const balance = Number(window.dom.find('erc20nBalance').innerHTML)
-      if (e.target.value && Number(e.target.value) <= balance) submit.disabled = false
+      const val = e.target.value
+      if (val && Number(val) <= balance && Number(val) > 0) submit.disabled = false
       else submit.disabled = true
     }
 
