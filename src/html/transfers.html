@@ -2,13 +2,6 @@
   <header>
     <h1>Your Transfers</h1>
     <p>Manage your transfers below or begin a new one.</p>
-    <button data-behavior="newTransfer" class="cta" style="margin-top: 2em">
-      Begin new transfer
-    </button>
-    <p class="or">or</p>
-    <button data-behavior="newRecovery" class="cta">
-      Restore transfer
-    </button>
     <!-- TODO: <nav> -->
   </header>
     <p style="margin-top: 2em; font-size: small; text-align: center;">
@@ -16,13 +9,21 @@
       <a href="https://t.me/rainbowbridgesupport"> support telegram channel</a>.
     </p>
   <div data-behavior="transfers-container" style="margin-top: 3rem"></div>
+  <div class="initiate">
+    <button data-behavior="newTransfer" class="cta" style="margin-top: 2em">
+      Begin new transfer
+    </button>
+    <button data-behavior="newRecovery" class="link">
+      Missing transfers?
+    </button>
+  </div>
   <div data-behavior="deleteModal" class=modal style="display:none">
     <div class="confirm-delete">
       <img src="/img/delete-pink.svg" alt="">
-      <h4>Are you sure you want to delete this transfer?</h4>
-      <p>Once deleted, a transfer cannot be restored without knowledge of the 1st step submit transaction hash.</p>
+      <h4>Remove transfer from list?</h4>
+      <p>If you remove a pending transfer, it can be restored and completed using the initiating transaction ID.</p>
       <div class="confirm-delete-buttons">
-        <button data-behavior="confirmDelete" class="cta">Delete Transfer</button>
+        <button data-behavior="confirmDelete" class="cta">Remove Transfer</button>
         <button data-behavior="closeModal" class="cta">Cancel</button>
       </div>
     </div>
@@ -44,11 +45,17 @@
   .transfers nav button {
     border-radius: 100em;
   }
-  .transfers > header :last-child {
-    background-color: var(--light-gray);
-    color: var(--fg-bold)
+  .initiate {
+    text-align: center;
+    position: sticky;
+    margin: auto;
+    background-color: var(--bg);
+    bottom: 0;
+    z-index: 10;
+    padding: 0em 1em;
+    border-radius: 0.8em 0.8em 0em 0em;
   }
-  .or {
+  .initiate :last-child {
     margin: 1em;
   }
   .transfer.in-progress {
@@ -282,6 +289,7 @@
     font-size: 1.7em;
     line-height: 0.7;
     z-index: 1;
+    flex-shrink: 0;
   }
   /* error message shown in a p */
   .transfer-details li p {
