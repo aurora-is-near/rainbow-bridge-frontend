@@ -1,3 +1,10 @@
+## [3.3.1](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.0...v3.3.1) (2021-03-31)
+
+
+### Bug Fixes
+
+* new transfer button position + upgrade [@near-eth](https://github.com/near-eth) transfer steps ([aed213b](https://github.com/near/rainbow-bridge-frontend/commit/aed213b200e649d062d6e8ffc71d3c938c02bdc2))
+
 # [3.3.0](https://github.com/near/rainbow-bridge-frontend/compare/v3.2.3...v3.3.0) (2021-03-31)
 
 
