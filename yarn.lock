@@ -10406,10 +10406,10 @@ posthtml-expressions@^1.7.1:
     posthtml-parser "^0.6.0"
     posthtml-render "^1.4.0"
 
-posthtml-include@^1.5.0:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/posthtml-include/-/posthtml-include-1.6.2.tgz#341f60f75f6460cdd4d6a1b5aaedd3a05d541818"
-  integrity sha512-y9TH7KYo3faGsODSZbBu599R93/7L45NFZvz3cMWG+LMjKH2r9gbNG/6pC0/qvlLUOapizhyzWWVD1PCqAlQcg==
+posthtml-include@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/posthtml-include/-/posthtml-include-1.7.0.tgz#8c25bd7d87cf7b36beb2b82d5577507e92efa2df"
+  integrity sha512-h691Cc18Y3MpRDSCReoYGRtNOfisW8SLFQSybjX66IVv3cQqZzJi2K0wwWL7zWadGo0VA1/yfwS6ESVEHa+3xg==
   dependencies:
     posthtml "^0.15.1"
     posthtml-expressions "^1.7.1"
