@@ -4,11 +4,6 @@
     <p>Manage your transfers below or begin a new one.</p>
     <!-- TODO: <nav> -->
   </header>
-    <p style="margin-top: 2em; font-size: small; text-align: center;">
-      Need help? Join our
-      <a href="https://t.me/rainbowbridgesupport"> support telegram channel</a>.
-    </p>
-  <div data-behavior="transfers-container" style="margin-top: 3rem"></div>
   <div class="initiate">
     <button data-behavior="newTransfer" class="cta" style="margin-top: 2em">
       Begin new transfer
@@ -17,6 +12,11 @@
       Missing transfers?
     </button>
   </div>
+  <div data-behavior="transfers-container" style="margin-top: 3rem"></div>
+  <p style="margin-top: 2em; font-size: small; text-align: center;">
+    Need help? Join our
+    <a href="https://t.me/rainbowbridgesupport"> support telegram channel</a>.
+  </p>
   <div data-behavior="deleteModal" class=modal style="display:none">
     <div class="confirm-delete">
       <img src="/img/delete-pink.svg" alt="">
@@ -47,7 +47,6 @@
   }
   .initiate {
     text-align: center;
-    position: sticky;
     margin: auto;
     background-color: var(--bg);
     bottom: 0;
