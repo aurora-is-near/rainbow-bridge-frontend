@@ -1,3 +1,16 @@
+# [3.3.0](https://github.com/near/rainbow-bridge-frontend/compare/v3.2.3...v3.3.0) (2021-03-31)
+
+
+### Bug Fixes
+
+* disable submit on amount <= O ([88775ce](https://github.com/near/rainbow-bridge-frontend/commit/88775ce35509582aec9920793d8def27fb1df1b6))
+* fix getAllowance api change ([08fab13](https://github.com/near/rainbow-bridge-frontend/commit/08fab13b6262c300409b42a7c4a63237eda8522b))
+
+
+### Features
+
+* skip approval if enough allowance ([9a70f56](https://github.com/near/rainbow-bridge-frontend/commit/9a70f56714fd715a42637e72fa14d7a4592b750b))
+
 ## [3.2.3](https://github.com/near/rainbow-bridge-frontend/compare/v3.2.2...v3.2.3) (2021-03-31)
 
 
