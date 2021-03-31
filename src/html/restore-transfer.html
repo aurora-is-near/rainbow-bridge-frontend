@@ -2,7 +2,7 @@
   <div data-behavior="locateTransfer">
     <header>
       <h2>Restore transfer</h2>
-      <p>Restore a bridge transfer by providing it's deposit transaction hash from Near or Ethereum.</p>
+      <p>Restore a bridge transfer by providing it's initiating transaction ID from Near or Ethereum.</p>
     </header>
     <form method="get" class="restore-form" data-behavior="restoreForm">
       <label for="txHashInput">Transaction hash</label>
@@ -131,7 +131,7 @@ window.addEventListener('load', function handleInputTxHashEvents () {
       console.error(e)
       txHashInput.classList.add('error')
       window.dom.fill('txHashError').with(
-        'Failed to locate transfer. Please double check your transaction hash'
+        'Failed to locate transfer. Please double check your transaction ID'
       )
     }
   }
