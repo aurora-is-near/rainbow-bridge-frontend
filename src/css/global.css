@@ -189,22 +189,6 @@ li {
   opacity: 0.5; /* Firefox */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --gray: #aaa;
-    --shadow: #2a2a2a;
-    --light-gray: #444;
-    --bg: var(--black);
-    --fg-bold: var(--white);
-  }
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--white);
-  }
-  input:focus {
-    box-shadow: 0 0 10em rgba(255, 255, 255, 0.02) inset;
-  }
-}
-
 .space-between {
   align-items: center;
   display: flex;
@@ -267,9 +251,4 @@ li {
 .account-with-icon.near:after {
   content: 'on NEAR';
   background-image: url(/img/near.svg);
-}
-@media (prefers-color-scheme: dark) {
-  .account-with-icon.near:after {
-    background-image: url(/img/near-dark.svg);
-  }
 }
