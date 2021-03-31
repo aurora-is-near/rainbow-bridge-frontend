@@ -1,3 +1,10 @@
+## [3.2.3](https://github.com/near/rainbow-bridge-frontend/compare/v3.2.2...v3.2.3) (2021-03-31)
+
+
+### Bug Fixes
+
+* clean url params on goBack ([a482ec8](https://github.com/near/rainbow-bridge-frontend/commit/a482ec80877d92f3e34ce452a3e2f483ace10cbb))
+
 ## [3.2.2](https://github.com/near/rainbow-bridge-frontend/compare/v3.2.1...v3.2.2) (2021-03-31)
 
 
