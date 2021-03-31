@@ -1,3 +1,10 @@
+## [3.2.2](https://github.com/near/rainbow-bridge-frontend/compare/v3.2.1...v3.2.2) (2021-03-31)
+
+
+### Bug Fixes
+
+* update naj, remove contract access key ([85561c8](https://github.com/near/rainbow-bridge-frontend/commit/85561c8e4a7a3714504e8f7fa4ebcca1952cbc69))
+
 ## [3.2.1](https://github.com/near/rainbow-bridge-frontend/compare/v3.2.0...v3.2.1) (2021-03-19)
 
 
