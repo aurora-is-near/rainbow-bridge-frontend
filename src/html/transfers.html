@@ -21,7 +21,7 @@
     <div class="confirm-delete">
       <img src="/img/delete-pink.svg" alt="">
       <h4>Remove transfer from list?</h4>
-      <p>If you remove a pending transfer, it can be restored and completed using the initiating transaction ID.</p>
+      <p>Deleted transfers can be restored using the initiating transaction hash/ID.</p>
       <div class="confirm-delete-buttons">
         <button data-behavior="confirmDelete" class="cta">Remove Transfer</button>
         <button data-behavior="closeModal" class="cta">Cancel</button>
@@ -113,10 +113,6 @@
   .transfer > header {
     background-color: var(--bg-dark);
   }
-  .transfer > header button {
-    background-color: var(--fg-light);
-    color: white;
-  }
   .transfer > div {
     background-color: var(--bg-light);
     border-color: var(--bg-medium);
@@ -186,14 +182,17 @@
   }
   .action-buttons {
     display: flex;
-  }
-  .transfer > header > button {
-    padding: 0.5em 1.1em;
-  }
-  .delete-button {
-    background: url(/img/delete.svg) no-repeat center;
-    margin-left: 0.5em;
     height: 2.4em;
+  }
+  .action-buttons button {
+    background-color: var(--fg-light);
+    color: white;
+  }
+  .action-buttons .delete-button {
+    background-color: transparent;
+    background: url(/img/delete.svg) no-repeat center;
+    margin-left: 1em;
+    width: 1em;
     padding: 1em;
   }
 
@@ -450,8 +449,9 @@ function renderTransfer (transfer, { inProgress }) {
               transfer.callToAction
             }</button>`
           )}
-          <button class="delete-button" data-behavior="deleteTransfer">
-          </button>
+          ${window.dom.toString(transfer.status === 'completed' &&
+            `<button class="delete-button" data-behavior="deleteTransfer"></button>`
+          )}
         </div>
       </header>
       <div>
