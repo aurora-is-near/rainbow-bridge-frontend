@@ -1,77 +1,100 @@
 <div class="landing" data-behavior="landing">
   <h1 class="title">
-    <img src="/img/rainbow-bridge.svg" style="width: 2.3em; display: inline; margin-top: 2em">
+    <img
+      src="/img/rainbow-bridge.svg"
+      style="width: 2.3em; display: inline; margin-top: 2em"
+    />
     <small>
       ETH
-      <img alt="to and from" src="img/swap-lr.svg" style="display: inline; vertical-align: bottom">
+      <img
+        alt="to and from"
+        src="img/swap-lr.svg"
+        style="display: inline; vertical-align: bottom"
+      />
       NEAR
     </small>
     <div>Rainbow</div>
     <div>Bridge</div>
   </h1>
-  <div style="margin: 0 auto 2.5em; max-width: 22em; text-align: center; padding: 1em">
-    <p>
-      Transfer tokens between Ethereum and NEAR! Connect your NEAR and Ethereum accounts to get started.
+  <div class="content-wrapper">
+    <p class="landing-blurb">
+      Transfer tokens between Ethereum and NEAR! Connect your NEAR and Ethereum
+      accounts to get started.
     </p>
     <form method="get" class="panel">
       <include src="authenticated-accounts.html"></include>
-      <p style="margin-top: 1.5em; font-size: small;">
-        Need a NEAR account? Create one
-        <a href="https://faucet.paras.id/">here</a>.
-      </p>
-      <button data-behavior="landingSubmit" class="cta" style="margin-top: 2em">
-        Begin new transfer
-      </button>
+      <div class="cta-container">
+        <p class="create-account">
+          Need a NEAR account? Create one
+          <a href="https://faucet.paras.id/">here</a>.
+        </p>
+        <button data-behavior="landingSubmit" class="full-width">
+          Begin new transfer
+        </button>
+      </div>
     </form>
   </div>
 </div>
 <style>
+  .landing {
+    margin-top: calc(var(--base-spacing) * 10);
+  }
+
+  .landing-blurb {
+    margin-top: var(--spacing-xxl);
+    padding: 0 var(--spacing-xl);
+  }
+
   .panel {
     background-color: var(--bg);
     border-radius: 1em;
-    box-shadow:
-      0px 51px 121px rgba(0, 0, 0, 0.05),
+    box-shadow: 0px 51px 121px rgba(0, 0, 0, 0.05),
       0px 21.3066px 50.5509px rgba(0, 0, 0, 0.0359427),
       0px 11.3915px 27.0269px rgba(0, 0, 0, 0.0298054),
       0px 6.38599px 15.1511px rgba(0, 0, 0, 0.025),
       0px 3.39155px 8.04662px rgba(0, 0, 0, 0.0201946),
       0px 1.4113px 3.34838px rgba(0, 0, 0, 0.0140573);
     margin: 0 auto;
-    padding: 1em;
+    padding: var(--spacing-m);
   }
   @media (min-width: 928px) {
-    .landing .panel {
-      margin-top: 6em;
-    }
     .landing {
-      background:
-        url(img/landing-bg-left.svg) no-repeat,
+      background: url(img/landing-bg-left.svg) no-repeat,
         url(img/landing-bg-right.svg) no-repeat;
-      background-position:
-        top 20em left calc(50% - 17em),
-        top 26em right calc(50% - 16em);
+      background-position: top 22em left calc(50% - 22em),
+        top 31em right calc(50% - 21em);
     }
+
+    .panel {
+      margin-top: 80px;
+    }
+  }
+  .cta-container {
+    margin-top: var(--spacing-xxl);
+  }
+  .create-account {
+    font-size: var(--fs-micro);
   }
 </style>
 <script>
-async function renderLanding () {
-  if (window.ethInitialized && window.nearInitialized) {
-    window.dom.find('landingSubmit').disabled = false
-  } else {
-    window.dom.show('landing')
-    window.dom.find('landingSubmit').disabled = true
-    return
+  async function renderLanding() {
+    if (window.ethInitialized && window.nearInitialized) {
+      window.dom.find("landingSubmit").disabled = false;
+    } else {
+      window.dom.show("landing");
+      window.dom.find("landingSubmit").disabled = true;
+      return;
+    }
+
+    const transfers = await window.transfers.get();
+    const params = Object.keys(window.urlParams.get());
+
+    if (transfers.length || params.length) {
+      window.dom.hide("landing");
+    } else {
+      window.dom.show("landing");
+    }
   }
 
-  const transfers = await window.transfers.get()
-  const params = Object.keys(window.urlParams.get())
-
-  if (transfers.length || params.length) {
-    window.dom.hide('landing')
-  } else {
-    window.dom.show('landing')
-  }
-}
-
-window.renderers.push(renderLanding)
+  window.renderers.push(renderLanding);
 </script>
