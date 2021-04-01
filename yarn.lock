@@ -1281,10 +1281,10 @@
     decimal.js "^10.2.1"
     near-api-js "^0.39.0"
 
-"@near-eth/nep141-erc20@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.2.1.tgz#6878735594e4b8cab77a6509cbbe547fe6f479fb"
-  integrity sha512-9gldrnClW0l97LEz/Snrua1JU80eX1FW4UGqFESHfpkx3NW/IrBRu9Sz8Qtotxvfckyy5MsfvsU7A32xHsF+Zg==
+"@near-eth/nep141-erc20@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.2.2.tgz#9ffcb09aad26344aa884322d851b4c2aca961908"
+  integrity sha512-YRH1+h6YUZ0StndgiY0+1vAedTD7Gx0Hm7ezEQoNO06CB06LpZPgQ6FfoRhGa/byvSxYOm5uOXIvxrp3u1PnuQ==
   dependencies:
     "@near-eth/client" "1.1.1"
     bn.js "^5.1.3"
