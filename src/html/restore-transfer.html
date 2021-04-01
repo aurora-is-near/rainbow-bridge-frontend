@@ -137,7 +137,7 @@ window.addEventListener('load', function handleInputTxHashEvents () {
   }
   window.dom.find('confirmRestore').onclick = async function trackRestoredTransfer () {
     window.transfers.track(transferToRestore)
-    window.urlParams.clear()
+    window.urlParams.clear('new')
     window.render()
     window.dom.show('locateTransfer')
     window.dom.hide('transferFound')
@@ -148,7 +148,7 @@ window.addEventListener('load', function handleInputTxHashEvents () {
     txHashInput.classList.remove('error')
     window.dom.fill('txHashError').with('')
     restoreSubmit.disabled = true
-    window.urlParams.clear()
+    window.urlParams.clear('new')
     window.render()
     window.dom.show('locateTransfer')
     window.dom.hide('transferFound')
