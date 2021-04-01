@@ -1,3 +1,10 @@
+## [3.3.2](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.1...v3.3.2) (2021-04-01)
+
+
+### Bug Fixes
+
+* requestSignIn requires contractId now ([719494a](https://github.com/near/rainbow-bridge-frontend/commit/719494a80077bd1e8a0db3e3a94b49d7be331f10))
+
 ## [3.3.1](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.0...v3.3.1) (2021-03-31)
 
 
