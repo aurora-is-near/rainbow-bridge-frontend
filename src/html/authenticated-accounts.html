@@ -9,19 +9,19 @@
     <!-- filled in with CSS -->
   </label>
   <div>
-    <span class="concept-ethereum">
-      <img src="img/ethereum.svg" alt="">
+    <span class="network-indicator network--ethereum">
+      <img src="img/ethereum.svg" alt="" />
       <span>Ethereum</span>
     </span>
     <span data-behavior="authEthereum">
-      <button type="button" id="authEthereum">
+      <button type="button" class="button-size--small" id="authEthereum">
         Connect
       </button>
     </span>
   </div>
 </div>
 <div class="authenticated-accounts-button">
-  <button type="button" data-behavior="swapAccounts">
+  <button type="button" class="button--swap" data-behavior="swapAccounts">
     <span class="visually-hidden">swap</span>
   </button>
 </div>
@@ -30,12 +30,12 @@
     <!-- filled in with CSS -->
   </label>
   <div>
-    <span style="color: var(--fg-bold)">
-      <img src="/img/near.svg" alt="">
+    <span class="network-indicator network--near">
+      <img src="/img/near.svg" alt="" />
       <span>NEAR</span>
     </span>
     <span data-behavior="authNear">
-      <button type="button" id="authNear">
+      <button type="button" class="button-size--small" id="authNear">
         Connect
       </button>
     </span>
@@ -43,119 +43,124 @@
 </div>
 
 <style>
-.connected-account {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  position: relative;
-  padding-left: 1em;
-}
-.connected-account:before {
-  color: var(--green);
-  content: '•';
-  font-size: 1.5em;
-  left: 0;
-  line-height: 0.8;
-  position: absolute;
-}
+  .button--swap {
+    background-color: var(--white);
+    border-radius: 50px;
+    border: 1px solid var(--gray-200);
+    background-image: url("/img/swap-vert.svg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 1.3em;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.04);
+    height: 2em;
+    width: 3.5em;
+    margin-top: 1.4em;
+  }
 
-.authenticated-accounts-button {
-  text-align: center;
-}
-.authenticated-accounts-button button {
-  background-color: var(--bg);
-  background-image: url('/img/swap-vert.svg');
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: 1.3em;
-  border-radius: 1000em;
-  border: 1px solid var(--light-gray);
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.04);
-  height: 2em;
-  width: 3.5em;
-  margin-top: 1.4em;
-}
-.authenticated-accounts-button button:hover,
-.authenticated-accounts-button button:focus {
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-.authenticated-accounts-button button:active {
-  box-shadow: none;
-}
+  .network-indicator {
+    align-items: center;
+    display: flex;
+  }
 
-/**
+  .network--ethereum {
+    color: #627eea;
+  }
+
+  .network--near {
+    color: var(--black);
+  }
+
+  .network-indicator img {
+    margin-right: var(--spacing-s);
+  }
+
+  .connected-account {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    padding-left: 1em;
+    max-width: 200px;
+    display: block;
+  }
+  .connected-account:before {
+    color: var(--green);
+    content: "•";
+    font-size: 1.5em;
+    left: 0;
+    line-height: 0.8;
+    position: absolute;
+  }
+
+  /**
  * Fill in labels with CSS to simplify swapping order with JS
  */
-.authenticated-accounts-input + .authenticated-account label:after {
-  content: 'Transfer from'
-}
-.authenticated-accounts-button + .authenticated-account label:after {
-  content: 'To'
-}
+  .authenticated-accounts-input + .authenticated-account label:after {
+    content: "Transfer from";
+  }
+  .authenticated-accounts-button + .authenticated-account label:after {
+    content: "To";
+  }
 
-.authenticated-account {
-  font-size: 0.8em;
-}
-.authenticated-account label {
-  margin-left: calc(1em + 1px);
-  margin-bottom: 0.5em;
-  text-align: left;
-}
+  .authenticated-account {
+    font-size: var(--fs-small);
+  }
 
-.authenticated-account > div {
-  background-color: var(--bg);
-  border: 1px solid var(--light-gray);
-  border-radius: 0.5em;
-  padding: 1em;
-  display: grid;
-  justify-content: space-between;
-  grid-template-columns: auto auto;
-  grid-gap: 3em;
-}
+  .authenticated-account label {
+    margin-left: calc(1em + 1px);
+    text-align: left;
+  }
 
-.authenticated-account > div > span {
-  display: grid;
-  align-items: center;
-  grid-gap: 0.5em;
-  grid-template-columns: auto auto;
-}
+  .authenticated-account > div {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--br-base);
+    padding: var(--spacing-m);
+    display: flex;
+    height: 64px;
+    align-items: center;
+    justify-content: space-between;
+  }
 </style>
 
 <script>
-window.addEventListener('load', function addAuthenticatedAccountHandlers () {
-  // Parcel + PostHTML *could* extract these script tags to separate JS files and
-  // include each only once, but it does not yet. Since this "component" is
-  // included multiple times in the HTML of the page, this script tag will also
-  // get executed multiple times. But two swaps makes a no-op, so let's be careful
-  // to add the swap behavior only once.
-  if (!window.state.authenticatedAccountsInitialized) {
-    window.dom.onClick('swapAccounts', function swapAccountOrder ({ target }) {
-      window.dom.findAll('transferFrom').forEach(input => {
-        input.name = input.name === 'erc20' ? 'erc20n' : 'erc20'
-      })
+  window.addEventListener("load", function addAuthenticatedAccountHandlers() {
+    // Parcel + PostHTML *could* extract these script tags to separate JS files and
+    // include each only once, but it does not yet. Since this "component" is
+    // included multiple times in the HTML of the page, this script tag will also
+    // get executed multiple times. But two swaps makes a no-op, so let's be careful
+    // to add the swap behavior only once.
+    if (!window.state.authenticatedAccountsInitialized) {
+      window.dom.onClick("swapAccounts", function swapAccountOrder({ target }) {
+        window.dom.findAll("transferFrom").forEach((input) => {
+          input.name = input.name === "erc20" ? "erc20n" : "erc20";
+        });
 
-      const from = target.closest('div').previousElementSibling
-      const to = target.closest('div').nextElementSibling
-      fromInner = from.innerHTML
-      toInner = to.innerHTML
-      from.innerHTML = toInner
-      to.innerHTML = fromInner
-    })
+        const from = target.closest("div").previousElementSibling;
+        const to = target.closest("div").nextElementSibling;
+        fromInner = from.innerHTML;
+        toInner = to.innerHTML;
+        from.innerHTML = toInner;
+        to.innerHTML = fromInner;
+      });
 
-    window.state.authenticatedAccountsInitialized = true
-  }
-})
+      window.state.authenticatedAccountsInitialized = true;
+    }
+  });
 
-window.renderers.push(() => {
-  if (window.ethInitialized) {
-    window.dom.fill('authEthereum').with(
-      `<span class="connected-account" title="${window.ethUserAddress}">${window.ethUserAddress}</span>`
-    )
-  }
-  if (window.nearInitialized) {
-    window.dom.fill('authNear').with(
-      `<span class="connected-account" title="${window.nearUserAddress}">${window.nearUserAddress}</span>`
-    )
-  }
-})
+  window.renderers.push(() => {
+    if (window.ethInitialized) {
+      window.dom
+        .fill("authEthereum")
+        .with(
+          `<span class="connected-account" title="${window.ethUserAddress}">${window.ethUserAddress}</span>`
+        );
+    }
+    if (window.nearInitialized) {
+      window.dom
+        .fill("authNear")
+        .with(
+          `<span class="connected-account" title="${window.nearUserAddress}">${window.nearUserAddress}</span>`
+        );
+    }
+  });
 </script>
