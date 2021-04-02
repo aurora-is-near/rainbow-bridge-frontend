@@ -1,0 +1,68 @@
+<div
+  data-behavior="unsupportedNetworkModal"
+  class="modal"
+  style="display: none"
+>
+  <div class="modal__container">
+    <div class="modal-image__container">
+      <span class="bg-squares bg-squares--top">
+        <span class="bg-squares__square bg-squares__square--light"></span>
+        <span class="bg-squares__square bg-squares__square--dark"></span>
+      </span>
+
+      <div class="network-badge network-badge--primary">
+        <span class="network-badge__indicator"></span>
+        <span class="network-badge__network-name">Ethereum Ropsten</span>
+      </div>
+
+      <div class="network-badge network-badge--secondary">
+        <span class="network-badge__indicator"></span>
+        <span class="network-badge__network-name">Ethereum Mainnet</span>
+      </div>
+
+      <span class="bg-squares bg-squares--bottom">
+        <span class="bg-squares__square bg-squares__square--light"></span>
+        <span class="bg-squares__square bg-squares__square--dark"></span>
+      </span>
+    </div>
+    <h1 class="modal__heading">Network Mismatch</h1>
+    <div data-behavior="modalMessage" class="modal__message"></div>
+    <p class="modal__cta">Change your active wallet network to proceed.</p>
+  </div>
+</div>
+
+<script>
+  async function renderModal() {
+    if (!window.ethInitialized) return;
+    window.dom.hide("unsupportedNetworkModal");
+    document.body.style.overflow = "scroll";
+
+    if (!window.isValidEthNetwork) {
+      // Disable scroll until correct eth network selected
+      document.body.style.overflow = "hidden";
+      window.dom.fill("modalMessage").with({
+        innerHTML: `The NEAR Testnet ↔︎ ${process.env.ethNetworkId} bridge requires an Ethereum wallet connected to ${process.env.ethNetworkId}.`,
+      });
+      window.dom.show("unsupportedNetworkModal");
+    }
+  }
+  window.renderers.push(renderModal);
+</script>
+
+<!-- <script>
+  async function renderBanner() {
+    if (!window.ethInitialized) return;
+
+    if (!window.isValidEthNetwork) {
+      // Go to top and disable scroll until correct eth network selected
+      window.scrollTo({ top: 0 });
+      document.body.style.overflow = "hidden";
+      window.dom.fill("unsupportedNetwork").with({
+        innerHTML: `Please change Ethereum network. Current: ${window.connectedEthNetwork}
+          => required: ${process.env.ethNetworkId}`,
+      });
+      window.dom.show("unsupportedNetworkBanner");
+    }
+  }
+  window.renderers.push(renderBanner);
+</script> -->
