@@ -33,47 +33,6 @@
     unable to finalize transactions.
   </span>
 </aside>
-<aside
-  class="banner danger"
-  data-behavior="unsupportedNetworkBanner"
-  style="display: none"
->
-  <span data-behavior="unsupportedNetwork"></span>
-</aside>
-<div
-  class="fullScreen"
-  data-behavior="unsupportedNetworkBanner"
-  style="display: none"
-></div>
-
-<script>
-  async function renderBanner() {
-    if (!window.ethInitialized) return;
-
-    if (window.isValidEthNetwork) {
-      // Correct eth network is selected, so enable scrolling
-      document.body.style.overflow = null;
-      window.dom.hide("unsupportedNetworkBanner");
-      if (window.connectedEthNetwork !== "main") {
-        window.dom.fill("testnetWarning").with({
-          innerHTML: `Current bridge: ${window.bridgeName}`,
-        });
-        window.dom.show("testnetBanner");
-      }
-    } else {
-      // Go to top and disable scroll until correct eth network selected
-      window.scrollTo({ top: 0 });
-      document.body.style.overflow = "hidden";
-      window.dom.hide("testnetBanner");
-      window.dom.fill("unsupportedNetwork").with({
-        innerHTML: `Please change Ethereum network. Current: ${window.connectedEthNetwork}
-          => required: ${process.env.ethNetworkId}`,
-      });
-      window.dom.show("unsupportedNetworkBanner");
-    }
-  }
-  window.renderers.push(renderBanner);
-</script>
 
 <style>
   .banner {
@@ -118,13 +77,5 @@
 
   .banner.blue svg path {
     stroke: var(--blue-700);
-  }
-
-  .fullScreen {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 10;
   }
 </style>

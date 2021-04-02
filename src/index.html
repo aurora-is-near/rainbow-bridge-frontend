@@ -1,62 +1,135 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bridge Ethereum to NEAR and back again</title>
-  <meta property="og:title" content="🌈 Rainbow Bridge 🌈">
-  <meta property="og:description" content="Bridge Ethereum to NEAR and back again">
-  <meta property="og:image" content="img/rainbow-black.gif">
-  <!-- <meta property="og:url" content="https://example.com/"> -->
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="apple-touch-icon" sizes="57x57" href="img/icons/apple-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="img/icons/apple-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="img/icons/apple-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="img/icons/apple-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="img/icons/apple-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="img/icons/apple-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="img/icons/apple-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="img/icons/apple-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="img/icons/android-icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="img/icons/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
-  <link rel="manifest" href="img/icons/manifest.json">
-  <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="img/icons/ms-icon-144x144.png">
-  <meta name="theme-color" content="#ffffff">
-  <link rel="preconnect" href="https://rsms.me">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link rel="prerender" href="https://wallet.testnet.near.org">
-  <link href="https://rsms.me/inter/inter.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/global.css">
-  <script>
-    // This app is organized into multiple html files, which can each add renderers.
-    // All renderers get called via `window.render()`
-    window.renderers = []
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bridge Ethereum to NEAR and back again</title>
+    <meta property="og:title" content="🌈 Rainbow Bridge 🌈" />
+    <meta
+      property="og:description"
+      content="Bridge Ethereum to NEAR and back again"
+    />
+    <meta property="og:image" content="img/rainbow-black.gif" />
+    <!-- <meta property="og:url" content="https://example.com/"> -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <link
+      rel="apple-touch-icon"
+      sizes="57x57"
+      href="img/icons/apple-icon-57x57.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="60x60"
+      href="img/icons/apple-icon-60x60.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="72x72"
+      href="img/icons/apple-icon-72x72.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="img/icons/apple-icon-76x76.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="114x114"
+      href="img/icons/apple-icon-114x114.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="120x120"
+      href="img/icons/apple-icon-120x120.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="144x144"
+      href="img/icons/apple-icon-144x144.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="152x152"
+      href="img/icons/apple-icon-152x152.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="img/icons/apple-icon-180x180.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="img/icons/android-icon-192x192.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="img/icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="img/icons/favicon-96x96.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="img/icons/favicon-16x16.png"
+    />
+    <link rel="manifest" href="img/icons/manifest.json" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta
+      name="msapplication-TileImage"
+      content="img/icons/ms-icon-144x144.png"
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="preconnect" href="https://rsms.me" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="prerender" href="https://wallet.testnet.near.org" />
+    <link href="https://rsms.me/inter/inter.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/global.css" />
+    <script>
+      // This app is organized into multiple html files, which can each add renderers.
+      // All renderers get called via `window.render()`
+      window.renderers = [];
 
-    // If a section of the app (one of those html files) wants to keep track of
-    // what it did so far, it can use window.state
-    window.state = {}
-  </script>
-</head>
-<body>
-  <!-- using posthtml to separate page into multiple files; see .posthtmlrc -->
-  <include src="network-banner.html"></include>
-  <!-- this div allows accounts dropdown in nav.html to use absolute positioning whether or not banner is shown -->
-  <div style="display: flex; flex-direction: column; min-height: 100vh; position: relative">
-    <include src="nav.html"></include>
-    <include src="landing.html"></include>
-    <include src="transfers.html"></include>
-    <include src="new-transfer.html"></include>
-    <include src="erc20-form.html"></include>
-    <include src="erc20n-form.html"></include>
-    <include src="bridge-erc20-form.html"></include>
-    <include src="restore-transfer.html"></include>
-  </div>
+      // If a section of the app (one of those html files) wants to keep track of
+      // what it did so far, it can use window.state
+      window.state = {};
+    </script>
+  </head>
+  <body>
+    <!-- using posthtml to separate page into multiple files; see .posthtmlrc -->
+    <include src="network-banner.html"></include>
+    <!-- this div allows accounts dropdown in nav.html to use absolute positioning whether or not banner is shown -->
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        position: relative;
+      "
+    >
+      <include src="incorrect-network-modal.html"></include>
+      <include src="nav.html"></include>
+      <include src="landing.html"></include>
+      <include src="transfers.html"></include>
+      <include src="new-transfer.html"></include>
+      <include src="erc20-form.html"></include>
+      <include src="erc20n-form.html"></include>
+      <include src="bridge-erc20-form.html"></include>
+      <include src="restore-transfer.html"></include>
+    </div>
 
-  <script src="./js/index.js"></script>
-</body>
+    <script src="./js/index.js"></script>
+  </body>
 </html>
