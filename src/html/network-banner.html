@@ -1,16 +1,88 @@
-<aside class="banner purple">
+<aside class="banner danger">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M6.86001 2.57335L1.21335 12C1.09693 12.2016 1.03533 12.4302 1.03467 12.663C1.03402 12.8958 1.09434 13.1248 1.20963 13.327C1.32492 13.5293 1.49116 13.6978 1.69182 13.8159C1.89247 13.934 2.12055 13.9975 2.35335 14H13.6467C13.8795 13.9975 14.1076 13.934 14.3082 13.8159C14.5089 13.6978 14.6751 13.5293 14.7904 13.327C14.9057 13.1248 14.966 12.8958 14.9654 12.663C14.9647 12.4302 14.9031 12.2016 14.7867 12L9.14001 2.57335C9.02117 2.37742 8.85383 2.21543 8.65414 2.103C8.45446 1.99058 8.22917 1.93152 8.00001 1.93152C7.77086 1.93152 7.54557 1.99058 7.34588 2.103C7.1462 2.21543 6.97886 2.37742 6.86001 2.57335V2.57335Z"
+      stroke="black"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M8 11.3334H8.00667"
+      stroke="black"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M8 6V8.66667"
+      stroke="black"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
   <span>
-    Ledger-protected Near wallets are not able to sign finalisation
-    transactions. You still can do the transfer to these wallets if you sign the
-    finalisation transaction with another NEAR wallet. You can create one
-    <a href="https://faucet.paras.id/">here</a>.
+    WARNING: NEAR wallets secured by Ledger are currently unable to finalize
+    transactions.
   </span>
 </aside>
 <aside
-  class="banner yellow"
+  class="banner caution"
   data-behavior="testnetBanner"
   style="display: none"
 >
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 15 15"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g clip-path="url(#clip0)">
+      <path
+        d="M3 6C4.26343 4.70768 5.85571 4 7.5 4C9.14429 4 10.7366 4.70768 12 6"
+        stroke="black"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M0.887512 3.74999C2.71403 2.13997 5.0652 1.25165 7.50001 1.25165C9.93483 1.25165 12.286 2.13997 14.1125 3.74999"
+        stroke="black"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M8.73744 7.26256C9.42085 7.94598 9.42085 9.05402 8.73744 9.73744C8.05402 10.4209 6.94598 10.4209 6.26256 9.73744C5.57915 9.05402 5.57915 7.94598 6.26256 7.26256C6.94598 6.57915 8.05402 6.57915 8.73744 7.26256Z"
+        stroke="black"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <line
+        x1="7.75"
+        y1="10.75"
+        x2="7.75"
+        y2="14.25"
+        stroke="black"
+        stroke-width="1.5"
+        stroke-linecap="round"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0">
+        <rect width="15" height="15" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
   <span data-behavior="testnetWarning"></span>
 </aside>
 <aside
@@ -36,7 +108,7 @@
       window.dom.hide("unsupportedNetworkBanner");
       if (window.connectedEthNetwork !== "main") {
         window.dom.fill("testnetWarning").with({
-          innerHTML: `Operating on the ${window.bridgeName} bridge`,
+          innerHTML: `Current bridge: ${window.bridgeName}`,
         });
         window.dom.show("testnetBanner");
       }
@@ -57,42 +129,49 @@
 
 <style>
   .banner {
-    font-size: 0.75em;
-    font-weight: 500;
-    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--fs-micro);
+    font-weight: var(--fw-regular);
+    padding: var(--spacing-m);
     text-align: center;
   }
-  .banner:before {
-    content: " ";
-    display: inline-block;
-    margin-right: 0.5em;
-    background: url(img/alert-triangle.svg) no-repeat;
-    background-size: contain;
-    width: 1rem;
-    height: 1rem;
-    position: relative;
-    top: -1px;
-    vertical-align: middle;
+
+  .banner svg {
+    margin-right: var(--spacing-s);
   }
-  .banner.yellow {
-    color: var(--orange-700);
+
+  .banner.caution {
+    color: var(--orange-800);
     background: var(--orange-400);
   }
-  .banner.red {
-    color: var(--red-700);
+
+  .banner.caution svg path,
+  .banner.caution svg line {
+    stroke: var(--orange-700);
+  }
+
+  .banner.danger {
+    color: var(--red-800);
     background: var(--red-400);
   }
-  .banner.purple {
+
+  .banner.danger svg path {
+    stroke: var(--red-700);
+  }
+
+  .banner.blue {
     color: var(--blue-700);
     background: var(--blue-300);
-    font-size: medium;
     font-weight: 400;
     padding: 1em 5em;
   }
-  .banner.purple a {
-    color: var(--fg-bold);
-    text-decoration: underline;
+
+  .banner.blue svg path {
+    stroke: var(--blue-700);
   }
+
   .fullScreen {
     position: absolute;
     height: 100%;

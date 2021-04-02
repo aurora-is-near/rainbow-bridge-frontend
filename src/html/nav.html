@@ -16,7 +16,7 @@
           <span data-behavior="bridgeName"></span>
         </button>
         <div class="dropdown-list">
-          <label class="dropdown-list__heading">Available Network Pairs</label>
+          <label class="dropdown-list__heading">Select a bridge</label>
           <button
             aria-controls="bridge-dropdown"
             class="dropdown-list__item"
@@ -100,10 +100,15 @@
   }
 
   .site-nav {
+    background-color: var(--white);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-m);
+    height: var(--header-height);
+    padding: 0 var(--spacing-m);
+    position: fixed;
+    width: 100%;
+    top: 0;
     border-bottom: 1px solid var(--gray-200);
   }
 

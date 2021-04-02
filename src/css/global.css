@@ -40,6 +40,9 @@ html, body {
   --spacing-xl: calc(var(--base-spacing) * 4);
   --spacing-xxl: calc(var(--base-spacing) * 5);
 
+  /* Sizes */
+  --header-height: 80px;
+
   /* Border Radius */
   --br-base: 8px;
   --br-small: 6px;
@@ -123,6 +126,7 @@ html {
 
 body {
   margin: 0;
+  padding-top: var(--header-height);
 }
 
 .content-wrapper {
