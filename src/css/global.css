@@ -246,6 +246,12 @@ button[disabled] {
   cursor: not-allowed;
   transform: none;
 }
+[disabled] .cancel, .cancel[disabled] {
+  color: gray;
+  cursor: not-allowed;
+  background: none;
+  box-shadow: none;
+}
 
 fieldset {
   border: none;

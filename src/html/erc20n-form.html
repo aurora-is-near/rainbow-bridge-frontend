@@ -61,10 +61,13 @@
       </div>
     </div>
     <footer>
-      <button disabled data-behavior="erc20nSubmit" class="full-width">
-        Confirm transfer
+      <p data-behavior="signInstruction" style="display:none">
+        Redirecting to NEAR wallet...
+      </p>
+      <button disabled data-behavior="erc20nSubmit" class="cta">
+        Submit transfer
       </button>
-      <button type="button" class="cancel" data-behavior="goHome">
+      <button id="erc20nCancel" type="button" class="cancel" data-behavior="goHome">
         Cancel
       </button>
     </footer>
@@ -135,21 +138,26 @@
 </div>
 
 <script>
-  window.addEventListener("load", function sendBridgedNep141OnLoad() {
-    const amount = window.dom.find("erc20nAmount");
-    const select = window.dom.find("erc20nSelectButton");
-    const submit = window.dom.find("erc20nSubmit");
+  window.addEventListener('load', function sendBridgedNep141OnLoad () {
+    const amount = window.dom.find('erc20nAmount')
+    const select = window.dom.find('erc20nSelectButton')
+    const submit = window.dom.find('erc20nSubmit')
+    const cancel = document.getElementById('erc20nCancel')
 
-    function disableForm() {
-      amount.disabled = true;
-      select.disabled = true;
-      submit.disabled = true;
+    function disableForm () {
+      amount.disabled = true
+      select.disabled = true
+      submit.disabled = true
+      cancel.disabled = true
+      window.dom.show('signInstruction')
     }
 
-    function enableForm() {
-      amount.disabled = false;
-      select.disabled = false;
-      submit.disabled = false;
+    function enableForm () {
+      amount.disabled = false
+      select.disabled = false
+      submit.disabled = false
+      cancel.disabled = false
+      window.dom.hide('signInstruction')
     }
 
     select.onclick = () => window.dom.show("erc20nModal");
