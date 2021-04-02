@@ -326,7 +326,7 @@ li {
   text-overflow: ellipsis;
   white-space: nowrap;
   position: relative;
-  padding-right: var(--spacing-xxl) !important;
+  padding-right: var(--spacing-l) !important;
   padding-left: var(--spacing-m);
   max-width: 200px;
 }
@@ -345,8 +345,13 @@ li {
   top: 0;
 }
 .account-with-icon.reverse {
+  line-height: var(--spacing-xl);
+  height: var(--spacing-xl);
   padding-right: unset;
-  padding-left: var(--spacing-xl) !important;
+  padding-left: var(--spacing-xxl) !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .account-with-icon.reverse:after {
   left: 0;
