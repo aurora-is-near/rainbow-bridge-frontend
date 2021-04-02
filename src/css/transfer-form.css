@@ -6,7 +6,7 @@
   /* also stretch this element vertically, to push footer to bottom */
   display: flex;
   flex-direction: column;
-  margin-top: 2rem;
+  margin-top: var(--spacing-xxl) !important;
   width: 100%;
 }
 .transfer-form > header {
@@ -14,13 +14,17 @@
   max-width: 15em;
   text-align: center;
 }
-.transfer-form > .account {
+.transfer-form .account {
   background-color: var(--shadow);
   margin: 0 auto;
-  max-width: 25em;
   padding: 1em;
   width: 100%;
 }
+
+.account.account--origin {
+  margin-top: var(--spacing-xxl);
+}
+
 @media (min-width: 25em) {
   .transfer-form > .account {
     border-radius: 4px;
@@ -32,12 +36,12 @@
   justify-content: space-between;
   grid-template-columns: auto auto;
   grid-gap: 3em;
+  font-size: var(--fs-small);
 }
 .transfer-form .token-details {
   display: none;
-
   border-top: 1px solid var(--light-gray);
-  font-size: 0.8em;
+  font-size: var(--fs-small);
   justify-content: space-between;
   margin: 1rem -1rem -1rem;
   padding: 1rem;
@@ -53,22 +57,25 @@
   background-color: var(--light-gray);
   border-radius: 0.75em;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  display: grid;
-  grid-gap: 1px;
-  grid-template-columns: auto 1fr;
+  display: flex;
   margin-top: 0.5em;
+  align-items: stretch;
+  height: 56px;
 }
 .transfer-form .inputs > * {
   background-color: var(--bg);
   border: none;
   box-shadow: none;
   padding: 0.75rem 1rem;
+  height: auto;
 }
 .transfer-form .inputs button {
   align-items: center;
   border-radius: 0.5rem 0 0 0.5rem;
+  border-right: 1px solid var(--gray-200);
   color: var(--fg-bold);
   display: flex;
+  width: 324px;
 }
 .transfer-form .inputs button:after {
   content: ' ';
@@ -103,7 +110,7 @@
 .transfer-form input {
   text-align: right;
 }
-.transfer-form > footer {
+.transfer-form footer {
   display: flex;
   flex-direction: column;
   flex: 1;
