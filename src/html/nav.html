@@ -25,7 +25,7 @@
             <span class="bridge-indicator" style="background-color: #29b6af">
               <span class="visually-hidden">Connected</span>
             </span>
-            <span> NEAR ↔︎ Ethereum </span>
+            <span> NEAR <span class="arrow-divider">↔︎</span> Ethereum </span>
           </button>
           <button
             aria-controls="bridge-dropdown"
@@ -35,7 +35,7 @@
             <span class="bridge-indicator" style="background-color: #ff4a8d">
               <span class="visually-hidden">Connected</span>
             </span>
-            <span> NEAR Testnet ↔︎ Ethereum Ropsten </span>
+            <span> NEAR Testnet <span class="arrow-divider">↔︎</span> Ethereum Ropsten </span>
           </button>
           <button
             aria-controls="bridge-dropdown"
@@ -45,7 +45,7 @@
             <span class="bridge-indicator" style="background-color: #f6c343">
               <span class="visually-hidden">Connected</span>
             </span>
-            <span> NEAR Testnet ↔︎ Ethereum Rinkeby </span>
+            <span> NEAR Testnet <span class="arrow-divider">↔︎</span> Ethereum Rinkeby </span>
           </button>
         </div>
       </div>
@@ -169,10 +169,20 @@
   }
 
   .dropdown-list__item {
+    border-radius: 0;
     display: flex;
     align-items: center;
     padding: var(--spacing-m);
-    font-weight: var(--fw-regular);
+    font-weight: 400;
+  }
+
+  .dropdown-list__item .arrow-divider {
+    color: var(--gray-500);
+    padding: 0 var(--spacing-s);
+  }
+
+  .bridge-dropdown .dropdown-list__item {
+    height: 40px;
   }
 
   .account-dropdown .dropdown-list__item {
@@ -197,10 +207,9 @@
   }
 
   .bridge-indicator {
-    border-radius: 10em;
-    width: 8px;
-    height: 8px;
-    margin-right: 8px;
+    width: 10px;
+    height: 10px;
+    margin-right: var(--spacing-m);
   }
 
   .dropdown-trigger img:last-child {
