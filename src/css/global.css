@@ -118,6 +118,7 @@ html {
   font-family: var(--sans);
   font-variant: slashed-zero;
   font-size: var(--base-font-size);
+  font-weight: var(--fw-regular);
 }
 
 body {
@@ -198,11 +199,11 @@ button.button-variant--secondary {
 
 button.button-size--small {
   border-radius: var(--br-small);
-  height: 32px;
+  height: 40px;
   padding-left: var(--spacing-m);
   padding-right: var(--spacing-m);
-  line-height: 32px;
-  font-size: var(--fs-small);
+  line-height: 40px;
+  font-size: var(--fs-micro);
 }
 
 button.full-width {
@@ -228,10 +229,9 @@ button.cta {
 button.cancel {
   background: none;
   box-shadow: none;
-  color: var(--red);
+  color: var(--red-500);
   padding: 0.75em;
   width: 100%;
-  margin-top: 1em;
 }
 button.cancel:hover,
 button.cancel:focus {
@@ -309,24 +309,28 @@ li {
 
 .account-tag {
   background-color: var(--light-gray);
-  padding: 0.25em;
-  padding-left: 0.75em;
   border-radius: 1000em;
+  height: var(--spacing-xl);
+  line-height: var(--spacing-xl);
+  vertical-align: middle;
 }
+
 .account-tag:before {
   font-size: 0.8em;
 }
 
 .account-with-icon {
+  align-items: center;
   color: var(--gray-700);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   position: relative;
-  padding-right: 2em !important;
-  height: var(--spacing-l);
-  line-height: var(--spacing-l);
+  padding-right: var(--spacing-xxl) !important;
+  padding-left: var(--spacing-m);
+  max-width: 200px;
 }
+
 .account-with-icon:after {
   background-repeat: no-repeat;
   background-size: var(--spacing-l) var(--spacing-l);
@@ -334,12 +338,11 @@ li {
   display: block;
   overflow: hidden;
   text-indent: -10em;
-  width: var(--spacing-l);
-  height: var(--spacing-l);
+  width: var(--spacing-xl);
+  height: var(--spacing-xl);
   position: absolute;
-  right: var(--spacing-xs);
+  right: 0;
   top: 0;
-  bottom: 0;
 }
 .account-with-icon.reverse {
   padding-right: unset;
