@@ -1,3 +1,11 @@
+## [3.3.3](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.2...v3.3.3) (2021-04-02)
+
+
+### Bug Fixes
+
+* clear only relevant url param ([4ffa622](https://github.com/near/rainbow-bridge-frontend/commit/4ffa622890f9f8707d897a0d2a128a8a8ff7c732))
+* update [@near-eth](https://github.com/near-eth), fix requestSignIn ([d3dc830](https://github.com/near/rainbow-bridge-frontend/commit/d3dc83033efd7123fd3b2b1499ae63c1c650125d))
+
 ## [3.3.2](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.1...v3.3.2) (2021-04-01)
 
 
