@@ -24,9 +24,9 @@ window.urlParams = urlParams
 window.utils = utils
 
 switch (`${process.env.nearNetworkId}-${process.env.ethNetworkId}`) {
-  case 'testnet-ropsten': window.bridgeName = 'Near Testnet - Ropsten'; break
-  case 'testnet-rinkeby': window.bridgeName = 'Near Testnet - Rinkeby'; break
-  case 'mainnet-main': window.bridgeName = 'Near - Ethereum'; break
+  case 'testnet-ropsten': window.bridgeName = 'Near Testnet ↔︎ Ethereum Ropsten'; break
+  case 'testnet-rinkeby': window.bridgeName = 'Near Testnet ↔︎ Ethereum Rinkeby'; break
+  case 'mainnet-main': window.bridgeName = 'Near ↔︎ Ethereum'; break
   default: window.bridgeName = 'Unknown'
 }
 
