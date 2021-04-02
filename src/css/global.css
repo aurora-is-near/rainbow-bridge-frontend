@@ -191,6 +191,11 @@ button {
   cursor: pointer;
 }
 
+button.button-variant--secondary {
+  background-color: var(--gray-200);
+  color: var(--black);
+}
+
 button.button-size--small {
   border-radius: var(--br-small);
   height: 32px;
@@ -313,27 +318,32 @@ li {
 }
 
 .account-with-icon {
+  color: var(--gray-700);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   position: relative;
   padding-right: 2em !important;
+  height: var(--spacing-l);
+  line-height: var(--spacing-l);
 }
 .account-with-icon:after {
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: var(--spacing-l) var(--spacing-l);
   background-position: center;
+  display: block;
   overflow: hidden;
   text-indent: -10em;
-  width: 1.4em;
+  width: var(--spacing-l);
+  height: var(--spacing-l);
   position: absolute;
-  right: 0.25em;
+  right: var(--spacing-xs);
   top: 0;
   bottom: 0;
 }
 .account-with-icon.reverse {
   padding-right: unset;
-  padding-left: 2em !important;
+  padding-left: var(--spacing-xl) !important;
 }
 .account-with-icon.reverse:after {
   left: 0;
