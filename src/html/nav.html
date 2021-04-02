@@ -25,9 +25,10 @@
             <span class="bridge-indicator" style="background-color: #29b6af">
               <span class="visually-hidden">Connected</span>
             </span>
-            <span> NEAR <span class="arrow-divider">↔︎</span> Ethereum </span>
+            <span> NEAR Mainnet <span class="arrow-divider">↔︎</span> Ethereum Mainnet</span>
           </button>
-          <button
+          <div class="testnet-options">
+            <button
             aria-controls="bridge-dropdown"
             class="dropdown-list__item"
             onclick="location.href='https://ropsten.bridgetonear.org';"
@@ -47,6 +48,7 @@
             </span>
             <span> NEAR Testnet <span class="arrow-divider">↔︎</span> Ethereum Rinkeby </span>
           </button>
+          </div>
         </div>
       </div>
     </div>
@@ -161,7 +163,6 @@
     background-color: var(--white);
     border: 1px solid var(--gray-300);
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
-    width: 300px;
     margin: 0;
     overflow: hidden;
     padding-top: var(--base-spacing);
@@ -217,6 +218,12 @@
     margin-right: var(--spacing-m);
   }
 
+  .bridge-dropdown .testnet-options {
+    border-top: 1px solid var(--gray-200);
+    margin-top: var(--spacing-s);
+    padding-top: var(--spacing-s);
+  }
+
   .dropdown-trigger img:last-child {
     margin-left: -4px;
   }
@@ -241,9 +248,7 @@
       right: 0;
       left: 0;
       content: " ";
-      background: url("img/form-bg-bottom-left.svg") no-repeat,
-        url("img/form-bg-bottom-right.svg") no-repeat;
-      background-position: bottom left, bottom right;
+
       z-index: -1;
     }
   }
@@ -296,14 +301,11 @@
     )[0].style.backgroundColor = ethNetworkColors[process.env.ethNetworkId];
   });
 
-  async function renderTopBar() {
+  async function renderNavLogo() {
     if (!(window.ethInitialized && window.nearInitialized)) return;
 
     const transfers = await window.transfers.get();
     const params = Object.keys(window.urlParams.get());
-
-    if (params.length) window.dom.show("goHome");
-    else window.dom.hide("goHome");
 
     if (transfers.length || params.length) {
       window.dom.show("navLogo");
@@ -311,6 +313,7 @@
       window.dom.hide("navLogo");
     }
   }
+
   function renderAccountsDropdown() {
     if (window.ethInitialized) window.dom.show("ethConnected");
     else window.dom.hide("ethConnected");
@@ -324,6 +327,6 @@
       window.dom.hide("accountsDropdown");
     }
   }
-  window.renderers.push(renderTopBar);
+  window.renderers.push(renderNavLogo);
   window.renderers.push(renderAccountsDropdown);
 </script>

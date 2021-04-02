@@ -9,6 +9,7 @@
   margin-top: var(--spacing-xxl) !important;
   width: 100%;
 }
+
 .transfer-form > header {
   margin: 0 auto;
   max-width: 15em;
