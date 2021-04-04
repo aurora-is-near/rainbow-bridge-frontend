@@ -1,4 +1,9 @@
-<form method="get" class="transfer-form" data-behavior="newTransferForm" style="display:none">
+<form
+  method="get"
+  class="transfer-form"
+  data-behavior="newTransferForm"
+  style="display: none"
+>
   <header>
     <h2>New Transfer</h2>
     <p>Select your transfer's origin and destination.</p>
@@ -7,25 +12,22 @@
     <include src="authenticated-accounts.html"></include>
   </div>
   <footer>
-    <button class="cta">
-      Continue
-    </button>
-    <button type="button" class="cancel" data-behavior="goHome">
-      Cancel
-    </button>
+    <button class="cta">Continue</button>
+    <button type="button" class="cancel" data-behavior="goHome">Cancel</button>
   </footer>
   <!-- TODO: cancel -->
 </form>
 
- <script>
- function renderNewTransferForm () {
-   if (!(window.ethInitialized && window.nearInitialized)) return
+<script>
+  function renderNewTransferForm() {
+    window.scrollTo({ top: 0 });
+    if (!(window.ethInitialized && window.nearInitialized)) return;
 
-   if (window.urlParams.get('new') === 'transfer') {
-     window.dom.show('newTransferForm')
-   } else {
-     window.dom.hide('newTransferForm')
-   }
- }
- window.renderers.push(renderNewTransferForm)
- </script>
+    if (window.urlParams.get("new") === "transfer") {
+      window.dom.show("newTransferForm");
+    } else {
+      window.dom.hide("newTransferForm");
+    }
+  }
+  window.renderers.push(renderNewTransferForm);
+</script>
