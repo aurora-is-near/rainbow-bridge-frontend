@@ -48,21 +48,3 @@
   }
   window.renderers.push(renderModal);
 </script>
-
-<!-- <script>
-  async function renderBanner() {
-    if (!window.ethInitialized) return;
-
-    if (!window.isValidEthNetwork) {
-      // Go to top and disable scroll until correct eth network selected
-      window.scrollTo({ top: 0 });
-      document.body.style.overflow = "hidden";
-      window.dom.fill("unsupportedNetwork").with({
-        innerHTML: `Please change Ethereum network. Current: ${window.connectedEthNetwork}
-          => required: ${process.env.ethNetworkId}`,
-      });
-      window.dom.show("unsupportedNetworkBanner");
-    }
-  }
-  window.renderers.push(renderBanner);
-</script> -->
