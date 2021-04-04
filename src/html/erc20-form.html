@@ -79,15 +79,40 @@
   </form>
 
   <div data-behavior="erc20Modal" class="modal" style="display: none">
-    <div class="token-selector">
-      <nav>
-        <button type="button" data-behavior="closeModal">
+    <div class="token-selector modal__container">
+      <nav class="modal__nav">
+        <button
+          type="button"
+          class="modal__nav__button--close"
+          data-behavior="closeModal"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6L6 18"
+              stroke="#A2A2A8"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M6 6L18 18"
+              stroke="#A2A2A8"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
           <span class="visually-hidden">close</span>
-          ⨉
         </button>
       </nav>
       <form method="get">
-        <h3>Enter token address</h3>
+        <h2 class="modal-section__label">Enter a token address</h2>
         <label for="erc20" class="visually-hidden">ERC20 Address</label>
         <input
           data-behavior="erc20FreeForm"
@@ -98,15 +123,11 @@
         />
         <div data-behavior="erc20AddressError" class="errorMessage"></div>
       </form>
-      <div class="separator">
-        <strong>or choose</strong>
-      </div>
+      <div class="modal-section__separator">or</div>
       <form method="get">
-        <header>
-          <div
-            class="space-between"
-            style="font-size: 0.75em; margin-bottom: 0.5em"
-          >
+        <header class="token-selector-section__header">
+          <h2 class="modal-section__label">Select from whitelist</h2>
+          <div class="space-between">
             <span>Token name</span>
             <span>Available balance</span>
           </div>
@@ -267,11 +288,7 @@
       input.value = erc20Address;
       window.dom.find("erc20FreeForm").classList.add("error");
       console.error(e);
-      window.dom
-        .fill("erc20AddressError")
-        .with(
-          "Sorry, the provided Ethereum address doesn't look like a valid ERC20 token contract"
-        );
+      window.dom.fill("erc20AddressError").with("Invalid ERC20 token contract");
       window.dom.show("erc20AddressError");
       window.dom.show("sendNaturalErc20");
       return;

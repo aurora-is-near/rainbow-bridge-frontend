@@ -270,8 +270,8 @@ fieldset {
 
 input,
 select {
-  background-color: var(--bg);
-  border: 2px solid var(--light-gray);
+  background-color: var(--white);
+  border: 2px solid var(--gray-300);
   border-radius: 0.5em;
   caret-color: var(--secondary);
   padding: 0.75em 1em;
@@ -282,8 +282,10 @@ select.error {
   border-color: var(--red);
 }
 .errorMessage {
-  color: var(--red);
-  word-break: break-word;
+  color: var(--red-600);
+  font-size: var(--fs-micro);
+  line-height: var(--lh-copy);
+  margin-top: var(--spacing-s);
 }
 input::selection {
   background-color: var(--primary);

@@ -57,7 +57,7 @@
 .transfer-form .inputs {
   background-color: var(--light-gray);
   border-radius: 0.75em;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   margin-top: 0.5em;
   align-items: stretch;
@@ -79,7 +79,7 @@
   width: 324px;
 }
 .transfer-form .inputs button:after {
-  content: ' ';
+  content: " ";
   background-image: url(/img/chevron-down-blue.svg);
   background-position: center;
   background-repeat: no-repeat;
@@ -103,8 +103,8 @@
   color: var(--gray);
   cursor: not-allowed;
 }
-.transfer-form .inputs input[type=number]::-webkit-inner-spin-button,
-.transfer-form .inputs input[type=number]::-webkit-outer-spin-button {
+.transfer-form .inputs input[type="number"]::-webkit-inner-spin-button,
+.transfer-form .inputs input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -117,7 +117,7 @@
   flex: 1;
   justify-content: flex-end;
   margin: 2em auto 0;
-  max-width:  25em;
+  max-width: 25em;
   padding: 1em;
   width: 100%;
 }
@@ -127,52 +127,41 @@
   }
 }
 .transfer-form > .arrow {
-  background: url('../img/arrow-down.svg') no-repeat;
+  background: url("../img/arrow-down.svg") no-repeat;
   background-size: contain;
   height: 1.5em;
   width: 1.5em;
   margin: 1em auto;
 }
 
-.token-selector h3 {
-  font-weight: 500;
-  font-size: 0.875em;
-  margin: 0 0 1.5rem;
-}
-.token-selector form {
-  margin: 1em;
-}
-.token-selector .separator {
-  border-top: 1px solid var(--light-gray);
-  height: 0;
-  margin: 2em 0;
-  text-align: center;
-  width: 100%;
-}
-.token-selector .separator strong {
-  background-color: var(--bg);
-  color: var(--fg);
-  font-weight: 400;
-  padding: 0 1em;
-  position: relative;
-  top: -0.6em;
+.token-selector-section__header {
+  margin-bottom: var(--spacing-m);
+  font-size: var(--fs-micro);
+  color: var(--gray-600);
 }
 
-.token-selector .token-list input[type=radio] {
+.token-selector-section__header div {
+  margin-top: var(--spacing-l);
+}
+
+.token-selector .token-list input[type="radio"] {
   display: none;
+  margin: 0 -16px;
 }
 
 .token-selector .token-list label {
-  border-radius: 0.5em;
-  color: var(--fg-bold);
+  display: flex;
+  color: var(--gray-800);
   cursor: pointer;
-  margin: 0 -1em;
-  padding: 1em;
+  font-size: var(--fs-heading-4);
+  font-weight: var(--fw-bold);
+  padding: var(--spacing-m);
+  margin: 0 calc(-1 * var(--spacing-m));
 }
 
 .token-selector .token-list label:hover,
 .token-selector .token-list label:focus {
-  background-color: var(--shadow);
+  background-color: var(--gray-100);
 }
 
 .token-selector .token-list label span {
