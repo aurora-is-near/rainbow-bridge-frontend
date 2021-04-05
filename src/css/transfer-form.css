@@ -20,12 +20,12 @@
 .transfer-form .account {
   background-color: var(--shadow);
   margin: 0 auto;
-  padding: 1em;
   width: 100%;
 }
 
 .account.account--origin {
   margin-top: var(--spacing-xxl);
+  padding: var(--spacing-m);
 }
 
 @media (min-width: 25em) {
@@ -35,33 +35,62 @@
 }
 .transfer-form > .account > header {
   align-items: center;
-  display: grid;
+  display: flex;
   justify-content: space-between;
-  grid-template-columns: auto auto;
-  grid-gap: 3em;
   font-size: var(--fs-small);
 }
-.transfer-form .token-details {
+
+.account--origin__token-details {
+  color: var(--gray-600);
+  display: none;
+  align-items: center;
+  font-size: var(--fs-small);
+  justify-content: space-between;
+}
+
+.account--origin__token-details:last-child {
+  margin-top: var(--spacing-s);
+}
+
+.account--origin__token-details label,
+.account--destination__token-details label {
+  color: var(--gray-600);
+  margin: 0;
+}
+
+.account--destination__token-details label {
+  font-size: var(--fs-small);
+}
+
+.account--destination header {
+  padding: var(--spacing-m);
+}
+
+.account--destination__token-details {
   display: none;
   border-top: 1px solid var(--light-gray);
+  color: var(--gray-600);
   font-size: var(--fs-small);
   justify-content: space-between;
-  margin: 1rem -1rem -1rem;
-  padding: 1rem;
+  padding: var(--spacing-m);
 }
+
+.account--destination__token-details strong {
+  color: var(--gray-800);
+  font-weight: var(--fw-bold);
+}
+
 .transfer-form .inputs + .token-details {
   border-top: none;
   padding: 0;
 }
-.transfer-form strong {
-  font-weight: 500;
-}
+
 .transfer-form .inputs {
   background-color: var(--light-gray);
   border-radius: 0.75em;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
-  margin-top: 0.5em;
+  margin: var(--spacing-m) 0;
   align-items: stretch;
   height: 56px;
 }
