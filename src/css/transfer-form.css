@@ -134,6 +134,10 @@
   margin: 1em auto;
 }
 
+.token-selector {
+  width: 360px;
+}
+
 .token-selector-section__header {
   margin-bottom: var(--spacing-m);
   font-size: var(--fs-micro);

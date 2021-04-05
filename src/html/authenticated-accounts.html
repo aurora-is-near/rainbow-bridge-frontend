@@ -8,27 +8,27 @@
   <label for="authEthereum">
     <!-- filled in with CSS -->
   </label>
-  <div>
-    <span class="network-indicator network--ethereum">
-      <img src="img/ethereum.svg" alt="" />
-      <span data-behavior="ethAccountPlaceholder">Ethereum</span>
-    </span>
-    <span>
-      <button
-        type="button"
-        class="button-size--small"
-        id="authEthereum"
-        data-behavior="authEthereum"
-      >
-        Connect
-      </button>
-      <button
-        class="button-size--small button-variant--secondary"
-        data-behavior="disconnectEthereum"
-      >
-        Disconnect
-      </button>
-    </span>
+  <div class="authenticated-account__details">
+    <img
+      src="img/ethereum.svg"
+      alt=""
+      class="network-indicator network--ethereum"
+    />
+    <div data-behavior="ethAccountPlaceholder">Ethereum</div>
+    <button
+      type="button"
+      class="button-size--small"
+      id="authEthereum"
+      data-behavior="authEthereum"
+    >
+      Connect
+    </button>
+    <button
+      class="button-size--small button-variant--secondary"
+      data-behavior="disconnectEthereum"
+    >
+      Disconnect
+    </button>
   </div>
 </div>
 <div class="authenticated-accounts-button">
@@ -40,27 +40,23 @@
   <label for="authNear">
     <!-- filled in with CSS -->
   </label>
-  <div>
-    <span class="network-indicator network--near">
-      <img src="/img/near.svg" alt="" />
-      <span data-behavior="nearAccountPlaceholder">NEAR</span>
-    </span>
-    <span>
-      <button
-        type="button"
-        class="button-size--small"
-        id="authNear"
-        data-behavior="authNear"
-      >
-        Connect
-      </button>
-      <button
-        class="button-size--small button-variant--secondary"
-        data-behavior="disconnectNear"
-      >
-        Disconnect
-      </button>
-    </span>
+  <div class="authenticated-account__details">
+    <img src="/img/near.svg" alt="" class="network-indicator network--near" />
+    <div data-behavior="nearAccountPlaceholder">NEAR</div>
+    <button
+      type="button"
+      class="button-size--small"
+      id="authNear"
+      data-behavior="authNear"
+    >
+      Connect
+    </button>
+    <button
+      class="button-size--small button-variant--secondary"
+      data-behavior="disconnectNear"
+    >
+      Disconnect
+    </button>
   </div>
 </div>
 
@@ -79,11 +75,6 @@
     margin-top: 1.4em;
   }
 
-  .network-indicator {
-    align-items: center;
-    display: flex;
-  }
-
   .network--ethereum {
     color: #627eea;
   }
@@ -92,18 +83,18 @@
     color: var(--black);
   }
 
-  .network-indicator img {
+  .network-indicator {
     margin-right: var(--spacing-s);
   }
 
   .connected-account {
-    color: var(--gray-700);
+    display: block;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    position: relative;
-    max-width: 200px;
-    display: block;
+    text-align: left;
+    max-width: 124px;
   }
 
   /**
@@ -120,19 +111,28 @@
     font-size: var(--fs-small);
   }
 
-  .authenticated-account label {
-    margin-left: calc(1em + 1px);
-    text-align: left;
-  }
-
-  .authenticated-account > div {
+  .authenticated-account__details {
     border: 1px solid var(--gray-200);
     border-radius: var(--br-base);
     padding: var(--spacing-m);
     display: flex;
+    flex-direction: row;
     height: 64px;
     align-items: center;
-    justify-content: space-between;
+  }
+
+  .authenticated-account__details > div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    margin-right: var(--spacing-l);
+    text-align: left;
+  }
+
+  .authenticated-account label {
+    margin-left: calc(1em + 1px);
+    text-align: left;
   }
 </style>
 
