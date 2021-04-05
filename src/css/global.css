@@ -48,6 +48,7 @@ body {
 
   /* Sizes */
   --header-height: 80px;
+  --input-height: 48px;
 
   /* Border Radius */
   --br-base: 8px;
@@ -201,8 +202,8 @@ button {
   border: none;
   color: var(--white);
   font-weight: var(--fw-bold);
-  height: 48px;
-  line-height: 48px;
+  height: var(--input-height);
+  line-height: var(--input-height);
   padding-left: var(--spacing-m);
   padding-right: var(--spacing-m);
   cursor: pointer;
@@ -273,14 +274,17 @@ select {
   background-color: var(--white);
   border: 2px solid var(--gray-300);
   border-radius: 0.5em;
-  caret-color: var(--secondary);
-  padding: 0.75em 1em;
+  color: var(--gray-700);
+  padding: 0 var(--spacing-m);
+  height: var(--input-height);
   width: 100%;
 }
+
 input.error,
 select.error {
   border-color: var(--red);
 }
+
 .errorMessage {
   color: var(--red-600);
   font-size: var(--fs-micro);
@@ -288,11 +292,18 @@ select.error {
   margin-top: var(--spacing-s);
 }
 input::selection {
-  background-color: var(--primary);
-  color: #efefef;
+  background-color: var(--blue-400);
+  color: var(--white);
 }
-input:focus {
-  box-shadow: 0 0 10em rgba(0, 0, 0, 0.02) inset;
+
+input:hover {
+  background-color: var(--gray-100);
+}
+
+input:focus,
+input:active {
+  color: var(--gray-700);
+  border-color: var(--blue-400);
 }
 
 code {
@@ -308,7 +319,7 @@ li {
 
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #aaa;
+  color: var(--gray-600);
   opacity: 0.5; /* Firefox */
 }
 
