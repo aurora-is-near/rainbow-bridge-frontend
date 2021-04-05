@@ -25,20 +25,16 @@
           type="number"
         />
       </div>
-      <p
-        class="token-details"
-        data-behavior="erc20nInfo"
-        style="margin: 0.5rem 0 0"
-      >
-        <span>Available to transfer</span>
+      <div class="account--origin__token-details" data-behavior="erc20nInfo">
+        <label>Available to transfer</label>
         <span>
           <span data-behavior="erc20nBalance"></span>
           <span data-behavior="erc20nName"></span>
         </span>
-      </p>
+      </div>
     </div>
     <div class="arrow"></div>
-    <div class="account">
+    <div class="account account--destination">
       <header>
         <strong>To</strong>
         <span
@@ -46,17 +42,23 @@
           data-behavior="ethUser"
         ></span>
       </header>
-      <p class="token-details" data-behavior="erc20nInfo">
-        <span>Receive as</span>
+      <div
+        class="account--destination__token-details"
+        data-behavior="erc20nInfo"
+      >
+        <label>Receive as</label>
         <strong data-behavior="erc20Name"></strong>
-      </p>
-      <p class="token-details" data-behavior="erc20nInfo">
-        <span>Current balance</span>
+      </div>
+      <div
+        class="account--destination__token-details"
+        data-behavior="erc20nInfo"
+      >
+        <label>Current balance</label>
         <strong>
           <span data-behavior="erc20Balance"></span>
           <span data-behavior="erc20Name"></span>
         </strong>
-      </p>
+      </div>
     </div>
     <footer>
       <button disabled data-behavior="erc20nSubmit" class="full-width">
@@ -68,15 +70,40 @@
     </footer>
   </form>
   <div data-behavior="erc20nModal" class="modal" style="display: none">
-    <div class="token-selector">
-      <nav>
-        <button type="button" data-behavior="closeModal">
+    <div class="token-selector modal__container">
+      <nav class="modal__nav">
+        <button
+          type="button"
+          class="modal__nav__button--close"
+          data-behavior="closeModal"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6L6 18"
+              stroke="#A2A2A8"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M6 6L18 18"
+              stroke="#A2A2A8"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
           <span class="visually-hidden">close</span>
-          ⨉
         </button>
       </nav>
       <form method="get">
-        <h3>Enter a token address</h3>
+        <h2 class="modal-section__label">Enter a token address</h2>
         <label for="erc20n" class="visually-hidden">ERC20 Address</label>
         <input
           data-behavior="erc20nFreeForm"
@@ -87,11 +114,12 @@
         />
         <div data-behavior="erc20nAddressError" class="errorMessage"></div>
       </form>
-      <div class="separator">
-        <strong>or choose</strong>
+      <div class="modal-section__separator">
+        <div>or</div>
       </div>
       <form method="get">
         <header>
+          <h2 class="modal-section__label">Select from whitelist</h2>
           <div
             class="space-between"
             style="font-size: 0.75em; margin-bottom: 0.5em"

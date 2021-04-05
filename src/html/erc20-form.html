@@ -25,24 +25,23 @@
           type="number"
         />
       </div>
-      <p
-        class="token-details"
-        data-behavior="erc20Info"
-        style="margin: 0.5rem 0 0"
-      >
-        <span>Available to transfer</span>
+      <div class="account--origin__token-details" data-behavior="erc20Info">
+        <label>Available to transfer</label>
         <span>
-          <span data-behavior="erc20Balance"></span>
-          <span data-behavior="erc20Name"></span>
+          <span data-behavior="erc20Balance" c>999.234234</span>
+          <span data-behavior="erc20Name">DAI</span>
         </span>
-      </p>
-      <p class="token-details allowance" data-behavior="erc20Info">
-        <span>Available allowance</span>
+      </div>
+      <div
+        class="account--origin__token-details allowance"
+        data-behavior="erc20Info"
+      >
+        <label>Available allowance</label>
         <span>
           <span data-behavior="erc20Allowance"></span>
           <span data-behavior="erc20Name"></span>
         </span>
-      </p>
+      </div>
     </div>
     <div class="arrow"></div>
     <div class="account account--destination">
@@ -53,17 +52,23 @@
           data-behavior="nearUser"
         ></span>
       </header>
-      <p class="token-details" data-behavior="erc20Info">
-        <span>Receive as</span>
+      <div
+        class="account--destination__token-details"
+        data-behavior="erc20Info"
+      >
+        <label>Receive as</label>
         <strong data-behavior="nep141Name"></strong>
-      </p>
-      <p class="token-details" data-behavior="erc20Info">
-        <span>Current balance</span>
+      </div>
+      <div
+        class="account--destination__token-details"
+        data-behavior="erc20Info"
+      >
+        <label>Current balance</label>
         <strong>
           <span data-behavior="nep141Balance"></span>
           <span data-behavior="nep141Name"></span>
         </strong>
-      </p>
+      </div>
     </div>
     <footer>
       <button disabled data-behavior="erc20Submit" class="full-width">
@@ -134,13 +139,6 @@
     </div>
   </div>
 </div>
-<style>
-  .token-details.allowance {
-    border-top: none;
-    margin-top: 0;
-    padding-top: 0;
-  }
-</style>
 
 <script>
   window.addEventListener("load", function handleSelectErc20Events() {
