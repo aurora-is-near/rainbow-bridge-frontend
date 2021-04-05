@@ -16,15 +16,20 @@
   background-color: var(--white);
   border-radius: 0.5em;
   margin: 0 auto;
-
-  width: 25em;
-  max-width: 100%;
   max-height: 90vh;
 }
 
 .modal__container {
   overflow-y: auto;
   padding: var(--spacing-m);
+  margin: 0 var(--spacing-m);
+}
+
+@media (min-width: 600px) {
+  .modal__container {
+    margin: 0 auto;
+    max-width: 440px;
+  }
 }
 
 .modal-section__label {
