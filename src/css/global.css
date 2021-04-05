@@ -3,25 +3,16 @@
 @import "./title.css";
 @import "./transfer-form.css";
 
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  height: 100%;
-}
-
 :root {
   /* Typographic Scale */
   --base-font-size: 16px;
-  --fs-heading-1: 31px;
-  --fs-heading-2: 25px;
-  --fs-heading-3: 20px;
-  --fs-heading-4: 16px;
+  --fs-heading-1: 1.9375rem;
+  --fs-heading-2: 1.5625rem;
+  --fs-heading-3: 1.25rem;
+  --fs-heading-4: var(--base-font-size);
   --fs-body: var(--base-font-size);
-  --fs-small: 14px;
-  --fs-micro: 12px;
+  --fs-small: 0.875rem;
+  --fs-micro: 0.75rem;
 
   /* Font Family */
   --sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
@@ -38,7 +29,7 @@ body {
   --lh-copy: 1.5;
 
   /* Spacing Scale */
-  --base-spacing: 8px;
+  --base-spacing: 0.5rem;
   --spacing-xs: calc(var(--base-spacing) / 2);
   --spacing-s: var(--base-spacing);
   --spacing-m: calc(var(--base-spacing) * 2);
@@ -51,8 +42,8 @@ body {
   --input-height: 48px;
 
   /* Border Radius */
-  --br-base: 8px;
-  --br-small: 6px;
+  --br-base: var(--base-spacing);
+  --br-small: 0.375rem;
 
   /* Colors */
   --white: white;
@@ -120,6 +111,15 @@ body {
   --secondary: var(--red);
 
   --space: 1em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
 }
 
 html {
