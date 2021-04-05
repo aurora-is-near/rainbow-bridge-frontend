@@ -349,7 +349,7 @@ li {
   text-overflow: ellipsis;
   white-space: nowrap;
   position: relative;
-  padding-right: var(--spacing-l) !important;
+  padding-right: var(--spacing-xl) !important;
   padding-left: var(--spacing-m);
   max-width: 180px;
 }
