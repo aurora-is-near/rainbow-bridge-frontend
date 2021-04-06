@@ -85,6 +85,16 @@ export function init () {
     e.target.closest('.modal').style.display = 'none'
   })
 
+  onClick('disconnectEthereum', async function disconnectEthereum (e) {
+    await window.web3Modal.clearCachedProvider()
+    setTimeout(() => window.location.reload())
+  })
+
+  onClick('disconnectNear', function disconnectNear () {
+    window.nearConnection.signOut()
+    setTimeout(() => window.location.reload())
+  })
+
   // avoid page refreshes when submitting "get" forms
   document.querySelectorAll('form[method="get"]').forEach(form => {
     form.onsubmit = e => {

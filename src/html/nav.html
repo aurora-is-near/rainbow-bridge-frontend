@@ -256,16 +256,6 @@
 </style>
 <script>
   window.addEventListener("load", function addNavEventHandlers() {
-    window.dom.find(
-      "disconnectEthereum"
-    ).onclick = async function disconnectEthereum() {
-      await window.web3Modal.clearCachedProvider();
-      setTimeout(() => window.location.reload());
-    };
-    window.dom.find("disconnectNear").onclick = function disconnectNear() {
-      window.nearConnection.signOut();
-      setTimeout(() => window.location.reload());
-    };
     document.querySelectorAll(".dropdown").forEach((d) => {
       document.querySelector("body").addEventListener("click", (event) => {
         const button = d.querySelector("button");
