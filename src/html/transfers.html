@@ -1,240 +1,552 @@
-<div class="transfers" data-behavior="recent-transfers" style="display:none">
-  <header>
-    <h1>Your Transfers</h1>
+<div class="transfers" data-behavior="recent-transfers">
+  <header class="transfers__header">
+    <h1 class="transfers__heading">Your Transfers</h1>
     <p>Manage your transfers below or begin a new one.</p>
     <!-- TODO: <nav> -->
   </header>
-  <div class="initiate">
-    <button data-behavior="newTransfer" class="cta" style="margin-top: 2em">
+  <div class="transfers__actions">
+    <button data-behavior="newTransfer">
       Begin new transfer
     </button>
-    <button data-behavior="newRecovery" class="link">
-      Missing transfers?
-    </button>
+    <button data-behavior="newRecovery" class="link">Missing transfers?</button>
   </div>
-  <div data-behavior="transfers-container" style="margin-top: 3rem"></div>
-  <p style="margin-top: 2em; font-size: small; text-align: center;">
+  <div class="transfers__container" data-behavior="transfers__container" style="margin-top: 3rem">
+    <!-- Test Transfer for styling purposes -->
+    <div
+      class="transfer in-progress"
+      id="${transfer.id}"
+      data-behavior="transfer"
+    >
+      <header class="transfer__header" >
+        <div>
+          <h3 class="transfer__amount">999.9999</h3>
+          <div class="transfer__status">
+            <span class="icon"></span>
+            <span>Message</span>
+          </div>
+        </div>
+        <div class="transfer__actions">
+          <button class="button--cta button-size--small" data-behavior="transferCallToAction">Button</button>
+          <button class="button--delete button-size--small" data-behavior="deleteTransfer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4H3.33333H14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5.3335 4.00004V2.66671C5.3335 2.31309 5.47397 1.97395 5.72402 1.7239C5.97407 1.47385 6.31321 1.33337 6.66683 1.33337H9.3335C9.68712 1.33337 10.0263 1.47385 10.2763 1.7239C10.5264 1.97395 10.6668 2.31309 10.6668 2.66671V4.00004M12.6668 4.00004V13.3334C12.6668 13.687 12.5264 14.0261 12.2763 14.2762C12.0263 14.5262 11.6871 14.6667 11.3335 14.6667H4.66683C4.31321 14.6667 3.97407 14.5262 3.72402 14.2762C3.47397 14.0261 3.3335 13.687 3.3335 13.3334V4.00004H12.6668Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6.6665 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9.3335 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div class="transfer__accounts-container">
+        <div class="transfer__account">
+          <label>From</label>
+          <div class="account-with-icon near" title="${
+        transfer.sender
+      }">
+            corwin.near
+    </div>
+        </div>
+        <div class="transfer__account">
+          <label>To</label>
+          <span class="account-with-icon ethereum" title="${
+        transfer.recipient
+      }">
+            corwin.eth
+          </span>
+        </div>
+      </div>
+
+      <footer class="transfer__footer ${
+        openTransferDetails[transfer.id] || transfer.status !== "completed"
+          ? "open"
+          : ""
+      }">
+        <ol class="transfer__details">
+          <li class="">
+            <span>Step 1</span>
+          </li>
+          <li class="completed">
+            <span>Step 1</span>
+          </li>
+          <li class="pending">
+            <span>Step 1</span>
+          </li>
+          <li class="failed">
+            <span>Step 1</span>
+            <p class="error">Error Message</p>
+          </li>
+        </ol>
+        <button class="full-width button-size--small" data-behavior="openTransferDetails">
+          <span>details</span>
+        </button>
+      </footer>
+    </div>
+    <div
+      class="transfer completed"
+      id="${transfer.id}"
+      data-behavior="transfer"
+    >
+      <header class="transfer__header" >
+        <div>
+          <h3 class="transfer__amount">999.9999</h3>
+          <div class="transfer__status">
+            <span class="icon"></span>
+            <span>Message</span>
+          </div>
+        </div>
+        <div class="transfer__actions">
+          <button class="button--cta button-size--small" data-behavior="transferCallToAction">Button</button>
+          <button class="button--delete button-size--small" data-behavior="deleteTransfer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4H3.33333H14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5.3335 4.00004V2.66671C5.3335 2.31309 5.47397 1.97395 5.72402 1.7239C5.97407 1.47385 6.31321 1.33337 6.66683 1.33337H9.3335C9.68712 1.33337 10.0263 1.47385 10.2763 1.7239C10.5264 1.97395 10.6668 2.31309 10.6668 2.66671V4.00004M12.6668 4.00004V13.3334C12.6668 13.687 12.5264 14.0261 12.2763 14.2762C12.0263 14.5262 11.6871 14.6667 11.3335 14.6667H4.66683C4.31321 14.6667 3.97407 14.5262 3.72402 14.2762C3.47397 14.0261 3.3335 13.687 3.3335 13.3334V4.00004H12.6668Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6.6665 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9.3335 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div class="transfer__accounts-container">
+        <div class="transfer__account">
+          <label>From</label>
+          <span class="account-with-icon ${transfer.sourceNetwork}" title="${
+        transfer.sender
+      }">
+            corwin.near
+          </span>
+        </div>
+        <div class="transfer__account">
+          <label>To</label>
+          <span class="account-with-icon ${transfer.destinationNetwork}" title="${
+        transfer.recipient
+      }">
+            corwin.eth
+          </span>
+        </div>
+      </div>
+
+      <footer class="transfer__footer ${
+        openTransferDetails[transfer.id] || transfer.status !== "completed"
+          ? "open"
+          : ""
+      }">
+        <ol class="transfer__details">
+          <li class="">
+            <span>Step 1</span>
+          </li>
+          <li class="completed">
+            <span>Step 1</span>
+          </li>
+          <li class="pending">
+            <span>Step 1</span>
+          </li>
+          <li class="failed">
+            <span>Step 1</span>
+            <p class="error">Error Message</p>
+          </li>
+        </ol>
+        <button class="full-width button-size--small" data-behavior="openTransferDetails">
+          <span>details</span>
+        </button>
+      </footer>
+    </div>
+    <div
+      class="transfer failed"
+      id="${transfer.id}"
+      data-behavior="transfer"
+    >
+      <header class="transfer__header" >
+        <div>
+          <h3 class="transfer__amount">999.9999</h3>
+          <div class="transfer__status">
+            <span class="icon"></span>
+            <span>Message</span>
+          </div>
+        </div>
+        <div class="transfer__actions">
+          <button class="button--cta button-size--small" data-behavior="transferCallToAction">Button</button>
+          <button class="button--delete button-size--small" data-behavior="deleteTransfer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4H3.33333H14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5.3335 4.00004V2.66671C5.3335 2.31309 5.47397 1.97395 5.72402 1.7239C5.97407 1.47385 6.31321 1.33337 6.66683 1.33337H9.3335C9.68712 1.33337 10.0263 1.47385 10.2763 1.7239C10.5264 1.97395 10.6668 2.31309 10.6668 2.66671V4.00004M12.6668 4.00004V13.3334C12.6668 13.687 12.5264 14.0261 12.2763 14.2762C12.0263 14.5262 11.6871 14.6667 11.3335 14.6667H4.66683C4.31321 14.6667 3.97407 14.5262 3.72402 14.2762C3.47397 14.0261 3.3335 13.687 3.3335 13.3334V4.00004H12.6668Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6.6665 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9.3335 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div class="transfer__accounts-container">
+        <div class="transfer__account">
+          <label>From</label>
+          <span class="account-with-icon ${transfer.sourceNetwork}" title="${
+        transfer.sender
+      }">
+            corwin.near
+          </span>
+        </div>
+        <div class="transfer__account">
+          <label>To</label>
+          <span class="account-with-icon ${transfer.destinationNetwork}" title="${
+        transfer.recipient
+      }">
+            corwin.eth
+          </span>
+        </div>
+      </div>
+
+      <footer class="transfer__footer ${
+        openTransferDetails[transfer.id] || transfer.status !== "completed"
+          ? "open"
+          : ""
+      }">
+        <ol class="transfer__details">
+          <li class="">
+            <span>Step 1</span>
+          </li>
+          <li class="completed">
+            <span>Step 1</span>
+          </li>
+          <li class="pending">
+            <span>Step 1</span>
+          </li>
+          <li class="failed">
+            <span>Step 1</span>
+            <p class="error">Error Message</p>
+          </li>
+        </ol>
+        <button class="full-width button-size--small" data-behavior="openTransferDetails">
+          <span>details</span>
+        </button>
+      </footer>
+    </div>
+    <div
+      class="transfer action-needed"
+      id="${transfer.id}"
+      data-behavior="transfer"
+    >
+      <header class="transfer__header" >
+        <div>
+          <h3 class="transfer__amount">999.9999</h3>
+          <div class="transfer__status">
+            <span class="icon"></span>
+            <span>Message</span>
+          </div>
+        </div>
+        <div class="transfer__actions">
+          <button class="button--cta button-size--small" data-behavior="transferCallToAction">Button</button>
+          <button class="button--delete button-size--small" data-behavior="deleteTransfer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4H3.33333H14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5.3335 4.00004V2.66671C5.3335 2.31309 5.47397 1.97395 5.72402 1.7239C5.97407 1.47385 6.31321 1.33337 6.66683 1.33337H9.3335C9.68712 1.33337 10.0263 1.47385 10.2763 1.7239C10.5264 1.97395 10.6668 2.31309 10.6668 2.66671V4.00004M12.6668 4.00004V13.3334C12.6668 13.687 12.5264 14.0261 12.2763 14.2762C12.0263 14.5262 11.6871 14.6667 11.3335 14.6667H4.66683C4.31321 14.6667 3.97407 14.5262 3.72402 14.2762C3.47397 14.0261 3.3335 13.687 3.3335 13.3334V4.00004H12.6668Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6.6665 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9.3335 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div class="transfer__accounts-container">
+        <div class="transfer__account">
+          <label>From</label>
+          <span class="account-with-icon ${transfer.sourceNetwork}" title="${
+        transfer.sender
+      }">
+            corwin.near
+          </span>
+        </div>
+        <div class="transfer__account">
+          <label>To</label>
+          <span class="account-with-icon ${transfer.destinationNetwork}" title="${
+        transfer.recipient
+      }">
+            corwin.eth
+          </span>
+        </div>
+      </div>
+
+      <footer class="transfer__footer ${
+        openTransferDetails[transfer.id] || transfer.status !== "completed"
+          ? "open"
+          : ""
+      }">
+        <ol class="transfer__details">
+          <li class="">
+            <span>Step 1</span>
+          </li>
+          <li class="completed">
+            <span>Step 1</span>
+          </li>
+          <li class="pending">
+            <span>Step 1</span>
+          </li>
+          <li class="failed">
+            <span>Step 1</span>
+            <p class="error">Error Message</p>
+          </li>
+        </ol>
+        <button class="full-width button-size--small" data-behavior="openTransferDetails">
+          <span>details</span>
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <p style="margin-top: 2em; font-size: small; text-align: center">
     Need help? Join our
     <a href="https://t.me/rainbowbridgesupport"> support telegram channel</a>.
   </p>
-  <div data-behavior="deleteModal" class=modal style="display:none">
+  <div data-behavior="deleteModal" class="modal" style="display: none">
     <div class="confirm-delete">
-      <img src="/img/delete-pink.svg" alt="">
+      <img src="/img/delete-pink.svg" alt="" />
       <h4>Remove transfer from list?</h4>
-      <p>Deleted transfers can be restored using the initiating transaction hash/ID.</p>
+      <p>
+        Deleted transfers can be restored using the initiating transaction
+        hash/ID.
+      </p>
       <div class="confirm-delete-buttons">
-        <button data-behavior="confirmDelete" class="cta">Remove Transfer</button>
+        <button data-behavior="confirmDelete" class="cta">
+          Remove Transfer
+        </button>
         <button data-behavior="closeModal" class="cta">Cancel</button>
       </div>
     </div>
-
   </div>
 </div>
 <style>
   .transfers {
     margin-top: 4em;
     width: 100%;
-    margin: 4em auto 2em;
+    margin: 0 auto 2em;
   }
-  .transfers > header {
-    padding: 0 1em;
-    margin: 0 auto;
-    max-width: 15.5em;
-    text-align: center;
-  }
-  .transfers nav button {
-    border-radius: 100em;
-  }
-  .initiate {
-    text-align: center;
-    margin: auto;
-    background-color: var(--bg);
-    bottom: 0;
-    z-index: 10;
-    padding: 0em 1em;
-    border-radius: 0.8em 0.8em 0em 0em;
-  }
-  .initiate :last-child {
-    margin: 1em;
-  }
-  .transfer.in-progress {
-    --bg-dark: #FFDBB2;
-    --bg-medium: #FFECD6;
-    --bg-light: #FFF6ED;
 
-    --fg-bold: #452500;
-    --fg: #995200;
-    --fg-light: var(--yellow);
-    --fg-details: #995200;
-    --fg-chevron: var(--yellow);
+  .transfers__header {
+    padding: 0 5rem;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .transfers__heading {
+    font-size: var(--fs-heading-2);
+  }
+
+  .transfers__actions {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    margin: 4rem auto;
+    z-index: 10;
+  }
+
+  .transfers__actions button {
+    padding: 0 var(--spacing-xxl);
+    margin-bottom: var(--spacing-s);
+  }
+
+  .transfer.in-progress {
+    --color--transfer-header: var(--orange-300);
+    --color--transfer-amount: var(--orange-800);
+    --color--transfer-status: var(--orange-700);
+    --color--transfer-actions--cta: var(--orange-600);
+    --color--transfer-actions--delete: var(--orange-200);
+    --color--transfer-actions--delete__icon: var(--orange-700);
+    --color--accounts-container: var(--orange-100);
+    --color--accounts-label: var(--orange-700);
+    --color--accounts-divider: var(--orange-200);
+    --color--footer: var(--orange-200);
+    --color--footer-text: var(--orange-700);
+    --color--footer-caret: var(--orange-500);
   }
   .transfer.completed {
-    --bg-dark: #90E9C5;
-    --bg-medium: #C2FCE0;
-    --bg-light: #ECFDF5;
-
-    --fg-bold: #00261C;
-    --fg: #005A46;
-    --fg-light: #008D6A;
-    --fg-details: #008D6A;
-    --fg-chevron: #00C08B;
+    --color--transfer-header: var(--green-300);
+    --color--transfer-amount: var(--green-800);
+    --color--transfer-status: var(--green-700);
+    --color--transfer-actions--cta: var(--green-600);
+    --color--transfer-actions--delete: var(--green-200);
+    --color--transfer-actions--delete__icon: var(--green-700);
+    --color--accounts-container: var(--green-100);
+    --color--accounts-label: var(--green-700);
+    --color--accounts-divider: var(--green-200);
+    --color--footer: var(--green-200);
+    --color--footer-text: var(--green-600);
+    --color--footer-caret: var(--green-500);
   }
   .transfer.failed {
-    --bg-dark: #FFBDBE;
-    --bg-medium: #FFDEDF;
-    --bg-light: #FEF2F2;
-
-    --fg-bold: #450002;
-    --fg: #A00005;
-    --fg-light: #FF585D;
-    --fg-details: #DC1F25;
-    --fg-chevron: #FF585D;
+    --color--transfer-header: var(--red-300);
+    --color--transfer-amount: var(--red-800);
+    --color--transfer-status: var(--red-700);
+    --color--transfer-actions--cta: var(--red-600);
+    --color--transfer-actions--delete: var(--red-200);
+    --color--transfer-actions--delete__icon: var(--red-700);
+    --color--accounts-container: var(--red-100);
+    --color--accounts-label: var(--red-700);
+    --color--accounts-divider: var(--red-200);
+    --color--footer: var(--red-200);
+    --color--footer-text: var(--red-600);
+    --color--footer-caret: var(--red-500);
   }
   .transfer.action-needed {
-    --bg-dark: #8FCDFF;
-    --bg-medium: #C2E4FF;
-    --bg-light: #F0F9FF;
-
-    --fg-bold: #001729;
-    --fg: #003560;
-    --fg-light: #0072CE;
-    --fg-details: #005497;
-    --fg-chevron: #0072CE;
-  }
-  .transfer {
-    /* necessary to override `html { color: var(--fg) }` 🤷🏻 */
-    color: var(--fg);
-  }
-  .transfer h3 {
-    /* necessary to override @media(prefers-color-scheme: dark)` variable */
-    color: var(--fg-bold);
-  }
-  .transfer > header {
-    background-color: var(--bg-dark);
-  }
-  .transfer > div {
-    background-color: var(--bg-light);
-    border-color: var(--bg-medium);
-  }
-  .transfer > div > *:first-child {
-    color: var(--fg-light);
-  }
-  .transfer > footer > button {
-    background-color: var(--bg-medium);
-  }
-  .transfer > footer button {
-    color: var(--fg-details);
+    --color--transfer-header: var(--blue-300);
+    --color--transfer-amount: var(--blue-800);
+    --color--transfer-status: var(--blue-700);
+    --color--transfer-actions--cta: var(--blue-500);
+    --color--transfer-actions--delete: var(--blue-200);--color--transfer-actions--delete__icon: var(--blue-700);
+    --color--accounts-container: var(--blue-100);
+    --color--accounts-label: var(--blue-700);
+    --color--accounts-divider: var(--blue-200);
+    --color--footer: var(--blue-200);
+    --color--footer-text: var(--blue-500);
+    --color--footer-caret: var(--blue-500);
   }
 
   .transfer {
     overflow: hidden;
-    margin: 1rem auto;
-    font-size: 0.75em;
+    border-radius: var(--br-small);
+    margin-bottom: var(--spacing-m);
   }
 
-  .transfer h3 {
-    font-size: 1.333em;
-    margin: 0 0 0.5rem;
-  }
-  .transfer > header {
-    padding: 0.9rem;
+  .transfer__header {
+    background-color: var(--color--transfer-header);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: var(--spacing-m);
   }
-  .transfer > header .status-message {
+
+  .transfer__header .transfer__amount {
+    color: var(--color--transfer-amount);
+    font-size: var(--fs-heading-4);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .transfer__status {
+    color: var(--color--transfer-status);
     display: flex;
     align-items: center;
+    font-size: var(--fs-micro);
   }
-  .transfer > header .status-message .icon {
-    margin-right: 0.5em;
+
+  .transfer__status .icon {
+    margin-right: var(--spacing-s);
     background-size: contain;
     background-position: center;
-    width: 1.2em; height: 1.2em;
+    width: var(--spacing-m);
+    height: var(--spacing-m);
   }
-  .transfer.failed > header .status-message .icon {
+
+  .transfer.failed > header .transfer__status .icon {
     background-image: url(img/alert-circle.svg);
   }
-  .transfer.completed > header .status-message .icon {
+
+  .transfer.completed > header .transfer__status .icon {
     background-image: url(img/completed.svg);
   }
-  .transfer.action-needed > header .status-message .icon:before {
-    content: '→';
+
+  .transfer.action-needed > header .transfer__status .icon:before {
+    content: "→";
   }
-  .transfer.in-progress > header .status-message .icon {
+
+  .transfer.in-progress > header .transfer__status .icon {
     margin-right: 0.8em;
     position: relative;
-    width: 0.8em; height: 0.8em;
+    width: 0.8em;
+    height: 0.8em;
   }
-  .transfer.in-progress > header .status-message .icon:before {
+
+  .transfer.in-progress > header .transfer__status .icon:before {
     animation: spin 1.5s ease-in-out infinite;
     border-radius: 50%;
     border: 1px solid transparent;
-    border-top-color: var(--fg);
-    content: ' ';
+    border-top-color: var(--color--transfer-status);
+    content: " ";
     position: absolute;
-    top: 0; right: 0; bottom: 0; left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
   }
+
   @keyframes spin {
-    0% { transform: rotate(0deg) }
-    100% { transform: rotate(360deg) }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
-  .action-buttons {
+
+  .transfer__actions {
     display: flex;
     height: 2.4em;
   }
-  .action-buttons button {
-    background-color: var(--fg-light);
+
+  .transfer__actions .button--cta {
+    background-color: var(--color--transfer-actions--cta);
     color: white;
   }
-  .action-buttons .delete-button {
-    background-color: transparent;
-    background: url(/img/delete.svg) no-repeat center;
-    margin-left: 1em;
-    width: 1em;
-    padding: 1em;
+
+  .transfer__actions .button--delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color--transfer-actions--delete) !important;
+    margin-left: var(--spacing-s);
+    padding: 0;
+    width: var(--input-height--small);
   }
 
-  .transfer > div {
-    padding: 0.5rem 1rem;
-    display: grid;
-    grid-gap: 7rem;
-    grid-template-columns: auto auto;
-    justify-content: space-between;
+  .transfer__actions .button--delete svg path {
+    stroke: var(--color--transfer-actions--delete__icon);
+  }
+
+  .transfer__accounts-container {
+    background-color: var(--color--accounts-container);
+    display: flex;
+    flex-direction: column;
+    font-size: var(--fs-small);
+  }
+
+  .transfer__account {
+    border-top: 1px solid var(--color--accounts-divider);
+    display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-s) var(--spacing-m);
   }
-  .transfer > div + div {
-    border-top: 1px solid var(--bg-medium);
+
+  .transfer__account label {
+    color: var(--color--accounts-label);
+    font-size: var(--fs-micro);
+    padding: 0;
+    margin: 0;
   }
-  .transfer > footer {
+
+  .transfer__account .account-with-icon {
+    color: var(--color--accounts-label);
+  }
+
+  .transfer__footer {
     position: relative;
     transition: height 0.2s;
+    height: var(--input-height--small);
   }
-  .transfer > footer button {
-    width: 100%;
+
+  .transfer__footer button {
+    color: var(--color--footer-text);
     text-align: center;
-    padding: 0.5rem 1rem;
     border-radius: 0;
     position: absolute;
     bottom: 0;
     z-index: 1;
+    font-size: var(--fs-micro);
+    background-color: var(--color--footer);
   }
-  .transfer > footer button:hover,
-  .transfer > footer button:focus {
-    text-decoration: none;
-    background-color: var(--bg-dark);
-    box-shadow: 0 0 10em rgba(255,255,255,0.3) inset;
-  }
-  .transfer > footer button:active {
-    color: var(--fg-details);
-    box-shadow: none;
-  }
-  .transfer > footer button:before {
+
+  .transfer__footer button:before {
     display: inline-block;
-    content: ' ';
+    content: " ";
     height: 0.3em;
     width: 0.3em;
-    border: 2.5px solid var(--fg-chevron);
+    border: 2.5px solid var(--color--footer-caret);
     border-left-color: transparent;
     border-top-color: transparent;
     transform: rotate(45deg);
@@ -242,41 +554,42 @@
     position: relative;
     top: -0.1em;
   }
-  .transfer > footer button span:before {
-    content: 'View ';
+
+  .transfer__footer button span:before {
+    content: "View ";
   }
-  .transfer > footer.open button span:before {
-    content: 'Hide ';
+
+  .transfer__footer.open button span:before {
+    content: "Hide ";
   }
-  .transfer > footer.open button:before {
+
+  .transfer__footer.open button:before {
     top: 0.1em;
     transform: rotate(225deg);
   }
 
-  .transfer-details {
-    --bg: #272729;
-    --fg: #A1A1A9;
-    background-color: var(--bg);
-    color: var(--fg);
+  .transfer__details {
+    background-color: var(--gray-800);
+    color: var(--gray-500);
     list-style: none;
     margin: 0;
     padding: 1.5rem 1rem;
     position: absolute;
     width: 100%;
   }
-  .transfer-details li {
+  .transfer__details li {
     position: relative;
-    padding-bottom: 1.5em;
+    margin-bottom: var(--spacing-m);
+    font-size: var(--fs-micro);
   }
-  .transfer-details li:last-child {
+  .transfer__details li:last-child {
     padding-bottom: 0;
   }
-  .transfer-details li span {
+  .transfer__details li span {
     display: flex;
   }
-  .transfer-details li span:before {
-    background-color: var(--bg);
-    content: '•';
+  .transfer__details li span:before {
+    content: "•";
     width: 1rem;
     height: 1rem;
     background-repeat: no-repeat;
@@ -284,14 +597,15 @@
     background-position: center;
     margin-right: 0.5rem;
     text-align: center;
-    font-size: 1.7em;
+    font-size: var(--fs-heading-3);
     line-height: 0.7;
     z-index: 1;
     flex-shrink: 0;
   }
   /* error message shown in a p */
-  .transfer-details li p {
-    background-color: #111618;
+  .transfer__details li p {
+    color: var(--gray-500);
+    background-color: var(--black);
     border-radius: 4px;
     font-size: 0.9em;
     margin: 1rem 0 0 1.5rem;
@@ -299,44 +613,36 @@
   }
   /* if very first step pending, bold it. otherwise, bold first pending
      step that comes after a completed step. */
-  .transfer-details li.pending:first-child span,
-  .transfer-details li.completed + li.pending span {
+  .transfer__details li.pending:first-child span,
+  .transfer__details li.completed + li.pending span {
     color: white;
   }
-  .transfer-details li.pending:first-child span:before,
-  .transfer-details li.completed + li.pending span:before {
-    color: #2B9AF4;
+  .transfer__details li.pending:first-child span:before,
+  .transfer__details li.completed + li.pending span:before {
+    color: #2b9af4;
   }
-  .transfer-details li.failed span:before {
+  .transfer__details li.failed span:before {
     background-image: url(img/alert-circle.svg);
-    content: ' ';
+    content: " ";
   }
-  .transfer-details li.completed span:before {
+  .transfer__details li.completed span:before {
     background-image: url(img/checkmark-48DBA7.svg);
-    content: ' ';
+    content: " ";
   }
-  .transfer-details li.completed:after {
-    content: ' ';
-    height: 100%;
+  .transfer__details li:after {
+    content: " ";
     width: 1px;
-    border-left: 1px solid #3F4045;
+    border-left: 1px solid var(--gray-700);
+    padding: var(--spacing-m) 0;
     position: absolute;
-    top: 0;
-    left: 0.43rem;
+    top: var(--spacing-m);
+    bottom: 0;
+    left: 7px;
   }
 
-  @media (min-width: 25em) {
+  @media (min-width: 600px) {
     .transfers {
-      max-width: 22em;
-    }
-    .transfers > header {
-      padding: 0;
-    }
-    .transfer {
-      border-radius: 0.5em;
-    }
-    .transfer > * {
-      max-width: 22rem;
+      max-width: 440px;
     }
   }
 
@@ -351,84 +657,99 @@
     flex-direction: column;
     justify-content: space-between;
   }
+
   .confirm-delete > img {
     margin-left: 40%;
     margin-right: 40%;
   }
+
   .confirm-delete > h4 {
     font-weight: 800;
     line-height: 1.5;
     margin-top: 2em;
     margin-bottom: 1em;
   }
+
   .confirm-delete button {
     margin-top: 1.2em;
   }
+
   .confirm-delete-buttons :first-child {
     background-color: var(--red);
-    color: var(--white)
+    color: var(--white);
   }
+
   .confirm-delete-buttons :last-child {
     background-color: var(--bg);
-    color: var(--fg)
+    color: var(--fg);
   }
 </style>
 <script>
-window.addEventListener('load', function addLandingHandlers () {
-  window.dom.onClick('newTransfer', function startErc20Transfer () {
-    window.urlParams.set({ new: 'transfer' })
-    window.render()
-  })
-  window.dom.onClick('newRecovery', function startTransferRecovery () {
-    window.urlParams.set({ new: 'restore' })
-    window.render()
-  })
-  // transfers are rendered after page load, so we add one click handler to the
-  // body tag to handle clicking each kind of button on a transfer
-  document.querySelector('body').addEventListener('click', event => {
-    const callToAction = event.target.closest('[data-behavior=transferCallToAction]')
+  window.addEventListener("load", function addLandingHandlers() {
+    window.dom.onClick("newTransfer", function startErc20Transfer() {
+      window.urlParams.set({ new: "transfer" });
+      window.render();
+    });
+    window.dom.onClick("newRecovery", function startTransferRecovery() {
+      window.urlParams.set({ new: "restore" });
+      window.render();
+    });
+    // transfers are rendered after page load, so we add one click handler to the
+    // body tag to handle clicking each kind of button on a transfer
+    document.querySelector("body").addEventListener("click", (event) => {
+      const callToAction = event.target.closest(
+        "[data-behavior=transferCallToAction]"
+      );
 
-    // no action button clicked, end here
-    if (!callToAction) return
+      // no action button clicked, end here
+      if (!callToAction) return;
 
-    const transferId = callToAction.closest('[data-behavior=transfer]').id
-    window.transfers.act(transferId)
-  })
-  document.querySelector('body').addEventListener('click', event => {
-    const transferDetailsButton = event.target.closest('[data-behavior=openTransferDetails]')
+      const transferId = callToAction.closest("[data-behavior=transfer]").id;
+      window.transfers.act(transferId);
+    });
+    document.querySelector("body").addEventListener("click", (event) => {
+      const transferDetailsButton = event.target.closest(
+        "[data-behavior=openTransferDetails]"
+      );
 
-    // no details button clicked, end here
-    if (!transferDetailsButton) return
+      // no details button clicked, end here
+      if (!transferDetailsButton) return;
 
-    const transferId = transferDetailsButton.closest('[data-behavior=transfer]').id
-    const footer = transferDetailsButton.closest('footer')
-    openTransferDetails[transferId] = !openTransferDetails[transferId]
-    footer.classList.toggle('open')
-    adjustTransferDetailsHeights()
-  })
-  document.querySelector('body').addEventListener('click', event => {
-    const deleteButton = event.target.closest('[data-behavior=deleteTransfer]')
+      const transferId = transferDetailsButton.closest(
+        "[data-behavior=transfer]"
+      ).id;
+      const footer = transferDetailsButton.closest("footer");
+      openTransferDetails[transferId] = !openTransferDetails[transferId];
+      footer.classList.toggle("open");
+      adjustTransferDetailsHeights();
+    });
+    document.querySelector("body").addEventListener("click", (event) => {
+      const deleteButton = event.target.closest(
+        "[data-behavior=deleteTransfer]"
+      );
 
-    // no delete button clicked, end here
-    if (!deleteButton) return
+      // no delete button clicked, end here
+      if (!deleteButton) return;
 
-    window.dom.show('deleteModal')
-    const transferIdToRemove = deleteButton.closest('[data-behavior=transfer]').id
-    // Delete a transfer after confirmation
-    const confirmDeleteButton = window.dom.find('confirmDelete')
-    confirmDeleteButton.onclick = () => {
-      window.transfers.remove(transferIdToRemove)
-      window.dom.hide('deleteModal')
-      document.getElementById(transferIdToRemove).remove()
-    }
-  })
-})
-// tracks UI state for which transfers have "view details" open
-const openTransferDetails = {}
+      window.dom.show("deleteModal");
+      const transferIdToRemove = deleteButton.closest(
+        "[data-behavior=transfer]"
+      ).id;
+      // Delete a transfer after confirmation
+      const confirmDeleteButton = window.dom.find("confirmDelete");
+      confirmDeleteButton.onclick = () => {
+        window.transfers.remove(transferIdToRemove);
+        window.dom.hide("deleteModal");
+        document.getElementById(transferIdToRemove).remove();
+      };
+    });
+  });
+  // tracks UI state for which transfers have "view details" open
+  const openTransferDetails = {};
 
-function renderTransfer (transfer, { inProgress }) {
-  transfer = window.transfers.decorate(transfer, { locale: 'en_US' })
-  return `
+  function renderTransfer(transfer, { inProgress }) {
+    transfer = window.transfers.decorate(transfer, { locale: "en_US" });
+    return `
     <div
       class="transfer ${transfer.status}"
       id="${transfer.id}"
@@ -436,96 +757,112 @@ function renderTransfer (transfer, { inProgress }) {
     >
       <header>
         <div>
-          <h3>${window.utils.formatLargeNum(transfer.amount, transfer.decimals)} ${transfer.sourceTokenName}</h3>
-          <div class="status-message">
+          <h3>${window.utils.formatLargeNum(
+            transfer.amount,
+            transfer.decimals
+          )} ${transfer.sourceTokenName}</h3>
+          <div class="transfer__status">
             <span class="icon"></span>
             <span>${transfer.statusMessage}</span>
           </div>
         </div>
         <div class="action-buttons">
-          ${window.dom.toString(transfer.callToAction &&
-            `<button data-behavior="transferCallToAction">${
-              transfer.callToAction
-            }</button>`
+          ${window.dom.toString(
+            transfer.callToAction &&
+              `<button data-behavior="transferCallToAction">${transfer.callToAction}</button>`
           )}
-          ${window.dom.toString(transfer.status === 'completed' &&
-            `<button class="delete-button" data-behavior="deleteTransfer"></button>`
+          ${window.dom.toString(
+            transfer.status === "completed" &&
+              `<button class="delete-button" data-behavior="deleteTransfer"></button>`
           )}
         </div>
       </header>
       <div>
         <span>From</span>
-        <span class="account-with-icon ${transfer.sourceNetwork}" title="${transfer.sender}">
+        <span class="account-with-icon ${transfer.sourceNetwork}" title="${
+      transfer.sender
+    }">
           ${transfer.sender}
         </span>
       </div>
       <div>
         <span>To</span>
-        <span class="account-with-icon ${transfer.destinationNetwork}" title="${transfer.recipient}">
+        <span class="account-with-icon ${transfer.destinationNetwork}" title="${
+      transfer.recipient
+    }">
           ${transfer.recipient}
         </span>
       </div>
-      <footer class="${openTransferDetails[transfer.id] || transfer.status !== 'completed' ? 'open' : ''}">
-        <ol class="transfer-details">${transfer.steps.map(step => (
-          `<li class="${step.status}">
+      <footer class="${
+        openTransferDetails[transfer.id] || transfer.status !== "completed"
+          ? "open"
+          : ""
+      }">
+        <ol class="transfer__details">${transfer.steps
+          .map(
+            (step) =>
+              `<li class="${step.status}">
             <span>${step.description}</span>
-            ${window.dom.toString(step.status === 'failed' &&
-              `<p class="error">${transfer.error}</p>`
+            ${window.dom.toString(
+              step.status === "failed" &&
+                `<p class="error">${transfer.error}</p>`
             )}
           </li>`
-        )).join('')}</ol>
+          )
+          .join("")}</ol>
         <button class="link" data-behavior="openTransferDetails">
           <span>details</span>
         </button>
       </footer>
     </div>
-  `
-}
-
-async function updateTransfers () {
-  if (!(window.ethInitialized && window.nearInitialized)) return
-  if (!window.isValidEthNetwork) return
-
-  const transfers = await window.transfers.get()
-
-  if (!transfers.length) {
-    window.dom.hide('recent-transfers')
-  } else {
-    window.dom.show('recent-transfers')
+  `;
   }
 
-  window.dom.fill('transfers-container').with([
-    ...transfers.map(t => renderTransfer(t, { inProgress: true }))
-  ])
+  // async function updateTransfers() {
+  //   if (!(window.ethInitialized && window.nearInitialized)) return;
+  //   if (!window.isValidEthNetwork) return;
 
-  adjustTransferDetailsHeights()
-}
+  //   const transfers = await window.transfers.get();
 
-// adjust hard-coded heights for transfers details panels, to enable slide-out animation
-function adjustTransferDetailsHeights () {
-  window.dom.findAll('transfer').map(transfer => {
-    const footer = transfer.querySelector('footer')
-    const button = footer.querySelector('button').getBoundingClientRect().height
-    const details = footer.querySelector('ol').getBoundingClientRect().height
-    footer.style.height = footer.classList.contains('open')
-      ? `${button + details}px`
-      : `${button}px`
-  })
-}
+  //   if (!transfers.length) {
+  //     window.dom.hide("recent-transfers");
+  //   } else {
+  //     window.dom.show("recent-transfers");
+  //   }
 
-async function hideShowTransfers () {
-  if (!(window.ethInitialized && window.nearInitialized)) return
+  //   window.dom
+  //     .fill("transfers__container")
+  //     .with([...transfers.map((t) => renderTransfer(t, { inProgress: true }))]);
 
-  const transfers = await window.transfers.get()
-  const params = Object.keys(window.urlParams.get())
+  //   adjustTransferDetailsHeights();
+  // }
 
-  if (transfers.length && !params.length) {
-    window.dom.show('recent-transfers')
-  } else {
-    window.dom.hide('recent-transfers')
+  // adjust hard-coded heights for transfers details panels, to enable slide-out animation
+  function adjustTransferDetailsHeights() {
+    window.dom.findAll("transfer").map((transfer) => {
+      const footer = transfer.querySelector("footer");
+      const button = footer.querySelector("button").getBoundingClientRect()
+        .height;
+      const details = footer.querySelector("ol").getBoundingClientRect().height;
+      footer.style.height = footer.classList.contains("open")
+        ? `${button + details}px`
+        : `${button}px`;
+    });
   }
-}
 
-window.renderers.push(updateTransfers)
-window.renderers.push(hideShowTransfers)
+  // async function hideShowTransfers() {
+  //   if (!(window.ethInitialized && window.nearInitialized)) return;
+
+  //   const transfers = await window.transfers.get();
+  //   const params = Object.keys(window.urlParams.get());
+
+  //   if (transfers.length && !params.length) {
+  //     window.dom.show("recent-transfers");
+  //   } else {
+  //     window.dom.hide("recent-transfers");
+  //   }
+  // }
+
+  window.renderers.push(updateTransfers);
+  window.renderers.push(hideShowTransfers);
 </script>

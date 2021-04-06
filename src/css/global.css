@@ -40,6 +40,7 @@
   /* Sizes */
   --header-height: 80px;
   --input-height: 48px;
+  --input-height--small: 40px;
 
   /* Border Radius */
   --br-base: var(--base-spacing);
@@ -147,8 +148,8 @@ h4,
 h5,
 h6 {
   font-weight: var(--fw-black);
-  line-height: 1;
   color: var(--black);
+  margin: 0;
 }
 
 img,
@@ -354,14 +355,14 @@ li {
 }
 
 .account-with-icon {
-  align-items: center;
+  height: var(--spacing-l);
+  line-height: var(--spacing-l);
   color: var(--gray-700);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   position: relative;
   padding-right: var(--spacing-xl) !important;
-  padding-left: var(--spacing-m);
   max-width: 180px;
 }
 
@@ -372,8 +373,8 @@ li {
   display: block;
   overflow: hidden;
   text-indent: -10em;
-  width: var(--spacing-xl);
-  height: var(--spacing-xl);
+  width: var(--spacing-l);
+  height: var(--spacing-l);
   position: absolute;
   right: 0;
   top: 0;
