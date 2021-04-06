@@ -199,14 +199,14 @@
     </div>
   `;
   }
-  // function renderRestoreForm () {
-  //   if (!(window.ethInitialized && window.nearInitialized)) return
+  function renderRestoreForm () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
 
-  //   if (window.urlParams.get('new') === 'restore') {
-  //     window.dom.show('restore')
-  //   } else {
-  //     window.dom.hide('restore')
-  //   }
-  // }
+    if (window.urlParams.get('new') === 'restore') {
+      window.dom.show('restore')
+    } else {
+      window.dom.hide('restore')
+    }
+  }
   window.renderers.push(renderRestoreForm);
 </script>
