@@ -1,7 +1,7 @@
 .transfer-form {
   display: flex;
   flex-direction: column;
-  margin-top: var(--spacing-xxl) !important;
+  margin-top: 5rem !important;
   width: 100%;
 }
 
@@ -13,7 +13,7 @@
 }
 
 .transfer-form > header {
-  margin: 0 auto;
+  margin: 0 auto var(--spacing-xxl);
   max-width: 15em;
   text-align: center;
 }
@@ -24,7 +24,6 @@
 }
 
 .account.account--origin {
-  margin-top: var(--spacing-xxl);
   padding: var(--spacing-m);
 }
 
