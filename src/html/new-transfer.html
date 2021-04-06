@@ -20,11 +20,11 @@
 
 <script>
   function renderNewTransferForm() {
-    window.scrollTo({ top: 0 });
     if (!(window.ethInitialized && window.nearInitialized)) return;
 
     if (window.urlParams.get("new") === "transfer") {
       window.dom.show("newTransferForm");
+      window.scrollTo({ top: 0 });
     } else {
       window.dom.hide("newTransferForm");
     }
