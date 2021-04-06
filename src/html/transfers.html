@@ -443,7 +443,7 @@
       });
       // transfers are rendered after page load, so we add one click handler to the
       // body tag to handle clicking each kind of button on a transfer
-      document.querySelector("body").addEventListener("click", (event) => {
+      document.querySelector("body").addEventListener("click", async (event) => {
         const callToAction = event.target.closest(
           "[data-behavior=transferCallToAction]"
         );
@@ -453,6 +453,14 @@
 
         const transferId = callToAction.closest("[data-behavior=transfer]").id;
         window.transfers.act(transferId);
+        callToAction.disabled = true
+        try {
+          await window.transfers.act(transferId)
+        } catch(error) {
+          console.error(error)
+        } finally {
+          callToAction.disabled = false
+        }
       });
       document.querySelector("body").addEventListener("click", (event) => {
         const transferDetailsButton = event.target.closest(
