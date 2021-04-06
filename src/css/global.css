@@ -325,11 +325,22 @@ li {
 }
 
 .account-tag {
-  background-color: var(--light-gray);
+  background-color: var(--gray-200);
   border-radius: 1000em;
+  height: var(--spacing-l);
+  line-height: var(--spacing-l);
+  vertical-align: middle;
+  padding-left: var(--spacing-m);
+}
+
+.account-tag.account-with-icon {
   height: var(--spacing-xl);
   line-height: var(--spacing-xl);
-  vertical-align: middle;
+}
+
+.account-tag.account-with-icon::after {
+  top: 4px;
+  right: 4px;
 }
 
 .account-tag:before {
@@ -344,7 +355,7 @@ li {
   text-overflow: ellipsis;
   white-space: nowrap;
   position: relative;
-  padding-right: var(--spacing-xl) !important;
+  padding-right: var(--spacing-xxl) !important;
   max-width: 180px;
 }
 
@@ -362,10 +373,10 @@ li {
   top: 0;
 }
 .account-with-icon.reverse {
-  line-height: var(--spacing-xl);
-  height: var(--spacing-xl);
+  line-height: var(--spacing-l);
+  height: var(--spacing-l);
   padding-right: unset;
-  padding-left: var(--spacing-xxl) !important;
+  padding-left: var(--spacing-xl) !important;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

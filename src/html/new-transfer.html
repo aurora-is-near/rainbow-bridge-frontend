@@ -6,13 +6,13 @@
 >
   <header>
     <h2>New Transfer</h2>
-    <p>Select your transfer's origin and destination.</p>
+    <p>Confirm your transfer's origin and destination.</p>
   </header>
-  <div class="account">
+  <div class="new-transfer__container">
     <include src="authenticated-accounts.html"></include>
   </div>
   <footer>
-    <button class="cta">Continue</button>
+    <button>Continue</button>
     <button type="button" class="cancel" data-behavior="goHome">Cancel</button>
   </footer>
   <!-- TODO: cancel -->
@@ -31,3 +31,32 @@
   }
   window.renderers.push(renderNewTransferForm);
 </script>
+
+<style>
+  .new-transfer__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--gray-100);
+    padding: var(--spacing-m);
+  }
+
+  @media (min-width: 600px) {
+    .new-transfer__container {
+      border-radius: var(--br-small);
+    }
+  }
+
+  .new-transfer__container .authenticated-account__details {
+    background-color: var(--white);
+  }
+
+  .new-transfer__container .authenticated-account {
+    align-self: stretch;
+    width: 100%;
+  }
+
+  .new-transfer__container .button--swap {
+    margin: var(--spacing-m) 0 0;
+  }
+</style>
