@@ -1,4 +1,4 @@
-<div class="transfers" data-behavior="recent-transfers">
+<div class="transfers" data-behavior="recent-transfers" style="display: none">
   <header class="transfers__header">
     <h1 class="transfers__heading">Your Transfers</h1>
     <p class="subheading">Manage your transfers below or begin a new one.</p>
@@ -7,7 +7,7 @@
     </button>
     <!-- TODO: <nav> -->
   </header>
-  <div class="transfers__container" data-behavior="transfers__container">
+  <div class="transfers__wrapper">
     <div class="button-wrapper">
       <button
         class="button--new-transfer button-variant--secondary full-width"
@@ -16,25 +16,29 @@
         + New Transfer
       </button>
     </div>
-
-    <p style="margin-top: 2em; font-size: small; text-align: center">
-      Need help? Join our
-      <a href="https://t.me/rainbowbridgesupport"> support telegram channel</a>.
-    </p>
-    <div data-behavior="deleteModal" class="modal" style="display: none">
-      <div class="confirm-delete">
+    <div data-behavior="transfers-container"></div>
+  </div>
+  <p style="margin-top: 2em; font-size: small; text-align: center">
+    Need help? Join our
+    <a href="https://t.me/rainbowbridgesupport"> support telegram channel</a>.
+  </p>
+  <div data-behavior="deleteModal" class="modal" style="display: none">
+    <div class="modal__container">
+      <div class="modal-image__container">
         <img src="/img/delete-pink.svg" alt="" />
-        <h4>Remove transfer from list?</h4>
-        <p>
-          Deleted transfers can be restored using the initiating transaction
-          hash/ID.
-        </p>
-        <div class="confirm-delete-buttons">
-          <button data-behavior="confirmDelete" class="cta">
-            Remove Transfer
-          </button>
-          <button data-behavior="closeModal" class="cta">Cancel</button>
-        </div>
+      </div>
+      <h1 class="modal__heading">Remove transfer from list?</h1>
+      <p class="modal__message">
+        Deleted transfers can be restored using the initiating transaction
+        hash/ID.
+      </p>
+      <div class="confirm-delete-buttons">
+        <button data-behavior="confirmDelete" class="full-width">
+          Remove Transfer
+        </button>
+        <button data-behavior="closeModal" class="cancel full-width">
+          Cancel
+        </button>
       </div>
     </div>
   </div>
@@ -66,17 +70,17 @@
       text-decoration: underline;
     }
 
-    .transfers__container .button-wrapper {
+    .transfers__wrapper .button-wrapper {
       padding: 0 var(--spacing-m);
     }
 
     @media (min-width: 600px) {
-      .transfers__container .button-wrapper {
+      .transfers__wrapper .button-wrapper {
         padding: 0;
       }
     }
 
-    .transfers__container .button--new-transfer {
+    .transfers__wrapper .button--new-transfer {
       margin-bottom: var(--spacing-m);
     }
 
@@ -418,14 +422,13 @@
       margin-top: 1.2em;
     }
 
+    .confirm-delete-buttons {
+      margin: var(--spacing-xxl) 0 var(--spacing-m);
+    }
+
     .confirm-delete-buttons :first-child {
       background-color: var(--red-500);
       color: var(--white);
-    }
-
-    .confirm-delete-buttons :last-child {
-      background-color: var(--white);
-      color: var(--gray-600);
     }
   </style>
   <script>
@@ -535,15 +538,16 @@
                   ${transfer.sender}
           </div>
         </div>
+        <div class="transfer__account">
+          <label>To</label>
+          <div class="account-with-icon ${
+            transfer.destinationNetwork
+          }" title="${transfer.recipient}">
+            ${transfer.recipient}
+          </div>
       </div>
-      <div class="transfer__account">
-        <label>To</label>
-        <div class="account-with-icon ${transfer.destinationNetwork}" title="${
-        transfer.recipient
-      }">
-          ${transfer.recipient}
-        </div>
       </div>
+
       <footer class="transfer__footer ${
         openTransferDetails[transfer.id] || transfer.status !== "completed"
           ? "open"
@@ -582,7 +586,7 @@
       }
 
       window.dom
-        .fill("transfers__container")
+        .fill("transfers-container")
         .with([
           ...transfers.map((t) => renderTransfer(t, { inProgress: true })),
         ]);
