@@ -74,7 +74,7 @@
       <p data-behavior="signInstruction" style="display:none">
         Please confirm the transaction in your connected Ethereum wallet...
       </p>
-      <button disabled data-behavior="erc20Submit" class="cta">
+      <button disabled data-behavior="erc20Submit" class="full-width">
         Approve transfer
       </button>
       <button id="erc20Cancel" type="button" class="cancel" data-behavior="goHome">
@@ -144,25 +144,25 @@
 </div>
 
 <script>
-  window.addEventListener('load', function handleSelectErc20Events () {
-    const amount = window.dom.find('erc20Amount')
-    const select = window.dom.find('erc20SelectButton')
-    const submit = window.dom.find('erc20Submit')
-    const cancel = document.getElementById('erc20Cancel')
+  window.addEventListener("load", function handleSelectErc20Events() {
+    const amount = window.dom.find("erc20Amount");
+    const select = window.dom.find("erc20SelectButton");
+    const submit = window.dom.find("erc20Submit");
+    const cancel = document.getElementById("erc20Cancel");
 
-    function disableForm () {
-      amount.disabled = true
-      select.disabled = true
-      submit.disabled = true
-      cancel.disabled = true
+    function disableForm() {
+      amount.disabled = true;
+      select.disabled = true;
+      submit.disabled = true;
+      cancel.disabled = true;
       window.dom.show('signInstruction')
     }
 
-    function enableForm () {
-      amount.disabled = false
-      select.disabled = false
-      submit.disabled = false
-      cancel.disabled = false
+    function enableForm() {
+      amount.disabled = false;
+      select.disabled = false;
+      submit.disabled = false;
+      cancel.disabled = false;
       window.dom.hide('signInstruction')
     }
 
