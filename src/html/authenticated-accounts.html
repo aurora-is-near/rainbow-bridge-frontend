@@ -26,6 +26,8 @@
     <button
       class="button-size--small button-variant--secondary"
       data-behavior="disconnectEthereum"
+      style="display: none"
+      type="button"
     >
       Disconnect
     </button>
@@ -54,6 +56,8 @@
     <button
       class="button-size--small button-variant--secondary"
       data-behavior="disconnectNear"
+      style="display: none"
+      type="button"
     >
       Disconnect
     </button>
@@ -162,9 +166,6 @@
   });
 
   window.renderers.push(() => {
-    window.dom.hide("disconnectEthereum");
-    window.dom.hide("disconnectNear");
-
     if (window.ethInitialized) {
       window.dom.hide("authEthereum");
       window.dom.show("disconnectEthereum");
@@ -173,6 +174,9 @@
         .with(
           `<span class="connected-account" title="${window.ethUserAddress}">${window.ethUserAddress}</span>`
         );
+    } else {
+      window.dom.show("authEthereum");
+      window.dom.hide("disconnectEthereum");
     }
     if (window.nearInitialized) {
       window.dom.hide("authNear");
@@ -182,6 +186,9 @@
         .with(
           `<span class="connected-account" title="${window.nearUserAddress}">${window.nearUserAddress}</span>`
         );
+    } else {
+      window.dom.show("authNear");
+      window.dom.hide("disconnectNear");
     }
   });
 </script>
