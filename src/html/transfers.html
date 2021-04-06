@@ -452,7 +452,6 @@
         if (!callToAction) return;
 
         const transferId = callToAction.closest("[data-behavior=transfer]").id;
-        window.transfers.act(transferId);
         callToAction.disabled = true
         try {
           await window.transfers.act(transferId)
