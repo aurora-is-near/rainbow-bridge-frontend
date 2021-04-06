@@ -68,6 +68,14 @@
   display: block;
 }
 
+.modal-image__container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  width: 100%;
+}
+
 .modal__heading {
   font-size: var(--fs-heading-4);
   text-align: center;
