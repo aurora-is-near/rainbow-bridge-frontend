@@ -18,7 +18,7 @@
   text-align: center;
 }
 .transfer-form .account {
-  background-color: var(--shadow);
+  background-color: var(--gray-100);
   margin: 0 auto;
   width: 100%;
 }
@@ -95,7 +95,7 @@
   height: 56px;
 }
 .transfer-form .inputs > * {
-  background-color: var(--bg);
+  background-color: var(--white);
   border: none;
   box-shadow: none;
   padding: 0.75rem 1rem;
@@ -123,7 +123,7 @@
 }
 /* add "selected" class after user selects an ERC20 token */
 .transfer-form .inputs button:not(.selected) {
-  color: var(--blue);
+  color: var(--blue-500);
 }
 .transfer-form .inputs input {
   border-radius: 0 0.5rem 0.5rem 0;
@@ -131,7 +131,7 @@
   font-weight: 900;
 }
 .transfer-form .inputs *:disabled {
-  color: var(--gray);
+  color: var(--gray-600);
   cursor: not-allowed;
 }
 .transfer-form .inputs input[type="number"]::-webkit-inner-spin-button,

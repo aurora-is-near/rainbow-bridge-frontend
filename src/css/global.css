@@ -94,24 +94,6 @@
   --blue-600: #005497;
   --blue-700: #003560;
   --blue-800: #001729;
-
-  --gray: #79726c;
-  --red: #ff585d;
-  --yellow: #e78513;
-  --blue: #0072ce;
-  --purple: #627eea;
-  --green: rgb(85, 188, 143);
-  --bg: var(--white);
-  --fg: var(--gray);
-  --fg-bold: var(--black);
-  --light-gray: #f0f0f0;
-  --shadow: #fafafa;
-  --error: #ff585d;
-  --success: var(--green);
-  --primary: var(--blue);
-  --secondary: var(--red);
-
-  --space: 1em;
 }
 
 * {
@@ -283,7 +265,7 @@ select {
 
 input.error,
 select.error {
-  border-color: var(--red);
+  border-color: var(--red-500);
 }
 
 .errorMessage {
@@ -310,7 +292,7 @@ input:active {
 code {
   box-shadow: 0 0 3px var(--light-gray) inset;
   border-radius: 5px;
-  color: var(--gray);
+  color: var(--gray-600);
   padding: 0 0.25em;
 }
 
