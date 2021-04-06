@@ -1,3 +1,13 @@
+## [3.3.4](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.3...v3.3.4) (2021-04-06)
+
+
+### Bug Fixes
+
+* center bridge it! button ([36253af](https://github.com/near/rainbow-bridge-frontend/commit/36253afd6301cf804812cfe3725508a7ba1e7cb6))
+* fix auto scroll and activate restore ([1518374](https://github.com/near/rainbow-bridge-frontend/commit/151837439e8319c174aa75447c22abc5146c6b34))
+* fix banner warning text ([52f6fbe](https://github.com/near/rainbow-bridge-frontend/commit/52f6fbe7357c5b75bd27aae3742222350188f717))
+* fix network dropdown display when mainnet ([bd67401](https://github.com/near/rainbow-bridge-frontend/commit/bd674017597ba46906c738962867c127299acfb5))
+
 ## [3.3.3](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.2...v3.3.3) (2021-04-02)
 
 
