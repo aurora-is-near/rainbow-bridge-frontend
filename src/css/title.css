@@ -7,11 +7,11 @@
 }
 
 .title > svg {
-  margin: calc(0.5 * var(--space)) auto;
+  margin: calc(0.5 * var(--spacing-m)) auto;
 }
 
 .title > small {
-  color: var(--gray);
+  color: var(--gray-600);
   font-size: 0.5em;
   margin-bottom: 0.5em;
   font-weight: 400;
