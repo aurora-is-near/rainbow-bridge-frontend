@@ -1,3 +1,10 @@
+## [3.3.6](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.5...v3.3.6) (2021-04-07)
+
+
+### Bug Fixes
+
+* update client addr, delete walletconnect on disconnect ([92d81ce](https://github.com/near/rainbow-bridge-frontend/commit/92d81ce7292b4235c6db4e8b3508846e59acebe0))
+
 ## [3.3.5](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.4...v3.3.5) (2021-04-07)
 
 
