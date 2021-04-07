@@ -87,6 +87,7 @@ export function init () {
 
   onClick('disconnectEthereum', async function disconnectEthereum (e) {
     await window.web3Modal.clearCachedProvider()
+    localStorage.removeItem('walletconnect')
     setTimeout(() => window.location.reload())
   })
 

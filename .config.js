@@ -27,7 +27,7 @@ module.exports = {
   },
   ropsten_development: {
     // library settings
-    ethClientAddress: '0x4018820687bfbf222fabd2ee014f6dc325c64084',
+    ethClientAddress: '0xb289c6e6c98644dc9f6a03c044564bc8558b6087',
     ethNearOnEthClientAbiText: readFileSync('./abi/nearOnEthClient.abi'),
     ethEd25519Address: '0xe729ee84db978d7971bbc5079fd32bb0ae8d1856',
     ethErc20AbiText: readFileSync('./abi/erc20.abi'),
