@@ -1,3 +1,10 @@
+## [3.3.7](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.6...v3.3.7) (2021-04-07)
+
+
+### Bug Fixes
+
+* fix amount input field step/min/max rounding ([a236f7d](https://github.com/near/rainbow-bridge-frontend/commit/a236f7d7d10d4debba015819c740cae85c4e6257))
+
 ## [3.3.6](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.5...v3.3.6) (2021-04-07)
 
 
