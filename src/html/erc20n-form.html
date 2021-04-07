@@ -313,17 +313,15 @@
     if (token.nep141.balance) amount.disabled = false;
     else amount.disabled = true;
 
-    amount.step = 10 ** -token.decimals;
+    amount.step = Number(Decimal(10).pow(-token.decimals).toFixed())
     // NOTE: the html input field makes the comparison on rounded numbers
     // So the max check is not precise for very small decimals.
     // For example if the balance is 500003.0100900000011, then the input field will allow a max of
     // only 500003.01009
-    (amount.max = Number(
-      new window.Decimal(token.nep141.balance)
-        .times(10 ** -token.decimals)
-        .toFixed()
-    )),
-      (amount.min = 10 ** -token.decimals);
+    amount.max = Number(
+      new window.Decimal(token.nep141.balance).times(Decimal(10).pow(-token.decimals)).toFixed()
+    )
+    amount.min = Number(Decimal(10).pow(-token.decimals).toFixed())
     window.dom.show("erc20nInfo", "flex");
     amount.focus();
   }
