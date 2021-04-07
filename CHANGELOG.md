@@ -1,3 +1,13 @@
+## [3.3.5](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.4...v3.3.5) (2021-04-07)
+
+
+### Bug Fixes
+
+* fixes after rebase ([d03d4d3](https://github.com/near/rainbow-bridge-frontend/commit/d03d4d32d00c7a64c3bcac451db1a7f13512191e))
+* prevent user from double clicking transfer action ([186bdf4](https://github.com/near/rainbow-bridge-frontend/commit/186bdf4bf53ff45ec3cecc51f71fb3bc3c246acb))
+* remove duplicate act() call ([1befd94](https://github.com/near/rainbow-bridge-frontend/commit/1befd943766a2e118b7342e766e4a7ff8799d8f6))
+* upgrade web3 and walletConnect to fix getTransactionReceipt().status ([8b96bec](https://github.com/near/rainbow-bridge-frontend/commit/8b96bec1f2ab82b9ade7dea0eb390d5a295e9906))
+
 ## [3.3.4](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.3...v3.3.4) (2021-04-06)
 
 
