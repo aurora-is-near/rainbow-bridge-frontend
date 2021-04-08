@@ -96,6 +96,12 @@ export function init () {
     setTimeout(() => window.location.reload())
   })
 
+  onClick('newRecovery', function startTransferRecovery () {
+    if (!(window.ethInitialized && window.nearInitialized)) return
+    window.urlParams.set({ new: 'restore' })
+    render()
+  })
+
   // avoid page refreshes when submitting "get" forms
   document.querySelectorAll('form[method="get"]').forEach(form => {
     form.onsubmit = e => {

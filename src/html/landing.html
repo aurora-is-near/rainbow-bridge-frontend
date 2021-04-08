@@ -24,15 +24,18 @@
     <form method="get" class="panel">
       <include src="authenticated-accounts.html"></include>
       <div class="cta-container">
-        <p class="create-account">
-          Need a NEAR account? Create one
-          <a href="https://faucet.paras.id/">here</a>.
-        </p>
         <button data-behavior="landingSubmit" class="full-width">
           Begin new transfer
         </button>
+        <button type="button" class="link button--missing-transfer" data-behavior="newRecovery">
+          Restore transfer
+        </button>
       </div>
     </form>
+    <p class="create-account">
+      Need a NEAR account? Create one
+      <a target="_blank" rel="noopener noreferrer" href="https://faucet.paras.id/">here</a>.
+    </p>
   </div>
 </div>
 <style>
@@ -55,7 +58,15 @@
       0px 3.39155px 8.04662px rgba(0, 0, 0, 0.0201946),
       0px 1.4113px 3.34838px rgba(0, 0, 0, 0.0140573);
     margin: 80px var(--spacing-m);
+    margin-bottom: 25px;
     padding: var(--spacing-m);
+  }
+  .create-account {
+    font-size: var(--fs-small);
+    border: 3px solid var(--gray-200);
+    border-radius: var(--br-base);
+    padding: var(--spacing-m);
+    margin: 0 var(--spacing-m);
   }
   @media (min-width: 928px) {
     .landing {
@@ -67,13 +78,19 @@
 
     .panel {
       margin: 80px auto;
+      margin-bottom: 25px;
+    }
+    .create-account {
+      margin: 0;
     }
   }
   .cta-container {
     margin-top: var(--spacing-xxl);
   }
-  .create-account {
-    font-size: var(--fs-micro);
+  .cta-container .button--missing-transfer {
+    font-size: var(--fs-body);
+    font-weight: var(--fw-regular);
+    margin-top: 0.5em;
   }
 </style>
 <script>
