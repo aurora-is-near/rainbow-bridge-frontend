@@ -1,20 +1,18 @@
 <form data-behavior="bridgeErc20Form" class="container" style="display:none">
   <h1 style="background: url(img/unbridged.svg) top center no-repeat; font-size: 1.5em; padding: 12rem 0 2.5rem">
-    Token not yet bridged
+    Setup <strong data-behavior="erc20Name"></strong> on NEAR
   </h1>
   <p>
     The <strong data-behavior="erc20Name"></strong>
     <a
       href="https://eips.ethereum.org/EIPS/eip-20"
-      rel="nofollow"
+      target="_blank" rel="noopener noreferrer"
     >ERC20</a>
     token has not yet been bridged.
   </p>
   <p>
-    The
-    <a href="https://github.com/near/rainbow-token-connector" target="_blank">Fungible Token Connector</a>
-    allows sending any ERC20 token to NEAR, but requires an initial one-time deploy of a "BridgeToken"
-    <a href="https://docs.near.org/docs/roles/developer/contracts/intro#get-started" target="_blank">smart contract</a>.
+    This is the first time the <strong data-behavior="erc20Name"></strong> token is being transferred to NEAR.
+    This requires a small, one-time setup fee of about 3$NEAR.
   </p>
   <button style="margin-top: 3em">
     Bridge it!
@@ -22,10 +20,6 @@
   <button type="button" class="cancel" data-behavior="bridgeErc20Cancel">
     Cancel
   </button>
-  <p style="font-size: 0.75em; margin-top: 2em">
-    Deploying a new "Bridge Token" smart contract requires ~3 NEAR to cover
-    <a href="https://docs.near.org/docs/concepts/storage" target="_blank">storage fees</a>.
-  </p>
 </form>
 
 <script>
