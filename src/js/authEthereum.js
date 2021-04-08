@@ -35,14 +35,20 @@ window.web3Modal = new Web3Modal({
 
 async function login () {
   const provider = await window.web3Modal.connect()
-  setEthProvider(provider)
 
   if (provider.isMetaMask) {
     window.ethUserAddress = provider.selectedAddress
     window.connectedEthNetwork = chainIdToEthNetwork[parseInt(provider.chainId)]
+    setEthProvider(provider)
   } else {
     window.ethUserAddress = provider.accounts[0]
     window.connectedEthNetwork = chainIdToEthNetwork[provider.chainId]
+    // The wallet connect provider returned by the modal.connect() gives random invalid results for receipt.status
+    // It affects receipts queried with getTransactionReceipt() and getBlock() when creating proofs.
+    // So use the infura url directly
+    setEthProvider(
+      `https://${process.env.ethNetworkId === 'main' ? 'mainnet' : process.env.ethNetworkId}.infura.io/v3/${INFURA_ID}`
+    )
   }
   provider.on('accountsChanged', (accounts) => {
     window.ethUserAddress = accounts[0]
