@@ -69,6 +69,13 @@ async function login () {
 }
 
 onClick('authEthereum', login)
+onClick('switchEthWallet', async () => {
+  window.ethInitialized = false
+  window.dom.hide('unsupportedNetworkModal')
+  await window.web3Modal.clearCachedProvider()
+  localStorage.removeItem('walletconnect')
+  login()
+})
 
 // on page load, check if user has already signed in via MetaMask
 if (window.web3Modal.cachedProvider) {

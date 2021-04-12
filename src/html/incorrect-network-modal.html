@@ -10,6 +10,12 @@
     <h1 class="modal__heading">Incorrect Wallet Network</h1>
     <div data-behavior="modalMessage" class="modal__message"></div>
     <p class="modal__cta">Change your active wallet network to proceed.</p>
+    <button
+      class="button-variant--secondary button-size--small"
+      data-behavior="switchEthWallet"
+    >
+      Switch wallet
+    </button>
   </div>
 </div>
 
@@ -23,7 +29,8 @@
       // Disable scroll until correct eth network selected
       document.body.style.overflow = "hidden";
       window.dom.fill("modalMessage").with({
-        innerHTML: `The NEAR Testnet ↔︎ ${process.env.ethNetworkId} bridge requires an Ethereum wallet connected to ${process.env.ethNetworkId}.`,
+        innerHTML: `The ${window.bridgeName} bridge requires an Ethereum wallet connected to
+          ${process.env.ethNetworkId === 'main' ? 'mainnet' : process.env.ethNetworkId}.`,
       });
       window.dom.show("unsupportedNetworkModal");
     }
