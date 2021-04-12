@@ -42,9 +42,9 @@ module.exports = {
 
     // frontend settings
     featuredErc20s: JSON.stringify([
-      '0x722dd3F80BAC40c951b51BdD28Dd19d435762180', // TST: https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180
-      '0xFab46E002BbF0b4509813474841E0716E6730136', // FAU: https://ropsten.etherscan.io/token/0xfab46e002bbf0b4509813474841e0716e6730136
-      '0xbF4D811e6891eD044D245cafcC4CAa96c969204D', // USDT: https://ropsten.etherscan.io/token/0xbf4d811e6891ed044d245cafcc4caa96c969204d
+      '0x722dd3f80bac40c951b51bdd28dd19d435762180', // TST: https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180
+      '0xfab46e002bbf0b4509813474841e0716e6730136', // FAU: https://ropsten.etherscan.io/token/0xfab46e002bbf0b4509813474841e0716e6730136
+      '0xbf4d811e6891ed044d245cafcc4caa96c969204d', // USDT: https://ropsten.etherscan.io/token/0xbf4d811e6891ed044d245cafcc4caa96c969204d
     ]),
     nearNodeUrl: 'https://rpc.testnet.near.org',
     nearWalletUrl: 'https://wallet.testnet.near.org',
