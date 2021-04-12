@@ -617,12 +617,13 @@
       if (!(window.ethInitialized && window.nearInitialized)) return;
 
       const transfers = await window.transfers.get();
-      const params = Object.keys(window.urlParams.get());
+      const currentParams = Object.keys(window.urlParams.get());
+      const allParams = ['new', 'erc20', 'erc20n']
 
-      if (transfers.length && !params.length) {
-        window.dom.show("recent-transfers");
-      } else {
+      if (allParams.some(param => currentParams.includes(param) )) {
         window.dom.hide("recent-transfers");
+      } else {
+        window.dom.show("recent-transfers");
       }
     }
 
