@@ -166,7 +166,12 @@
       window.dom.hide('signInstruction')
     }
 
-    select.onclick = () => window.dom.show("erc20Modal");
+    select.onclick = () => {
+      window.urlParams.set({ erc20: '' })
+      window.dom.find("erc20FreeForm").value = ''
+      erc20Address = ''
+      window.dom.show("erc20Modal")
+    }
 
     amount.onkeyup = function enableOrDisable(e) {
       const balance = Number(window.dom.find("erc20Balance").innerHTML);
