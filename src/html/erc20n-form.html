@@ -161,10 +161,13 @@
     }
 
     select.onclick = () => {
-      window.dom.show('erc20nModal')
       window.urlParams.set({ erc20n: '' })
       window.dom.find('erc20nFreeForm').value = ''
+      window.dom.find("erc20nFreeForm").classList.remove("error");
       erc20nAddress = ''
+      window.dom.fill("erc20nAddressError").with("");
+      window.dom.hide("erc20nAddressError");
+      window.dom.show('erc20nModal')
     }
 
     amount.onkeyup = function enableOrDisableErc20n(e) {

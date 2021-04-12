@@ -169,7 +169,10 @@
     select.onclick = () => {
       window.urlParams.set({ erc20: '' })
       window.dom.find("erc20FreeForm").value = ''
+      window.dom.find("erc20FreeForm").classList.remove("error");
       erc20Address = ''
+      window.dom.fill("erc20AddressError").with("");
+      window.dom.hide("erc20AddressError");
       window.dom.show("erc20Modal")
     }
 
