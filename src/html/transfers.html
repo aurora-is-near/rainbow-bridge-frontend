@@ -522,7 +522,8 @@
               `<button class="button--cta button-size--small" data-behavior="transferCallToAction">${transfer.callToAction}</button>`
           )}
           ${window.dom.toString(
-            (transfer.status === "completed" || !transfer.completedStep || // transfer completed or not yet approved
+            (transfer.status === "completed" || // transfer completed
+             (transfer.type === '@near-eth/nep141-erc20/natural-erc20/sendToNear' && !transfer.completedStep) || // transfer from Ethereum not yet approved
              (transfer.completedStep === 'approve-natural-erc20-to-nep141' && transfer.status === 'action-needed') || // approved but not transfered (not yet locked)
              (transfer.completedStep === 'approve-natural-erc20-to-nep141' && transfer.status === 'failed')) && // approved but not transfered (lock failed)
               `<button class="button--delete button-size--small" data-behavior="deleteTransfer"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
