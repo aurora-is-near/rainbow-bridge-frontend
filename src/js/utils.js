@@ -2,6 +2,8 @@ import { bridgedNep141, naturalErc20 } from '@near-eth/nep141-erc20'
 
 import { Decimal } from 'decimal.js'
 
+const CUSTOM_ERC20_STORAGE = 'custom-erc20s'
+
 export function formatLargeNum (n, decimals = 18) {
   // decimals defaults to 18 for old transfers in state that didn't record transfer.decimals
   if (!n) {
@@ -23,9 +25,13 @@ export async function getErc20Data (address) {
   return { ...erc20, allowance, nep141 }
 }
 
-export async function getFeaturedErc20s () {
+export async function getAllErc20s () {
+  const featuredErc20s = JSON.parse(process.env.featuredErc20s)
+  let customErc20s = JSON.parse(localStorage.getItem(CUSTOM_ERC20_STORAGE))
+  if (customErc20s === null) { customErc20s = [] }
+
   return (await Promise.all(
-    JSON.parse(process.env.featuredErc20s).map(getErc20Data)
+    [...featuredErc20s, ...customErc20s].map(getErc20Data)
   )).reduce(
     (acc, token) => {
       acc[token.address] = token
@@ -33,6 +39,18 @@ export async function getFeaturedErc20s () {
     },
     {}
   )
+}
+
+export function rememberCustomErc20 (erc20Address) {
+  erc20Address = erc20Address.toLowerCase()
+  if (process.env.featuredErc20s.includes(erc20Address)) return
+
+  const customErc20s = JSON.parse(localStorage.getItem(CUSTOM_ERC20_STORAGE))
+  if (customErc20s === null) {
+    localStorage.setItem(CUSTOM_ERC20_STORAGE, JSON.stringify([erc20Address]))
+  } else if (!customErc20s.includes(erc20Address)) {
+    localStorage.setItem(CUSTOM_ERC20_STORAGE, JSON.stringify([...customErc20s, erc20Address]))
+  }
 }
 
 export const chainIdToEthNetwork = {
