@@ -8,6 +8,7 @@ import {
 import render from './render'
 import { onClick } from './domHelpers'
 import { chainIdToEthNetwork } from './utils'
+import * as urlParams from './urlParams'
 
 // SWAP IN YOUR OWN INFURA_ID FROM https://infura.io/dashboard/ethereum
 const INFURA_ID = '9c91979e95cb4ef8a61eb029b4217a1a'
@@ -71,10 +72,15 @@ async function login () {
 onClick('authEthereum', login)
 onClick('switchEthWallet', async () => {
   window.ethInitialized = false
-  window.dom.hide('unsupportedNetworkModal')
   await window.web3Modal.clearCachedProvider()
   localStorage.removeItem('walletconnect')
-  login()
+  window.dom.hide('unsupportedNetworkModal')
+  try {
+    await login()
+  } catch (error) {
+    // user closed modal without selecting wallet
+    window.location.reload()
+  }
 })
 
 // on page load, check if user has already signed in via MetaMask
