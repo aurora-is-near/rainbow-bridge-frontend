@@ -246,7 +246,8 @@ button[disabled] {
   cursor: not-allowed;
   transform: none;
 }
-[disabled] .cancel, .cancel[disabled] {
+[disabled] .cancel,
+.cancel[disabled] {
   color: gray;
   cursor: not-allowed;
   background: none;
@@ -324,6 +325,15 @@ li {
   margin: 0 auto;
   text-align: center;
   padding: 1em;
+}
+
+.beta-tag {
+  color: var(--blue-500);
+  border: 1px solid var(--blue-500);
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-regular);
 }
 
 .concept-ethereum {

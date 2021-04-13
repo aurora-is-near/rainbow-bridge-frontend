@@ -1,9 +1,6 @@
 <div class="landing" data-behavior="landing">
-  <h1 class="title">
-    <img
-      src="/img/rainbow-bridge.svg"
-      style="width: 2.3em; display: inline; margin-top: 2em"
-    />
+  <h1 class="logo--landing-page">
+    <img class="rainbow-icon" src="/img/rainbow-bridge.svg" />
     <small>
       ETH
       <img
@@ -13,8 +10,11 @@
       />
       NEAR
     </small>
-    <div>Rainbow</div>
-    <div>Bridge</div>
+    <div class="logo-text--primary">
+      Rainbow <br />
+      Bridge
+      <span class="beta-tag">Beta</span>
+    </div>
   </h1>
   <div class="content-wrapper">
     <p class="landing-blurb">
@@ -27,14 +27,23 @@
         <button data-behavior="landingSubmit" class="full-width">
           Begin new transfer
         </button>
-        <button type="button" class="link button--missing-transfer" data-behavior="newRecovery">
+        <button
+          type="button"
+          class="link button--missing-transfer"
+          data-behavior="newRecovery"
+        >
           Restore transfer
         </button>
       </div>
     </form>
     <p class="create-account">
       Need a NEAR account? Create one
-      <a target="_blank" rel="noopener noreferrer" href="https://faucet.paras.id/">here</a>.
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://faucet.paras.id/"
+        >here</a
+      >.
     </p>
   </div>
 </div>
