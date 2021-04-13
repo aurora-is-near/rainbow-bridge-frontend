@@ -1,14 +1,15 @@
 <nav class="site-nav">
   <div class="site-nav__wrapper">
-    <a
-    class="navLogo"
-    data-behavior="navLogo"
-    href="/index.html"
-    title="Home"
-    ><span>Home</a>
+    <a class="navLogo" data-behavior="navLogo" href="/index.html" title="Home"
+      >Home<span class="beta-tag">Beta</span></a
+    >
 
     <div data-behavior="bridgesDropdown" class="bridges-nav">
-      <div id="bridge-dropdown" class="dropdown bridge-dropdown" aria-live="polite">
+      <div
+        id="bridge-dropdown"
+        class="dropdown bridge-dropdown"
+        aria-live="polite"
+      >
         <button aria-controls="bridge-dropdown" class="dropdown-trigger">
           <span class="bridge-indicator" style="background-color: #29b6af">
             <span class="visually-hidden">Connected</span>
@@ -25,31 +26,41 @@
             <span class="bridge-indicator" style="background-color: #29b6af">
               <span class="visually-hidden">Connected</span>
             </span>
-            <span> NEAR Mainnet <span class="arrow-divider">↔︎</span> Ethereum Mainnet</span>
+            <span>
+              NEAR Mainnet <span class="arrow-divider">↔︎</span> Ethereum
+              Mainnet</span
+            >
           </button>
           <div class="testnet-options">
             <button
-            aria-controls="bridge-dropdown"
-            class="dropdown-list__item"
-            onclick="location.href='https://ropsten.bridgetonear.org';"
-          >
-            <span class="bridge-indicator" style="background-color: #ff4a8d">
-              <span class="visually-hidden">Connected</span>
-            </span>
-            <span> NEAR Testnet <span class="arrow-divider">↔︎</span> Ethereum Ropsten </span>
-          </button>
+              aria-controls="bridge-dropdown"
+              class="dropdown-list__item"
+              onclick="location.href='https://ropsten.bridgetonear.org';"
+            >
+              <span class="bridge-indicator" style="background-color: #ff4a8d">
+                <span class="visually-hidden">Connected</span>
+              </span>
+              <span>
+                NEAR Testnet <span class="arrow-divider">↔︎</span> Ethereum
+                Ropsten
+              </span>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="site-nav__wrapper">
-  <div
+    <div
       data-behavior="accountsDropdown"
       class="accounts-nav"
       style="display: none"
     >
-      <div id="accounts-dropdown" class="dropdown account-dropdown" aria-live="polite">
+      <div
+        id="accounts-dropdown"
+        class="dropdown account-dropdown"
+        aria-live="polite"
+      >
         <button aria-controls="accounts-dropdown" class="dropdown-trigger">
           <img
             data-behavior="ethConnected"
@@ -66,7 +77,10 @@
               class="account-with-icon reverse ethereum"
               data-behavior="ethUser"
             ></span>
-            <button class="button-size--small button-variant--secondary" data-behavior="disconnectEthereum">
+            <button
+              class="button-size--small button-variant--secondary"
+              data-behavior="disconnectEthereum"
+            >
               Disconnect
             </button>
           </div>
@@ -75,7 +89,10 @@
               class="account-with-icon reverse near"
               data-behavior="nearUser"
             ></span>
-            <button class="button-size--small button-variant--secondary" data-behavior="disconnectNear">
+            <button
+              class="button-size--small button-variant--secondary"
+              data-behavior="disconnectNear"
+            >
               Disconnect
             </button>
           </div>
@@ -111,6 +128,16 @@
     display: block;
     margin-right: var(--spacing-xxl);
     text-indent: -999px;
+    position: relative;
+    padding-right: 104px;
+  }
+
+  .navLogo .beta-tag {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    text-indent: 0;
+    transform: translateY(-50%);
   }
 
   .dropdown {
@@ -197,7 +224,7 @@
     background-color: transparent;
   }
 
-  button.dropdown-list__item  {
+  button.dropdown-list__item {
     border: none;
     background-color: transparent;
     color: var(--gray-700);
