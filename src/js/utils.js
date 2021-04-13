@@ -31,7 +31,7 @@ export async function getAllErc20s () {
   if (customErc20s === null) { customErc20s = [] }
 
   return (await Promise.all(
-    [...featuredErc20s, ...customErc20s].map(getErc20Data)
+    [...customErc20s, ...featuredErc20s].map(getErc20Data)
   )).reduce(
     (acc, token) => {
       acc[token.address] = token
