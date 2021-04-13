@@ -1,3 +1,11 @@
+## [3.4.1](https://github.com/near/rainbow-bridge-frontend/compare/v3.4.0...v3.4.1) (2021-04-13)
+
+
+### Bug Fixes
+
+* handle close modal during switch wallet, center button ([39ade05](https://github.com/near/rainbow-bridge-frontend/commit/39ade05bbd3eb9bd1b6ae537e80bf25123b52eda))
+* switch wallet from unsuported network ([98b3b88](https://github.com/near/rainbow-bridge-frontend/commit/98b3b888b299ca8932aef20083fedc758694651b))
+
 # [3.4.0](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.7...v3.4.0) (2021-04-13)
 
 
