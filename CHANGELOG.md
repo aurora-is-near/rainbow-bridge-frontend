@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.7...v3.4.0) (2021-04-13)
+
+
+### Features
+
+* remember custom erc20 addresses, tokens with balance on top ([92111b9](https://github.com/near/rainbow-bridge-frontend/commit/92111b9e54472a89157284c722c0fdc3461318b2))
+
 ## [3.3.7](https://github.com/near/rainbow-bridge-frontend/compare/v3.3.6...v3.3.7) (2021-04-07)
 
 
