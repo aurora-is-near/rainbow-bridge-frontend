@@ -521,10 +521,7 @@
               `<button class="button--cta button-size--small" data-behavior="transferCallToAction">${transfer.callToAction}</button>`
           )}
           ${window.dom.toString(
-            (transfer.status === "completed" || // transfer completed
-             (transfer.type === '@near-eth/nep141-erc20/natural-erc20/sendToNear' && !transfer.completedStep) || // transfer from Ethereum not yet approved
-             (transfer.completedStep === 'approve-natural-erc20-to-nep141' && transfer.status === 'action-needed') || // approved but not transfered (not yet locked)
-             (transfer.completedStep === 'approve-natural-erc20-to-nep141' && transfer.status === 'failed')) && // approved but not transfered (lock failed)
+            transfer.status === "completed" &&
               `<button class="button--delete button-size--small" data-behavior="deleteTransfer"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2 4H3.33333H14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M5.3335 4.00004V2.66671C5.3335 2.31309 5.47397 1.97395 5.72402 1.7239C5.97407 1.47385 6.31321 1.33337 6.66683 1.33337H9.3335C9.68712 1.33337 10.0263 1.47385 10.2763 1.7239C10.5264 1.97395 10.6668 2.31309 10.6668 2.66671V4.00004M12.6668 4.00004V13.3334C12.6668 13.687 12.5264 14.0261 12.2763 14.2762C12.0263 14.5262 11.6871 14.6667 11.3335 14.6667H4.66683C4.31321 14.6667 3.97407 14.5262 3.72402 14.2762C3.47397 14.0261 3.3335 13.687 3.3335 13.3334V4.00004H12.6668Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -618,9 +615,10 @@
 
       const transfers = await window.transfers.get();
       const currentParams = Object.keys(window.urlParams.get());
-      const allParams = ['new', 'erc20', 'erc20n']
+      const appUrlPaths = ['new', 'erc20', 'erc20n']
 
-      if (allParams.some(param => currentParams.includes(param) )) {
+      // Hide transfers if one of the appUrlPaths is included in the current url
+      if (appUrlPaths.some(param => currentParams.includes(param) )) {
         window.dom.hide("recent-transfers");
       } else {
         window.dom.show("recent-transfers");
