@@ -168,14 +168,18 @@
       }
       window.dom.show("claimModal")
     })
-    window.dom.onClick('claimNearAccount', async function renderClaimModal () {
+
+    const claimButton = window.dom.find("claimNearAccount");
+    claimButton.onclick = async () => {
       window.dom.fill('claimMessage').with('To claim, please sign the message when prompted on your Ethereum wallet...');
       try{
+        claimButton.disabled = true
         await window.faucetUtils.claim()
       } catch(error) {
         window.dom.fill('claimMessage').with(error.message)
+        claimButton.disabled = false
       }
-    })
+    }
   })
 
   async function renderLanding() {
