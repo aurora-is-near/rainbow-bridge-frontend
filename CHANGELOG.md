@@ -1,3 +1,10 @@
+## [3.4.3](https://github.com/near/rainbow-bridge-frontend/compare/v3.4.2...v3.4.3) (2021-04-14)
+
+
+### Bug Fixes
+
+* hide transfers on landing if no transfers ([7abacdb](https://github.com/near/rainbow-bridge-frontend/commit/7abacdb0ee6ab69056c22814bf9a2c0ac10f1cd3))
+
 ## [3.4.2](https://github.com/near/rainbow-bridge-frontend/compare/v3.4.1...v3.4.2) (2021-04-14)
 
 
