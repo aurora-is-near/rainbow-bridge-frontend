@@ -41,6 +41,8 @@ window.addEventListener('load', function cleanUrlParams () {
   ) {
     window.urlParams.clear()
   }
+  // If a new token was bridged it is safe to clear transactionHashes
+  if (params.includes('bridging')) { window.urlParams.clear() }
 })
 
 render()
