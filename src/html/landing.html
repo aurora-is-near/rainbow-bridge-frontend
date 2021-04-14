@@ -39,12 +39,65 @@
     <p class="create-account">
       Need a NEAR account? Create one
       <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://faucet.paras.id/"
-        >here</a
-      >.
+        data-behavior="openClaimModal"
+        style="cursor: pointer"
+      >here</a>.
     </p>
+    <div data-behavior="claimModal" class="modal" style="display: none">
+      <div class="modal__container">
+        <nav class="modal__nav">
+          <button
+            type="button"
+            class="modal__nav__button--close"
+            data-behavior="closeModal"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18 6L6 18"
+                stroke="#A2A2A8"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M6 6L18 18"
+                stroke="#A2A2A8"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span class="visually-hidden">close</span>
+          </button>
+        </nav>
+        <h1 class="modal__heading">Claim your NEAR account</h1>
+        <p class="modal__message">
+          Create a free NEAR account by showing that you have at least 0.05 ETH.
+          Learn more about the Paras Faucet
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://faucet.paras.id/"
+            >here</a
+          >.
+        </p>
+        <p data-behavior="claimMessage"></p>
+        <div class="">
+          <button data-behavior="authEthereum" class="full-width">
+            Connect Ethereum Wallet
+          </button>
+          <button data-behavior="claimNearAccount" class="full-width">
+            Claim NEAR Account
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <style>
@@ -103,7 +156,26 @@
   }
 </style>
 <script>
+  window.addEventListener("load", function addClaimHandler() {
+    window.dom.onClick('openClaimModal', function renderClaimModal () {
+      window.dom.fill('claimMessage').with('')
+      if (!window.ethInitialized) {
+        window.dom.hide("claimNearAccount")
+      }
+      window.dom.show("claimModal")
+    })
+    window.dom.onClick('claimNearAccount', async function renderClaimModal () {
+      window.dom.fill('claimMessage').with('To claim, please sign the message when prompted on your Ethereum wallet...');
+      try{
+        await window.faucetUtils.claim()
+      } catch(error) {
+        window.dom.fill('claimMessage').with(error.message)
+      }
+    })
+  })
+
   async function renderLanding() {
+    if (window.ethInitialized) { window.dom.show("claimNearAccount") }
     if (window.ethInitialized && window.nearInitialized) {
       window.dom.find("landingSubmit").disabled = false;
     } else {
