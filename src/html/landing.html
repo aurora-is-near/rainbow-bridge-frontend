@@ -158,6 +158,10 @@
 <script>
   window.addEventListener("load", function addClaimHandler() {
     window.dom.onClick('openClaimModal', function renderClaimModal () {
+      if (process.env.ethNetworkId !== 'main') {
+        window.location.href = 'https://wallet.testnet.near.org/'
+        return
+      }
       window.dom.fill('claimMessage').with('')
       if (!window.ethInitialized) {
         window.dom.hide("claimNearAccount")
