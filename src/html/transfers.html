@@ -617,11 +617,11 @@
       const currentParams = Object.keys(window.urlParams.get());
       const appUrlPaths = ['new', 'erc20', 'erc20n']
 
-      // Hide transfers if one of the appUrlPaths is included in the current url
-      if (appUrlPaths.some(param => currentParams.includes(param) )) {
-        window.dom.hide("recent-transfers");
-      } else {
+      // Hide transfers if on another page or if there are no transfers
+      if (transfers.length && !appUrlPaths.some(param => currentParams.includes(param) )) {
         window.dom.show("recent-transfers");
+      } else {
+        window.dom.hide("recent-transfers");
       }
     }
 
