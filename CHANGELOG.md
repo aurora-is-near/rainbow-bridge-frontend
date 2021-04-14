@@ -1,3 +1,16 @@
+## [3.4.2](https://github.com/near/rainbow-bridge-frontend/compare/v3.4.1...v3.4.2) (2021-04-14)
+
+
+### Bug Fixes
+
+* always display transfers page as default ([7a1476f](https://github.com/near/rainbow-bridge-frontend/commit/7a1476f603e395285b58a35697abda6470f817f1))
+* enable remove transfer before lock transaction is made ([621a012](https://github.com/near/rainbow-bridge-frontend/commit/621a012552b934144dd4f2105ec2f4ca5e5991f7))
+* enable restore from landing page ([02e7f28](https://github.com/near/rainbow-bridge-frontend/commit/02e7f28c48060c69a217532027bc3abb0105bffc))
+* prevent deleting transfer if it is a withdrawal from NEAR ([ea65c83](https://github.com/near/rainbow-bridge-frontend/commit/ea65c83dbabc2f9a507d918df6b8f38cbc5127c0))
+* remove css transition on every transfers list render ([ba72658](https://github.com/near/rainbow-bridge-frontend/commit/ba7265852f766aa1a5aace445c8a5a1eead1e261))
+* reset selection on erc20Modal open ([2e90567](https://github.com/near/rainbow-bridge-frontend/commit/2e905670ce18912f3905e3845a158df3c7af624e))
+* simplify text on token setup screen ([910bdfe](https://github.com/near/rainbow-bridge-frontend/commit/910bdfea07cedce0b53515891d572fcc977b4a76))
+
 ## [3.4.1](https://github.com/near/rainbow-bridge-frontend/compare/v3.4.0...v3.4.1) (2021-04-13)
 
 
