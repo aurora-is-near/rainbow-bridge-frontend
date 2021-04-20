@@ -2,19 +2,24 @@ import jwtDecode from 'jwt-decode'
 import { getEthProvider } from '@near-eth/client/dist/utils'
 import Web3 from 'web3'
 import * as naj from 'near-api-js'
+import { Decimal } from 'decimal.js'
 
 // TODO: update urls
 const FAUCET_URL = 'http://95.216.165.53:3456/api'
 const CLAIM_URL = 'https://wallet.testnet.near.org/create/testnet/'
 
-export async function claim () {
+export async function checkETHBalance () {
   const web3 = new Web3(getEthProvider())
 
-  // check eth balance
   const ethBalance = await web3.eth.getBalance(window.ethUserAddress)
-  if (ethBalance < 50000000000000000) {
+  if (Decimal(ethBalance).comparedTo(Decimal(0.05).mul(Decimal.pow(10, 18))) < 0) {
     throw new Error('0.05 ETH are needed to claim a free NEAR account')
   }
+  return ethBalance
+}
+
+export async function parasFaucetLogin () {
+  const web3 = new Web3(getEthProvider())
 
   // check if user already exists
   let response = await fetch(
@@ -62,6 +67,8 @@ export async function claim () {
     throw new Error('Failed to connect to faucet')
   }
   const { accessToken } = await response.json()
+  window.localStorage.setItem('paras-faucet-access-token', accessToken)
+
   const { payload } = jwtDecode(accessToken)
   response = await fetch(`${FAUCET_URL}/users/${payload.id}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
@@ -80,10 +87,16 @@ export async function claim () {
         `Did you already claim ${window.ethUserAddress} in a different browser? Could not find key in localStorage.`
       )
     }
-    window.location.href = `${CLAIM_URL}${alreadyClaimedKey}`
-    return
   }
+}
 
+export async function getClaimURL () {
+  const accessToken = window.localStorage.getItem('paras-faucet-access-token')
+  const { payload } = jwtDecode(accessToken)
+  const alreadyClaimedKey = window.localStorage.getItem(`claim_${payload.id}`)
+  if (alreadyClaimedKey) {
+    return `${CLAIM_URL}${alreadyClaimedKey}`
+  }
   // Claim with the keypair generated locally
   const keypair = naj.utils.KeyPair.fromRandom('ed25519')
   const key = {
@@ -91,8 +104,9 @@ export async function claim () {
     secretKey: keypair.toString()
   }
   const claimedKey = key.secretKey.replace('ed25519:', '')
-  const invite = 0 // do we need this invite?
-  response = await fetch(`${FAUCET_URL}/claim/${userDetails.id}/${key.publicKey}/${invite}`, {
+  // TODO: get invite id from url params (+ functionality to create invite link on bridge UI) ?
+  const invite = 0
+  const response = await fetch(`${FAUCET_URL}/claim/${payload.id}/${key.publicKey}/${invite}`, {
     body: '',
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -109,6 +123,6 @@ export async function claim () {
   }
 
   // Record the claimedKey locally in case the user doesn't complete the account creation.
-  window.localStorage.setItem(`claim_${userDetails.id}`, claimedKey)
-  window.location.href = `${CLAIM_URL}${claimedKey}`
+  window.localStorage.setItem(`claim_${payload.id}`, claimedKey)
+  return `${CLAIM_URL}${claimedKey}`
 }
