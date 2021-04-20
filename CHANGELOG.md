@@ -1,3 +1,10 @@
+## [3.4.4](https://github.com/near/rainbow-bridge-frontend/compare/v3.4.3...v3.4.4) (2021-04-20)
+
+
+### Bug Fixes
+
+* update ethClient contract, order tokens alphabetically ([11d42de](https://github.com/near/rainbow-bridge-frontend/commit/11d42de64b3ed0e3544a30f58656248226e5b141))
+
 ## [3.4.3](https://github.com/near/rainbow-bridge-frontend/compare/v3.4.2...v3.4.3) (2021-04-14)
 
 
