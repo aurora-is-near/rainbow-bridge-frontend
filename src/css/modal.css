@@ -53,7 +53,7 @@
   border-top: 1px solid var(--gray-200);
   top: 50%;
   position: absolute;
-  width: 45%;
+  width: 35%;
 }
 
 .modal-section__separator::before {
