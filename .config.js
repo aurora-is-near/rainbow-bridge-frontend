@@ -42,8 +42,8 @@ module.exports = {
 
     // frontend settings
     featuredErc20s: JSON.stringify([
-      '0x722dd3f80bac40c951b51bdd28dd19d435762180', // TST: https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180
       '0xfab46e002bbf0b4509813474841e0716e6730136', // FAU: https://ropsten.etherscan.io/token/0xfab46e002bbf0b4509813474841e0716e6730136
+      '0x722dd3f80bac40c951b51bdd28dd19d435762180', // TST: https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180
       '0xbf4d811e6891ed044d245cafcc4caa96c969204d', // USDT: https://ropsten.etherscan.io/token/0xbf4d811e6891ed044d245cafcc4caa96c969204d
     ]),
     nearNodeUrl: 'https://rpc.testnet.near.org',
@@ -79,7 +79,7 @@ module.exports = {
   },
   mainnet: {
     // library settings
-    ethClientAddress: '0xce9d8c70c2ac161383c4debf207d884f6531b1b9',
+    ethClientAddress: '0x0151568af92125fb289f1dd81d9d8f7484efc362',
     ethNearOnEthClientAbiText: readFileSync('./abi/nearOnEthClient.abi'),
     ethErc20AbiText: readFileSync('./abi/erc20.abi'),
     ethLockerAbiText: readFileSync('./node_modules/rainbow-token-connector/res/BridgeTokenFactory.full.abi'),
@@ -90,25 +90,25 @@ module.exports = {
 
     // frontend settings
     featuredErc20s: JSON.stringify([
-      '0xdac17f958d2ee523a2206206994597c13d831ec7', //   USDT
-      '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', //   UNI
-      '0x514910771af9ca656af840dff83e8264ecf986ca', //   LINK
-      '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', //   USDC
-      '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', //   WBTC
       '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9', //   AAVE
-      '0xa0b73e1ff0b80914ab6fe0444e65848c4c34450b', //   CRO
-      '0x50d1c9771902476076ecfc8b2a83ad6b9355a4c9', //   FTT
       '0x4fabb145d64652a948d72533023f6e7a623c7c53', //   BUSD
-      '0x6f259637dcd74c767781e37bc6133cd6a68aa161', //   HT
-      '0x6b175474e89094c44da98b954eedeac495271d0f', //   DAI
-      '0x6b3595068778dd592e39a122f4f5a5cf09c90fe2', //   SUSHI
-      '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f', //   SNX
-      '0xc944e90c64b2c07662a292be6244bdf05cda44a7', //   GRT
-      '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', //   MKR
       '0xc00e94cb662c3520282e6f5717214004a7f26888', //   COMP
-      '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e', //   YFI
-      '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', //   WETH
+      '0xa0b73e1ff0b80914ab6fe0444e65848c4c34450b', //   CRO
+      '0x6b175474e89094c44da98b954eedeac495271d0f', //   DAI
+      '0x50d1c9771902476076ecfc8b2a83ad6b9355a4c9', //   FTT
+      '0xc944e90c64b2c07662a292be6244bdf05cda44a7', //   GRT
       '0x0316eb71485b0ab14103307bf65a021042c6d380', //   HBTC
+      '0x6f259637dcd74c767781e37bc6133cd6a68aa161', //   HT
+      '0x514910771af9ca656af840dff83e8264ecf986ca', //   LINK
+      '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', //   MKR
+      '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f', //   SNX
+      '0x6b3595068778dd592e39a122f4f5a5cf09c90fe2', //   SUSHI
+      '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', //   UNI
+      '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', //   USDC
+      '0xdac17f958d2ee523a2206206994597c13d831ec7', //   USDT
+      '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', //   WBTC
+      '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', //   WETH
+      '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e', //   YFI
       '0x111111111117dc0aa78b770fa6a738034120c302', //   1INCH
     ]),
     nearNodeUrl: 'https://rpc.mainnet.near.org',
