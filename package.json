@@ -49,7 +49,7 @@
   "assetsPath": "src/img",
   "repository": {
     "type": "git",
-    "url": "https://github.com/near/rainbow-bridge-frontend"
+    "url": "https://github.com/aurora-is-near/rainbow-bridge-frontend"
   },
   "parcel": {
     "transforms": {
