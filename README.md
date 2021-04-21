@@ -3,7 +3,7 @@
 
 An app that moves assets between Ethereum and NEAR. You can use this as the starting point for your own app on the [Rainbow Bridge].
 
-Try it between [Ethereum Rinkeby] & [NEAR Testnet]: https://near.github.io/rainbow-bridge-frontend
+Try it between [Ethereum Ropsten] & [NEAR Testnet]: https://aurora-is-near.github.io/rainbow-bridge-frontend/
 
 
 How it works
@@ -73,7 +73,7 @@ Exploring the code
 
 
 
-Run everything locally
+Run everything locally (todo)
 ======================
 
 In `package.json` you may have noticed a `local` command. This will let you run the app in "full local" mode, with a locally-running Ethereum network, NEAR network, NEAR Wallet (frontend & backend), Rainbow Bridge contracts, and an ERC20 contract.
