@@ -14,7 +14,7 @@
           <span class="bridge-indicator" style="background-color: #29b6af">
             <span class="visually-hidden">Connected</span>
           </span>
-          <span data-behavior="bridgeName"></span>
+          <span data-behavior="bridgeName">Near ↔︎ Ethereum</span>
         </button>
         <div class="dropdown-list">
           <label class="dropdown-list__heading">Select a bridge</label>
@@ -119,6 +119,7 @@
     width: 100%;
     top: 0;
     border-bottom: 1px solid var(--gray-200);
+    z-index: 2;
   }
 
   .navLogo {
@@ -269,6 +270,11 @@
       content: " ";
 
       z-index: -1;
+    }
+  }
+  @media (max-width: 600px) {
+    .bridges-nav {
+      position: fixed;
     }
   }
 </style>

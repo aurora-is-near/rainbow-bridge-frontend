@@ -46,7 +46,7 @@ async function login () {
   }
   provider.on('accountsChanged', (accounts) => {
     window.ethUserAddress = accounts[0]
-    render()
+    window.location.reload()
   })
   provider.on('chainChanged', (chainId) => {
     window.connectedEthNetwork = chainIdToEthNetwork[parseInt(chainId)]
