@@ -25,6 +25,11 @@
           type="number"
         />
       </div>
+      <div style="display: flex; justify-content: flex-end;">
+        <button class="maxAmount" type="button" data-behavior="useMaxErc20n">
+          MAX
+        </button>
+      </div>
       <div class="account--origin__token-details" data-behavior="erc20nInfo">
         <label>Available to transfer</label>
         <span>
@@ -141,6 +146,7 @@
 <script>
   window.addEventListener("load", function sendBridgedNep141OnLoad() {
     const amount = window.dom.find("erc20nAmount");
+    const maxAmount = window.dom.find("useMaxErc20n");
     const select = window.dom.find("erc20nSelectButton");
     const submit = window.dom.find("erc20nSubmit");
     const confirmSubmit = window.dom.find("erc20nConfirmSubmit");
@@ -163,20 +169,30 @@
     select.onclick = () => {
       window.urlParams.set({ erc20n: '' })
       window.dom.find('erc20nFreeForm').value = ''
-      window.dom.find("erc20nFreeForm").classList.remove("error");
+      window.dom.find("erc20nFreeForm").classList.remove("error")
       erc20nAddress = ''
-      window.dom.fill("erc20nAddressError").with("");
-      window.dom.hide("erc20nAddressError");
+      window.dom.fill("erc20nAddressError").with("")
+      window.dom.hide("erc20nAddressError")
       window.dom.show('erc20nModal')
+      window.dom.hide('erc20nInfo')
+      amount.value = ''
+      window.dom.find("erc20nSelectButton").classList.remove("selected")
+      window.dom.fill("erc20nSelectButton").with("Select token")
     }
 
-    amount.onkeyup = function enableOrDisableErc20n(e) {
-      const balance = Number(window.dom.find("erc20nBalance").innerHTML);
-      const val = e.target.value;
-      if (val && Number(val) <= balance && Number(val) > 0)
-        submit.disabled = false;
-      else submit.disabled = true;
-    };
+    function enableOrDisableErc20n() {
+      const decimalBalance = window.Decimal(window.dom.find("erc20nBalance").innerHTML)
+      const decimalAmount = window.Decimal(amount.value)
+      if (decimalAmount.isZero() || decimalAmount.comparedTo(decimalBalance) === 1)
+        submit.disabled = true
+      else submit.disabled = false
+    }
+    maxAmount.onclick = () => {
+      amount.value = window.dom.find("erc20nBalance").innerHTML
+      enableOrDisableErc20n()
+    }
+
+    amount.onkeyup = enableOrDisableErc20n
 
     window.dom.find(
       "sendBridgedNep141Form"
@@ -288,7 +304,7 @@
       token = await window.utils.getErc20Data(erc20nAddress);
     } catch (e) {
       window.dom.find("erc20nSelectButton").classList.remove("selected");
-      window.dom.fill("erc20nSelectButton").with("Select ERC20");
+      window.dom.fill("erc20nSelectButton").with("Select token");
       window.dom.find("erc20nAmount").value = "";
       window.dom.find("erc20nAmount").disabled = true;
       const input = window.dom.find("erc20nFreeForm");

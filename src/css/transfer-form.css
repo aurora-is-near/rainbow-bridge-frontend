@@ -89,7 +89,7 @@
   border-radius: 0.75em;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
-  margin: var(--spacing-m) 0;
+  margin: var(--spacing-m) 0 var(--spacing-s) 0;
   align-items: stretch;
   height: 56px;
 }
@@ -137,6 +137,10 @@
 .transfer-form .inputs input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+.maxAmountContainer {
+  display: flex;
+  justify-content: flex-end;
 }
 .transfer-form input {
   text-align: right;

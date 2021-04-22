@@ -253,6 +253,18 @@ button[disabled] {
   background: none;
   box-shadow: none;
 }
+button.maxAmount {
+  font-size: var(--fs-micro);
+  color: var(--blue-500);
+  background-color: var(--light-gray);
+  border: 1px solid var(--blue-500);
+  text-align: center;
+  height: 20px;
+  padding: 0 var(--spacing-xs);
+  line-height: 20px;
+  margin-bottom: var(--spacing-s);
+  margin-right: var(--spacing-s);
+}
 
 fieldset {
   border: none;
