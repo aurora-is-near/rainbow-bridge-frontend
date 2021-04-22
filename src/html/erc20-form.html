@@ -25,11 +25,16 @@
           type="number"
         />
       </div>
+      <div class="maxAmountContainer">
+        <button class="maxAmount" type="button" data-behavior="useMaxErc20">
+          MAX
+        </button>
+      </div>
       <div class="account--origin__token-details" data-behavior="erc20Info">
         <label>Available to transfer</label>
         <span>
-          <span data-behavior="erc20Balance" c>999.234234</span>
-          <span data-behavior="erc20Name">DAI</span>
+          <span data-behavior="erc20Balance"></span>
+          <span data-behavior="erc20Name"></span>
         </span>
       </div>
       <div
@@ -137,6 +142,7 @@
 <script>
   window.addEventListener("load", function handleSelectErc20Events() {
     const amount = window.dom.find("erc20Amount");
+    const maxAmount = window.dom.find("useMaxErc20");
     const select = window.dom.find("erc20SelectButton");
     const submit = window.dom.find("erc20Submit");
     const cancel = document.getElementById("erc20Cancel");
@@ -158,24 +164,37 @@
     select.onclick = () => {
       window.urlParams.set({ erc20: '' })
       window.dom.find("erc20FreeForm").value = ''
-      window.dom.find("erc20FreeForm").classList.remove("error");
+      window.dom.find("erc20FreeForm").classList.remove("error")
       erc20Address = ''
-      window.dom.fill("erc20AddressError").with("");
-      window.dom.hide("erc20AddressError");
+      window.dom.fill("erc20AddressError").with("")
+      window.dom.hide("erc20AddressError")
       window.dom.show("erc20Modal")
+      window.dom.hide('erc20Info')
+      amount.value = ''
+      window.dom.find("erc20SelectButton").classList.remove("selected")
+      window.dom.fill("erc20SelectButton").with("Select ERC20")
     }
 
-    amount.onkeyup = function enableOrDisable(e) {
-      const balance = Number(window.dom.find("erc20Balance").innerHTML);
-      const allowance = Number(window.dom.find("erc20Allowance").innerHTML);
-      const val = e.target.value;
-      if (val && Number(val) <= balance && Number(val) > 0)
-        submit.disabled = false;
-      else submit.disabled = true;
-      if (Number(e.target.value) <= allowance)
-        submit.innerHTML = "Submit transfer";
-      else submit.innerHTML = "Approve transfer";
-    };
+    function enableOrDisableErc20() {
+      const decimalBalance = window.Decimal(window.dom.find("erc20Balance").innerHTML)
+      const decimalAllowance = window.Decimal(window.dom.find("erc20Allowance").innerHTML)
+      const decimalAmount = window.Decimal(amount.value)
+      if (decimalAmount.isZero() || decimalAmount.comparedTo(decimalBalance) === 1)
+        // decimalAmount is bigger than decimalBalance
+        submit.disabled = true
+      else submit.disabled = false
+      if (decimalAmount.comparedTo(decimalAllowance) === 1)
+        // decimalAmount is bigger than decimalAllowance
+        submit.innerHTML = "Approve transfer"
+      else submit.innerHTML = "Submit transfer"
+    }
+
+    maxAmount.onclick = () => {
+      amount.value = window.dom.find("erc20Balance").innerHTML;
+      enableOrDisableErc20()
+    }
+
+    amount.onkeyup = enableOrDisableErc20
 
     window.dom.find(
       "sendNaturalErc20Form"
