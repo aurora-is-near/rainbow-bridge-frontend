@@ -250,7 +250,9 @@
           />
           <span>
             <img src="${token.icon || "ethereum.svg"}" alt="" />
-            ${token.name}
+            <span class="token-in-list-name">
+              ${token.name}
+            </span>
           </span>
           <span>
             ${window.utils.formatLargeNum(token.balance, token.decimals)}

@@ -238,8 +238,12 @@
             value="${token.address}"
           />
           <span>
-            <img src="${token.nep141.icon || "near.svg"}" alt="" />
-            ${token.nep141.name}
+            <div class="bridged-token">
+              <img class="bridged-token-icon" src="${token.icon || "near.svg"}" alt="" />
+            </div>
+            <span class="token-in-list-name">
+              ${token.nep141.name}
+            </span>
           </span>
           <span>
             ${window.utils.formatLargeNum(token.nep141.balance, token.decimals)}
