@@ -24,9 +24,22 @@
 
 <script>
   window.addEventListener('load', function handleSelectErc20Events () {
-    window.dom.find('bridgeErc20Form').onsubmit = function bridgeIt (e) {
+    window.dom.find('bridgeErc20Form').onsubmit = async function bridgeIt (e) {
       e.preventDefault()
-      window.nep141Xerc20.bridgedNep141.deploy(window.urlParams.get('erc20'))
+      window.dom.show("nearTxModal")
+      // give the user some time to read the redirect information
+      await new Promise(r => setTimeout(r, 3000))
+      try {
+        await window.nep141Xerc20.bridgedNep141.deploy(window.urlParams.get('erc20'))
+      } catch (e) {
+        // only hide if error, show until redirect happens
+        window.dom.hide("nearTxModal")
+        alert(
+          "Something went wrong! " +
+          "Check your browser console for more info."
+        );
+        throw e
+      }
     }
 
     window.dom.find('bridgeErc20Cancel').onclick = () => {
