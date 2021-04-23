@@ -42,6 +42,7 @@
       </div>
     </div>
   </div>
+</div>
   <style>
     .transfers {
       padding: 5rem 0;
@@ -447,13 +448,30 @@
         if (!callToAction) return;
 
         const transferId = callToAction.closest("[data-behavior=transfer]").id;
+        const [transfer] = await window.transfers.get({
+          filter: (t) => t.id === transferId
+        });
+        if (
+          (transfer.type.includes('sendToNear') && transfer.completedStep !== 'sync-natural-erc20-to-nep141') || // approve or lock (including retry)
+          (transfer.type.includes('sendToEthereum') && transfer.completedStep === 'sync-bridged-nep141-to-erc20') // unlock (including retry)
+          // TODO eNEAR case
+        ) {
+          window.dom.show("ethTxModal")
+        } else {
+          window.dom.show("nearTxModal")
+          // give the user some time to read the redirect information
+          await new Promise(r => setTimeout(r, 3000));
+        }
         callToAction.disabled = true
         try {
           await window.transfers.act(transferId)
         } catch(error) {
           console.error(error)
+          // only hide if error, show until redirect happens
+          window.dom.hide("nearTxModal")
         } finally {
           callToAction.disabled = false
+          window.dom.hide("ethTxModal")
         }
       });
       document.querySelector("body").addEventListener("click", (event) => {
@@ -628,4 +646,3 @@
     window.renderers.push(updateTransfers);
     window.renderers.push(hideShowTransfers);
   </script>
-</div>

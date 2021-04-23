@@ -194,6 +194,7 @@
 
       disableForm();
 
+      window.dom.show("ethTxModal")
       try {
         await window.nep141Xerc20.naturalErc20.sendToNear({
           amount: amount.value,
@@ -205,6 +206,7 @@
         alert("Something went wrong!\n" + e.message);
         throw e;
       } finally {
+        window.dom.hide("ethTxModal")
         // re-enable the form, whether the call succeeded or failed
         enableForm();
       }
