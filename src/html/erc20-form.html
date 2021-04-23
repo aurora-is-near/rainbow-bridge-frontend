@@ -71,9 +71,6 @@
       </div>
     </div>
     <footer>
-      <p data-behavior="signInstruction" style="display:none">
-        Please confirm the transaction in your connected Ethereum wallet...
-      </p>
       <button disabled data-behavior="erc20Submit" class="full-width">
         Approve transfer
       </button>
@@ -154,7 +151,6 @@
       select.disabled = true;
       submit.disabled = true;
       cancel.disabled = true;
-      window.dom.show('signInstruction')
     }
 
     function enableForm() {
@@ -162,7 +158,6 @@
       select.disabled = false;
       submit.disabled = false;
       cancel.disabled = false;
-      window.dom.hide('signInstruction')
     }
 
     select.onclick = () => {

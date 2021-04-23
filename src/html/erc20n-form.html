@@ -61,9 +61,6 @@
       </div>
     </div>
     <footer>
-      <p data-behavior="signInstruction" style="display:none">
-        Redirecting to NEAR wallet...
-      </p>
       <button disabled data-behavior="erc20nSubmit" class="full-width">
         Submit transfer
       </button>
@@ -143,7 +140,6 @@
       select.disabled = true;
       submit.disabled = true;
       cancel.disabled = true;
-      window.dom.show('signInstruction')
     }
 
     function enableForm() {
@@ -151,7 +147,6 @@
       select.disabled = false;
       submit.disabled = false;
       cancel.disabled = false;
-      window.dom.hide('signInstruction')
     }
 
     select.onclick = () => {
