@@ -39,12 +39,93 @@
     <p class="create-account">
       Need a NEAR account? Create one
       <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://faucet.paras.id/"
-        >here</a
-      >.
+        data-behavior="openClaimModal"
+        style="cursor: pointer"
+      >here</a>.
     </p>
+    <div data-behavior="claimVerification" class="modal" style="display: none">
+      <div class="modal__container">
+        <nav class="modal__nav">
+          <button
+            type="button"
+            class="modal__nav__button--close"
+            data-behavior="closeModal"
+          >
+            <span class="visually-hidden">close</span>
+          </button>
+        </nav>
+        <div data-behavior="enoughETH">
+          <div class="modal-image__container">
+            <img src="img/gift.svg" alt="" class="modal__image"/>
+          </div>
+          <h1 class="modal__heading">Claim Your NEAR Account</h1>
+          <p class="modal__message">
+            Ethereum holders may create a NEAR account using the
+            <a target="_blank" rel="noopener noreferrer" href="https://faucet.paras.id/">Paras Faucet</a>.
+            Connect your Ethereum wallet to get started.
+          </p>
+        </div>
+        <div data-behavior="notEnoughETH" style="display: none">
+          <div class="modal-image__container">
+            <img src="img/empty-wallet.svg" alt="" class="modal__image"/>
+          </div>
+          <h1 class="modal__heading">Insufficient funds to claim account</h1>
+          <p class="modal__message">
+            Your Ethereum wallet must have a balance of at least 0.05 ETH as proof of liquidity in order to claim your account.
+          </p>
+        </div>
+        <div class="authenticated-account__details space_around">
+          <img src="img/ethereum.svg" alt="" class="network-indicator network--ethereum"/>
+          <div data-behavior="ethAccountPlaceholder">Ethereum</div>
+          <button
+            type="button"
+            class="button-size--small"
+            id="authEthereum"
+            data-behavior="authEthereum"
+          >
+            Connect
+          </button>
+          <button
+            class="button-size--small button-variant--secondary"
+            data-behavior="disconnectEthereum"
+            style="display: none"
+            type="button"
+          >
+            Disconnect
+          </button>
+        </div>
+        <button data-behavior="verifyEthAddress" class="full-width">
+          Verify & Continue
+        </button>
+      </div>
+    </div>
+    <div data-behavior="claimSignature" class="modal" style="display: none">
+      <include src="sign-message-modal.html"></include>
+    </div>
+    <div data-behavior="claimReady" class="modal" style="display: none">
+      <include src="claim-ready-modal.html"></include>
+    </div>
+    <div data-behavior="claimError" class="modal" style="display: none">
+      <div class="modal__container">
+        <nav class="modal__nav">
+          <button
+            type="button"
+            class="modal__nav__button--close"
+            data-behavior="closeModal"
+          >
+            <span class="visually-hidden">close</span>
+          </button>
+        </nav>
+        <div class="modal-image__container">
+          <img src="img/warning.svg" alt="" class="modal__image" />
+        </div>
+        <h1 class="modal__heading">Oops! Something went wrong</h1>
+        <p class="modal__message" data-behavior="claimErrorMessage"></p>
+        <button data-behavior="openClaimModal" class="full-width">
+          Return
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 <style>
@@ -101,9 +182,72 @@
     font-weight: var(--fw-regular);
     margin-top: 0.5em;
   }
+  .space_around {
+    margin: var(--spacing-xxl) 0;
+  }
 </style>
 <script>
-  async function renderLanding() {
+  window.addEventListener("load", function addLoginParasFaucetHandler () {
+    const verifyButton = window.dom.find("verifyEthAddress");
+    const claimButton = window.dom.find("claimNEARAccount");
+    window.dom.onClick('openClaimModal', function renderClaimModal () {
+      if (process.env.ethNetworkId !== 'main') {
+        window.location.href = 'https://wallet.testnet.near.org/'
+        return
+      }
+      window.dom.hide("claimError")
+      window.dom.show("enoughETH")
+      window.dom.hide("notEnoughETH")
+      verifyButton.disabled = false
+      if (!window.ethInitialized) {
+        verifyButton.disabled = true
+      }
+      window.dom.show("claimVerification")
+    })
+
+    verifyButton.onclick = async () => {
+      try{
+        await window.faucetUtils.checkETHBalance()
+      } catch(error) {
+        console.error(error.message)
+        window.dom.hide("enoughETH")
+        window.dom.show("notEnoughETH")
+        verifyButton.disabled = true
+        return
+      }
+      window.dom.hide("claimVerification")
+      window.dom.show("claimSignature")
+      try{
+        await window.faucetUtils.parasFaucetLogin()
+      } catch(error) {
+        console.log(error.message)
+        window.dom.fill('claimErrorMessage').with(error.message);
+        window.dom.hide("claimSignature")
+        window.dom.show("claimError")
+        return
+      }
+      window.dom.hide("claimSignature")
+      window.dom.show("claimReady")
+    }
+
+    claimButton.onclick = async () => {
+      window.dom.fill('claimErrorMessage').with("");
+      let claimURL
+      try {
+        claimURL = await window.faucetUtils.getClaimURL()
+      } catch(error) {
+        console.error(error.message)
+        window.dom.fill('claimErrorMessage').with(error.message);
+        window.dom.hide("claimReady")
+        window.dom.show("claimError")
+        return
+      }
+      window.location.href = claimURL
+    }
+  })
+
+  async function renderLanding () {
+    if (window.ethInitialized) {window.dom.find("verifyEthAddress").disabled = false}
     if (window.ethInitialized && window.nearInitialized) {
       window.dom.find("landingSubmit").disabled = false;
     } else {

@@ -7,6 +7,7 @@ import * as urlParams from './urlParams'
 import * as transfers from '@near-eth/client'
 import * as nep141Xerc20 from '@near-eth/nep141-erc20'
 import * as utils from './utils'
+import * as faucetUtils from './faucetUtils'
 
 dom.init()
 
@@ -22,6 +23,7 @@ window.render = render
 window.transfers = transfers
 window.urlParams = urlParams
 window.utils = utils
+window.faucetUtils = faucetUtils
 
 switch (`${process.env.nearNetworkId}-${process.env.ethNetworkId}`) {
   case 'testnet-ropsten': window.bridgeName = 'Near Testnet ↔︎ Ethereum Ropsten'; break

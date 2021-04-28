@@ -8,7 +8,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 100;
+  z-index: 2;
 }
 
 /* modal expects one immediate child */
@@ -88,10 +88,8 @@
   font-size: var(--fs-small);
   line-height: var(--lh-copy);
   text-align: center;
-}
-
-.modal__cta {
-  margin: var(--spacing-l) 0 var(--spacing-xl);
+  padding: 0 var(--spacing-xxl);
+  margin: var(--spacing-xxl) 0;
 }
 
 /* child must have nav element with one close button within */
@@ -101,12 +99,8 @@
 }
 
 .modal__nav__button--close {
-  background-color: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-s);
-  height: auto;
+  background: url(../img/cross.svg);
+  background-size: 100% 100%;
 }
 
 .modal__nav__button--close:hover,
