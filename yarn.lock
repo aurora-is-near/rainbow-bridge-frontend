@@ -1309,21 +1309,41 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@near-eth/client@1.2.0", "@near-eth/client@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.2.0.tgz#a618d16d8d4da89a40cbd0f3b6ce3f691c4f3e5d"
-  integrity sha512-6kkl4ngfMEimHjPpWiERauAMqHVx+O3T3f7LrzHmdg5u9RZLtBA9GO5LdRdmzTtALLHtxMgeT2RJit5snXo8fA==
+"@near-eth/client@1.3.0-1", "@near-eth/client@^1.3.0-1":
+  version "1.3.0-1"
+  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.3.0-1.tgz#af29fe9781c8717bec690ca2c3f0544d5edaef55"
+  integrity sha512-cJeVQCBQnhCZF2oen1K8biiC8A52JJzkhm/P0d4l5NxM+6rpwkK2H/YwsoHofPqdQug20jayLwrWkuvyHSheHQ==
   dependencies:
     bn.js "^5.1.3"
     decimal.js "^10.2.1"
     near-api-js "^0.39.0"
 
-"@near-eth/nep141-erc20@^1.3.3":
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.3.3.tgz#179a17e44f298503760493c710a3e24660f7183e"
-  integrity sha512-Z9Hp5AqVvhvV2JgQc/g//rysDbWvmVWIuaOIVNyGD64v4xGv0YDhvC9w9yWDVYx7Oc9NE32J1lUeoRzYSyYOOQ==
+"@near-eth/near-ether@^0.0.1-1":
+  version "0.0.1-1"
+  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-0.0.1-1.tgz#1bcf01fc04f7e0b806fd9f08704eec279b88ee3a"
+  integrity sha512-gpD5PB++G3HxAi1uu8i70JsRJYqf+MoxnDwQ/0M472EhZNGz9hc5BIaXNbu2RyKxrXcgt8jZctYaUumD25AlQA==
   dependencies:
-    "@near-eth/client" "1.2.0"
+    "@near-eth/client" "1.3.0-1"
+    "@near-eth/utils" "0.0.1-1"
+    bn.js "^5.1.3"
+    bs58 "^4.0.1"
+    eth-object aurora-is-near/eth-object#fb57468391112502792ba5fd8c586f5d2467a89f
+    eth-revert-reason "^1.0.3"
+    ethereumjs-util "^7.0.10"
+    find-replacement-tx "0.0.1-0"
+    lite-merkle-patricia-tree "0.0.1-0"
+    near-api-js "^0.39.0"
+    promisfy "^1.2.0"
+    rlp "^2.2.6"
+    web3 "^1.3.4"
+    web3-utils "^1.3.4"
+
+"@near-eth/nep141-erc20@^1.3.4-0":
+  version "1.3.4-0"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.3.4-0.tgz#39200cedf9efa14d4551693a0050403552117532"
+  integrity sha512-VAnYRNx7QPNlu4qkfy/SyanESLAfFPRL5xel6gsWOgZyA76mLvsM94PQlTsGR8VAfhr+wjce8xSidYjJ1COgVQ==
+  dependencies:
+    "@near-eth/client" "1.3.0-1"
     bn.js "^5.1.3"
     bs58 "^4.0.1"
     eth-object aurora-is-near/eth-object#fb57468391112502792ba5fd8c586f5d2467a89f
@@ -1333,6 +1353,15 @@
     promisfy "^1.2.0"
     rlp "^2.2.6"
     web3 "^1.3.4"
+    web3-utils "^1.3.4"
+
+"@near-eth/utils@0.0.1-1":
+  version "0.0.1-1"
+  resolved "https://registry.yarnpkg.com/@near-eth/utils/-/utils-0.0.1-1.tgz#4cf1a2b88381f93cf8b3021e42c76eabbb4a7cad"
+  integrity sha512-RreimPObbnnDyGsEGPY0BKwjrAwO9a8JEO7Cvd3cZbJvB1EYbMlic529KRPHyyuRX3Hbo7oHsw9XqMGuEjja5Q==
+  dependencies:
+    bs58 "^4.0.1"
+    near-api-js "^0.39.0"
     web3-utils "^1.3.4"
 
 "@nodelib/fs.scandir@2.1.4":
@@ -5218,6 +5247,18 @@ find-cache-dir@^3.3.1:
     make-dir "^3.0.2"
     pkg-dir "^4.1.0"
 
+find-npm-prefix@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/find-npm-prefix/-/find-npm-prefix-1.0.2.tgz#8d8ce2c78b3b4b9e66c8acc6a37c231eb841cfdf"
+  integrity sha512-KEftzJ+H90x6pcKtdXZEPsQse8/y/UnvzRKrOSQFprnrGaFuJ62fVkP34Iu2IYuMvyauCyoLTNkJZgrrGA2wkA==
+
+find-replacement-tx@0.0.1-0:
+  version "0.0.1-0"
+  resolved "https://registry.yarnpkg.com/find-replacement-tx/-/find-replacement-tx-0.0.1-0.tgz#36a20bfa6a8a219ff8e862e75c67f9de44320ba9"
+  integrity sha512-wOvh31mx2RX9880t792r+8g+HJtg1GZ5bQwwNlPt1A7TLISaC5AC8vNKkFcLnl36copSQOnc1VydiP+2fSsWDQ==
+  dependencies:
+    web3 "^1.3.4"
+
 find-up@^2.0.0, find-up@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/find-up/-/find-up-2.1.0.tgz#45d1b7e506c717ddd482775a2b77920a3c0c57a7"
@@ -7048,6 +7089,14 @@ lines-and-columns@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
+
+lite-merkle-patricia-tree@0.0.1-0:
+  version "0.0.1-0"
+  resolved "https://registry.yarnpkg.com/lite-merkle-patricia-tree/-/lite-merkle-patricia-tree-0.0.1-0.tgz#2145227e74626eedd8b31f34043c5a9a0487b799"
+  integrity sha512-VPk+agoJKDsNigBF4GTi2hAu64uC3WeIfihuvdyp0xArqA48rUVhEyMXqte7fj0MsRMvVRu1ctgNKheiRNU0Aw==
+  dependencies:
+    ethereumjs-util "^7.0.10"
+    rlp "^2.2.6"
 
 load-json-file@^2.0.0:
   version "2.0.0"
