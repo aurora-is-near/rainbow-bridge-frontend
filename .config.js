@@ -51,31 +51,10 @@ module.exports = {
     nearExplorerUrl: 'https://explorer.testnet.near.org',
     nearNetworkId: 'testnet',
     ethNetworkId: 'ropsten',
-  },
-  rinkeby_development: {
-    // library settings
-    ethClientAddress: '0x067421d6ba15d5c70190a1e512c5f9137a4a8168',
-    ethNearOnEthClientAbiText: readFileSync('./abi/nearOnEthClient.abi'),
-    ethEd25519Address: '0xa9e58bed3649e535dba9fa594e67e39575db3f4b',
-    ethErc20AbiText: readFileSync('./abi/erc20.abi'),
-    ethLockerAbiText: readFileSync('./abi/ERC20Locker.full.abi'),
-    ethLockerAddress: '0x6381a3bad6b51988497dc588496ad1177d1650ea',
-    ethProverAddress: '0x57d7dc68f98bd09b8d1ea46aac61c305f203f104',
-    ethProverAbiText: readFileSync('./abi/prover.abi'),
-    nearClientAccount: 'client.rinkeby.testnet',
-    nearHelperUrl: 'https://helper.testnet.near.org',
-    nearProverAccount: 'prover.rinkeby.testnet',
-    nearTokenFactoryAccount: 'f030221.rinkeby.testnet',
 
-    // frontend settings
-    featuredErc20s: JSON.stringify([
-      '0x3e13318e92F0C67Ca10f0120372E998d43E6a8E8', // ABND: https://github.com/chadoh/abundance-token
-    ]),
-    nearNodeUrl: 'https://rpc.testnet.near.org',
-    nearWalletUrl: 'https://wallet.testnet.near.org',
-    nearExplorerUrl: 'https://explorer.testnet.near.org',
-    nearNetworkId: 'testnet',
-    ethNetworkId: 'rinkeby',
+    eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
+    eNEARAddress: '0x73d37194cb39387b5a9ce86717e736c8a93d0d85',
+    nativeNEARLockerAddress: 'enear.testnet',
   },
   mainnet: {
     // library settings
@@ -116,6 +95,10 @@ module.exports = {
     nearExplorerUrl: 'https://explorer.near.org',
     nearNetworkId: 'mainnet',
     ethNetworkId: 'main',
+
+    eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
+    eNEARAddress: 'TODO',
+    nativeNEARLockerAddress: 'enear.testnet',
 
   }
 }
