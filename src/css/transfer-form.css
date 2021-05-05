@@ -79,36 +79,31 @@
   font-weight: var(--fw-bold);
 }
 
-.transfer-form .inputs + .token-details {
-  border-top: none;
-  padding: 0;
-}
-
 .transfer-form .inputs {
-  background-color: var(--light-gray);
   border-radius: 0.75em;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
+  background-color: var(--white);
+  align-items: center;
   margin: var(--spacing-m) 0 var(--spacing-s) 0;
-  align-items: stretch;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   height: 56px;
 }
 .transfer-form .inputs > * {
-  background-color: var(--white);
   border: none;
-  box-shadow: none;
-  padding: 0.75rem 1rem;
-  height: auto;
 }
-.transfer-form .inputs button {
+.transfer-form .inputs input:last-child {
+  background-color: var(--white);
+}
+.transfer-form .inputs .selectButton {
+  background-color: var(--white);
   align-items: center;
   border-radius: 0.5rem 0 0 0.5rem;
   border-right: 1px solid var(--gray-200);
   color: var(--fg-bold);
+  white-space: nowrap;
   display: flex;
-  width: 324px;
 }
-.transfer-form .inputs button:after {
+.transfer-form .inputs .selectButton:after {
   content: " ";
   background-image: url(/img/chevron-down-blue.svg);
   background-position: center;
@@ -119,6 +114,18 @@
   margin-left: 0.5em;
   width: 1.3rem;
   height: 2rem;
+}
+button.maxAmount {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-micro);
+  background-color: var(--blue-100);
+  height: 30px;
+  padding-right: var(--spacing-xs);
+  padding-left: var(--spacing-xs);
+  margin-left: var(--spacing-m);
 }
 /* add "selected" class after user selects an ERC20 token */
 .transfer-form .inputs button:not(.selected) {
@@ -137,10 +144,6 @@
 .transfer-form .inputs input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
-}
-.maxAmountContainer {
-  display: flex;
-  justify-content: flex-end;
 }
 .transfer-form input {
   text-align: right;
