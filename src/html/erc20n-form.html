@@ -14,8 +14,11 @@
       </header>
       <div class="inputs">
         <input type="hidden" name="erc20n" data-behavior="erc20nAddress" />
-        <button type="button" data-behavior="erc20nSelectButton">
+        <button class="selectButton" type="button" data-behavior="erc20nSelectButton">
           Select token
+        </button>
+        <button class="maxAmount" type="button" data-behavior="useMaxErc20n" style="display: none;">
+          Use Max
         </button>
         <input
           autocomplete="off"
@@ -24,11 +27,6 @@
           placeholder="0"
           type="number"
         />
-      </div>
-      <div style="display: flex; justify-content: flex-end;">
-        <button class="maxAmount" type="button" data-behavior="useMaxErc20n">
-          MAX
-        </button>
       </div>
       <div class="account--origin__token-details" data-behavior="erc20nInfo">
         <label>Available to transfer</label>
@@ -181,6 +179,7 @@
     }
 
     function enableOrDisableErc20n() {
+      window.dom.show("useMaxErc20n")
       const decimalBalance = window.Decimal(window.dom.find("erc20nBalance").innerHTML)
       const decimalAmount = window.Decimal(amount.value)
       if (decimalAmount.isZero() || decimalAmount.comparedTo(decimalBalance) === 1)
@@ -190,6 +189,7 @@
     maxAmount.onclick = () => {
       amount.value = window.dom.find("erc20nBalance").innerHTML
       enableOrDisableErc20n()
+      window.dom.hide("useMaxErc20n")
     }
 
     amount.onkeyup = enableOrDisableErc20n
@@ -296,8 +296,11 @@
       window.dom.fill("erc20nSelectButton").with("Select token");
       window.dom.hide("erc20nInfo");
       window.dom.show("sendBridgedNep141");
+      window.dom.hide("useMaxErc20n")
       return;
     }
+
+    window.dom.show("useMaxErc20n")
 
     let token;
     try {
