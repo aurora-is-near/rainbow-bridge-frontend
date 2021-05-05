@@ -101,12 +101,8 @@
 }
 
 .modal__nav__button--close {
-  background-color: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-s);
-  height: auto;
+  background: url(../img/cross.svg);
+  background-size: 100% 100%;
 }
 
 .modal__nav__button--close:hover,

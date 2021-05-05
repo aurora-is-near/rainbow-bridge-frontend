@@ -42,6 +42,43 @@
       </div>
     </div>
   </div>
+  <div data-behavior="nearTxModal" class="modal" style="display: none">
+    <div class="modal__container">
+      <nav class="modal__nav">
+        <button
+          type="button"
+          class="modal__nav__button--close"
+          data-behavior="closeModal"
+        >
+          <span class="visually-hidden">close</span>
+        </button>
+      </nav>
+      <div class="modal-image__container">
+        <img src="img/near-wallet-sig.svg" alt="" class="modal__image" />
+      </div>
+      <h1 class="modal__heading">Confirm NEAR Transaction</h1>
+      <p class="modal__message">
+        You will be redirected to NEAR Wallet to complete your transaction.
+      </p>
+      <p class="modal__message">
+        Please do not go back or close the window until the process is complete.
+      </p>
+      <button data-behavior="nearTxConfirmButton" class="full-width">
+        Continue to NEAR Wallet
+      </button>
+    </div>
+  </div>
+  <div data-behavior="ethTxModal" class="modal" style="display: none">
+    <div class="modal__container">
+      <div class="modal-image__container">
+        <img src="img/eth-wallet-sig.svg" alt="" class="modal__image" />
+      </div>
+      <h1 class="modal__heading">Confirm Ethereum Transaction</h1>
+      <p class="modal__message">
+        Please sign and confirm the transaction in your Ethereum wallet to proceed.
+      </p>
+    </div>
+  </div>
 </div>
   <style>
     .transfers {
@@ -433,6 +470,7 @@
   </style>
   <script>
     window.addEventListener("load", function addLandingHandlers() {
+      let transferIdToActOnNear
       window.dom.onClick("newTransfer", function startErc20Transfer() {
         window.urlParams.set({ new: "transfer" });
         window.render();
@@ -452,28 +490,40 @@
           filter: (t) => t.id === transferId
         });
         if (
-          (transfer.type.includes('sendToNear') && transfer.completedStep !== 'sync-natural-erc20-to-nep141') || // approve or lock (including retry)
-          (transfer.type.includes('sendToEthereum') && transfer.completedStep === 'sync-bridged-nep141-to-erc20') // unlock (including retry)
-          // TODO eNEAR case
+          // At transfer start completedStep is null when retrying approve or burn e-near
+          (transfer.type.includes('sendToNear') && transfer.completedStep === null) ||
+          // Lock or transfer finalization
+          ['approve-natural-erc20-to-nep141', 'sync-bridged-nep141-to-erc20', 'sync-natural-near-to-e-near'].includes(transfer.completedStep)
         ) {
           window.dom.show("ethTxModal")
+          try {
+            await window.transfers.act(transferId)
+          } catch(error) {
+            console.error(error)
+            // only hide if error, show until redirect happens
+          } finally {
+            window.dom.hide("ethTxModal")
+          }
         } else {
+          // record transfer id to be confirmed in the modal
+          transferIdToActOnNear = transferId
           window.dom.show("nearTxModal")
-          // give the user some time to read the redirect information
-          await new Promise(r => setTimeout(r, 3000));
         }
-        callToAction.disabled = true
+      });
+
+      const nearTxConfirmButton = window.dom.find("nearTxConfirmButton");
+      nearTxConfirmButton.onclick = async () => {
+        nearTxConfirmButton.disabled = true
         try {
-          await window.transfers.act(transferId)
+          await window.transfers.act(transferIdToActOnNear)
         } catch(error) {
           console.error(error)
           // only hide if error, show until redirect happens
           window.dom.hide("nearTxModal")
-        } finally {
-          callToAction.disabled = false
-          window.dom.hide("ethTxModal")
+          nearTxConfirmButton.disabled = false
         }
-      });
+      }
+
       document.querySelector("body").addEventListener("click", (event) => {
         const transferDetailsButton = event.target.closest(
           "[data-behavior=openTransferDetails]"
