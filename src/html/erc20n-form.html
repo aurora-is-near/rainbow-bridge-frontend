@@ -77,28 +77,6 @@
           class="modal__nav__button--close"
           data-behavior="closeModal"
         >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M18 6L6 18"
-              stroke="#A2A2A8"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M6 6L18 18"
-              stroke="#A2A2A8"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
           <span class="visually-hidden">close</span>
         </button>
       </nav>
@@ -126,6 +104,39 @@
       </form>
     </div>
   </div>
+  <div data-behavior="startTransferToEthereumModal" class="modal" style="display: none">
+    <div class="modal__container">
+      <nav class="modal__nav">
+        <button
+          type="button"
+          class="modal__nav__button--close"
+          data-behavior="closeModal"
+        >
+          <span class="visually-hidden">close</span>
+        </button>
+      </nav>
+      <div class="modal-image__container">
+        <img src="img/near-wallet-sig.svg" alt="" class="modal__image" />
+      </div>
+      <h1 class="modal__heading">Confirm NEAR Transaction</h1>
+      <p class="modal__message">
+        This transfer can take up to 24 hours and costs approximately 500kgas to finalize on Ethereum (0.05ETH at 100gWei gas price).
+      </p>
+      <p class="modal__message">
+        We encourage you to consider the transfered value relative to the transaction fees on Ethereum.
+      </p>
+      <p class="modal__message">
+        Once initiated, a transfer cannot be canceled and should be finalized on Ethereum.
+      </p>
+      <p class="modal__message">
+        You will be redirected to NEAR Wallet to complete your transaction.
+        Please do not go back or close the window until the process is complete.
+      </p>
+      <button data-behavior="erc20nConfirmSubmit" class="full-width">
+        Continue to NEAR Wallet
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -133,6 +144,7 @@
     const amount = window.dom.find("erc20nAmount");
     const select = window.dom.find("erc20nSelectButton");
     const submit = window.dom.find("erc20nSubmit");
+    const confirmSubmit = window.dom.find("erc20nConfirmSubmit");
     const cancel = document.getElementById("erc20nCancel")
 
     function disableForm() {
@@ -171,13 +183,11 @@
       "sendBridgedNep141Form"
     ).onsubmit = async function transferErc20n(e) {
       e.preventDefault();
+      window.dom.show("startTransferToEthereumModal")
+    }
 
-      disableForm();
-
-      window.dom.show("nearTxModal")
-      // give the user some time to read the redirect information
-      await new Promise(r => setTimeout(r, 3000));
-
+    confirmSubmit.onclick = async function confirmTransferErc20n(e) {
+      confirmSubmit.disabled = true
       try {
         await window.nep141Xerc20.bridgedNep141.sendToEthereum({
           amount: amount.value,
@@ -185,24 +195,18 @@
           sender: window.nearUserAddress,
           recipient: window.ethUserAddress,
         });
+        // Client library will redirect to NEAR Wallet
       } catch (e) {
-        // only hide if error, show until redirect happens
-        window.dom.hide("nearTxModal")
+        console.error(e)
         alert(
           "Something went wrong! " +
             "Maybe you need to sign out and back in? " +
             "Check your browser console for more info."
         );
-        throw e;
-      } finally {
-        // re-enable the form, whether the call succeeded or failed
-        enableForm();
+        // only hide if error, show until redirect happens
+        window.dom.hide("startTransferToEthereumModal")
+        confirmSubmit.disabled = false
       }
-
-      // if the call succeeded, reset and close the form
-      amount.value = "";
-      window.urlParams.clear("erc20n");
-      window.render();
     };
 
     window.dom.onClick("featuredErc20nOption", ({ target }) => {

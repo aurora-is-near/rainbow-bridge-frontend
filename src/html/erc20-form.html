@@ -88,28 +88,6 @@
           class="modal__nav__button--close"
           data-behavior="closeModal"
         >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M18 6L6 18"
-              stroke="#A2A2A8"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M6 6L18 18"
-              stroke="#A2A2A8"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
           <span class="visually-hidden">close</span>
         </button>
       </nav>
@@ -135,6 +113,24 @@
         </header>
         <div class="token-list" data-behavior="erc20List"></div>
       </form>
+    </div>
+  </div>
+  <div data-behavior="startTransferToNearModal" class="modal" style="display: none">
+    <div class="modal__container">
+      <div class="modal-image__container">
+        <img src="img/eth-wallet-sig.svg" alt="" class="modal__image" />
+      </div>
+      <h1 class="modal__heading">Confirm Ethereum Transaction</h1>
+      <p class="modal__message">
+        Transfers to NEAR take about 10 minutes, while transfers back to
+        Ethereum can take up to 24 hours.
+      </p>
+      <p class="modal__message">
+        Once initiated, a transfer cannot be canceled and should be finalized on NEAR.
+      </p>
+      <p class="modal__message">
+        Please sign and confirm the transaction in your Ethereum wallet to proceed.
+      </p>
     </div>
   </div>
 </div>
@@ -189,7 +185,7 @@
 
       disableForm();
 
-      window.dom.show("ethTxModal")
+      window.dom.show("startTransferToNearModal")
       try {
         await window.nep141Xerc20.naturalErc20.sendToNear({
           amount: amount.value,
@@ -201,7 +197,7 @@
         alert("Something went wrong!\n" + e.message);
         throw e;
       } finally {
-        window.dom.hide("ethTxModal")
+        window.dom.hide("startTransferToNearModal")
         // re-enable the form, whether the call succeeded or failed
         enableForm();
       }
