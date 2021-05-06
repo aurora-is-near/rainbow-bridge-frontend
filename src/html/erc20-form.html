@@ -171,6 +171,8 @@
       amount.value = ''
       window.dom.find("erc20SelectButton").classList.remove("selected")
       window.dom.fill("erc20SelectButton").with("Select ERC20")
+      window.dom.hide("useMaxErc20")
+      amount.disabled = true
     }
 
     function enableOrDisableErc20() {
