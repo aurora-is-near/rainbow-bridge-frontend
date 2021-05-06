@@ -2574,6 +2574,11 @@ bn.js@4.11.8:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
 
+bn.js@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.0.tgz#7ef3e4af5d85a8d70d7077cb7d44bfc5cd6e6039"
+  integrity sha512-NiyuqJjtPhXcJDc8I+YeyZceSMViT39AvuFJCH3ieMcOsRvZsp2luMrGSnQaqN6HVJMvSgydLnkvw5N4xvuIoQ==
+
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.11.0, bn.js@^4.11.1, bn.js@^4.11.6, bn.js@^4.11.8, bn.js@^4.11.9, bn.js@^4.4.0:
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.12.0.tgz#775b3f278efbb9718eec7361f483fb36fbbfea88"
@@ -7740,6 +7745,23 @@ near-api-js@^0.39.0:
   dependencies:
     "@types/bn.js" "^5.1.0"
     bn.js "^5.0.0"
+    borsh "^0.3.1"
+    bs58 "^4.0.0"
+    depd "^2.0.0"
+    error-polyfill "^0.1.2"
+    http-errors "^1.7.2"
+    js-sha256 "^0.9.0"
+    mustache "^4.0.0"
+    node-fetch "^2.6.1"
+    text-encoding-utf-8 "^1.0.2"
+    tweetnacl "^1.0.1"
+
+near-api-js@^0.40.0:
+  version "0.40.0"
+  resolved "https://registry.yarnpkg.com/near-api-js/-/near-api-js-0.40.0.tgz#27a3de4b4394d1d96c24bc5976db581c863e5cf4"
+  integrity sha512-GC6hENjJf0Vgi07gNiCrr44Yli8yf1bEnoXu+4+68GKBhVnQXqjyArU9nepeCtWR8PIrDosVHIkSe2F2e0YyUw==
+  dependencies:
+    bn.js "5.1.0"
     borsh "^0.3.1"
     bs58 "^4.0.0"
     depd "^2.0.0"
