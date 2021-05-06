@@ -176,6 +176,8 @@
       amount.value = ''
       window.dom.find("erc20nSelectButton").classList.remove("selected")
       window.dom.fill("erc20nSelectButton").with("Select token")
+      window.dom.hide("useMaxErc20n")
+      amount.disabled = true
     }
 
     function enableOrDisableErc20n() {
