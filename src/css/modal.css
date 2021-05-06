@@ -88,6 +88,7 @@
   font-size: var(--fs-small);
   line-height: var(--lh-copy);
   text-align: center;
+  margin-bottom: var(--spacing-xl)
 }
 
 .modal__cta {
