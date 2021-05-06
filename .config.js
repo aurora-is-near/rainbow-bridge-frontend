@@ -46,7 +46,7 @@ module.exports = {
       '0x722dd3f80bac40c951b51bdd28dd19d435762180', // TST: https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180
       '0xbf4d811e6891ed044d245cafcc4caa96c969204d', // USDT: https://ropsten.etherscan.io/token/0xbf4d811e6891ed044d245cafcc4caa96c969204d
     ]),
-    nearNodeUrl: 'https://rpc.testnet.near.org',
+    nearNodeUrl: 'https://archival-rpc.testnet.near.org/',
     nearWalletUrl: 'https://wallet.testnet.near.org',
     nearExplorerUrl: 'https://explorer.testnet.near.org',
     nearNetworkId: 'testnet',
@@ -111,7 +111,7 @@ module.exports = {
       '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e', //   YFI
       '0x111111111117dc0aa78b770fa6a738034120c302', //   1INCH
     ]),
-    nearNodeUrl: 'https://rpc.mainnet.near.org',
+    nearNodeUrl: 'https://archival-rpc.mainnet.near.org/',
     nearWalletUrl: 'https://wallet.near.org',
     nearExplorerUrl: 'https://explorer.near.org',
     nearNetworkId: 'mainnet',
