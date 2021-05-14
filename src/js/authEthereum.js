@@ -9,9 +9,6 @@ import render from './render'
 import { onClick } from './domHelpers'
 import { chainIdToEthNetwork } from './utils'
 
-// SWAP IN YOUR OWN INFURA_ID FROM https://infura.io/dashboard/ethereum
-const INFURA_ID = '9c91979e95cb4ef8a61eb029b4217a1a'
-
 /*
   Web3 modal helps us "connect" external wallets:
 */
@@ -26,7 +23,7 @@ window.web3Modal = new Web3Modal({
     walletconnect: {
       package: WalletConnectProvider, // required
       options: {
-        infuraId: INFURA_ID
+        infuraId: process.env.INFURA_ID
       }
     }
   },
