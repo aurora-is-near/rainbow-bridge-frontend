@@ -55,11 +55,12 @@ export async function getNearData () {
     balance: eNearBalance,
     allowance: '-1',
     decimals: 24,
-    name: 'eNEAR',
+    name: 'NEAR',
+    icon: 'near.svg',
     nep141: {
       address: 'near',
       balance: nearBalance,
-      name: 'NEAR'
+      name: '$NEAR'
     }
   }
 }
