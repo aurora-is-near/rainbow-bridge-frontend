@@ -98,6 +98,11 @@ export function init () {
 
   onClick('newRecovery', function startTransferRecovery () {
     if (!(window.ethInitialized && window.nearInitialized)) return
+    window.dom.show('locateTransfer')
+    window.dom.hide('searchingTransfer')
+    window.dom.hide('transferFound')
+    window.dom.hide('noTransferFound')
+    window.dom.find('txHashInput').value = ''
     window.urlParams.set({ new: 'restore' })
     render()
   })

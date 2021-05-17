@@ -15,7 +15,6 @@
         placeholder="0x89d24A6b4C.../4vcWEVTeg5C"
         autocomplete="off"
       />
-      <div data-behavior="txHashError" class="errorMessage"></div>
       <footer>
         <button class="full-width" data-behavior="restoreSubmit" disabled>
           Locate transfer
@@ -25,6 +24,38 @@
         </button>
       </footer>
     </form>
+  </div>
+  <div data-behavior="searchingTransfer" style="display: none">
+    <header>
+      <h2>Searching Transfer...</h2>
+    </header>
+    <footer>
+      <button type="button" class="cancel" data-behavior="cancelRestore">
+        Cancel
+      </button>
+    </footer>
+  </div>
+  <div data-behavior="noTransferFound" style="display: none">
+    <header>
+      <h2>No transfer found</h2>
+      <p>
+        No bridge transfer could be recovered from this transaction hash.
+      </p>
+    </header>
+    <div>
+      <label for="txHashContainer">Transaction hash</label>
+      <div class="txHashContainer">
+        <p data-behavior="txHashNotFound"></p>
+      </div>
+    </div>
+    <footer>
+      <button class="full-width" data-behavior="cancelRestore">
+        Return to transfers
+      </button>
+      <button type="button" class="link button--missing-transfer full-width" data-behavior="newRecovery">
+        Try again
+      </button>
+    </footer>
   </div>
   <div data-behavior="transferFound" style="display: none">
     <header>
@@ -52,7 +83,6 @@
   }
   .restore header {
     text-align: center;
-    margin-top: 5em;
     margin-bottom: 5em;
   }
   .restore input {
@@ -64,8 +94,23 @@
   .restore button {
     margin-top: 1em;
   }
-  .restore .errorMessage {
-    margin-top: 1em;
+  .restoredTransfer.in-progress {
+    --color--transfer-header: var(--orange-300);
+    --color--transfer-amount: var(--orange-800);
+    --color--accounts-container: var(--orange-100);
+    --color--accounts-label: var(--orange-700);
+  }
+  .restoredTransfer.completed {
+    --color--transfer-header: var(--green-300);
+    --color--transfer-amount: var(--green-800);
+    --color--accounts-container: var(--green-100);
+    --color--accounts-label: var(--green-700);
+  }
+  .restoredTransfer.action-needed {
+    --color--transfer-header: var(--blue-300);
+    --color--transfer-amount: var(--blue-800);
+    --color--accounts-container: var(--blue-100);
+    --color--accounts-label: var(--blue-700);
   }
   .restoredTransfer {
     overflow: hidden;
@@ -74,7 +119,7 @@
     border-radius: 10px;
   }
   .restoredTransfer header {
-    background-color: #ffdbb2;
+    background-color: var(--color--transfer-header);
     text-align: left;
     padding: 0.6rem 1rem;
     display: grid;
@@ -86,11 +131,14 @@
     margin-top: 0;
   }
   .restoredTransfer header h3 {
-    color: #452500;
+    color: var(--color--transfer-amount);
+  }
+  .restoredTransfer header span {
+    color: var(--color--accounts-label);
   }
   .restoredTransfer div {
-    background-color: #fff6ed;
-    color: #995200;
+    background-color: var(--color--accounts-container);
+    color: var(--color--accounts-label);
     padding: 0.7rem 1rem;
     display: grid;
     grid-gap: 7rem;
@@ -99,7 +147,19 @@
     align-items: center;
   }
   .restoredTransfer > div > *:first-child {
-    color: #e78513;
+    color: var(--color--accounts-label);
+  }
+  .restoredTransfer .account-with-icon {
+    color: var(--color--accounts-label);
+  }
+  .txHashContainer {
+    background-color: var(--gray-200);
+    padding: var(--spacing-xs);
+    border-radius: var(--br-small);
+    overflow-wrap: break-word;
+    text-align: left;
+    padding-left: var(--spacing-s);
+    padding-right: var(--spacing-s);
   }
 </style>
 <script>
@@ -116,6 +176,9 @@
     ) {
       e.preventDefault();
       try {
+        window.dom.hide("locateTransfer");
+        window.dom.show("searchingTransfer");
+        await new Promise(r => setTimeout(r, 1000));
         if (/^(0x)?[0-9a-f]{64}$/i.test(txHashInput.value)) {
           transferToRestore = await window.nep141Xerc20.naturalErc20.recover(
             txHashInput.value
@@ -127,9 +190,7 @@
         }
         console.log(transferToRestore);
         txHashInput.value = "";
-        window.dom.fill("txHashError").with("");
-        window.dom.find("erc20FreeForm").classList.remove("error");
-        window.dom.hide("locateTransfer");
+        window.dom.hide("searchingTransfer");
         window.dom.show("transferFound");
         window.dom
           .fill("restoredTransferContainer")
@@ -138,12 +199,9 @@
           );
       } catch (e) {
         console.error(e);
-        txHashInput.classList.add("error");
-        window.dom
-          .fill("txHashError")
-          .with(
-            "Failed to locate transfer. Please double check your transaction ID"
-          );
+        window.dom.hide("searchingTransfer");
+        window.dom.show("noTransferFound");
+        window.dom.fill("txHashNotFound").with(txHashInput.value)
       }
     };
     window.dom.find(
@@ -160,8 +218,6 @@
         (cancelBtn.onclick = async function forgetFoundTransfer() {
           const txHashInput = window.dom.find("txHashInput");
           txHashInput.value = "";
-          txHashInput.classList.remove("error");
-          window.dom.fill("txHashError").with("");
           restoreSubmit.disabled = true;
           window.urlParams.clear("new");
           window.render();
@@ -173,12 +229,13 @@
   function renderRestoredTransfer(transfer, { inProgress }) {
     transfer = window.transfers.decorate(transfer, { locale: "en_US" });
     return `
-    <div class="restoredTransfer">
+    <div class="restoredTransfer ${transfer.status}">
       <header>
         <h3>${window.utils.formatLargeNum(
           transfer.amount,
           transfer.decimals
         )} ${transfer.sourceTokenName}</h3>
+        <span>${transfer.statusMessage}</span>
       </header>
       <div>
         <span>From</span>
