@@ -1,23 +1,30 @@
 <div>
-  <form data-behavior="bridgeErc20Form" class="container" style="display:none">
-    <h1 style="background: url(img/unbridged.svg) top center no-repeat; font-size: 1.5em; padding: 12rem 0 2.5rem">
+  <form data-behavior="bridgeErc20Form" class="container" style="display: none">
+    <h1
+      style="
+        background: url(img/unbridged.svg) top center no-repeat;
+        font-size: 1.5em;
+        padding: 12rem 0 2.5rem;
+      "
+    >
       Set up <strong data-behavior="erc20Name"></strong> on NEAR
     </h1>
     <p>
       The <strong data-behavior="erc20Name"></strong>
       <a
         href="https://eips.ethereum.org/EIPS/eip-20"
-        target="_blank" rel="noopener noreferrer"
-      >ERC20</a>
+        target="_blank"
+        rel="noopener noreferrer"
+        >ERC20</a
+      >
       token has not yet been bridged.
     </p>
     <p>
-      This is the first time the <strong data-behavior="erc20Name"></strong> token is being transferred to NEAR.
-      This requires a small, one-time setup fee of about 3 $NEAR.
+      This is the first time the
+      <strong data-behavior="erc20Name"></strong> token is being transferred to
+      NEAR. This requires a small, one-time setup fee of about 3 $NEAR.
     </p>
-    <button style="margin-top: 3em">
-      Bridge it!
-    </button>
+    <button style="margin-top: 3em">Bridge it!</button>
     <button type="button" class="cancel" data-behavior="bridgeErc20Cancel">
       Cancel
     </button>
@@ -41,7 +48,7 @@
         You will be redirected to NEAR Wallet to complete your transaction.
       </p>
       <p class="modal__message">
-        Please do not go back or close the window until the process is complete.
+        Keep this window open until the process is complete.
       </p>
       <button data-behavior="nearBridgeTxConfirmButton" class="full-width">
         Continue to NEAR Wallet
@@ -51,66 +58,65 @@
 </div>
 
 <script>
-  window.addEventListener('load', function handleSelectErc20Events () {
+  window.addEventListener("load", function handleSelectErc20Events() {
     const confirmBridgeTxButton = window.dom.find("nearBridgeTxConfirmButton");
-    window.dom.find('bridgeErc20Form').onsubmit = async function bridgeIt (e) {
-      e.preventDefault()
-      window.dom.show("nearBridgeTxModal")
-    }
+    window.dom.find("bridgeErc20Form").onsubmit = async function bridgeIt(e) {
+      e.preventDefault();
+      window.dom.show("nearBridgeTxModal");
+    };
     confirmBridgeTxButton.onclick = async () => {
-      confirmBridgeTxButton.disabled = true
+      confirmBridgeTxButton.disabled = true;
       try {
-        const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
-        const erc20Address = erc20 || erc20n
-        await window.nep141Xerc20.bridgedNep141.deploy(erc20Address)
+        const { erc20, erc20n } = window.urlParams.get("erc20", "erc20n");
+        const erc20Address = erc20 || erc20n;
+        await window.nep141Xerc20.bridgedNep141.deploy(erc20Address);
       } catch (e) {
         // only hide if error, show until redirect happens
-        console.error(e)
+        console.error(e);
         alert(
-          "Something went wrong! " +
-          "Check your browser console for more info."
+          "Something went wrong! " + "Check your browser console for more info."
         );
-        window.dom.hide("nearBridgeTxModal")
-        confirmBridgeTxButton.disabled = false
+        window.dom.hide("nearBridgeTxModal");
+        confirmBridgeTxButton.disabled = false;
       }
-    }
+    };
 
-    window.dom.find('bridgeErc20Cancel').onclick = () => {
-      window.dom.hide('bridgeErc20Form')
-      window.urlParams.clear()
-      window.render()
-    }
-  })
+    window.dom.find("bridgeErc20Cancel").onclick = () => {
+      window.dom.hide("bridgeErc20Form");
+      window.urlParams.clear();
+      window.render();
+    };
+  });
 
-  async function renderBridgeErc20 () {
-    if (!(window.ethInitialized && window.nearInitialized)) return
-    if (!window.isValidEthNetwork) return
+  async function renderBridgeErc20() {
+    if (!(window.ethInitialized && window.nearInitialized)) return;
+    if (!window.isValidEthNetwork) return;
 
-    const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
-    const erc20Address = erc20 || erc20n
+    const { erc20, erc20n } = window.urlParams.get("erc20", "erc20n");
+    const erc20Address = erc20 || erc20n;
 
     if (!erc20Address) {
-      window.dom.hide('bridgeErc20Form')
-      return
+      window.dom.hide("bridgeErc20Form");
+      return;
     }
 
-    let token
+    let token;
     try {
-      token = await window.utils.getErc20Data(erc20Address)
+      token = await window.utils.getErc20Data(erc20Address);
     } catch (e) {
       // error message filled in by other components
-      window.dom.hide('bridgeErc20Form')
-      return
+      window.dom.hide("bridgeErc20Form");
+      return;
     }
 
     if (token.nep141.balance !== null) {
-      window.dom.hide('bridgeErc20Form')
-      return
+      window.dom.hide("bridgeErc20Form");
+      return;
     }
 
-    window.dom.fill('erc20Name').with(token.name)
-    window.dom.show('bridgeErc20Form')
+    window.dom.fill("erc20Name").with(token.name);
+    window.dom.show("bridgeErc20Form");
   }
 
-  window.renderers.push(renderBridgeErc20)
+  window.renderers.push(renderBridgeErc20);
 </script>

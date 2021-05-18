@@ -14,10 +14,19 @@
       </header>
       <div class="inputs">
         <input type="hidden" name="erc20" data-behavior="erc20Address" />
-        <button class="selectButton" type="button" data-behavior="erc20SelectButton">
+        <button
+          class="selectButton"
+          type="button"
+          data-behavior="erc20SelectButton"
+        >
           Select ERC20
         </button>
-        <button class="maxAmount" type="button" data-behavior="useMaxErc20" style="display: none;">
+        <button
+          class="maxAmount"
+          type="button"
+          data-behavior="useMaxErc20"
+          style="display: none"
+        >
           Use Max
         </button>
         <input
@@ -77,7 +86,12 @@
       <button disabled data-behavior="erc20Submit" class="full-width">
         Approve transfer
       </button>
-      <button id="erc20Cancel" type="button" class="cancel" data-behavior="goHome">
+      <button
+        id="erc20Cancel"
+        type="button"
+        class="cancel"
+        data-behavior="goHome"
+      >
         Cancel
       </button>
     </footer>
@@ -118,20 +132,23 @@
       </form>
     </div>
   </div>
-  <div data-behavior="startTransferToNearModal" class="modal" style="display: none">
+  <div
+    data-behavior="startTransferToNearModal"
+    class="modal"
+    style="display: none"
+  >
     <div class="modal__container">
       <div class="modal-image__container">
         <img src="img/eth-wallet-sig.svg" alt="" class="modal__image" />
       </div>
       <h1 class="modal__heading">Confirm Ethereum Transaction</h1>
       <p class="modal__message">
-        Transfers are a two-step process, requiring confirmations in both your Ethereum and NEAR wallets.
+        Transfers require confirmation from both your Ethereum and NEAR wallets
+        and cannot be cancelled once initiated.
       </p>
       <p class="modal__message">
-        After confirming with your Ethereum wallet, you’ll need to return about 10 minutes later to confirm with your NEAR wallet.
-      </p>
-      <p class="modal__message">
-        Once initiated from Ethereum, the transfer can not be canceled.
+        Once the initial transfer has been confirmed with your Ethereum wallet,
+        you’ll need to return later (~10min) to finalize with your NEAR wallet.
       </p>
     </div>
   </div>
@@ -160,43 +177,50 @@
     }
 
     select.onclick = () => {
-      window.urlParams.set({ erc20: '' })
-      window.dom.find("erc20FreeForm").value = ''
-      window.dom.find("erc20FreeForm").classList.remove("error")
-      erc20Address = ''
-      window.dom.fill("erc20AddressError").with("")
-      window.dom.hide("erc20AddressError")
-      window.dom.show("erc20Modal")
-      window.dom.hide('erc20Info')
-      amount.value = ''
-      window.dom.find("erc20SelectButton").classList.remove("selected")
-      window.dom.fill("erc20SelectButton").with("Select ERC20")
-      window.dom.hide("useMaxErc20")
-      amount.disabled = true
-    }
+      window.urlParams.set({ erc20: "" });
+      window.dom.find("erc20FreeForm").value = "";
+      window.dom.find("erc20FreeForm").classList.remove("error");
+      erc20Address = "";
+      window.dom.fill("erc20AddressError").with("");
+      window.dom.hide("erc20AddressError");
+      window.dom.show("erc20Modal");
+      window.dom.hide("erc20Info");
+      amount.value = "";
+      window.dom.find("erc20SelectButton").classList.remove("selected");
+      window.dom.fill("erc20SelectButton").with("Select ERC20");
+      window.dom.hide("useMaxErc20");
+      amount.disabled = true;
+    };
 
     function enableOrDisableErc20() {
-      window.dom.show("useMaxErc20")
-      const decimalBalance = window.Decimal(window.dom.find("erc20Balance").innerHTML)
-      const decimalAllowance = window.Decimal(window.dom.find("erc20Allowance").innerHTML)
-      const decimalAmount = window.Decimal(amount.value)
-      if (decimalAmount.isZero() || decimalAmount.comparedTo(decimalBalance) === 1)
+      window.dom.show("useMaxErc20");
+      const decimalBalance = window.Decimal(
+        window.dom.find("erc20Balance").innerHTML
+      );
+      const decimalAllowance = window.Decimal(
+        window.dom.find("erc20Allowance").innerHTML
+      );
+      const decimalAmount = window.Decimal(amount.value);
+      if (
+        decimalAmount.isZero() ||
+        decimalAmount.comparedTo(decimalBalance) === 1
+      )
         // decimalAmount is bigger than decimalBalance
-        submit.disabled = true
-      else submit.disabled = false
+        submit.disabled = true;
+      else submit.disabled = false;
       if (decimalAmount.comparedTo(decimalAllowance) === 1)
         // decimalAmount is bigger than decimalAllowance
-        submit.innerHTML = "Approve transfer"
-      else submit.innerHTML = "Submit transfer"
+        submit.innerHTML = "Approve transfer";
+      else submit.innerHTML = "Submit transfer";
     }
 
     maxAmount.onclick = () => {
       amount.value = window.dom.find("erc20Balance").innerHTML;
-      enableOrDisableErc20()
-      window.dom.hide("useMaxErc20")
-    }
+      enableOrDisableErc20();
+      window.dom.hide("useMaxErc20");
+    };
 
-    amount.onkeyup = enableOrDisableErc20
+    amount.onkeyup = enableOrDisableErc20;
 
     window.dom.find(
       "sendNaturalErc20Form"
@@ -205,7 +229,7 @@
 
       disableForm();
 
-      window.dom.show("startTransferToNearModal")
+      window.dom.show("startTransferToNearModal");
       try {
         await window.nep141Xerc20.naturalErc20.sendToNear({
           amount: amount.value,
@@ -217,7 +241,7 @@
         alert("Something went wrong!\n" + e.message);
         throw e;
       } finally {
-        window.dom.hide("startTransferToNearModal")
+        window.dom.hide("startTransferToNearModal");
         // re-enable the form, whether the call succeeded or failed
         enableForm();
       }
@@ -235,16 +259,16 @@
     });
   });
 
-  function ownedErc20OnTop (token1, token2) {
-    if (token1.balance === '0' && token2.balance !== '0') {
-      return 1
-    } else if (token1.balance !== '0' && token2.balance === '0') {
-      return -1
+  function ownedErc20OnTop(token1, token2) {
+    if (token1.balance === "0" && token2.balance !== "0") {
+      return 1;
+    } else if (token1.balance !== "0" && token2.balance === "0") {
+      return -1;
     }
-    return 0
+    return 0;
   }
 
-  async function fillErc20List () {
+  async function fillErc20List() {
     if (!window.ethInitialized) return;
     if (!window.isValidEthNetwork) return;
     if (window.urlParams.get("erc20") === null) return;
@@ -252,8 +276,10 @@
     const allTokens = await window.utils.getAllErc20s();
 
     window.dom.fill("erc20List").with(
-      Object.values(allTokens).sort(ownedErc20OnTop).map(
-        (token) => `
+      Object.values(allTokens)
+        .sort(ownedErc20OnTop)
+        .map(
+          (token) => `
         <label class="space-between">
           <input
             type="radio"
@@ -270,7 +296,7 @@
           </span>
         </label>
       `
-      )
+        )
     );
   }
 
@@ -302,12 +328,12 @@
       window.dom.fill("erc20SelectButton").with("Select ERC20");
       window.dom.hide("erc20Info");
       window.dom.show("sendNaturalErc20");
-      window.dom.hide("useMaxErc20")
+      window.dom.hide("useMaxErc20");
       return;
     }
 
     window.dom.find("erc20Address").value = erc20Address;
-    window.dom.show("useMaxErc20")
+    window.dom.show("useMaxErc20");
 
     let token;
     try {
@@ -329,7 +355,7 @@
     }
 
     // getErc20Data succeeded so remember this token if not already in storage
-    window.utils.rememberCustomErc20(erc20Address)
+    window.utils.rememberCustomErc20(erc20Address);
 
     if (token.nep141.balance === null) {
       window.dom.hide("sendNaturalErc20");
@@ -360,15 +386,17 @@
     if (token.balance) amount.disabled = false;
     else amount.disabled = true;
 
-    amount.step = Number(Decimal(10).pow(-token.decimals).toFixed())
+    amount.step = Number(Decimal(10).pow(-token.decimals).toFixed());
     // NOTE: the html input field makes the comparison on rounded numbers
     // So the max check is not precise for very small decimals.
     // For example if the balance is 500003.0100900000011, then the input field will allow a max of
     // only 500003.01009
     amount.max = Number(
-      new window.Decimal(token.balance).times(Decimal(10).pow(-token.decimals)).toFixed()
-    )
-    amount.min = Number(Decimal(10).pow(-token.decimals).toFixed())
+      new window.Decimal(token.balance)
+        .times(Decimal(10).pow(-token.decimals))
+        .toFixed()
+    );
+    amount.min = Number(Decimal(10).pow(-token.decimals).toFixed());
     window.dom.show("erc20Info", "flex");
     amount.focus();
   }
