@@ -1318,10 +1318,10 @@
     decimal.js "^10.2.1"
     near-api-js "^0.39.0"
 
-"@near-eth/near-ether@0.0.1-2":
-  version "0.0.1-2"
-  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-0.0.1-2.tgz#249abf2de0f7c3c9b814168c748c8f6cf06382d6"
-  integrity sha512-u2+PrggnL8oBApPJeffLZhl42DK37+TqAJcxgk1dRdRkFN9AHOH3ZgFtElPB9iO2+sBu4C9oTyvccJ7++qqEiA==
+"@near-eth/near-ether@0.0.1-3":
+  version "0.0.1-3"
+  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-0.0.1-3.tgz#f969632fff7522dd73c11d0acb725ff66acadd19"
+  integrity sha512-HX+sWEdBxuRDAaXXprZQDSQ1ATc4FYkKhx3WgCsebxJsEhK/G0gLrVBFV+tPtZZXYwD6RHaHk3xOU+pQudbGqQ==
   dependencies:
     "@near-eth/client" "1.3.0-3"
     "@near-eth/utils" "0.0.1-1"
@@ -1338,17 +1338,20 @@
     web3 "^1.3.4"
     web3-utils "^1.3.4"
 
-"@near-eth/nep141-erc20@1.3.4-1":
-  version "1.3.4-1"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.3.4-1.tgz#a96f4b0708f937cbd89162e53298e681ec0d19b2"
-  integrity sha512-y13cIeSdDhZuA8sG/Ef6trO2uEsjqX4rbf3kt7t55hvN5ddPs9p+pj/BD3OCKW93z5yhamrnbdjpKUL7ALlFaQ==
+"@near-eth/nep141-erc20@1.3.4-3":
+  version "1.3.4-3"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.3.4-3.tgz#24a34f8fd2100efc87e6a86a2f6af3d7fbdf5e84"
+  integrity sha512-bJaZKVAZw/dNEPDynSiAWoXiaKLDgH4VBNTiA2ZTBP4abdbL1m6Nq5UmO+uzFXEI0yDvwMnENVSLstTmtwXxAg==
   dependencies:
     "@near-eth/client" "1.3.0-3"
+    "@near-eth/utils" "0.0.1-1"
     bn.js "^5.1.3"
     bs58 "^4.0.1"
     eth-object aurora-is-near/eth-object#fb57468391112502792ba5fd8c586f5d2467a89f
     eth-revert-reason "^1.0.3"
     ethereumjs-util "^7.0.10"
+    find-replacement-tx "0.0.1-0"
+    lite-merkle-patricia-tree "0.0.1-0"
     near-api-js "^0.39.0"
     promisfy "^1.2.0"
     rlp "^2.2.6"
