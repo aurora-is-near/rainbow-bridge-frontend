@@ -227,7 +227,7 @@
         window.dom
           .fill("restoredTransferContainer")
           .with(
-            renderRestoredTransfer(transferToRestore, { inProgress: true })
+            renderRestoredTransfer(transferToRestore)
           );
       } catch (e) {
         console.error(e);
@@ -258,7 +258,7 @@
         })
     );
   });
-  function renderRestoredTransfer(transfer, { inProgress }) {
+  function renderRestoredTransfer(transfer) {
     transfer = window.transfers.decorate(transfer, { locale: "en_US" });
     return `
     <div class="restoredTransfer ${transfer.status}">
