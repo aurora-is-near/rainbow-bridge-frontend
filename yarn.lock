@@ -1309,21 +1309,21 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@near-eth/client@1.3.0-3":
-  version "1.3.0-3"
-  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.3.0-3.tgz#487f613495999dbbd4a6d98499cccb98bf137886"
-  integrity sha512-uhXU9XrhTvw4FJkzVOWMnf0dXDoepz+RIAx7Hd6VEQrIOoNDz46Z8UE9TIAX9a/a3bGUMjBnN127al+8ycZp1w==
+"@near-eth/client@1.3.0-4":
+  version "1.3.0-4"
+  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.3.0-4.tgz#d981f00482d6434f001137863d0bd6971095d483"
+  integrity sha512-23O6QBhXiFA0gRwg0TQUB+Gy2g4OxHtXC+TDLEEVZvOP3KaDa2jHoyzR/2SQSIx8STqIsRPs1c/CPFEYln+leQ==
   dependencies:
     bn.js "^5.1.3"
     decimal.js "^10.2.1"
     near-api-js "^0.39.0"
 
-"@near-eth/near-ether@0.0.1-3":
-  version "0.0.1-3"
-  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-0.0.1-3.tgz#f969632fff7522dd73c11d0acb725ff66acadd19"
-  integrity sha512-HX+sWEdBxuRDAaXXprZQDSQ1ATc4FYkKhx3WgCsebxJsEhK/G0gLrVBFV+tPtZZXYwD6RHaHk3xOU+pQudbGqQ==
+"@near-eth/near-ether@0.0.1-4":
+  version "0.0.1-4"
+  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-0.0.1-4.tgz#56a9f4f90dbaa5031ad8520c862f297698267077"
+  integrity sha512-fseff0MOHi7GSqTKyPWuNqvC/LvgB2E2dtE/7RnjZaC2dqo6mP242NkDciLXNqWgYpFRsvf+KxuWUB4vM+kpRQ==
   dependencies:
-    "@near-eth/client" "1.3.0-3"
+    "@near-eth/client" "1.3.0-4"
     "@near-eth/utils" "0.0.1-1"
     bn.js "^5.1.3"
     bs58 "^4.0.1"
@@ -1338,12 +1338,12 @@
     web3 "^1.3.4"
     web3-utils "^1.3.4"
 
-"@near-eth/nep141-erc20@1.3.4-3":
-  version "1.3.4-3"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.3.4-3.tgz#24a34f8fd2100efc87e6a86a2f6af3d7fbdf5e84"
-  integrity sha512-bJaZKVAZw/dNEPDynSiAWoXiaKLDgH4VBNTiA2ZTBP4abdbL1m6Nq5UmO+uzFXEI0yDvwMnENVSLstTmtwXxAg==
+"@near-eth/nep141-erc20@1.3.4-4":
+  version "1.3.4-4"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.3.4-4.tgz#5aa21fae828758dc5efa369430ef2ed1bf5a78dd"
+  integrity sha512-MDhzHm/W5iKlXxKum6c0n1OfGtk6tqmuTmQlGG6IW9XGcYYtpVvP6WfF68MPwiUhcxrnkpggY0Pn7WcffC7opQ==
   dependencies:
-    "@near-eth/client" "1.3.0-3"
+    "@near-eth/client" "1.3.0-4"
     "@near-eth/utils" "0.0.1-1"
     bn.js "^5.1.3"
     bs58 "^4.0.1"

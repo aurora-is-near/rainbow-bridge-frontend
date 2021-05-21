@@ -53,8 +53,8 @@ module.exports = {
     ethNetworkId: 'ropsten',
 
     eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
-    eNEARAddress: '0x73d37194cb39387b5a9ce86717e736c8a93d0d85',
-    nativeNEARLockerAddress: 'enear.testnet',
+    eNEARAddress: '0x2b3077b25909f24de5543d1e350c4d60f9e0c3ed',
+    nativeNEARLockerAddress: '0.e-near.testnet',
   },
   mainnet: {
     // library settings
@@ -97,8 +97,8 @@ module.exports = {
     ethNetworkId: 'main',
 
     eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
-    eNEARAddress: 'TODO',
-    nativeNEARLockerAddress: 'enear.testnet',
+    eNEARAddress: '0x85f17cf997934a597031b2e18a9ab6ebd4b9f6a4',
+    nativeNEARLockerAddress: 'e-near.near',
 
   }
 }
