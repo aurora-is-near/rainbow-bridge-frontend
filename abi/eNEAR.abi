@@ -70,10 +70,17 @@
       "inputs": [
         {
           "indexed": true,
-          "internalType": "address",
-          "name": "sender",
-          "type": "address"
-        },
+          "internalType": "bytes32",
+          "name": "_receiptId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "ConsumedProof",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
         {
           "indexed": false,
           "internalType": "uint128",
@@ -549,7 +556,7 @@
           "type": "bytes32"
         }
       ],
-      "name": "usedProofs_",
+      "name": "usedProofs",
       "outputs": [
         {
           "internalType": "bool",

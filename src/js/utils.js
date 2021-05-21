@@ -44,7 +44,7 @@ export async function getAllTokens () {
     },
     {}
   )
-  return { ...tokens, near: await getNearData() }
+  return { near: await getNearData(), ...tokens }
 }
 
 export async function getNearData () {
@@ -60,7 +60,7 @@ export async function getNearData () {
     nep141: {
       address: 'near',
       balance: nearBalance,
-      name: '$NEAR'
+      name: 'NEAR'
     }
   }
 }
