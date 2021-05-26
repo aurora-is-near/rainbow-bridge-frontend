@@ -149,20 +149,36 @@
     // to add the swap behavior only once.
     if (!window.state.authenticatedAccountsInitialized) {
       window.dom.onClick("swapAccounts", function swapAccountOrder({ target }) {
-        window.dom.findAll("transferFrom").forEach((input) => {
-          input.name = input.name === "erc20" ? "erc20n" : "erc20";
-        });
-
         const from = target.closest("div").previousElementSibling;
         const to = target.closest("div").nextElementSibling;
         fromInner = from.innerHTML;
         toInner = to.innerHTML;
         from.innerHTML = toInner;
         to.innerHTML = fromInner;
+
+        // Record current swap direction to be the same after NEAR wallet login redirect.
+        const settings = JSON.parse(window.localStorage.getItem("rainbow-bridge-settings"))
+        if (from.childNodes[3].childNodes[5].id === "authEthereum") {
+          window.localStorage.setItem("rainbow-bridge-settings", JSON.stringify({ ...settings, direction: "eth-to-near"}))
+          window.dom.findAll("transferFrom").forEach((input) => {
+            input.name = "erc20";
+          });
+        } else {
+          window.localStorage.setItem("rainbow-bridge-settings", JSON.stringify({ ...settings, direction: "near-to-eth"}))
+          window.dom.findAll("transferFrom").forEach((input) => {
+            input.name = "erc20n";
+          });
+        }
       });
+      const swaps = window.dom.findAll("swapAccounts");
+      const settings = JSON.parse(window.localStorage.getItem("rainbow-bridge-settings"))
+      if (settings?.direction === "near-to-eth") {
+        swaps.map(swap => swap.click())
+      }
 
       window.state.authenticatedAccountsInitialized = true;
     }
+
   });
 
   window.renderers.push(() => {
