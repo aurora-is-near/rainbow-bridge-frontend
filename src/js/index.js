@@ -51,6 +51,9 @@ render()
 
 transfers.onChange(render)
 
+// Render when user clicks goBack
+window.onpopstate = render
+
 // These have side effects and may cause `render` calls which expect all
 // `window` additions above to be in place. Load last.
 require('./authEthereum')
