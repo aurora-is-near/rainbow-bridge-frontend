@@ -471,10 +471,6 @@
   <script>
     window.addEventListener("load", function addLandingHandlers() {
       let transferIdToActOnNear
-      window.dom.onClick("newTransfer", function startErc20Transfer() {
-        window.urlParams.set({ new: "transfer" });
-        window.render();
-      });
       // transfers are rendered after page load, so we add one click handler to the
       // body tag to handle clicking each kind of button on a transfer
       document.querySelector("body").addEventListener("click", async (event) => {

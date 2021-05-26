@@ -103,8 +103,18 @@ export function init () {
     window.dom.hide('transferFound')
     window.dom.hide('noTransferFound')
     window.dom.find('txHashInput').value = ''
-    window.urlParams.set({ new: 'restore' })
+    window.urlParams.setPush({ new: 'restore' })
     render()
+  })
+
+  onClick('newTransfer', function startTransfer () {
+    // Add url param with history.pushState to enable goBack.
+    urlParams.setPush({ new: 'transfer' })
+    window.render()
+  })
+
+  onClick('goBack', function goBack () {
+    window.history.back()
   })
 
   // avoid page refreshes when submitting "get" forms
@@ -112,9 +122,9 @@ export function init () {
     form.onsubmit = e => {
       e.preventDefault()
 
-      urlParams.clear()
+      // Replace url params with history.pushState to enable goBack.
       Array.from(e.target.elements).forEach(el => {
-        if (el.name) urlParams.set({ [el.name]: el.value })
+        if (el.name) urlParams.setPush({ [el.name]: el.value }, true)
       })
 
       render()
