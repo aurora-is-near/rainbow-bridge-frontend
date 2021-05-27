@@ -142,3 +142,19 @@ If your change should show up in release notes as a feature, use `feat:`. If it 
   [storage]: https://docs.near.org/docs/concepts/storage-staking
   [Node.js]: https://nodejs.org/en/download/package-manager/
   [yarn]: https://yarnpkg.com/
+
+
+
+Release the repository
+----------------------
+
+Update the repository CHANGELOG:
+```
+yarn changelog
+```
+
+Commit and push master:
+```
+git commit -m "chore: Release v2.0.0."
+git tag v2.0.0
+```
