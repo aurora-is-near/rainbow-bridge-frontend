@@ -1,6 +1,6 @@
 {
   "name": "rainbow-bridge-frontend",
-  "version": "1.0.0",
+  "version": "3.4.4",
   "license": "(MIT AND Apache-2.0)",
   "private": true,
   "scripts": {
@@ -11,14 +11,15 @@
     "start": "env-cmd -e ropsten_development -r .config.js parcel src/index.html --port 3333",
     "start_mainnet": "env-cmd -e mainnet -r .config.js parcel src/index.html --port 1111",
     "local": "env-cmd -e local -r .config.js parcel src/index.html",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "commitlint": "commitlint --from HEAD~1 --to HEAD --verbose",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "devDependencies": {
+    "conventional-changelog-angular": "^5.0.12",
+    "conventional-changelog-cli": "^2.1.1",
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
-    "@commitlint/travis-cli": "^12.1.1",
-    "@semantic-release/changelog": "^5.0.1",
-    "@semantic-release/git": "^9.0.0",
     "env-cmd": "^10.1.0",
     "eslint": "^7.24.0",
     "eslint-config-standard": "^16.0.2",
@@ -30,8 +31,7 @@
     "parcel-bundler": "^1.12.5",
     "parcel-plugin-asset-copier": "^1.1.0",
     "parcel-transformer-google-fonts": "^0.1.3",
-    "posthtml-include": "^1.7.0",
-    "semantic-release": "^17.4.2"
+    "posthtml-include": "^1.7.0"
   },
   "dependencies": {
     "@near-eth/client": "^1.3.0",
