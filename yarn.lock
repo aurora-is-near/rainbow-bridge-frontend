@@ -1309,10 +1309,19 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@near-eth/client@1.2.0", "@near-eth/client@^1.2.0":
+"@near-eth/client@1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.2.0.tgz#a618d16d8d4da89a40cbd0f3b6ce3f691c4f3e5d"
   integrity sha512-6kkl4ngfMEimHjPpWiERauAMqHVx+O3T3f7LrzHmdg5u9RZLtBA9GO5LdRdmzTtALLHtxMgeT2RJit5snXo8fA==
+  dependencies:
+    bn.js "^5.1.3"
+    decimal.js "^10.2.1"
+    near-api-js "^0.39.0"
+
+"@near-eth/client@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.3.0.tgz#822486db53f7c5af1d396af48986fb109483ebca"
+  integrity sha512-LQqBwyV77RWMV9nVeETyTfswTv7VQAGa/+UOMmtrVg+XQ2JDA5PL2loT34DPtOtA+dK/Gx/KqFcS5dRQqBauWw==
   dependencies:
     bn.js "^5.1.3"
     decimal.js "^10.2.1"
