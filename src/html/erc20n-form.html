@@ -178,7 +178,9 @@
     }
 
     function enableOrDisableErc20n() {
-      window.dom.show("useMaxErc20n")
+      if (erc20nAddress.toLowerCase() !== process.env.eNEARAddress) {
+        window.dom.show("useMaxErc20n")
+      }
       const decimalBalance = window.Decimal(window.dom.find("erc20nBalance").innerHTML)
       const decimalAmount = window.Decimal(amount.value)
       if (decimalAmount.isZero() || decimalAmount.comparedTo(decimalBalance) === 1)
@@ -302,13 +304,13 @@
       return;
     }
 
-    window.dom.show("useMaxErc20n")
 
     let token;
     try {
       if (erc20nAddress.toLowerCase() === process.env.eNEARAddress) {
         token = await window.utils.getNearData();
       } else {
+        window.dom.show("useMaxErc20n")
         token = await window.utils.getErc20Data(erc20nAddress);
       }
     } catch (e) {
