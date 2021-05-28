@@ -1,3 +1,28 @@
+# [3.5.0](https://github.com/aurora-is-near/rainbow-bridge-frontend/compare/v3.4.4...v3.5.0) (2021-05-28)
+
+
+### Bug Fixes
+
+* Enable browser back button. ([9efa74e](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/9efa74e4c9cebd1f057a19e42f8450c2d41f67e9))
+* Enable remove transfer before lock transaction is made ([82e5e07](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/82e5e072cee6f217c0a202ef841aab724d065de7))
+* Handle bridging redirect ([90fa12c](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/90fa12c3a397e5a7a49d665ff90ca4c636e3eeb4))
+* Improve tx modals ([b0f366f](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/b0f366f1c273bd865481c6c6fa362381f52cd7bc))
+* Make failed transfer from NEAR deletable. ([5503293](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/5503293871840bb62299a7242a0559faa3fb2345))
+* Remove rainbow-bridge-cli to upgrade eth-object ([b13b908](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/b13b90857c842d78f21986d9048256527dfa0952))
+* Upgrade nep141-erc20 with bridging redirect ([35e0e75](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/35e0e750e1420e4de1ad6e6a5ddd84c98d5b5dc1))
+
+
+### Features
+
+* Add eNEAR transfers. ([8d180f0](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/8d180f09f4b95196a9624c28e4494bcf9fe510e2))
+* Add max amount transfer ([e7cdcf7](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/e7cdcf709971e924901c75449f22d56447c41a14))
+* Add nearTxModal to BridgeIt ([2387d1a](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/2387d1aa9784cd1129a45f2bb09adf9a2dfb023d))
+* Add tx signing instructions modal ([6b015f4](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/6b015f46ca094c816e756aa458fe3d446e73626b))
+* Display restored transfer status. ([10a0e91](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/10a0e91cd185f7eb02efeff49cca8dde5692b5b6))
+* Record bridge direction in localStorage. ([ffb5121](https://github.com/aurora-is-near/rainbow-bridge-frontend/commit/ffb5121b62eb6f26664857ff815501390147d790))
+
+
+
 ## [3.4.4](https://github.com/near/rainbow-bridge-frontend/compare/v3.4.3...v3.4.4) (2021-04-20)
 
 
