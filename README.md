@@ -5,6 +5,9 @@ An app that moves assets between Ethereum and NEAR. You can use this as the star
 
 Try it between [Ethereum Ropsten] & [NEAR Testnet]: https://aurora-is-near.github.io/rainbow-bridge-frontend/
 
+![Deploy](https://github.com/aurora-is-near/rainbow-bridge-frontend/actions/workflows/deploy.yaml/badge.svg)
+![Lint](https://github.com/aurora-is-near/rainbow-bridge-frontend/actions/workflows/lint.yaml/badge.svg)
+
 
 How it works
 ============
