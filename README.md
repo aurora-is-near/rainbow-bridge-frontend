@@ -48,7 +48,7 @@ Getting started
 3. Run the local development server: `npm run start` or `yarn start` (see
    `package.json` for a full list of `scripts` you can run)
 
-This will start the app locally, connecting to smart contracts on the Rinkeby test network for Ethereum and NEAR's Testnet. If you want to run _everything_ locally, see [below](#run-everything-locally).
+This will start the app locally, connecting to smart contracts on the Ropsten test network for Ethereum and NEAR's Testnet. If you want to run _everything_ locally, see [below](#run-everything-locally).
 
 
 Exploring the code
@@ -140,7 +140,7 @@ If your change should show up in release notes as a feature, use `feat:`. If it 
   [Rainbow Bridge]: https://github.com/near/rainbow-bridge
   [NEP141]: https://github.com/near/NEPs/issues/141
   [NEAR]: https://near.org/
-  [Ethereum Rinkeby]: https://support.airswap.io/en/articles/2831385-what-is-rinkeby
+  [Ethereum Ropsten]: https://ropsten.etherscan.io
   [NEAR Testnet]: https://docs.near.org/docs/concepts/networks#testnet
   [storage]: https://docs.near.org/docs/concepts/storage-staking
   [Node.js]: https://nodejs.org/en/download/package-manager/
