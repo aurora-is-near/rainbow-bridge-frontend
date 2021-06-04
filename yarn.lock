@@ -1385,7 +1385,7 @@
     ora "^2.1.0"
     strip-ansi "^4.0.0"
 
-"@parcel/plugin@^2.0.0-alpha.1.1":
+"@parcel/plugin@^2.0.0-alpha.3":
   version "2.0.0-alpha.3"
   resolved "https://registry.yarnpkg.com/@parcel/plugin/-/plugin-2.0.0-alpha.3.tgz#ff9215d0c522ff60692aca7ef6abaa95243f564a"
   integrity sha512-2nfjd7ujL042gP7ssJ4JRyxEirp5Fuz+Vf4sk4aky3oWVuY9YmUqce0UNUMaIlh911xERo5uagy1jYOSa7gp6g==
@@ -3353,7 +3353,7 @@ debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.9:
   dependencies:
     ms "2.0.0"
 
-debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
+debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.1.tgz#f0d229c505e0c6d8c49ac553d1b13dc183f6b2ee"
   integrity sha512-doEwdvm4PCeK4K3RQN2ZC2BYUBaxwLARCqZmMjtF8a51J2Rb0xpVloFRnCODwqjpwnAoao4pelN8l3RJdv3gRQ==
@@ -6600,7 +6600,7 @@ mkdirp-promise@^5.0.1:
   dependencies:
     mkdirp "*"
 
-mkdirp@*:
+mkdirp@*, mkdirp@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
@@ -7216,12 +7216,14 @@ parcel-plugin-asset-copier@^1.1.0:
   dependencies:
     recursive-copy "2.0.10"
 
-parcel-transformer-google-fonts@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/parcel-transformer-google-fonts/-/parcel-transformer-google-fonts-0.1.3.tgz#a3a66c5c72e834d6d952ceb16c7678b22a24d16f"
-  integrity sha512-11dHWXY2TNdslr7LDeKAmELwOI/L4KYvg4MQ7hDXkXildvPWoLp8/UXDQBA0ccYw6/uql4ab5JobwPbEuOqPtA==
+parcel-transformer-google-fonts@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/parcel-transformer-google-fonts/-/parcel-transformer-google-fonts-0.1.4.tgz#adf8717679e7f7395937588b3bc233c0918de422"
+  integrity sha512-WyG+fK4ytd/L48BOPGdf8hGGZ9cOxolxoDMdmrqXnjISQqtCKjBRmmuR/aZNwnibRNtEFRjw+3fcfvBOitbZ8A==
   dependencies:
-    "@parcel/plugin" "^2.0.0-alpha.1.1"
+    "@parcel/plugin" "^2.0.0-alpha.3"
+    debug "^4.3.1"
+    mkdirp "^1.0.4"
 
 parent-module@^1.0.0:
   version "1.0.1"
