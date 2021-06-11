@@ -518,6 +518,13 @@
           window.dom.hide("nearTxModal")
           nearTxConfirmButton.disabled = false
         }
+        const [transfer] = await window.transfers.get({
+          filter: (t) => t.id === transferIdToActOnNear
+        });
+        // TODO client.act() should return the updated transfer object
+        if (transfer.status === 'completed') {
+          window.dom.hide("nearTxModal")
+        }
       }
 
       document.querySelector("body").addEventListener("click", (event) => {

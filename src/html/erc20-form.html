@@ -230,6 +230,7 @@
       // if the call succeeded, reset and close the form
       amount.value = "";
       window.urlParams.clear("erc20");
+      window.scrollTo({ top: 0 });
       window.render();
     };
 

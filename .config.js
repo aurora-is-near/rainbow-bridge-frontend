@@ -39,6 +39,11 @@ module.exports = {
     nearHelperUrl: 'https://helper.testnet.near.org',
     nearProverAccount: 'prover.ropsten.testnet',
     nearTokenFactoryAccount: 'f.ropsten.testnet',
+    eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
+    eNEARAddress: '0x2b3077b25909f24de5543d1e350c4d60f9e0c3ed',
+    nativeNEARLockerAddress: '0.e-near.testnet',
+
+    nearEventRelayerMargin: 10,
 
     // frontend settings
     featuredErc20s: JSON.stringify([
@@ -51,10 +56,6 @@ module.exports = {
     nearExplorerUrl: 'https://explorer.testnet.near.org',
     nearNetworkId: 'testnet',
     ethNetworkId: 'ropsten',
-
-    eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
-    eNEARAddress: '0x2b3077b25909f24de5543d1e350c4d60f9e0c3ed',
-    nativeNEARLockerAddress: '0.e-near.testnet',
   },
   mainnet: {
     // library settings
@@ -66,6 +67,11 @@ module.exports = {
     nearClientAccount: 'client.bridge.near',
     nearHelperUrl: 'https://helper.near.org',
     nearTokenFactoryAccount: 'factory.bridge.near',
+    eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
+    eNEARAddress: '0x85f17cf997934a597031b2e18a9ab6ebd4b9f6a4',
+    nativeNEARLockerAddress: 'e-near.near',
+
+    nearEventRelayerMargin: 10,
 
     // frontend settings
     featuredErc20s: JSON.stringify([
@@ -95,10 +101,5 @@ module.exports = {
     nearExplorerUrl: 'https://explorer.near.org',
     nearNetworkId: 'mainnet',
     ethNetworkId: 'main',
-
-    eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
-    eNEARAddress: '0x85f17cf997934a597031b2e18a9ab6ebd4b9f6a4',
-    nativeNEARLockerAddress: 'e-near.near',
-
   }
 }
