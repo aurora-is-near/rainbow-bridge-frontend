@@ -1330,10 +1330,10 @@
     web3 "^1.3.4"
     web3-utils "^1.3.4"
 
-"@near-eth/nep141-erc20@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.4.0.tgz#ba076828d54f1cc19e8fbf347a2c0c98f94c81c8"
-  integrity sha512-OnfTUco35JtmWpMd90WB9PQ42egvxrNE8sPZGQvU1MJq6DpwdPY8L3NeWit+tVYuhn2Of1D3r0KQUlpDO6zWmQ==
+"@near-eth/nep141-erc20@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.5.0.tgz#d007e51aadc7d67fce77aa61441a31f429a98de0"
+  integrity sha512-ZQOm9eKz1na9/78dQxv+poYu3ULquUfE7VTy/skjLdUJ5CX8yyFCqgNFEWKUKpQsTI3DOvEcFTLEmlzuOWGrpg==
   dependencies:
     "@near-eth/client" "1.3.0"
     "@near-eth/utils" "1.0.0"
@@ -1342,9 +1342,9 @@
     eth-object aurora-is-near/eth-object#fb57468391112502792ba5fd8c586f5d2467a89f
     eth-revert-reason "^1.0.3"
     ethereumjs-util "^7.0.10"
-    find-replacement-tx "1.0.0"
+    find-replacement-tx "1.1.0"
     lite-merkle-patricia-tree "1.0.0"
-    near-api-js "^0.39.0"
+    near-api-js "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb"
     promisfy "^1.2.0"
     rlp "^2.2.6"
     web3 "^1.3.4"
@@ -2144,15 +2144,15 @@ bn.js@4.11.8:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
 
+bn.js@5.2.0, bn.js@^5.0.0, bn.js@^5.1.1, bn.js@^5.1.2, bn.js@^5.1.3:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.0.tgz#358860674396c6997771a9d051fcc1b57d4ae002"
+  integrity sha512-D7iWRBvnZE8ecXiLj/9wbxH7Tk79fAh8IHaTNq1RWRixsS02W+5qS+iE9yq6RYl0asXx5tw0bLhmT5pIfbSquw==
+
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.11.0, bn.js@^4.11.1, bn.js@^4.11.6, bn.js@^4.11.8, bn.js@^4.11.9, bn.js@^4.4.0:
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.12.0.tgz#775b3f278efbb9718eec7361f483fb36fbbfea88"
   integrity sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==
-
-bn.js@^5.0.0, bn.js@^5.1.1, bn.js@^5.1.2, bn.js@^5.1.3:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.0.tgz#358860674396c6997771a9d051fcc1b57d4ae002"
-  integrity sha512-D7iWRBvnZE8ecXiLj/9wbxH7Tk79fAh8IHaTNq1RWRixsS02W+5qS+iE9yq6RYl0asXx5tw0bLhmT5pIfbSquw==
 
 body-parser@1.19.0, body-parser@^1.16.0:
   version "1.19.0"
@@ -2179,6 +2179,16 @@ borsh@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/borsh/-/borsh-0.3.1.tgz#c31c3a149610e37913deada80e89073fb15cf55b"
   integrity sha512-gJoSTnhwLxN/i2+15Y7uprU8h3CKI+Co4YKZKvrGYUy0FwHWM20x5Sx7eU8Xv4HQqV+7rb4r3P7K1cBIQe3q8A==
+  dependencies:
+    "@types/bn.js" "^4.11.5"
+    bn.js "^5.0.0"
+    bs58 "^4.0.0"
+    text-encoding-utf-8 "^1.0.2"
+
+borsh@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/borsh/-/borsh-0.4.0.tgz#9dd6defe741627f1315eac2a73df61421f6ddb9f"
+  integrity sha512-aX6qtLya3K0AkT66CmYWCCDr77qsE9arV05OmdFpmat9qu8Pg9J5tBUPDztAW5fNh/d/MyVG/OYziP52Ndzx1g==
   dependencies:
     "@types/bn.js" "^4.11.5"
     bn.js "^5.0.0"
@@ -4630,6 +4640,13 @@ find-replacement-tx@1.0.0:
   dependencies:
     web3 "^1.3.4"
 
+find-replacement-tx@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/find-replacement-tx/-/find-replacement-tx-1.1.0.tgz#107c036b6b5cc5fa8b9a205e4cb7d6162b3886af"
+  integrity sha512-TvXvi/VVknpw2LpuD53+mma6ki4TFOgJ65OOcPhK20FlEt0V75D4oFXXwb3SBBnabaGWKL9MOTdJDMPQxN/gIA==
+  dependencies:
+    web3 "^1.3.4"
+
 find-up@^1.0.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/find-up/-/find-up-1.1.2.tgz#6b2e9822b1a2ce0a60ab64d610eccad53cb24d0f"
@@ -6722,6 +6739,23 @@ near-api-js@^0.39.0:
     "@types/bn.js" "^5.1.0"
     bn.js "^5.0.0"
     borsh "^0.3.1"
+    bs58 "^4.0.0"
+    depd "^2.0.0"
+    error-polyfill "^0.1.2"
+    http-errors "^1.7.2"
+    js-sha256 "^0.9.0"
+    mustache "^4.0.0"
+    node-fetch "^2.6.1"
+    text-encoding-utf-8 "^1.0.2"
+    tweetnacl "^1.0.1"
+
+"near-api-js@https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb":
+  version "0.41.0"
+  uid fef7f683fca86980f3509987226fbc7f63b455cb
+  resolved "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb"
+  dependencies:
+    bn.js "5.2.0"
+    borsh "^0.4.0"
     bs58 "^4.0.0"
     depd "^2.0.0"
     error-polyfill "^0.1.2"

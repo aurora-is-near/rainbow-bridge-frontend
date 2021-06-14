@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@near-eth/client": "^1.3.0",
-    "@near-eth/nep141-erc20": "^1.4.0",
+    "@near-eth/nep141-erc20": "^1.5.0",
     "@near-eth/near-ether": "^1.0.0",
     "decimal.js": "^10.2.1",
     "near-api-js": "^0.39.0",
