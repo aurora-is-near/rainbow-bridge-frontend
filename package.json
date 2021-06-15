@@ -27,7 +27,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-standard": "^5.0.0",
-    "gh-pages": "^3.1.0",
+    "gh-pages": "^3.2.1",
     "parcel-bundler": "^1.12.5",
     "parcel-plugin-asset-copier": "^1.1.0",
     "parcel-transformer-google-fonts": "^0.1.3",
