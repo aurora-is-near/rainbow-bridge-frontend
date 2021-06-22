@@ -1,13 +1,8 @@
 import Web3Modal from 'web3modal'
-import WalletConnectProvider from '@walletconnect/web3-provider'
+import { ethers } from 'ethers'
 
-import {
-  checkStatusAll as checkTransferStatuses,
-  setEthProvider
-} from '@near-eth/client'
 import render from './render'
 import { onClick } from './domHelpers'
-import { chainIdToEthNetwork } from './utils'
 
 /*
   Web3 modal helps us "connect" external wallets:
@@ -19,50 +14,57 @@ if (window.matchMedia &&
 };
 window.web3Modal = new Web3Modal({
   cacheProvider: true, // optional
-  providerOptions: {
-    walletconnect: {
-      package: WalletConnectProvider, // required
-      options: {
-        infuraId: process.env.INFURA_ID
-      }
-    }
-  },
   theme: theme
 })
 
+export const AURORA_CHAIN = Number(process.env.auroraChainId)
+const capitalizeNetworkName = name => name.charAt(0).toUpperCase() + name.slice(1)
+const AURORA_CHAIN_PARAMS = {
+  chainId: '0x' + AURORA_CHAIN.toString(16),
+  chainName: 'Aurora ' + capitalizeNetworkName(process.env.nearNetworkId),
+  nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
+  rpcUrls: [process.env.auroraRpc],
+  blockExplorerUrls: null // TODO
+}
+
+export async function connectAurora () {
+  await window.ethereum.request({
+    method: 'wallet_addEthereumChain',
+    params: [AURORA_CHAIN_PARAMS]
+  })
+}
+
 async function login () {
   const provider = await window.web3Modal.connect()
-  setEthProvider(provider)
-
+  window.web3Provider = new ethers.providers.Web3Provider(provider)
   if (provider.isMetaMask) {
     window.ethUserAddress = provider.selectedAddress
-    window.connectedEthNetwork = chainIdToEthNetwork[parseInt(provider.chainId)]
+    window.connectedEthNetwork = parseInt(provider.chainId)
   } else {
     window.ethUserAddress = provider.accounts[0]
-    window.connectedEthNetwork = chainIdToEthNetwork[provider.chainId]
+    window.connectedEthNetwork = parseInt(provider.chainId)
   }
   provider.on('accountsChanged', (accounts) => {
     window.ethUserAddress = accounts[0]
     window.location.reload()
   })
   provider.on('chainChanged', (chainId) => {
-    window.connectedEthNetwork = chainIdToEthNetwork[parseInt(chainId)]
-    window.isValidEthNetwork = window.connectedEthNetwork === process.env.ethNetworkId
+    window.connectedEthNetwork = parseInt(chainId)
+    window.isValidEthNetwork = parseInt(chainId) === parseInt(process.env.auroraChainId)
     render()
   })
   provider.on('disconnect', (code, reason) => {
     console.log(code, reason)
     setTimeout(() => window.location.reload())
-    window.web3Modal.clearCachedProvider()
+    // window.web3Modal.clearCachedProvider()
     render()
   })
+  await connectAurora()
 
-  window.isValidEthNetwork = window.connectedEthNetwork === process.env.ethNetworkId
+  window.isValidEthNetwork = window.connectedEthNetwork === parseInt(process.env.auroraChainId)
   window.ethInitialized = true
 
   render()
-
-  if (window.nearInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
 }
 
 onClick('authEthereum', login)

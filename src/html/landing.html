@@ -2,7 +2,7 @@
   <h1 class="logo--landing-page">
     <img class="rainbow-icon" src="/img/rainbow-bridge.svg" />
     <small>
-      ETH
+      Aurora
       <img
         alt="to and from"
         src="img/swap-lr.svg"
@@ -11,14 +11,13 @@
       NEAR
     </small>
     <div class="logo-text--primary">
-      Rainbow <br />
-      Bridge
+      Aurora <br /> Bridge
       <span class="beta-tag">Beta</span>
     </div>
   </h1>
   <div class="content-wrapper">
     <p class="landing-blurb">
-      Transfer tokens between Ethereum and NEAR! Connect a NEAR and Ethereum
+      Transfer tokens between Aurora and NEAR! Connect a NEAR and Aurora
       account to get started.
     </p>
     <form method="get" class="panel">
@@ -112,7 +111,8 @@
       return;
     }
 
-    const transfers = await window.transfers.get();
+    // const transfers = await window.transfers.get();
+    const transfers = []
     const params = Object.keys(window.urlParams.get());
 
     if (transfers.length || params.length) {

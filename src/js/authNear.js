@@ -1,9 +1,11 @@
 import { keyStores, WalletConnection, Near } from 'near-api-js'
 
+/*
 import {
   checkStatusAll as checkTransferStatuses,
   setNearConnection
 } from '@near-eth/client'
+*/
 import render from './render'
 import { onClick } from './domHelpers'
 
@@ -18,8 +20,9 @@ const near = new Near({
 
 // Initialize main interface to NEAR network
 window.nearConnection = new WalletConnection(near)
+window.near = near
 
-setNearConnection(window.nearConnection)
+// setNearConnection(window.nearConnection)
 
 // Getting the Account ID. If still unauthorized, it's an empty string
 window.nearUserAddress = window.nearConnection.getAccountId()
@@ -34,7 +37,7 @@ function login () {
 
   render()
 
-  if (window.ethInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
+  // if (window.ethInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
 }
 
 // The NEAR signin flow redirects from the current URL to NEAR Wallet,

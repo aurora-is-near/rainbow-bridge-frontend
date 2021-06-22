@@ -482,9 +482,12 @@
         if (!callToAction) return;
 
         const transferId = callToAction.closest("[data-behavior=transfer]").id;
+        /*
         const [transfer] = await window.transfers.get({
           filter: (t) => t.id === transferId
         });
+        */
+        const transfer = {}
         if (
           // At transfer start completedStep is null when retrying approve or burn e-near
           (transfer.type.includes('sendToNear') && transfer.completedStep === null) ||
@@ -647,7 +650,8 @@
       if (!(window.ethInitialized && window.nearInitialized)) return;
       if (!window.isValidEthNetwork) return;
 
-      const transfers = await window.transfers.get();
+      // const transfers = await window.transfers.get();
+      const transfers = []
 
       if (!transfers.length) {
         window.dom.hide("recent-transfers");
@@ -681,7 +685,8 @@
     async function hideShowTransfers() {
       if (!(window.ethInitialized && window.nearInitialized)) return;
 
-      const transfers = await window.transfers.get();
+      // const transfers = await window.transfers.get();
+      const transfers = []
       const currentParams = Object.keys(window.urlParams.get());
       const appUrlPaths = ['new', 'erc20', 'erc20n']
 

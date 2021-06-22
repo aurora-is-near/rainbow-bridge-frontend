@@ -28,6 +28,7 @@
           type="number"
         />
       </div>
+      <span style="display: none" name="erc20nDecimals" data-behavior="erc20nDecimals"></span>
       <div class="account--origin__token-details" data-behavior="erc20nInfo">
         <label>Available to transfer</label>
         <span>
@@ -123,12 +124,6 @@
       </div>
       <h1 class="modal__heading">Confirm NEAR Transaction</h1>
       <p class="modal__message">
-        Transfers are a two-step process, requiring confirmations in both your NEAR and Ethereum wallets, with a delay of about 16 hours between.
-      </p>
-      <p class="modal__message">
-        When Ethereum gas is expensive—say 100 Gwei—that confirmation could cost 0.05 ETH or more, and once initiated from NEAR, the transfer cannot be canceled.
-      </p>
-      <p class="modal__message">
         Continue to your NEAR wallet, and do not close the window until the NEAR confirmation is complete.
       </p>
       <button data-behavior="erc20nConfirmSubmit" class="full-width">
@@ -205,6 +200,14 @@
     confirmSubmit.onclick = async function confirmTransferErc20n(e) {
       confirmSubmit.disabled = true
       try {
+        const decimals = window.dom.find("erc20nDecimals").innerHTML
+        window.utils.sendToAurora(
+          erc20nAddress,
+          new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed()
+        )
+        // new window.Decimal(token.nep141.balance).times(Decimal(10).pow(-token.decimals)).toFixed()
+        // TODO ft transfer nep141 tokens to aurora account
+        /*
         if (erc20nAddress.toLowerCase() === process.env.eNEARAddress) {
           await window.eNEAR.naturalNEAR.sendToEthereum({
             amount: amount.value,
@@ -219,6 +222,7 @@
             recipient: window.ethUserAddress,
           })
         }
+        */
         // Client library will redirect to NEAR Wallet
       } catch (e) {
         console.error(e)
@@ -259,7 +263,7 @@
             type="radio"
             name="erc20n"
             data-behavior="featuredErc20nOption"
-            value="${token.address}"
+            value="${token.nep141.address}"
           />
           <span>
             <img src="${token.nep141.icon || "near.svg"}" alt="" />
@@ -307,12 +311,7 @@
 
     let token;
     try {
-      if (erc20nAddress.toLowerCase() === process.env.eNEARAddress) {
-        token = await window.utils.getNearData();
-      } else {
-        window.dom.show("useMaxErc20n")
-        token = await window.utils.getErc20Data(erc20nAddress);
-      }
+      token = await window.utils.getErc20Data(erc20nAddress);
     } catch (e) {
       window.dom.find("erc20nSelectButton").classList.remove("selected");
       window.dom.fill("erc20nSelectButton").with("Select token");
@@ -325,7 +324,7 @@
       console.error(e);
       window.dom
         .fill("erc20nAddressError")
-        .with("Invalid ERC20 token contract");
+        .with("Invalid NEP-141 token contract");
       window.dom.show("erc20nAddressError");
       window.dom.show("sendBridgedNep141");
       return;
@@ -334,7 +333,7 @@
     // getErc20Data succeeded so remember this token if not already in storage
     window.utils.rememberCustomErc20(erc20nAddress)
 
-    if (token.nep141.balance === null) {
+    if (token.address === '') {
       window.dom.hide("sendBridgedNep141");
       return;
     }
@@ -347,6 +346,7 @@
     window.dom.fill("erc20Name").with(token.name);
     window.dom.hide("erc20nModal");
     window.dom.fill("erc20nName").with(token.nep141.name);
+    window.dom.fill("erc20nDecimals").with(token.decimals);
     window.dom
       .fill("erc20nBalance")
       .with(window.utils.formatLargeNum(token.nep141.balance, token.decimals));

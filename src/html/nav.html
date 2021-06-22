@@ -21,28 +21,27 @@
           <button
             aria-controls="bridge-dropdown"
             class="dropdown-list__item"
-            onclick="location.href='https://ethereum.bridgetonear.org';"
+            onclick="location.href='https://aurora.bridgetonear.org';"
           >
             <span class="bridge-indicator" style="background-color: #29b6af">
               <span class="visually-hidden">Connected</span>
             </span>
             <span>
-              NEAR Mainnet <span class="arrow-divider">↔︎</span> Ethereum
-              Mainnet</span
+              Aurora Mainnet <span class="arrow-divider">↔︎</span> NEAR Mainnet
+            </span
             >
           </button>
           <div class="testnet-options">
             <button
               aria-controls="bridge-dropdown"
               class="dropdown-list__item"
-              onclick="location.href='https://ropsten.bridgetonear.org';"
+              onclick="location.href='https://aurora-testnet.bridgetonear.org';"
             >
               <span class="bridge-indicator" style="background-color: #ff4a8d">
                 <span class="visually-hidden">Connected</span>
               </span>
               <span>
-                NEAR Testnet <span class="arrow-divider">↔︎</span> Ethereum
-                Ropsten
+                Aurora Testnet <span class="arrow-divider">↔︎</span> NEAR Testnet
               </span>
             </button>
           </div>
@@ -291,9 +290,8 @@
 
   window.addEventListener("load", function displaySelectedBridge() {
     const ethNetworkColors = {
-      main: "#29b6af",
-      ropsten: "#ff4a8d",
-      rinkeby: "#f6c343",
+      1313161555: "#ff4a8d",
+      1313161554: "#29b6af"
     };
     window.dom.fill("bridgeName").with({
       innerHTML: window.bridgeName,
@@ -301,13 +299,14 @@
     });
     document.querySelectorAll(
       ".dropdown-trigger > .bridge-indicator"
-    )[0].style.backgroundColor = ethNetworkColors[process.env.ethNetworkId];
+    )[0].style.backgroundColor = ethNetworkColors[Number(process.env.auroraChainId)];
   });
 
   async function renderNavLogo() {
     if (!(window.ethInitialized && window.nearInitialized)) return;
 
-    const transfers = await window.transfers.get();
+    // const transfers = await window.transfers.get();
+    const transfers = []
     const params = Object.keys(window.urlParams.get());
 
     if (transfers.length || params.length) {

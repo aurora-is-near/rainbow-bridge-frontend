@@ -1,14 +1,14 @@
 <div>
   <form data-behavior="bridgeErc20Form" class="container" style="display:none">
     <h1 style="background: url(img/unbridged.svg) top center no-repeat; font-size: 1.5em; padding: 12rem 0 2.5rem">
-      Set up <strong data-behavior="erc20Name"></strong> on NEAR
+      Set up <strong data-behavior="erc20Name"></strong> on Aurora
     </h1>
     <p>
       The <strong data-behavior="erc20Name"></strong>
       <a
-        href="https://eips.ethereum.org/EIPS/eip-20"
+        href="https://github.com/near/NEPs/discussions/146"
         target="_blank" rel="noopener noreferrer"
-      >ERC20</a>
+      >NEP-141</a>
       token has not yet been bridged.
     </p>
     <p>
@@ -61,8 +61,9 @@
       confirmBridgeTxButton.disabled = true
       try {
         const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
-        const erc20Address = erc20 || erc20n
-        await window.nep141Xerc20.bridgedNep141.deploy(erc20Address)
+        const nep141Address = erc20 || erc20n
+        await window.utils.deployToAurora(nep141Address)
+
       } catch (e) {
         // only hide if error, show until redirect happens
         console.error(e)
@@ -87,28 +88,29 @@
     if (!window.isValidEthNetwork) return
 
     const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
-    const erc20Address = erc20 || erc20n
+    const nep141Address = erc20 || erc20n
 
-    if (!erc20Address || erc20Address.toLowerCase() === process.env.eNEARAddress) {
+    if (!nep141Address || nep141Address.toLowerCase() === 'near') {
       window.dom.hide('bridgeErc20Form')
       return
     }
 
     let token
     try {
-      token = await window.utils.getErc20Data(erc20Address)
+      token = await window.utils.getErc20Data(nep141Address)
     } catch (e) {
       // error message filled in by other components
+      console.error(e)
       window.dom.hide('bridgeErc20Form')
       return
     }
 
-    if (token.nep141.balance !== null) {
+    if (token.address !== '') {
       window.dom.hide('bridgeErc20Form')
       return
     }
 
-    window.dom.fill('erc20Name').with(token.name)
+    window.dom.fill('erc20Name').with(token.nep141.name)
     window.dom.show('bridgeErc20Form')
   }
 

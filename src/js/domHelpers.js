@@ -1,5 +1,6 @@
 import render from './render'
 import * as urlParams from './urlParams'
+import { connectAurora } from './authEthereum'
 
 const isObject = x =>
   Object.prototype.toString.call(x) === '[object Object]'
@@ -89,6 +90,10 @@ export function init () {
     await window.web3Modal.clearCachedProvider()
     localStorage.removeItem('walletconnect')
     setTimeout(() => window.location.reload())
+  })
+
+  onClick('switchAurora', async function switchAurora (e) {
+    await connectAurora()
   })
 
   onClick('disconnectNear', function disconnectNear () {

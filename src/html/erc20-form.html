@@ -28,20 +28,12 @@
           type="number"
         />
       </div>
+      <span style="display: none" name="erc20Decimals" data-behavior="erc20Decimals"></span>
+      <span style="display: none" name="auroraErc20" data-behavior="auroraErc20"></span>
       <div class="account--origin__token-details" data-behavior="erc20Info">
         <label>Available to transfer</label>
         <span>
           <span data-behavior="erc20Balance"></span>
-          <span data-behavior="erc20Name"></span>
-        </span>
-      </div>
-      <div
-        class="account--origin__token-details allowance"
-        data-behavior="erc20InfoAllowance"
-      >
-        <label>Available allowance</label>
-        <span>
-          <span data-behavior="erc20Allowance"></span>
           <span data-behavior="erc20Name"></span>
         </span>
       </div>
@@ -75,7 +67,7 @@
     </div>
     <footer>
       <button disabled data-behavior="erc20Submit" class="full-width">
-        Approve transfer
+        Submit transfer
       </button>
       <button id="erc20Cancel" type="button" class="cancel" data-behavior="goBack">
         Back
@@ -123,12 +115,9 @@
       <div class="modal-image__container">
         <img src="img/eth-wallet-sig.svg" alt="" class="modal__image" />
       </div>
-      <h1 class="modal__heading">Confirm Ethereum Transaction</h1>
+      <h1 class="modal__heading">Confirm Aurora Transaction</h1>
       <p class="modal__message">
-        Transfers are a two-step process, requiring confirmations in both your Ethereum and NEAR wallets, with a delay of about 10 minutes between.
-      </p>
-      <p class="modal__message">
-        Once initiated from Ethereum, the transfer cannot be canceled.
+        You will be prompted to sign the transaction in Metamask.
       </p>
     </div>
   </div>
@@ -175,16 +164,11 @@
     function enableOrDisableErc20() {
       window.dom.show("useMaxErc20")
       const decimalBalance = window.Decimal(window.dom.find("erc20Balance").innerHTML)
-      const decimalAllowance = window.Decimal(window.dom.find("erc20Allowance").innerHTML)
       const decimalAmount = window.Decimal(amount.value)
       if (decimalAmount.isZero() || decimalAmount.comparedTo(decimalBalance) === 1)
         // decimalAmount is bigger than decimalBalance
         submit.disabled = true
       else submit.disabled = false
-      if (decimalAmount.comparedTo(decimalAllowance) === 1 && decimalAllowance.isPositive())
-        // decimalAmount is bigger than decimalAllowance
-        submit.innerHTML = "Approve transfer"
-      else submit.innerHTML = "Submit transfer"
     }
 
     maxAmount.onclick = () => {
@@ -204,6 +188,12 @@
 
       window.dom.show("startTransferToNearModal")
       try {
+        const decimals = window.dom.find("erc20Decimals").innerHTML
+        await window.utils.withdrawToNear(
+          window.dom.find("auroraErc20").innerHTML,
+          new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed()
+        )
+        /*
         if (erc20Address.toLowerCase() === process.env.eNEARAddress) {
           await window.eNEAR.bridgedNEAR.sendToNear({
             amount: amount.value,
@@ -218,6 +208,7 @@
             recipient: window.nearUserAddress,
           });
         }
+        */
       } catch (e) {
         alert("Something went wrong!\n" + e.message);
         throw e;
@@ -259,7 +250,7 @@
             type="radio"
             name="erc20"
             data-behavior="featuredErc20Option"
-            value="${token.address}"
+            value="${token.nep141.address}"
           />
           <span>
             <img src="${token.icon || "ethereum.svg"}" alt="" />
@@ -290,7 +281,6 @@
       window.dom.find("erc20Amount").value = "";
       const submit = window.dom.find("erc20Submit");
       submit.disabled = true;
-      submit.innerHTML = "Approve transfer";
       return;
     }
 
@@ -301,22 +291,14 @@
       window.dom.find("erc20SelectButton").classList.remove("selected");
       window.dom.fill("erc20SelectButton").with("Select ERC20");
       window.dom.hide("erc20Info");
-      window.dom.hide("erc20InfoAllowance");
       window.dom.show("sendNaturalErc20");
       window.dom.hide("useMaxErc20")
       return;
     }
 
-    window.dom.find("erc20Address").value = erc20Address;
-    window.dom.show("useMaxErc20")
-
     let token;
     try {
-      if (erc20Address.toLowerCase() === process.env.eNEARAddress) {
-        token = await window.utils.getNearData();
-      } else {
-        token = await window.utils.getErc20Data(erc20Address);
-      }
+      token = await window.utils.getErc20Data(erc20Address);
     } catch (e) {
       window.dom.find("erc20SelectButton").classList.remove("selected");
       window.dom.fill("erc20SelectButton").with("Select ERC20");
@@ -327,16 +309,19 @@
       input.value = erc20Address;
       window.dom.find("erc20FreeForm").classList.add("error");
       console.error(e);
-      window.dom.fill("erc20AddressError").with("Invalid ERC20 token contract");
+      window.dom.fill("erc20AddressError").with("Invalid NEP-141 token contract");
       window.dom.show("erc20AddressError");
       window.dom.show("sendNaturalErc20");
       return;
     }
 
+    window.dom.find("erc20Address").value = token.address;
+    window.dom.show("useMaxErc20")
+
     // getErc20Data succeeded so remember this token if not already in storage
     window.utils.rememberCustomErc20(erc20Address)
 
-    if (token.nep141.balance === null) {
+    if (token.address === '') {
       window.dom.hide("sendNaturalErc20");
       return;
     }
@@ -350,13 +335,12 @@
     window.dom.find("erc20FreeForm").value = "";
     window.dom.hide("erc20AddressError");
     window.dom.fill("erc20Name").with(token.name);
+    window.dom.fill("erc20Decimals").with(token.decimals);
+    window.dom.fill("auroraErc20").with(token.address);
     window.dom.hide("erc20Modal");
     window.dom
       .fill("erc20Balance")
       .with(window.utils.formatLargeNum(token.balance, token.decimals));
-    window.dom
-      .fill("erc20Allowance")
-      .with(window.utils.formatLargeNum(token.allowance, token.decimals));
     window.dom.fill("nep141Name").with(token.nep141.name);
     window.dom
       .fill("nep141Balance")
@@ -375,11 +359,6 @@
     )
     amount.min = Number(Decimal(10).pow(-token.decimals).toFixed())
     window.dom.show("erc20Info", "flex");
-    if (Number(token.allowance) > 0) {
-      window.dom.show('erc20InfoAllowance', 'flex')
-    } else {
-      window.dom.hide('erc20InfoAllowance')
-    }
     amount.focus();
   }
 
