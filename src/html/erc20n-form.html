@@ -181,6 +181,10 @@
       if (erc20nAddress.toLowerCase() !== process.env.eNEARAddress) {
         window.dom.show("useMaxErc20n")
       }
+      if (amount.value.length === 0) {
+        submit.disabled = true
+        return
+      }
       const decimalBalance = window.Decimal(window.dom.find("erc20nBalance").innerHTML)
       const decimalAmount = window.Decimal(amount.value)
       if (decimalAmount.isZero() || decimalAmount.comparedTo(decimalBalance) === 1)
