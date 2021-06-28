@@ -43,7 +43,7 @@ module.exports = {
     // frontend settings
     featuredNep141s: JSON.stringify([
       'fab46e002bbf0b4509813474841e0716e6730136.f.ropsten.testnet', // FAU: https://ropsten.etherscan.io/token/0xfab46e002bbf0b4509813474841e0716e6730136
-      '722dd3f80bac40c951b51bdd28dd19d435762180.f.ropsten.testnet', // TST: https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180
+      // '722dd3f80bac40c951b51bdd28dd19d435762180.f.ropsten.testnet', // TST: https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180
       // 'bf4d811e6891ed044d245cafcc4caa96c969204d.f.ropsten.testnet', // USDT: https://ropsten.etherscan.io/token/0xbf4d811e6891ed044d245cafcc4caa96c969204d
     ]),
     nearNodeUrl: 'https://archival-rpc.testnet.near.org/',

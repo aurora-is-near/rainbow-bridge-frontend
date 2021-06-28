@@ -79,6 +79,21 @@ async function getMetadata (nep141Address) {
   return metadata
 }
 
+async function getAuroraStorageBalance (address) {
+  const nearAccount = await window.nearConnection.account()
+  try {
+    const balance = await nearAccount.viewFunction(
+      address,
+      'storage_balance_of',
+      { account_id: 'aurora' }
+    )
+    return balance
+  } catch (e) {
+    console.warn(e, address)
+    return null
+  }
+}
+
 export async function getErc20Data (nep141Address) {
   const metadata = await getMetadata(nep141Address) || {}
   const erc20Address = await getAuroraErc20Address(nep141Address) || ''
@@ -93,7 +108,9 @@ export async function getErc20Data (nep141Address) {
     balance: await getErc20Balance(erc20Address, window.ethUserAddress),
     decimals: metadata.decimals || 18 // TODO default as 0 for tokens needing metadata update.
   }
-  return { ...erc20, nep141 }
+  // If auroraStorageBalance is null, then the "aurora" account needs to be registered (pay for storage) in the NEP-141
+  const auroraStorageBalance = await getAuroraStorageBalance(nep141Address)
+  return { ...erc20, nep141, auroraStorageBalance }
 }
 
 export async function getAllTokens () {
@@ -215,9 +232,8 @@ export async function withdrawToNear (erc20Address, amount) {
   return tx
 }
 
-export async function sendToAurora (nep141Address, amount) {
+export async function registerAurora (nep141Address) {
   const nearAccount = await window.nearConnection.account()
-  /*
   await nearAccount.functionCall(
     nep141Address,
     'storage_deposit',
@@ -228,8 +244,10 @@ export async function sendToAurora (nep141Address, amount) {
     new window.BN('100' + '0'.repeat(12)),
     new window.BN('6' + '0'.repeat(22))
   )
-  return
-  */
+}
+
+export async function sendToAurora (nep141Address, amount) {
+  const nearAccount = await window.nearConnection.account()
   await nearAccount.functionCall(
     nep141Address,
     'ft_transfer_call',
