@@ -409,3 +409,25 @@ li {
   content: "on NEAR";
   background-image: url(/img/near.svg);
 }
+
+.toast, .toastError {
+  position: fixed;
+  display: block;
+  overflow: auto;
+  width: 20em;
+  right: 0;
+  top: 10em;
+  margin: 5em;
+  border-radius: 1em;
+  padding: 1em;
+  color: white;
+  z-index: 100;
+}
+
+.toast {
+  background-color: #6ecd4e;
+}
+
+.toastError {
+  background-color: red;
+}

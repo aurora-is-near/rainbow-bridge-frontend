@@ -43,13 +43,25 @@ window.addEventListener('load', function cleanUrlParams () {
   // transfer can be marked FAILED and retried.
   const params = Object.keys(window.urlParams.get())
   if (params.includes('transactionHashes')) {
-    // TODO notify swap success
+    window.dom.toast(
+      'Transfer submitted! Check the transaction status from your NEAR wallet.',
+      `https://explorer.testnet.near.org/transactions/${window.urlParams.get('transactionHashes')}`
+    )
     window.urlParams.clear()
   }
   if (params.includes('errorCode') || params.includes('errorMessage')) {
+    window.dom.toast(
+      `Something went wrong! ${decodeURI(window.urlParams.get('errorMessage'))}`,
+      null,
+      'toastError'
+    )
     window.urlParams.clear('errorCode', 'errorMessage')
   }
   if (params.includes('bridging')) {
+    window.dom.toast(
+      'Bridging transaction submitted! Check the transaction status from your NEAR wallet.',
+      `https://explorer.testnet.near.org/transactions/${window.urlParams.get('transactionHashes')}`
+    )
     window.urlParams.clear()
   }
   const currentParams = window.urlParams.get()

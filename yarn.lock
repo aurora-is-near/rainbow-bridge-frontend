@@ -8697,6 +8697,11 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
 
+toastify-js@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/toastify-js/-/toastify-js-1.11.0.tgz#00d5a592a59789c8f0856f74935c31f282b77c66"
+  integrity sha512-N9o4RHy+IxY51C0wO50uJmXDpGHKKf6wRq2q0pfHlpMxRLKreD68L6ZR5BEETd5UCHWcwZa4sLNMV8iO5L+zqQ==
+
 toidentifier@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"

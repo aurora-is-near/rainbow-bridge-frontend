@@ -38,6 +38,7 @@
     "decimal.js": "^10.2.1",
     "ethers": "^5.3.1",
     "near-api-js": "^0.39.0",
+    "toastify-js": "^1.11.0",
     "web3modal": "^1.9.3"
   },
   "browserslist": [

@@ -193,9 +193,13 @@
       window.dom.show("startTransferToNearModal")
       try {
         const decimals = window.dom.find("erc20Decimals").innerHTML
-        await window.utils.withdrawToNear(
+        const tx = await window.utils.withdrawToNear(
           window.dom.find("auroraErc20").innerHTML,
           new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed()
+        )
+        window.dom.toast(
+          "Transfer submitted! Check the transaction status from your Ethereum wallet.",
+          null // `https://ropsten.etherscan.io/tx/${tx.hash}`
         )
         /*
         if (erc20Address.toLowerCase() === process.env.eNEARAddress) {

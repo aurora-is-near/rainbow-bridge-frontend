@@ -207,11 +207,12 @@ export async function withdrawToNear (erc20Address, amount) {
     contractAbiFragment,
     window.web3Provider.getSigner()
   )
-  await erc20Contract.withdrawToNear(
+  const tx = await erc20Contract.withdrawToNear(
     Buffer.from(window.nearUserAddress),
     amount,
     { gasLimit: 100000 }
   )
+  return tx
 }
 
 export async function sendToAurora (nep141Address, amount) {

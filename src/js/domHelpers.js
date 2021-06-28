@@ -1,3 +1,4 @@
+import Toastify from 'toastify-js'
 import render from './render'
 import * as urlParams from './urlParams'
 import { connectAurora } from './authEthereum'
@@ -135,4 +136,19 @@ export function init () {
       render()
     }
   })
+}
+
+export const toast = (text, url, className) => {
+  Toastify({
+    text: text,
+    duration: 5000,
+    newWindow: true,
+    gravity: 'top', // `top` or `bottom`
+    position: 'right', // `left`, `center` or `right`
+    stopOnFocus: true, // Prevents dismissing of toast on hover
+    className: className || 'toast',
+    onClick: () => {
+      url && window.open(url, '_blank').focus()
+    }
+  }).showToast();
 }
