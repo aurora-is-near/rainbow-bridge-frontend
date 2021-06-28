@@ -106,7 +106,7 @@ export async function getErc20Data (nep141Address) {
     address: erc20Address,
     name: metadata.name || '0x' + erc20Address.slice(0, 5) + '...',
     balance: await getErc20Balance(erc20Address, window.ethUserAddress),
-    decimals: metadata.decimals || 18 // TODO default as 0 for tokens needing metadata update.
+    decimals: metadata.decimals
   }
   // If auroraStorageBalance is null, then the "aurora" account needs to be registered (pay for storage) in the NEP-141
   const auroraStorageBalance = await getAuroraStorageBalance(nep141Address)
