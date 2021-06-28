@@ -66,7 +66,9 @@ window.addEventListener('load', function cleanUrlParams () {
   }
   const currentParams = window.urlParams.get()
   window.urlParams.clear()
-  window.urlParams.setPush(currentParams, true)
+  if (Object.keys(currentParams).length > 0) {
+    window.urlParams.setPush(currentParams, true)
+  }
 })
 
 render()
