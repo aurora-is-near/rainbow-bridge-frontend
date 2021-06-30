@@ -45,8 +45,9 @@ module.exports = {
       'fab46e002bbf0b4509813474841e0716e6730136.f.ropsten.testnet', // FAU: https://ropsten.etherscan.io/token/0xfab46e002bbf0b4509813474841e0716e6730136
       // '722dd3f80bac40c951b51bdd28dd19d435762180.f.ropsten.testnet', // TST: https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180
       // 'bf4d811e6891ed044d245cafcc4caa96c969204d.f.ropsten.testnet', // USDT: https://ropsten.etherscan.io/token/0xbf4d811e6891ed044d245cafcc4caa96c969204d
+      'wrap.testnet'
     ]),
-    nearNodeUrl: 'https://archival-rpc.testnet.near.org/',
+    nearNodeUrl: 'https://rpc.testnet.near.org/',
     nearWalletUrl: 'https://wallet.testnet.near.org',
     nearExplorerUrl: 'https://explorer.testnet.near.org',
     nearNetworkId: 'testnet',
@@ -57,6 +58,7 @@ module.exports = {
     eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
     eNEARAddress: '0x2b3077b25909f24de5543d1e350c4d60f9e0c3ed',
     nativeNEARLockerAddress: '0.e-near.testnet',
+    wNearNep141: 'wrap.testnet'
   },
   mainnet: {
     // library settings
@@ -91,6 +93,7 @@ module.exports = {
       // 'c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.factory.bridge.near', //   WETH
       // '0bc529c00c6401aef6d220be8c6ea1667f6ad93e.factory.bridge.near', //   YFI
       // '111111111117dc0aa78b770fa6a738034120c302.factory.bridge.near', //   1INCH
+      'wrap.near'
     ]),
     nearNodeUrl: 'https://archival-rpc.mainnet.near.org/',
     nearWalletUrl: 'https://wallet.near.org',
@@ -103,6 +106,6 @@ module.exports = {
     eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
     eNEARAddress: '0x85f17cf997934a597031b2e18a9ab6ebd4b9f6a4',
     nativeNEARLockerAddress: 'e-near.near',
-
+    wNearNep141: 'wrap.near'
   }
 }

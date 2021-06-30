@@ -205,10 +205,16 @@
       confirmSubmit.disabled = true
       try {
         const decimals = window.dom.find("erc20nDecimals").innerHTML
-        window.utils.sendToAurora(
-          erc20nAddress,
-          new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed()
-        )
+        if (erc20nAddress === "near") {
+          window.utils.wrapAndSendNearToAurora(
+            new window.Decimal(amount.value).times(Decimal(10).pow(24)).toFixed()
+          )
+        } else {
+          window.utils.sendToAurora(
+            erc20nAddress,
+            new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed()
+          )
+        }
         // new window.Decimal(token.nep141.balance).times(Decimal(10).pow(-token.decimals)).toFixed()
         // TODO ft transfer nep141 tokens to aurora account
         /*
@@ -274,7 +280,7 @@
             ${token.nep141.name}
           </span>
           <span>
-            ${window.utils.formatLargeNum(token.nep141.balance, token.decimals).toFixed(2)}
+            ${window.utils.formatLargeNum(token.nep141.balance, token.decimals).toFixed(2, window.Decimal.ROUND_DOWN)}
           </span>
         </label>
       `
@@ -315,7 +321,11 @@
 
     let token;
     try {
-      token = await window.utils.getErc20Data(erc20nAddress);
+      if (erc20nAddress === "near") {
+        token = await window.utils.getNearData();
+      } else {
+        token = await window.utils.getErc20Data(erc20nAddress);
+      }
     } catch (e) {
       window.dom.find("erc20nSelectButton").classList.remove("selected");
       window.dom.fill("erc20nSelectButton").with("Select token");

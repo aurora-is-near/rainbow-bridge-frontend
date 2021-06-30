@@ -249,9 +249,10 @@
     if (window.urlParams.get("erc20") === null) return;
 
     const allTokens = await window.utils.getAllTokens();
+    const allTokensList = Object.values(allTokens).filter(token => token.nep141.address !== 'near')
 
     window.dom.fill("erc20List").with(
-      Object.values(allTokens).sort(ownedErc20OnTop).map(
+      allTokensList.sort(ownedErc20OnTop).map(
         (token) => `
         <label class="space-between">
           <input
@@ -261,11 +262,11 @@
             value="${token.nep141.address}"
           />
           <span>
-            <img src="${token.icon || "ethereum.svg"}" alt="" />
+            <img src="${token.icon || "aurora.svg"}" alt="" />
             ${token.name}
           </span>
           <span>
-            ${window.utils.formatLargeNum(token.balance, token.decimals).toFixed(2)}
+            ${window.utils.formatLargeNum(token.balance, token.decimals).toFixed(2, window.Decimal.ROUND_DOWN)}
           </span>
         </label>
       `
@@ -306,7 +307,11 @@
 
     let token;
     try {
-      token = await window.utils.getErc20Data(erc20Address);
+      if (erc20Address === "near") {
+        token = await window.utils.getNearData();
+      } else {
+        token = await window.utils.getErc20Data(erc20Address);
+      }
     } catch (e) {
       window.dom.find("erc20SelectButton").classList.remove("selected");
       window.dom.fill("erc20SelectButton").with("Select ERC20");

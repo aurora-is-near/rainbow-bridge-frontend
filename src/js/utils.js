@@ -1,8 +1,10 @@
+import BN from 'bn.js'
 import { ethers } from 'ethers'
 
 // import { bridgedNep141, naturalErc20 } from '@near-eth/nep141-erc20'
 // import { bridgedNEAR, naturalNEAR } from '@near-eth/near-ether'
 import { serialize as serializeBorsh } from 'near-api-js/lib/utils/serialize'
+import { transactions } from 'near-api-js'
 
 import { Decimal } from 'decimal.js'
 
@@ -79,17 +81,34 @@ async function getMetadata (nep141Address) {
   return metadata
 }
 
-async function getAuroraStorageBalance (address) {
+async function getMinStorageBalance (nep141Address) {
   const nearAccount = await window.nearConnection.account()
   try {
     const balance = await nearAccount.viewFunction(
-      address,
+      nep141Address,
+      'storage_balance_bounds'
+    )
+    return balance.min
+  } catch (e) {
+    const balance = await nearAccount.viewFunction(
+      nep141Address,
+      'storage_minimum_balance'
+    )
+    return balance
+  }
+}
+
+async function getStorageBalance (nep141Address, accountId) {
+  const nearAccount = await window.nearConnection.account()
+  try {
+    const balance = await nearAccount.viewFunction(
+      nep141Address,
       'storage_balance_of',
-      { account_id: 'aurora' }
+      { account_id: accountId }
     )
     return balance
   } catch (e) {
-    console.warn(e, address)
+    console.warn(e, nep141Address)
     return null
   }
 }
@@ -100,16 +119,15 @@ export async function getErc20Data (nep141Address) {
   const nep141 = {
     address: nep141Address,
     balance: await getNep141Balance(nep141Address, window.nearUserAddress),
-    name: metadata.name || nep141Address.slice(0, 5) + '...'
+    name: metadata.symbol || nep141Address.slice(0, 5) + '...'
   }
   const erc20 = {
     address: erc20Address,
-    name: metadata.name || '0x' + erc20Address.slice(0, 5) + '...',
+    name: metadata.symbol || '0x' + erc20Address.slice(0, 5) + '...',
     balance: await getErc20Balance(erc20Address, window.ethUserAddress),
     decimals: metadata.decimals
   }
-  // If auroraStorageBalance is null, then the "aurora" account needs to be registered (pay for storage) in the NEP-141
-  const auroraStorageBalance = await getAuroraStorageBalance(nep141Address)
+  const auroraStorageBalance = await getStorageBalance(nep141Address, 'aurora')
   return { ...erc20, nep141, auroraStorageBalance }
 }
 
@@ -127,32 +145,28 @@ export async function getAllTokens () {
     },
     {}
   )
-  // return { near: await getNearData(), ...tokens }
-  return tokens
+  return { near: await getNearData(), ...tokens }
 }
 
-/*
-TODO NEAR connector not available on NEAR <> Aurora
 export async function getNearData () {
-  // const nearBalance = await naturalNEAR.getBalance(window.ethUserAddress)
-  // const eNearBalance = await bridgedNEAR.getBalance(window.ethUserAddress)
+  const aNearAddress = await getAuroraErc20Address(process.env.wNearNep141)
+  const aNearBalance = await getErc20Balance(aNearAddress, window.ethUserAddress)
   const nearAccount = await window.nearConnection.account()
   const { available: nearBalance } = await nearAccount.getAccountBalance()
   return {
-    address: '',
-    balance: 1110000000000000000000000000, // TODO
-    allowance: '-1',
+    address: aNearAddress,
+    balance: aNearBalance,
     decimals: 24,
     name: 'NEAR',
     icon: 'near.svg',
+    auroraStorageBalance: await getStorageBalance(process.env.wNearNep141, 'aurora'),
     nep141: {
       address: 'near',
-      balance: nearBalance, // TODO
+      balance: nearBalance,
       name: 'NEAR'
     }
   }
 }
-*/
 
 export function rememberCustomErc20 (nep141Address) {
   if (process.env.featuredNep141s.includes(nep141Address)) return
@@ -210,8 +224,8 @@ export async function deployToAurora (nep141Address) {
     'aurora',
     'deploy_erc20_token',
     arg,
-    new window.BN('100' + '0'.repeat(12)),
-    new window.BN('3' + '0'.repeat(24))
+    new BN('100' + '0'.repeat(12)),
+    new BN('3' + '0'.repeat(24))
   )
 }
 
@@ -232,17 +246,18 @@ export async function withdrawToNear (erc20Address, amount) {
   return tx
 }
 
-export async function registerAurora (nep141Address) {
+export async function registerStorage (nep141Address, accountId) {
   const nearAccount = await window.nearConnection.account()
+  const minStorageBalance = await getMinStorageBalance(nep141Address)
   await nearAccount.functionCall(
     nep141Address,
     'storage_deposit',
     {
-      account_id: 'aurora',
+      account_id: accountId,
       registration_only: true
     },
-    new window.BN('100' + '0'.repeat(12)),
-    new window.BN('6' + '0'.repeat(22))
+    new BN('100' + '0'.repeat(12)),
+    new BN(minStorageBalance)
   )
 }
 
@@ -257,9 +272,52 @@ export async function sendToAurora (nep141Address, amount) {
       memo: null,
       msg: window.ethUserAddress.slice(2)
     },
-    new window.BN('100' + '0'.repeat(12)),
-    new window.BN('1')
+    new BN('100' + '0'.repeat(12)),
+    new BN('1')
   )
+}
+
+export async function wrapAndSendNearToAurora (amount) {
+  const nearAccount = await window.nearConnection.account()
+  const actions = []
+  const minStorageBalance = await getMinStorageBalance(process.env.wNearNep141)
+  const userStorageBalance = await getStorageBalance(
+    process.env.wNearNep141,
+    window.nearUserAddress
+  )
+  if (new BN(userStorageBalance.total).lt(new BN(minStorageBalance))) {
+    actions.push(transactions.functionCall(
+      'storage_deposit',
+      Buffer.from(JSON.stringify({
+        account_id: window.nearUserAddress,
+        registration_only: true
+      })),
+      new BN('100' + '0'.repeat(12)),
+      new BN(minStorageBalance)
+    ))
+  }
+
+  actions.push(transactions.functionCall(
+    'near_deposit',
+    Buffer.from(JSON.stringify({})),
+    new BN('100' + '0'.repeat(12)),
+    new BN(amount)
+  ))
+  actions.push(transactions.functionCall(
+    'ft_transfer_call',
+    Buffer.from(JSON.stringify({
+      receiver_id: 'aurora',
+      amount: amount,
+      memo: null,
+      msg: window.ethUserAddress.slice(2)
+    })),
+    new BN('100' + '0'.repeat(12)),
+    new BN('1')
+  ))
+  await nearAccount.signAndSendTransaction(process.env.wNearNep141, actions)
+}
+
+export async function withdrawAndUnwrapNear (amount) {
 }
 
 export const chainIdToEthNetwork = {
