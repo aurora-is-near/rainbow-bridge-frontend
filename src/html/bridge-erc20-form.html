@@ -83,7 +83,7 @@
         if (window.dom.find("bridgeErc20Form").style.display !== 'none') {
           await window.utils.deployToAurora(nep141Address)
         } else {
-          await window.utils.registerAurora(nep141Address)
+          await window.utils.registerStorage(nep141Address, 'aurora')
         }
 
       } catch (e) {

@@ -94,6 +94,8 @@
   --blue-600: #005497;
   --blue-700: #003560;
   --blue-800: #001729;
+
+  --aurora-green: #70D44B;
 }
 
 * {
@@ -403,7 +405,7 @@ li {
 }
 .account-with-icon.ethereum:after {
   content: "on Ethereum";
-  background-image: url(/img/ethereum.svg);
+  background-image: url(/img/aurora.svg);
 }
 .account-with-icon.near:after {
   content: "on NEAR";
@@ -420,14 +422,14 @@ li {
   margin: 5em;
   border-radius: 1em;
   padding: 1em;
-  color: white;
+  color: var(--black);
   z-index: 100;
 }
 
 .toast {
-  background-color: #6ecd4e;
+  background-color: var(--aurora-green);
 }
 
 .toastError {
-  background-color: red;
+  background-color: var(--red-600);
 }

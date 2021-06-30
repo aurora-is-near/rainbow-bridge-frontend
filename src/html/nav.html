@@ -14,24 +14,50 @@
           <span class="bridge-indicator" style="background-color: #29b6af">
             <span class="visually-hidden">Connected</span>
           </span>
-          <span data-behavior="bridgeName">Near ↔︎ Ethereum</span>
+          <span data-behavior="bridgeName">Aurora ↔︎ NEAR</span>
         </button>
         <div class="dropdown-list">
           <label class="dropdown-list__heading">Select a bridge</label>
           <button
             aria-controls="bridge-dropdown"
             class="dropdown-list__item"
-            onclick="location.href='https://aurora.bridgetonear.org';"
+            onclick="location.href='https://ethereum.bridgetonear.org';"
           >
             <span class="bridge-indicator" style="background-color: #29b6af">
               <span class="visually-hidden">Connected</span>
             </span>
             <span>
-              Aurora Mainnet <span class="arrow-divider">↔︎</span> NEAR Mainnet
+              Ethereum <span class="arrow-divider">↔︎</span> NEAR
+            </span
+            >
+          </button>
+          <button
+            aria-controls="bridge-dropdown"
+            class="dropdown-list__item"
+            onclick="location.href='https://aurora.bridgetonear.org';"
+          >
+            <span class="bridge-indicator" style="background-color: var(--aurora-green)">
+              <span class="visually-hidden">Connected</span>
+            </span>
+            <span>
+              Aurora <span class="arrow-divider">↔︎</span> NEAR
             </span
             >
           </button>
           <div class="testnet-options">
+            <button
+              aria-controls="bridge-dropdown"
+              class="dropdown-list__item"
+              onclick="location.href='https://ropsten.bridgetonear.org';"
+            >
+              <span class="bridge-indicator" style="background-color: #ff4a8d">
+                <span class="visually-hidden">Connected</span>
+              </span>
+              <span>
+                Ropsten <span class="arrow-divider">↔︎</span> NEAR Testnet
+              </span
+              >
+            </button>
             <button
               aria-controls="bridge-dropdown"
               class="dropdown-list__item"
@@ -64,8 +90,8 @@
           <img
             data-behavior="ethConnected"
             style="width: 1.5rem"
-            alt="Ethereum"
-            src="img/ethereum.svg"
+            alt="Aurora"
+            src="img/aurora.svg"
           />
           <img style="width: 1.5rem" alt="NEAR" src="img/near.svg" />
         </button>
@@ -291,7 +317,7 @@
   window.addEventListener("load", function displaySelectedBridge() {
     const ethNetworkColors = {
       1313161555: "#ff4a8d",
-      1313161554: "#29b6af"
+      1313161554: "var(--aurora-green)"
     };
     window.dom.fill("bridgeName").with({
       innerHTML: window.bridgeName,

@@ -150,5 +150,5 @@ export const toast = (text, url, className) => {
     onClick: () => {
       url && window.open(url, '_blank').focus()
     }
-  }).showToast();
+  }).showToast()
 }
