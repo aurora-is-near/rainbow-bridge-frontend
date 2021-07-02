@@ -1302,45 +1302,25 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@near-eth/client@1.3.0", "@near-eth/client@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.3.0.tgz#822486db53f7c5af1d396af48986fb109483ebca"
-  integrity sha512-LQqBwyV77RWMV9nVeETyTfswTv7VQAGa/+UOMmtrVg+XQ2JDA5PL2loT34DPtOtA+dK/Gx/KqFcS5dRQqBauWw==
+"@near-eth/client@1.4.0", "@near-eth/client@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.4.0.tgz#979e6aadfe254870882c98eb14e9452c1a8d0b7a"
+  integrity sha512-niVKV5NCGc3VspZTD7E+tAd3bPPfObvUHjU34Z+FxTG68ngNrhuqxUTXcm/dBbl+/Cd/Zz8LkmTCx1M/SNwAnw==
   dependencies:
     bn.js "^5.1.3"
     decimal.js "^10.2.1"
-    near-api-js "^0.39.0"
+    near-api-js "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb"
 
-"@near-eth/near-ether@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-1.0.0.tgz#7adf224bf6d6420cdd0212874bccbe521e1f34f1"
-  integrity sha512-sP5gCa/niETbPo61TOj1O2LfiZ6Q6mdZsEwXfAXa74HNZCFeR7tg4QLR0d/hh+1gaRwjD31LVvCukHtktKGoLw==
+"@near-eth/near-ether@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-1.1.0.tgz#adff0e47634122e67aadce2d145f4da4b2142b4b"
+  integrity sha512-Zn3VOZwZXP8lfulxBj8ilEEN0PLt0FUKBAK5zgfJKebtIyuNoHVJwVFqYi64MTdIb5RaYAF0BzyltiuSaJ71Aw==
   dependencies:
-    "@near-eth/client" "1.3.0"
+    "@near-eth/client" "1.4.0"
     "@near-eth/utils" "1.0.0"
     bn.js "^5.1.3"
     bs58 "^4.0.1"
-    eth-object aurora-is-near/eth-object#fb57468391112502792ba5fd8c586f5d2467a89f
-    eth-revert-reason "^1.0.3"
-    ethereumjs-util "^7.0.10"
-    find-replacement-tx "1.0.0"
-    lite-merkle-patricia-tree "1.0.0"
-    near-api-js "^0.39.0"
-    promisfy "^1.2.0"
-    rlp "^2.2.6"
-    web3 "^1.3.4"
-    web3-utils "^1.3.4"
-
-"@near-eth/nep141-erc20@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.5.0.tgz#d007e51aadc7d67fce77aa61441a31f429a98de0"
-  integrity sha512-ZQOm9eKz1na9/78dQxv+poYu3ULquUfE7VTy/skjLdUJ5CX8yyFCqgNFEWKUKpQsTI3DOvEcFTLEmlzuOWGrpg==
-  dependencies:
-    "@near-eth/client" "1.3.0"
-    "@near-eth/utils" "1.0.0"
-    bn.js "^5.1.3"
-    bs58 "^4.0.1"
-    eth-object aurora-is-near/eth-object#fb57468391112502792ba5fd8c586f5d2467a89f
+    eth-object aurora-is-near/eth-object#3c9df3b736be3d9b74235d346f70d000414d9092
     eth-revert-reason "^1.0.3"
     ethereumjs-util "^7.0.10"
     find-replacement-tx "1.1.0"
@@ -1349,7 +1329,25 @@
     promisfy "^1.2.0"
     rlp "^2.2.6"
     web3 "^1.3.4"
-    web3-utils "^1.3.4"
+
+"@near-eth/nep141-erc20@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.5.1.tgz#cbf905d3e9fb84cf0154f1a9a971ace012012bf9"
+  integrity sha512-V6N1oLJa1WVGrRMiJEMkr0+A3KVpexIrOLFMBOZsVXYvOHI7XklNoxWjeMTKr/FNC/Rm5kqcni+qT9Dph+yOBQ==
+  dependencies:
+    "@near-eth/client" "1.4.0"
+    "@near-eth/utils" "1.0.0"
+    bn.js "^5.1.3"
+    bs58 "^4.0.1"
+    eth-object aurora-is-near/eth-object#3c9df3b736be3d9b74235d346f70d000414d9092
+    eth-revert-reason "^1.0.3"
+    ethereumjs-util "^7.0.10"
+    find-replacement-tx "1.1.0"
+    lite-merkle-patricia-tree "1.0.0"
+    near-api-js "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb"
+    promisfy "^1.2.0"
+    rlp "^2.2.6"
+    web3 "^1.3.4"
 
 "@near-eth/utils@1.0.0":
   version "1.0.0"
@@ -4147,9 +4145,9 @@ eth-lib@^0.1.26:
     ws "^3.0.0"
     xhr-request-promise "^0.1.2"
 
-eth-object@aurora-is-near/eth-object#fb57468391112502792ba5fd8c586f5d2467a89f:
+eth-object@aurora-is-near/eth-object#3c9df3b736be3d9b74235d346f70d000414d9092:
   version "1.0.3"
-  resolved "https://codeload.github.com/aurora-is-near/eth-object/tar.gz/fb57468391112502792ba5fd8c586f5d2467a89f"
+  resolved "https://codeload.github.com/aurora-is-near/eth-object/tar.gz/3c9df3b736be3d9b74235d346f70d000414d9092"
   dependencies:
     eth-util-lite near/eth-util-lite#master
     ethereumjs-util "^7.0.3"
@@ -4636,13 +4634,6 @@ find-cache-dir@^3.3.1:
     commondir "^1.0.1"
     make-dir "^3.0.2"
     pkg-dir "^4.1.0"
-
-find-replacement-tx@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/find-replacement-tx/-/find-replacement-tx-1.0.0.tgz#81221572ca9689e9103f2503cc86cd245125b049"
-  integrity sha512-8PiZ5QDeHixrVvgfrbxF/vW1rX77XB8CB6Q+7CE+j/NJm/XZaF99J5u9waFizDXMqrWubh/45uYqSporTySWmA==
-  dependencies:
-    web3 "^1.3.4"
 
 find-replacement-tx@1.1.0:
   version "1.1.0"
