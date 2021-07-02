@@ -25,10 +25,10 @@ window.transfers = transfers
 window.urlParams = urlParams
 window.utils = utils
 
-switch (`${process.env.nearNetworkId}-${process.env.ethNetworkId}`) {
-  case 'testnet-ropsten': window.bridgeName = 'Near Testnet ↔︎ Ethereum Ropsten'; break
-  case 'testnet-rinkeby': window.bridgeName = 'Near Testnet ↔︎ Ethereum Rinkeby'; break
-  case 'mainnet-main': window.bridgeName = 'Near ↔︎ Ethereum'; break
+switch (`${process.env.ethNetworkId}-${process.env.nearNetworkId}`) {
+  case 'ropsten-testnet': window.bridgeName = 'Ropsten ↔︎ NEAR Testnet'; break
+  case 'rinkeby-testnet': window.bridgeName = 'Rinkeby ↔︎ NEAR Testnet'; break
+  case 'main-mainnet': window.bridgeName = 'Ethereum ↔︎ NEAR'; break
   default: window.bridgeName = 'Unknown'
 }
 

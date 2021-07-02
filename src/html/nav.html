@@ -16,37 +16,7 @@
           </span>
           <span data-behavior="bridgeName">Near ↔︎ Ethereum</span>
         </button>
-        <div class="dropdown-list">
-          <label class="dropdown-list__heading">Select a bridge</label>
-          <button
-            aria-controls="bridge-dropdown"
-            class="dropdown-list__item"
-            onclick="location.href='https://ethereum.bridgetonear.org';"
-          >
-            <span class="bridge-indicator" style="background-color: #29b6af">
-              <span class="visually-hidden">Connected</span>
-            </span>
-            <span>
-              NEAR Mainnet <span class="arrow-divider">↔︎</span> Ethereum
-              Mainnet</span
-            >
-          </button>
-          <div class="testnet-options">
-            <button
-              aria-controls="bridge-dropdown"
-              class="dropdown-list__item"
-              onclick="location.href='https://ropsten.bridgetonear.org';"
-            >
-              <span class="bridge-indicator" style="background-color: #ff4a8d">
-                <span class="visually-hidden">Connected</span>
-              </span>
-              <span>
-                NEAR Testnet <span class="arrow-divider">↔︎</span> Ethereum
-                Ropsten
-              </span>
-            </button>
-          </div>
-        </div>
+        <div class="dropdown-list" data-behavior="dropdownList"></div>
       </div>
     </div>
   </div>
@@ -241,7 +211,8 @@
   .bridge-dropdown .testnet-options {
     border-top: 1px solid var(--gray-200);
     margin-top: var(--spacing-s);
-    padding-top: var(--spacing-s);
+    padding: var(--spacing-m);
+    padding-bottom: var(--spacing-s);
   }
 
   .dropdown-trigger img:last-child {
@@ -302,6 +273,58 @@
     document.querySelectorAll(
       ".dropdown-trigger > .bridge-indicator"
     )[0].style.backgroundColor = ethNetworkColors[process.env.ethNetworkId];
+
+    let bridgeName
+    let auroraBridgeName
+    let url
+    let auroraUrl
+    let testnetOrMainnetUrl
+    let testnetOrMainnet
+    if (process.env.nearNetworkId === 'mainnet') {
+      bridgeName = `Ethereum <span class="arrow-divider">↔︎</span> NEAR`
+      auroraBridgeName = `Aurora <span class="arrow-divider">↔︎</span> NEAR`
+      url = 'https://ethereum.bridgetonear.org'
+      auroraUrl = 'https://aurora.bridgetonear.org'
+      testnetOrMainnetUrl = 'https://ropsten.bridgetonear.org'
+      testnetOrMainnet = 'testnet'
+    } else {
+      bridgeName = `Ropsten <span class="arrow-divider">↔︎</span> NEAR Tesnet`
+      auroraBridgeName = `Aurora Testnet <span class="arrow-divider">↔︎</span> NEAR Testnet`
+      url = 'https://ropsten.bridgetonear.org'
+      auroraUrl = 'https://aurora-testnet.bridgetonear.org'
+      testnetOrMainnetUrl = 'https://ethereum.bridgetonear.org'
+      testnetOrMainnet = 'mainnet'
+    }
+    window.dom.fill("dropdownList").with(
+      `
+        <label class="dropdown-list__heading">Select a bridge</label>
+        <button
+          aria-controls="bridge-dropdown"
+          class="dropdown-list__item"
+          onclick="location.href='${url}';"
+        >
+          <span class="bridge-indicator" style="background-color: ${ethNetworkColors[process.env.ethNetworkId]}">
+            <span class="visually-hidden">Connected</span>
+          </span>
+          <span>${bridgeName}</span>
+        </button>
+          <button
+            aria-controls="bridge-dropdown"
+            class="dropdown-list__item"
+            onclick="location.href='${auroraUrl}';"
+          >
+            <span class="bridge-indicator" style="background-color: var(--aurora-green)">
+              <span class="visually-hidden">Connected</span>
+            </span>
+            <span>
+              ${auroraBridgeName}
+            </span>
+          </button>
+        <div class="testnet-options">
+          <a href=${testnetOrMainnetUrl}>Looking for the ${testnetOrMainnet} bridge?</a>
+        </div>
+      `
+    )
   });
 
   async function renderNavLogo() {
