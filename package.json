@@ -21,7 +21,7 @@
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
     "env-cmd": "^10.1.0",
-    "eslint": "^7.24.0",
+    "eslint": "^7.30.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
