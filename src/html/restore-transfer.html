@@ -181,6 +181,49 @@
   }
 </style>
 <script>
+  async function findTransfer (txHash) {
+    if (/^(0x)?[0-9a-f]{64}$/i.test(txHash)) {
+      try {
+        const transferToRestore = await window.nep141Xerc20.naturalErc20.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+      try {
+        const transferToRestore = await window.eNEAR.bridgedNEAR.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+      try {
+        const transferToRestore = await window.eNEAR.naturalETH.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+    } else {
+      try {
+        transferToRestore = await window.nep141Xerc20.bridgedNep141.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+      try {
+        transferToRestore = await window.eNEAR.naturalNEAR.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+      try {
+        const transferToRestore = await window.eNEAR.bridgedETH.recover(
+          txHash
+        )
+        if (transferToRestore) return transferToRestore
+      } catch (e) {console.log(e)}
+    }
+    return null
+  }
+
   window.addEventListener("load", function handleInputTxHashEvents() {
     let transferToRestore;
     const txHashInput = window.dom.find("txHashInput");
@@ -193,33 +236,13 @@
       e
     ) {
       e.preventDefault();
-      try {
-        window.dom.hide("locateTransfer");
-        window.dom.show("searchingTransfer");
-        await new Promise(r => setTimeout(r, 1000));
-        // No easy way to determine the type of transaction without more information from
-        // the user or on-chain query, so try-catch to find a matching transfer.
-        if (/^(0x)?[0-9a-f]{64}$/i.test(txHashInput.value)) {
-          try {
-            transferToRestore = await window.nep141Xerc20.naturalErc20.recover(
-              txHashInput.value
-            )
-          } catch {
-            transferToRestore = await window.eNEAR.bridgedNEAR.recover(
-              txHashInput.value
-            )
-          }
-        } else {
-          try {
-            transferToRestore = await window.nep141Xerc20.bridgedNep141.recover(
-              txHashInput.value
-            )
-          } catch {
-            transferToRestore = await window.eNEAR.naturalNEAR.recover(
-              txHashInput.value
-            )
-          }
-        }
+      window.dom.hide("locateTransfer");
+      window.dom.show("searchingTransfer");
+      await new Promise(r => setTimeout(r, 1000));
+      // No easy way to determine the type of transaction without more information from
+      // the user or on-chain query, so try-catch to find a matching transfer.
+      transferToRestore = await findTransfer(txHashInput.value)
+      if (transferToRestore) {
         console.log(transferToRestore);
         txHashInput.value = "";
         window.dom.hide("searchingTransfer");
@@ -229,7 +252,7 @@
           .with(
             renderRestoredTransfer(transferToRestore)
           );
-      } catch (e) {
+      } else {
         console.error(e);
         window.dom.hide("searchingTransfer");
         window.dom.show("noTransferFound");

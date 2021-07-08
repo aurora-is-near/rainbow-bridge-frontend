@@ -1,6 +1,8 @@
 import { bridgedNep141, naturalErc20 } from '@near-eth/nep141-erc20'
 import { bridgedNEAR, naturalNEAR } from '@near-eth/near-ether'
 
+import { ethers } from 'ethers'
+
 import { Decimal } from 'decimal.js'
 
 const CUSTOM_ERC20_STORAGE = 'custom-erc20s'
@@ -44,8 +46,44 @@ export async function getAllTokens () {
     },
     {}
   )
-  return { near: await getNearData(), ...tokens }
+  return { near: await getNearData(), eth: await getEthData(), ...tokens }
 }
+
+async function getNep141Balance (address, user) {
+  const nearAccount = await window.nearConnection.account()
+  try {
+    const balanceAsString = await nearAccount.viewFunction(
+      address,
+      'ft_balance_of',
+      { account_id: user }
+    )
+    return balanceAsString
+  } catch (e) {
+    console.warn(e)
+    return null
+  }
+}
+
+export async function getEthData () {
+  const provider = new ethers.providers.Web3Provider(window.provider)
+  const ethBalance = (await provider.getBalance(window.ethUserAddress)).toString()
+  const ethOnNearBalance = await getNep141Balance('aurora', window.nearUserAddress)
+  console.log(ethBalance, ethOnNearBalance)
+  return {
+    address: 'eth',
+    balance: ethBalance,
+    allowance: '-1',
+    decimals: 18,
+    name: 'ETH',
+    icon: 'ethereum.svg',
+    nep141: {
+      address: 'aurora',
+      balance: ethOnNearBalance,
+      name: 'nETH'
+    }
+  }
+}
+
 
 export async function getNearData () {
   const nearBalance = await naturalNEAR.getBalance(window.ethUserAddress)
@@ -66,9 +104,11 @@ export async function getNearData () {
 }
 
 export function rememberCustomErc20 (erc20Address) {
+  if (!erc20Address) return
   erc20Address = erc20Address.toLowerCase()
   if (process.env.featuredErc20s.includes(erc20Address)) return
-  if (process.env.eNEARAddress === erc20Address) return
+  if (erc20Address === process.env.eNEARAddress) return
+  if (erc20Address === 'eth') return
 
   const customErc20s = JSON.parse(localStorage.getItem(CUSTOM_ERC20_STORAGE))
   if (customErc20s === null) {
