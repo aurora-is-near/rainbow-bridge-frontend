@@ -84,7 +84,6 @@ export async function getEthData () {
   }
 }
 
-
 export async function getNearData () {
   const nearBalance = await naturalNEAR.getBalance(window.ethUserAddress)
   const eNearBalance = await bridgedNEAR.getBalance(window.ethUserAddress)

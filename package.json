@@ -41,7 +41,6 @@
     "near-api-js": "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb",
     "@walletconnect/web3-provider": "^1.4.1",
     "ethers": "^5.4.0",
-    "web3": "^1.3.4",
     "web3modal": "^1.9.3"
   },
   "browserslist": [
