@@ -42,6 +42,10 @@ module.exports = {
     eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
     eNEARAddress: '0x2b3077b25909f24de5543d1e350c4d60f9e0c3ed',
     nativeNEARLockerAddress: '0.e-near.testnet',
+    etherCustodianAddress: '0x9006a6D7d08A388Eeea0112cc1b6b6B15a4289AF',
+    etherCustodianAbiText: readFileSync('./abi/etherCustodian.full.abi'),
+    auroraEvmAccount: 'aurora',
+    auroraRelayerAccount: 'relay.aurora',
 
     nearEventRelayerMargin: 10,
 
@@ -70,6 +74,10 @@ module.exports = {
     eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
     eNEARAddress: '0x85f17cf997934a597031b2e18a9ab6ebd4b9f6a4',
     nativeNEARLockerAddress: 'e-near.near',
+    etherCustodianAddress: '0x6BFaD42cFC4EfC96f529D786D643Ff4A8B89FA52',
+    etherCustodianAbiText: readFileSync('./abi/etherCustodian.full.abi'),
+    auroraEvmAccount: 'aurora',
+    auroraRelayerAccount: 'relay.aurora',
 
     nearEventRelayerMargin: 10,
 

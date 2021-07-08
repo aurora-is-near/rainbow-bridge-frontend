@@ -1,9 +1,11 @@
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
+import { ethers } from 'ethers'
 
 import {
   checkStatusAll as checkTransferStatuses,
-  setEthProvider
+  setEthProvider,
+  setSignerProvider
 } from '@near-eth/client'
 import render from './render'
 import { onClick } from './domHelpers'
@@ -32,7 +34,9 @@ window.web3Modal = new Web3Modal({
 
 async function login () {
   const provider = await window.web3Modal.connect()
-  setEthProvider(provider)
+  window.provider = provider
+  setEthProvider(new ethers.providers.InfuraProvider(process.env.ethNetworkId, process.env.INFURA_ID))
+  setSignerProvider(new ethers.providers.Web3Provider(provider))
 
   if (provider.isMetaMask) {
     window.ethUserAddress = provider.selectedAddress

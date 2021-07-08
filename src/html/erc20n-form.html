@@ -215,6 +215,12 @@
             sender: window.nearUserAddress,
             recipient: window.ethUserAddress,
           })
+        } else if (erc20nAddress === 'eth') {
+          await window.eNEAR.bridgedETH.sendToEthereum({
+            amount: amount.value,
+            sender: window.nearUserAddress,
+            recipient: window.ethUserAddress,
+          })
         } else {
           await window.nep141Xerc20.bridgedNep141.sendToEthereum({
             amount: amount.value,
@@ -223,6 +229,7 @@
             recipient: window.ethUserAddress,
           })
         }
+        window.urlParams.clear("erc20n");
         // Client library will redirect to NEAR Wallet
       } catch (e) {
         console.error(e)
@@ -313,6 +320,8 @@
     try {
       if (erc20nAddress.toLowerCase() === process.env.eNEARAddress) {
         token = await window.utils.getNearData();
+      } else if (erc20nAddress === 'eth') {
+        token = await window.utils.getEthData();
       } else {
         window.dom.show("useMaxErc20n")
         token = await window.utils.getErc20Data(erc20nAddress);
