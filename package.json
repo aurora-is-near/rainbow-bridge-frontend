@@ -34,6 +34,7 @@
     "posthtml-include": "^1.7.0"
   },
   "dependencies": {
+    "eth-object": "aurora-is-near/eth-object#383b6ea68c7050bea4cab6950c1d5a7fa553e72b",
     "@near-eth/client": "^1.4.0",
     "@near-eth/nep141-erc20": "^1.5.1",
     "@near-eth/near-ether": "^1.1.0",
