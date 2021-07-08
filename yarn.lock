@@ -1365,16 +1365,16 @@
     rlp "^2.2.6"
     web3 "^1.3.4"
 
-"@near-eth/nep141-erc20@^1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.5.1.tgz#cbf905d3e9fb84cf0154f1a9a971ace012012bf9"
-  integrity sha512-V6N1oLJa1WVGrRMiJEMkr0+A3KVpexIrOLFMBOZsVXYvOHI7XklNoxWjeMTKr/FNC/Rm5kqcni+qT9Dph+yOBQ==
+"@near-eth/nep141-erc20@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.5.2.tgz#cb04dff66bc7d201d989da02e70c98bff256b51f"
+  integrity sha512-XwxnlTVI0u7ymB0k9lM1OWK7pgzq1iKgE69MIQfqk++BdzIkoCKSr4aXnO9q5B11AUZGnoGNqd3MECC9l9CJ7A==
   dependencies:
     "@near-eth/client" "1.4.0"
     "@near-eth/utils" "1.0.0"
     bn.js "^5.1.3"
     bs58 "^4.0.1"
-    eth-object aurora-is-near/eth-object#3c9df3b736be3d9b74235d346f70d000414d9092
+    eth-object aurora-is-near/eth-object#383b6ea68c7050bea4cab6950c1d5a7fa553e72b
     eth-revert-reason "^1.0.3"
     ethereumjs-util "^7.0.10"
     find-replacement-tx "1.1.0"
