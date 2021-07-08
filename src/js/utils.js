@@ -252,7 +252,7 @@ export async function withdrawToNear (erc20Address, amount, decimals, name) {
     sourceTokenName: name,
     completedStep: null,
     sender: window.ethUserAddress,
-    recipient: window.ethUserAddress,
+    recipient: window.nearUserAddress,
     errors: [],
     hash: tx.hash
   }
@@ -284,7 +284,7 @@ export async function sendToAurora (nep141Address, amount, decimals, name) {
     sourceTokenName: name,
     completedStep: null,
     errors: [],
-    sender: window.ethUserAddress,
+    sender: window.nearUserAddress,
     recipient: window.ethUserAddress
   }
   await track(transfer)
@@ -349,7 +349,7 @@ export async function wrapAndSendNearToAurora (amount) {
     sourceTokenName: 'NEAR',
     completedStep: null,
     errors: [],
-    sender: window.ethUserAddress,
+    sender: window.nearUserAddress,
     recipient: window.ethUserAddress
   }
   await track(transfer)
