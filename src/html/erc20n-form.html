@@ -42,7 +42,7 @@
       <header>
         <strong>To</strong>
         <span
-          class="account-tag account-with-icon ethereum"
+          class="account-tag account-with-icon aurora"
           data-behavior="ethUser"
         ></span>
       </header>
@@ -212,7 +212,9 @@
         } else {
           window.utils.sendToAurora(
             erc20nAddress,
-            new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed()
+            new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
+            decimals,
+            window.dom.find("erc20nName").innerHTML
           )
         }
         // new window.Decimal(token.nep141.balance).times(Decimal(10).pow(-token.decimals)).toFixed()

@@ -34,9 +34,10 @@
     "posthtml-include": "^1.7.0"
   },
   "dependencies": {
+    "@near-eth/client": "^1.5.0-0",
     "@walletconnect/web3-provider": "^1.4.1",
     "decimal.js": "^10.2.1",
-    "ethers": "^5.3.1",
+    "ethers": "^5.4.0",
     "near-api-js": "^0.39.0",
     "toastify-js": "^1.11.0",
     "web3modal": "^1.9.3"

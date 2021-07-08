@@ -8,7 +8,7 @@
       <header>
         <strong>Transfer from</strong>
         <span
-          class="account-tag account-with-icon ethereum"
+          class="account-tag account-with-icon aurora"
           data-behavior="ethUser"
         ></span>
       </header>
@@ -113,7 +113,7 @@
   <div data-behavior="startTransferToNearModal" class="modal" style="display: none">
     <div class="modal__container">
       <div class="modal-image__container">
-        <img src="img/eth-wallet-sig.svg" alt="" class="modal__image" />
+        <img src="img/aurora-wallet-sig.svg" alt="" class="modal__image" />
       </div>
       <h1 class="modal__heading">Confirm Aurora Transaction</h1>
       <p class="modal__message">
@@ -195,13 +195,15 @@
         const decimals = window.dom.find("erc20Decimals").innerHTML
         const tx = await window.utils.withdrawToNear(
           window.dom.find("auroraErc20").innerHTML,
-          new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed()
+          new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
+          decimals,
+          window.dom.find("erc20Name").innerHTML,
         )
+        /*
         window.dom.toast(
           "Transfer submitted! Check the transaction status from your Ethereum wallet.",
           null // `https://ropsten.etherscan.io/tx/${tx.hash}`
         )
-        /*
         if (erc20Address.toLowerCase() === process.env.eNEARAddress) {
           await window.eNEAR.bridgedNEAR.sendToNear({
             amount: amount.value,

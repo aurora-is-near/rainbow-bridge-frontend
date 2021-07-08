@@ -103,8 +103,8 @@
       return;
     }
 
-    // const transfers = await window.transfers.get();
-    const transfers = []
+    const transfers = await window.transfers.get();
+    // const transfers = []
     const params = Object.keys(window.urlParams.get());
 
     if (transfers.length || params.length) {

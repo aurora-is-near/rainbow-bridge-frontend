@@ -1,5 +1,6 @@
 import BN from 'bn.js'
 import { ethers } from 'ethers'
+import { track } from '@near-eth/client'
 
 // import { bridgedNep141, naturalErc20 } from '@near-eth/nep141-erc20'
 // import { bridgedNEAR, naturalNEAR } from '@near-eth/near-ether'
@@ -169,8 +170,8 @@ export async function getNearData () {
 }
 
 export function rememberCustomErc20 (nep141Address) {
+  if (!nep141Address || nep141Address === 'near') return
   if (process.env.featuredNep141s.includes(nep141Address)) return
-  if (nep141Address === 'near') return
 
   const customNep141s = JSON.parse(localStorage.getItem(CUSTOM_NEP141_STORAGE))
   if (customNep141s === null) {
@@ -229,7 +230,7 @@ export async function deployToAurora (nep141Address) {
   )
 }
 
-export async function withdrawToNear (erc20Address, amount) {
+export async function withdrawToNear (erc20Address, amount, decimals, name) {
   const contractAbiFragment = [
     'function withdrawToNear(bytes memory recipient, uint256 amount) external'
   ]
@@ -243,6 +244,19 @@ export async function withdrawToNear (erc20Address, amount) {
     amount,
     { gasLimit: 100000 }
   )
+  const transfer = {
+    status: 'in-progress',
+    type: 'aurora<>near/sendToNear',
+    amount: amount,
+    decimals,
+    sourceTokenName: name,
+    completedStep: null,
+    sender: window.ethUserAddress,
+    recipient: window.ethUserAddress,
+    errors: [],
+    hash: tx.hash
+  }
+  await track(transfer)
   return tx
 }
 
@@ -261,7 +275,20 @@ export async function registerStorage (nep141Address, accountId) {
   )
 }
 
-export async function sendToAurora (nep141Address, amount) {
+export async function sendToAurora (nep141Address, amount, decimals, name) {
+  const transfer = {
+    status: 'in-progress',
+    type: 'aurora<>near/sendToAurora',
+    amount: amount,
+    decimals,
+    sourceTokenName: name,
+    completedStep: null,
+    errors: [],
+    sender: window.ethUserAddress,
+    recipient: window.ethUserAddress
+  }
+  await track(transfer)
+  window.urlParams.clear('erc20n')
   const nearAccount = await window.nearConnection.account()
   await nearAccount.functionCall(
     nep141Address,
@@ -314,6 +341,19 @@ export async function wrapAndSendNearToAurora (amount) {
     new BN('100' + '0'.repeat(12)),
     new BN('1')
   ))
+  const transfer = {
+    status: 'in-progress',
+    type: 'aurora<>near/sendToAurora',
+    amount: amount,
+    decimals: 24,
+    sourceTokenName: 'NEAR',
+    completedStep: null,
+    errors: [],
+    sender: window.ethUserAddress,
+    recipient: window.ethUserAddress
+  }
+  await track(transfer)
+  window.urlParams.clear('erc20n')
   await nearAccount.signAndSendTransaction(process.env.wNearNep141, actions)
 }
 

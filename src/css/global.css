@@ -403,7 +403,7 @@ li {
   left: 0;
   right: unset;
 }
-.account-with-icon.ethereum:after {
+.account-with-icon.aurora:after {
   content: "on Ethereum";
   background-image: url(/img/aurora.svg);
 }

@@ -2,9 +2,6 @@
   <header class="transfers__header">
     <h1 class="transfers__heading">Your Transfers</h1>
     <p class="subheading">Manage your transfers below or begin a new one.</p>
-    <button class="link button--missing-transfer" data-behavior="newRecovery">
-      Missing a transfer?
-    </button>
     <!-- TODO: <nav> -->
   </header>
   <div class="transfers__wrapper">
@@ -326,32 +323,6 @@
       background-color: var(--color--footer);
     }
 
-    .transfer__footer button:before {
-      display: inline-block;
-      content: " ";
-      height: 0.3em;
-      width: 0.3em;
-      border: 2.5px solid var(--color--footer-caret);
-      border-left-color: transparent;
-      border-top-color: transparent;
-      transform: rotate(45deg);
-      margin-right: 0.5em;
-      position: relative;
-      top: -0.1em;
-    }
-
-    .transfer__footer button span:before {
-      content: "View ";
-    }
-
-    .transfer__footer.open button span:before {
-      content: "Hide ";
-    }
-
-    .transfer__footer.open button:before {
-      top: 0.1em;
-      transform: rotate(225deg);
-    }
 
     .transfer__details {
       background-color: var(--gray-800);
@@ -482,12 +453,10 @@
         if (!callToAction) return;
 
         const transferId = callToAction.closest("[data-behavior=transfer]").id;
-        /*
         const [transfer] = await window.transfers.get({
           filter: (t) => t.id === transferId
         });
-        */
-        const transfer = {}
+        // const transfer = {}
         if (
           // At transfer start completedStep is null when retrying approve or burn e-near
           (transfer.type.includes('sendToNear') && transfer.completedStep === null) ||
@@ -524,22 +493,6 @@
       }
 
       document.querySelector("body").addEventListener("click", (event) => {
-        const transferDetailsButton = event.target.closest(
-          "[data-behavior=openTransferDetails]"
-        );
-
-        // no details button clicked, end here
-        if (!transferDetailsButton) return;
-
-        const transferId = transferDetailsButton.closest(
-          "[data-behavior=transfer]"
-        ).id;
-        const footer = transferDetailsButton.closest("footer");
-        openTransferDetails[transferId] = !openTransferDetails[transferId];
-        footer.classList.toggle("open");
-        adjustTransferDetailsHeights();
-      });
-      document.querySelector("body").addEventListener("click", (event) => {
         const deleteButton = event.target.closest(
           "[data-behavior=deleteTransfer]"
         );
@@ -565,6 +518,7 @@
 
     function renderTransfer(transfer, { inProgress }) {
       transfer = window.transfers.decorate(transfer, { locale: "en_US" });
+      console.log(transfer)
       return `
     <div
       class="transfer ${transfer.status}"
@@ -583,23 +537,12 @@
           </div>
         </div>
         <div class="transfer__actions">
-          ${window.dom.toString(
-            transfer.callToAction &&
-              `<button class="button--cta button-size--small" data-behavior="transferCallToAction">${transfer.callToAction}</button>`
-          )}
-          ${window.dom.toString(
-            (transfer.status === "completed" || // transfer completed
-              (transfer.type === '@near-eth/nep141-erc20/natural-erc20/sendToNear' && !transfer.completedStep) || // transfer from Ethereum not yet approved
-              (transfer.completedStep === 'approve-natural-erc20-to-nep141' && transfer.status === 'action-needed') || // approved but not transfered (not yet locked)
-              (transfer.completedStep === 'approve-natural-erc20-to-nep141' && transfer.status === 'failed') || // approved but not transfered (lock failed)
-              (transfer.completedStep === null && transfer.status === 'failed')) && // NEAR redirect failed: user should not Retry if the call succeded
-              `<button class="button--delete button-size--small" data-behavior="deleteTransfer"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 4H3.33333H14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M5.3335 4.00004V2.66671C5.3335 2.31309 5.47397 1.97395 5.72402 1.7239C5.97407 1.47385 6.31321 1.33337 6.66683 1.33337H9.3335C9.68712 1.33337 10.0263 1.47385 10.2763 1.7239C10.5264 1.97395 10.6668 2.31309 10.6668 2.66671V4.00004M12.6668 4.00004V13.3334C12.6668 13.687 12.5264 14.0261 12.2763 14.2762C12.0263 14.5262 11.6871 14.6667 11.3335 14.6667H4.66683C4.31321 14.6667 3.97407 14.5262 3.72402 14.2762C3.47397 14.0261 3.3335 13.687 3.3335 13.3334V4.00004H12.6668Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M6.6665 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9.3335 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg></button>`
-          )}
+          <button class="button--delete button-size--small" data-behavior="deleteTransfer"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 4H3.33333H14" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5.3335 4.00004V2.66671C5.3335 2.31309 5.47397 1.97395 5.72402 1.7239C5.97407 1.47385 6.31321 1.33337 6.66683 1.33337H9.3335C9.68712 1.33337 10.0263 1.47385 10.2763 1.7239C10.5264 1.97395 10.6668 2.31309 10.6668 2.66671V4.00004M12.6668 4.00004V13.3334C12.6668 13.687 12.5264 14.0261 12.2763 14.2762C12.0263 14.5262 11.6871 14.6667 11.3335 14.6667H4.66683C4.31321 14.6667 3.97407 14.5262 3.72402 14.2762C3.47397 14.0261 3.3335 13.687 3.3335 13.3334V4.00004H12.6668Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6.6665 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9.3335 7.33337V11.3334" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg></button>
         </div>
       </header>
       <div class="transfer__accounts-container">
@@ -621,25 +564,8 @@
       </div>
       </div>
 
-      <footer class="transfer__footer ${
-        openTransferDetails[transfer.id] || transfer.status !== "completed"
-          ? "open"
-          : ""
-      }">
-        <ol class="transfer__details">${transfer.steps
-          .map(
-            (step) =>
-              `<li class="${step.status}">
-            <span>${step.description}</span>
-            ${window.dom.toString(
-              step.status === "failed" &&
-                `<p class="error">${transfer.error}</p>`
-            )}
-          </li>`
-          )
-          .join("")}</ol>
+      <footer class="transfer__footer">
         <button class="full-width button-size--small" data-behavior="openTransferDetails">
-          <span>details</span>
         </button>
       </footer>
     </div>
@@ -650,8 +576,8 @@
       if (!(window.ethInitialized && window.nearInitialized)) return;
       if (!window.isValidEthNetwork) return;
 
-      // const transfers = await window.transfers.get();
-      const transfers = []
+      const transfers = await window.transfers.get();
+      // const transfers = []
 
       if (!transfers.length) {
         window.dom.hide("recent-transfers");
@@ -664,29 +590,13 @@
         .with([
           ...transfers.map((t) => renderTransfer(t, { inProgress: true })),
         ]);
-
-      adjustTransferDetailsHeights();
-    }
-
-    // adjust hard-coded heights for transfers details panels, to enable slide-out animation
-    function adjustTransferDetailsHeights() {
-      window.dom.findAll("transfer").map((transfer) => {
-        const footer = transfer.querySelector("footer");
-        const button = footer.querySelector("button").getBoundingClientRect()
-          .height;
-        const details = footer.querySelector("ol").getBoundingClientRect()
-          .height;
-        footer.style.height = footer.classList.contains("open")
-          ? `${button + details}px`
-          : `${button}px`;
-      });
     }
 
     async function hideShowTransfers() {
       if (!(window.ethInitialized && window.nearInitialized)) return;
 
-      // const transfers = await window.transfers.get();
-      const transfers = []
+      const transfers = await window.transfers.get();
+      // const transfers = []
       const currentParams = Object.keys(window.urlParams.get());
       const appUrlPaths = ['new', 'erc20', 'erc20n']
 

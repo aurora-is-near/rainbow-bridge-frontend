@@ -44,7 +44,7 @@
           <label class="dropdown-list__heading">Connected Accounts</label>
           <div data-behavior="ethConnected" class="dropdown-list__item">
             <span
-              class="account-with-icon reverse ethereum"
+              class="account-with-icon reverse aurora"
               data-behavior="ethUser"
             ></span>
             <button
@@ -329,8 +329,8 @@
   async function renderNavLogo() {
     if (!(window.ethInitialized && window.nearInitialized)) return;
 
-    // const transfers = await window.transfers.get();
-    const transfers = []
+    const transfers = await window.transfers.get();
+    // const transfers = []
     const params = Object.keys(window.urlParams.get());
 
     if (transfers.length || params.length) {
