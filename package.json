@@ -37,7 +37,7 @@
     "eth-object": "aurora-is-near/eth-object#383b6ea68c7050bea4cab6950c1d5a7fa553e72b",
     "@near-eth/client": "^1.4.0",
     "@near-eth/nep141-erc20": "^1.5.1",
-    "@near-eth/near-ether": "^1.1.0",
+    "@near-eth/near-ether": "^1.1.1",
     "decimal.js": "^10.2.1",
     "near-api-js": "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb",
     "@walletconnect/web3-provider": "^1.4.1",
