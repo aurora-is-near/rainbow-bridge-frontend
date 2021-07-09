@@ -5,81 +5,24 @@ import * as dom from './domHelpers'
 import render from './render'
 import * as urlParams from './urlParams'
 import * as transfers from '@near-eth/client'
+import * as nearXaurora from './near-aurora'
 // import * as nep141Xerc20 from '@near-eth/nep141-erc20'
 // import * as eNEAR from '@near-eth/near-ether'
 import * as utils from './utils'
 
 dom.init()
 
+// Set custom transfer types to use @near-eth/client for tracking and checking transaction status.
 transfers.setTransferTypes({
-  'aurora<>near/sendToNear': {
-    checkStatus: async transfer => {
-      console.log('checkStatus', transfer)
-      const provider = transfers.getAuroraProvider()
-      console.log(provider)
-      const receipt = await provider.getTransactionReceipt(transfer.hash)
-      console.log(receipt)
-      if (!receipt) return transfer
-      if (!receipt.status || receipt.status !== 1) {
-        return { ...transfer, status: 'failed', receipt, errors: ['Execution failed'] }
-      }
-      return { ...transfer, status: 'completed', receipt }
-    },
-    i18n: {
-      en_US: {
-        steps: transfer => [],
-        statusMessage: transfer => {
-          switch (transfer.status) {
-            case 'in-progress': return 'Confirming transaction'
-            case 'failed': return 'Failed: check transaction status from Wallet'
-            default: return 'Completed'
-          }
-        },
-        callToAction: transfer => { return 'NONE' }
-      }
-    },
-    SOURCE_NETWORK: 'aurora',
-    DESTINATION_NETWORK: 'near'
-  },
-  'aurora<>near/sendToAurora': {
-    checkStatus: transfer => {
-      console.log('checkStatus', transfer)
-      const params = Object.keys(window.urlParams.get())
-      if (params.includes('transactionHashes')) {
-        const hash = window.urlParams.get('transactionHashes')
-        window.urlParams.clear()
-        return { ...transfer, status: 'completed', hash }
-      }
-      if (params.includes('errorCode') || params.includes('errorMessage')) {
-        const errorCode = window.urlParams.get('errorCode')
-        window.urlParams.clear()
-        // window.urlParams.clear('errorCode', 'errorMessage')
-        return { ...transfer, status: 'failed', errors: [`Failed: ${errorCode}`] }
-      }
-      return transfer
-    },
-    i18n: {
-      en_US: {
-        steps: transfer => [],
-        statusMessage: transfer => {
-          switch (transfer.status) {
-            case 'in-progress': return 'Confirming transaction'
-            case 'failed': return transfer.errors[0]
-            default: return 'Completed'
-          }
-        },
-        callToAction: transfer => { return 'NONE' }
-      }
-    },
-    SOURCE_NETWORK: 'near',
-    DESTINATION_NETWORK: 'aurora'
-  }
+  'aurora<>near/sendToNear': nearXaurora.bridgedErc20,
+  'aurora<>near/sendToAurora': nearXaurora.naturalNep141
 })
 
 // Can't import modules in <script> tags in files included via PostHTML 😞
 window.BN = BN
 window.Decimal = Decimal
 window.dom = dom
+window.nearXaurora = nearXaurora
 // window.nep141Xerc20 = nep141Xerc20
 // window.eNEAR = eNEAR
 window.LOOP_INTERVAL = 5500
@@ -115,20 +58,21 @@ window.addEventListener('load', function cleanUrlParams () {
     )
     window.urlParams.clear()
   }
-  if (params.includes('errorCode') || params.includes('errorMessage')) {
-    window.dom.toast(
-      `Something went wrong! ${decodeURI(window.urlParams.get('errorMessage'))}`,
-      null,
-      'toastError'
-    )
-    window.urlParams.clear('errorCode', 'errorMessage')
-  }
   */
   if (params.includes('bridging')) {
-    window.dom.toast(
-      'Bridging transaction submitted! Check the transaction status from your NEAR wallet.',
-      `https://explorer.testnet.near.org/transactions/${window.urlParams.get('transactionHashes')}`
-    )
+    if (params.includes('errorCode') || params.includes('errorMessage')) {
+      window.dom.toast(
+        `${decodeURI(window.urlParams.get('errorMessage'))}.`,
+        null,
+        'toastError'
+      )
+      window.urlParams.clear('errorCode', 'errorMessage')
+    } else {
+      window.dom.toast(
+        'Token registration transaction submitted! Check the transaction status from your NEAR wallet.',
+        `https://explorer.testnet.near.org/transactions/${window.urlParams.get('transactionHashes')}`
+      )
+    }
     window.urlParams.clear('bridging')
   }
   /*

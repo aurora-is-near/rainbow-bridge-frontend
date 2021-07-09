@@ -518,7 +518,6 @@
 
     function renderTransfer(transfer, { inProgress }) {
       transfer = window.transfers.decorate(transfer, { locale: "en_US" });
-      console.log(transfer)
       return `
     <div
       class="transfer ${transfer.status}"

@@ -206,11 +206,11 @@
       try {
         const decimals = window.dom.find("erc20nDecimals").innerHTML
         if (erc20nAddress === "near") {
-          window.utils.wrapAndSendNearToAurora(
+          window.nearXaurora.naturalNep141.wrapAndSendNearToAurora(
             new window.Decimal(amount.value).times(Decimal(10).pow(24)).toFixed()
           )
         } else {
-          window.utils.sendToAurora(
+          window.nearXaurora.naturalNep141.sendToAurora(
             erc20nAddress,
             new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
             decimals,

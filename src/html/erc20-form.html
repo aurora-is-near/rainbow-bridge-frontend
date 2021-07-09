@@ -193,7 +193,7 @@
       window.dom.show("startTransferToNearModal")
       try {
         const decimals = window.dom.find("erc20Decimals").innerHTML
-        const tx = await window.utils.withdrawToNear(
+        const tx = await window.nearXaurora.bridgedErc20.withdrawToNear(
           window.dom.find("auroraErc20").innerHTML,
           new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
           decimals,

@@ -81,7 +81,7 @@
         const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
         const nep141Address = erc20 || erc20n
         if (window.dom.find("bridgeErc20Form").style.display !== 'none') {
-          await window.utils.deployToAurora(nep141Address)
+          await window.nearXaurora.naturalNep141.deployToAurora(nep141Address)
         } else {
           await window.utils.registerStorage(nep141Address, 'aurora')
         }
