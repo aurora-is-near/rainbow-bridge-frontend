@@ -14,8 +14,8 @@ dom.init()
 
 // Set custom transfer types to use @near-eth/client for tracking and checking transaction status.
 transfers.setTransferTypes({
-  'aurora<>near/sendToNear': nearXaurora.bridgedErc20,
-  'aurora<>near/sendToAurora': nearXaurora.naturalNep141
+  [nearXaurora.bridgedErc20.TRANSFER_TYPE]: nearXaurora.bridgedErc20,
+  [nearXaurora.naturalNep141.TRANSFER_TYPE]: nearXaurora.naturalNep141
 })
 
 // Can't import modules in <script> tags in files included via PostHTML 😞

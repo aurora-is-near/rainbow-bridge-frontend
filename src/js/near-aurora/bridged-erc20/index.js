@@ -3,6 +3,7 @@ import { getAuroraProvider, track } from '@near-eth/client'
 
 export const SOURCE_NETWORK = 'aurora'
 export const DESTINATION_NETWORK = 'near'
+export const TRANSFER_TYPE = 'aurora<>near/sendToNear'
 
 export const i18n = {
   en_US: {
@@ -44,7 +45,7 @@ export async function withdrawToNear (erc20Address, amount, decimals, name) {
   )
   const transfer = {
     status: 'in-progress',
-    type: 'aurora<>near/sendToNear',
+    type: TRANSFER_TYPE,
     amount: amount,
     decimals,
     sourceTokenName: name,

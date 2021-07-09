@@ -6,6 +6,7 @@ import { getMinStorageBalance, getStorageBalance } from '../../utils'
 
 export const SOURCE_NETWORK = 'near'
 export const DESTINATION_NETWORK = 'aurora'
+export const TRANSFER_TYPE = 'aurora<>near/sendToAurora'
 
 export const i18n = {
   en_US: {
@@ -40,7 +41,7 @@ export async function checkStatus (transfer) {
 export async function sendToAurora (nep141Address, amount, decimals, name) {
   const transfer = {
     status: 'in-progress',
-    type: 'aurora<>near/sendToAurora',
+    type: TRANSFER_TYPE,
     amount: amount,
     decimals,
     sourceTokenName: name,
@@ -105,7 +106,7 @@ export async function wrapAndSendNearToAurora (amount) {
   ))
   const transfer = {
     status: 'in-progress',
-    type: 'aurora<>near/sendToAurora',
+    type: TRANSFER_TYPE,
     amount: amount,
     decimals: 24,
     sourceTokenName: 'NEAR',
