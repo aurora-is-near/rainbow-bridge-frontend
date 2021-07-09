@@ -190,13 +190,13 @@
         if (transferToRestore) return transferToRestore
       } catch (e) {console.log(e)}
       try {
-        const transferToRestore = await window.eNEAR.bridgedNEAR.recover(
+        const transferToRestore = await window.ethXnear.bridgedNEAR.recover(
           txHash
         )
         if (transferToRestore) return transferToRestore
       } catch (e) {console.log(e)}
       try {
-        const transferToRestore = await window.eNEAR.naturalETH.recover(
+        const transferToRestore = await window.ethXnear.naturalETH.recover(
           txHash
         )
         if (transferToRestore) return transferToRestore
@@ -209,13 +209,13 @@
         if (transferToRestore) return transferToRestore
       } catch (e) {console.log(e)}
       try {
-        transferToRestore = await window.eNEAR.naturalNEAR.recover(
+        transferToRestore = await window.ethXnear.naturalNEAR.recover(
           txHash
         )
         if (transferToRestore) return transferToRestore
       } catch (e) {console.log(e)}
       try {
-        const transferToRestore = await window.eNEAR.bridgedETH.recover(
+        const transferToRestore = await window.ethXnear.bridgedETH.recover(
           txHash
         )
         if (transferToRestore) return transferToRestore
