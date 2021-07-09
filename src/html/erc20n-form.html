@@ -210,13 +210,13 @@
       confirmSubmit.disabled = true
       try {
         if (erc20nAddress.toLowerCase() === process.env.eNEARAddress) {
-          await window.eNEAR.naturalNEAR.sendToEthereum({
+          await window.ethXnear.naturalNEAR.sendToEthereum({
             amount: amount.value,
             sender: window.nearUserAddress,
             recipient: window.ethUserAddress,
           })
         } else if (erc20nAddress === 'eth') {
-          await window.eNEAR.bridgedETH.sendToEthereum({
+          await window.ethXnear.bridgedETH.sendToEthereum({
             amount: amount.value,
             sender: window.nearUserAddress,
             recipient: window.ethUserAddress,

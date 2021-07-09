@@ -209,13 +209,13 @@
       window.dom.show("startTransferToNearModal")
       try {
         if (erc20Address.toLowerCase() === process.env.eNEARAddress) {
-          await window.eNEAR.bridgedNEAR.sendToNear({
+          await window.ethXnear.bridgedNEAR.sendToNear({
             amount: amount.value,
             sender: window.ethUserAddress,
             recipient: window.nearUserAddress,
           })
         } else if (erc20Address === 'eth') {
-          await window.eNEAR.naturalETH.sendToNear({
+          await window.ethXnear.naturalETH.sendToNear({
             amount: amount.value,
             sender: window.ethUserAddress,
             recipient: window.nearUserAddress,
