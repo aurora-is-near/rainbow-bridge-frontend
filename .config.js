@@ -95,7 +95,7 @@ module.exports = {
       // '111111111117dc0aa78b770fa6a738034120c302.factory.bridge.near', //   1INCH
       'wrap.near'
     ]),
-    nearNodeUrl: 'https://archival-rpc.mainnet.near.org/',
+    nearNodeUrl: 'https://rpc.mainnet.near.org/',
     nearWalletUrl: 'https://wallet.near.org',
     nearExplorerUrl: 'https://explorer.near.org',
     nearNetworkId: 'mainnet',

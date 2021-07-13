@@ -9,7 +9,7 @@
     "build_ropsten": "env-cmd -e ropsten_development -r .config.js parcel build src/index.html --public-url ./",
     "build_rinkeby": "env-cmd -e rinkeby_development -r .config.js parcel build src/index.html --public-url ./",
     "start": "env-cmd -e ropsten_development -r .config.js parcel src/index.html --port 5555",
-    "start_mainnet": "env-cmd -e mainnet -r .config.js parcel src/index.html --port 4444",
+    "start_mainnet": "env-cmd -e mainnet -r .config.js parcel src/index.html --port 7777",
     "local": "env-cmd -e local -r .config.js parcel src/index.html",
     "lint": "eslint src",
     "commitlint": "commitlint --from HEAD~1 --to HEAD --verbose",
