@@ -55,7 +55,9 @@ async function login () {
     window.ethUserAddress = accounts[0]
     render()
   })
-  provider.on('chainChanged', (chainId) => {
+  provider.on('chainChanged', async (chainId) => {
+    // The cached provider in local storage is deleted when changing to a custom network.
+    await window.web3Modal.connect()
     window.connectedEthNetwork = parseInt(chainId)
     window.isValidEthNetwork = parseInt(chainId) === parseInt(process.env.auroraChainId)
     render()
