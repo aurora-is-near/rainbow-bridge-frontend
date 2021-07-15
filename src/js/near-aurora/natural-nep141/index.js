@@ -50,7 +50,6 @@ export async function sendToAurora (nep141Address, amount, decimals, name) {
     sender: window.nearUserAddress,
     recipient: window.ethUserAddress
   }
-  window.urlParams.clear('erc20n')
   const nearAccount = await window.nearConnection.account()
 
   // nETH (aurora) transfers to Aurora has a different protocol:
@@ -59,6 +58,7 @@ export async function sendToAurora (nep141Address, amount, decimals, name) {
 
   await track(transfer)
 
+  window.urlParams.clear('erc20n')
   await nearAccount.functionCall(
     nep141Address,
     'ft_transfer_call',
