@@ -48,6 +48,9 @@ module.exports = {
     auroraRelayerAccount: 'relay.aurora',
 
     nearEventRelayerMargin: 10,
+    sendToEthereumSyncInterval: 60000,  // 60sec
+    sendToNearSyncInterval: 20000,  // 20sec
+    maxFindEthProofInterval: 600000,  // 600sec / 10min
 
     // frontend settings
     featuredErc20s: JSON.stringify([
@@ -60,6 +63,7 @@ module.exports = {
     nearExplorerUrl: 'https://explorer.testnet.near.org',
     nearNetworkId: 'testnet',
     ethNetworkId: 'ropsten',
+    ethChainId: 3
   },
   mainnet: {
     // library settings
@@ -80,6 +84,9 @@ module.exports = {
     auroraRelayerAccount: 'relay.aurora',
 
     nearEventRelayerMargin: 10,
+    sendToEthereumSyncInterval: 60000,  // 60sec
+    sendToNearSyncInterval: 20000,  // 20sec
+    maxFindEthProofInterval: 600000,  // 600sec / 10min
 
     // frontend settings
     featuredErc20s: JSON.stringify([
@@ -109,5 +116,6 @@ module.exports = {
     nearExplorerUrl: 'https://explorer.near.org',
     nearNetworkId: 'mainnet',
     ethNetworkId: 'main',
+    ethChainId: 1
   }
 }
