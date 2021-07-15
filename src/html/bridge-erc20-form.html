@@ -117,7 +117,7 @@
     const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
     const nep141Address = erc20 || erc20n
 
-    if (!nep141Address || nep141Address.toLowerCase() === 'near') {
+    if (!nep141Address || nep141Address === 'near' || nep141Address === 'aurora') {
       window.dom.hide('bridgeErc20Form')
       return
     }

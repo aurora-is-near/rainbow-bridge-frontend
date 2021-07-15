@@ -56,7 +56,34 @@ export async function withdrawToNear (erc20Address, amount, decimals, name) {
     hash: tx.hash
   }
   await track(transfer)
-  return tx
+  return tx.hash
+}
+
+export async function withdrawEthToNear (amount) {
+  console.log(33333)
+  const exitToNearPrecompile = '0xe9217bc70b7ed1f598ddd3199e80b093fa71124f'
+  const exitToNearData = '0x00' + Buffer.from(window.nearUserAddress).toString('hex')
+  const txHash = await window.web3Provider.send('eth_sendTransaction', [{
+    from: window.ethUserAddress,
+    to: exitToNearPrecompile,
+    value: ethers.BigNumber.from(amount).toHexString(),
+    data: exitToNearData,
+    gas: ethers.BigNumber.from(121000).toHexString()
+  }])
+  const transfer = {
+    status: 'in-progress',
+    type: TRANSFER_TYPE,
+    amount: amount,
+    decimals: 18,
+    sourceTokenName: 'ETH',
+    completedStep: null,
+    sender: window.ethUserAddress,
+    recipient: window.nearUserAddress,
+    errors: [],
+    hash: txHash
+  }
+  await track(transfer)
+  return txHash
 }
 
 export async function withdrawAndUnwrapNear (amount) {

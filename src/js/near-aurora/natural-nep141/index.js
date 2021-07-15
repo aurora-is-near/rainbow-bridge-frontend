@@ -50,9 +50,15 @@ export async function sendToAurora (nep141Address, amount, decimals, name) {
     sender: window.nearUserAddress,
     recipient: window.ethUserAddress
   }
-  await track(transfer)
   window.urlParams.clear('erc20n')
   const nearAccount = await window.nearConnection.account()
+
+  // nETH (aurora) transfers to Aurora has a different protocol:
+  // <relayer_id>:<fee(32 bytes)><eth_address_receiver(20 bytes)>
+  const msgPrefix = nep141Address === 'aurora' ? window.nearUserAddress + ':' + '0'.repeat(64) : ''
+
+  await track(transfer)
+
   await nearAccount.functionCall(
     nep141Address,
     'ft_transfer_call',
@@ -60,9 +66,9 @@ export async function sendToAurora (nep141Address, amount, decimals, name) {
       receiver_id: 'aurora',
       amount: amount,
       memo: null,
-      msg: window.ethUserAddress.slice(2)
+      msg: msgPrefix + window.ethUserAddress.slice(2)
     },
-    new BN('50' + '0'.repeat(12)),
+    new BN('70' + '0'.repeat(12)),
     new BN('1')
   )
 }
@@ -90,7 +96,7 @@ export async function wrapAndSendNearToAurora (amount) {
   actions.push(transactions.functionCall(
     'near_deposit',
     Buffer.from(JSON.stringify({})),
-    new BN('50' + '0'.repeat(12)),
+    new BN('30' + '0'.repeat(12)),
     new BN(amount)
   ))
   actions.push(transactions.functionCall(
@@ -101,7 +107,7 @@ export async function wrapAndSendNearToAurora (amount) {
       memo: null,
       msg: window.ethUserAddress.slice(2)
     })),
-    new BN('50' + '0'.repeat(12)),
+    new BN('70' + '0'.repeat(12)),
     new BN('1')
   ))
   const transfer = {

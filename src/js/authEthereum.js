@@ -41,7 +41,7 @@ export async function connectAurora () {
 
 async function login () {
   const provider = await window.web3Modal.connect()
-  window.web3Provider = new ethers.providers.Web3Provider(provider)
+  window.web3Provider = new ethers.providers.Web3Provider(provider, 'any')
   setAuroraProvider(new ethers.providers.JsonRpcProvider(process.env.auroraRpc))
   setSignerProvider(provider)
   if (provider.isMetaMask) {

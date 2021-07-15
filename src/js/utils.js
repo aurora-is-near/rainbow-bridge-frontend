@@ -143,7 +143,7 @@ export async function getAllTokens () {
     },
     {}
   )
-  return { near: await getNearData(), ...tokens }
+  return { near: await getNearData(), eth: await getEthData(), ...tokens }
 }
 
 export async function getNearData () {
@@ -166,8 +166,27 @@ export async function getNearData () {
   }
 }
 
+export async function getEthData () {
+  const ethOnAuroraBalance = (await window.web3Provider.getBalance(window.ethUserAddress)).toString()
+  const ethOnNearBalance = await getNep141Balance('aurora', window.nearUserAddress)
+  console.log(ethOnAuroraBalance, ethOnNearBalance)
+  return {
+    address: 'eth',
+    balance: ethOnAuroraBalance,
+    decimals: 18,
+    name: 'ETH',
+    // icon: 'ethereum.svg',
+    auroraStorageBalance: true,
+    nep141: {
+      address: 'aurora',
+      balance: ethOnNearBalance,
+      name: 'nETH'
+    }
+  }
+}
+
 export function rememberCustomErc20 (nep141Address) {
-  if (!nep141Address || nep141Address === 'near') return
+  if (!nep141Address || nep141Address === 'near' || nep141Address === 'aurora') return
   if (process.env.featuredNep141s.includes(nep141Address)) return
 
   const customNep141s = JSON.parse(localStorage.getItem(CUSTOM_NEP141_STORAGE))
@@ -190,7 +209,7 @@ export async function getAuroraErc20Address (nep141Address) {
     })
     auroraErc20Addresses[nep141Address] = Buffer.from(address.result).toString('hex')
   } catch (error) {
-    console.warn(error)
+    console.error(error)
     return null
   }
   return auroraErc20Addresses[nep141Address]

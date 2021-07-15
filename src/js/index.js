@@ -14,7 +14,7 @@ dom.init()
 
 // Set custom transfer types to use @near-eth/client for tracking and checking transaction status.
 transfers.setTransferTypes({
-  [nearXaurora.bridgedErc20.TRANSFER_TYPE]: nearXaurora.bridgedErc20,
+  [nearXaurora.bridgedNep141.TRANSFER_TYPE]: nearXaurora.bridgedNep141,
   [nearXaurora.naturalNep141.TRANSFER_TYPE]: nearXaurora.naturalNep141
 })
 
