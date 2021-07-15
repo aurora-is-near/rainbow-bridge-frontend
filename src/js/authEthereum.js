@@ -35,7 +35,10 @@ window.web3Modal = new Web3Modal({
 async function login () {
   const provider = await window.web3Modal.connect()
   window.provider = provider
-  setEthProvider(new ethers.providers.InfuraProvider(process.env.ethNetworkId, process.env.INFURA_ID))
+  setEthProvider(new ethers.providers.InfuraProvider(
+    process.env.ethNetworkId === 'main' ? 'mainnet' : process.env.ethNetworkId,
+    process.env.INFURA_ID
+  ))
   setSignerProvider(new ethers.providers.Web3Provider(provider))
 
   if (provider.isMetaMask) {
