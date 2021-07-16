@@ -81,7 +81,7 @@ export async function wrapAndSendNearToAurora (amount) {
     process.env.wNearNep141,
     window.nearUserAddress
   )
-  if (new BN(userStorageBalance.total).lt(new BN(minStorageBalance))) {
+  if (!userStorageBalance || new BN(userStorageBalance.total).lt(new BN(minStorageBalance))) {
     actions.push(transactions.functionCall(
       'storage_deposit',
       Buffer.from(JSON.stringify({
