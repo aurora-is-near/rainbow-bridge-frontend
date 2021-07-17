@@ -35,7 +35,7 @@ module.exports = {
     ethLockerAddress: '0xb48e6441524f261e141bc766a7ebd54b19ca7465',
     ethProverAddress: '0xb3df48b0ea3e91b43226fb3c5eb335b7e3d76faa',
     ethProverAbiText: readFileSync('./abi/prover.abi'),
-    nearClientAccount: 't5.client.ropsten.testnet',
+    nearClientAccount: 't7.client.ropsten.testnet',
     nearHelperUrl: 'https://helper.testnet.near.org',
     nearProverAccount: 'prover.ropsten.testnet',
     nearTokenFactoryAccount: 'f.ropsten.testnet',
