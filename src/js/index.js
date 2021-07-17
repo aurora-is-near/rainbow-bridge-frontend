@@ -73,6 +73,7 @@ window.addEventListener('load', function cleanUrlParams () {
         `https://explorer.testnet.near.org/transactions/${window.urlParams.get('transactionHashes')}`
       )
     }
+    window.urlParams.clear('bridging', 'transactionHashes')
     const currentParams = window.urlParams.get()
     window.urlParams.clear()
     if (Object.keys(currentParams).length > 0) {

@@ -209,7 +209,7 @@ export async function getAuroraErc20Address (nep141Address) {
     })
     auroraErc20Addresses[nep141Address] = Buffer.from(address.result).toString('hex')
   } catch (error) {
-    console.error(error)
+    console.error(error, nep141Address)
     return null
   }
   return auroraErc20Addresses[nep141Address]
