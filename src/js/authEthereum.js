@@ -39,7 +39,7 @@ async function login () {
     process.env.ethNetworkId === 'main' ? 'mainnet' : process.env.ethNetworkId,
     process.env.INFURA_ID
   ))
-  setSignerProvider(new ethers.providers.Web3Provider(provider))
+  setSignerProvider(new ethers.providers.Web3Provider(provider, 'any'))
 
   if (provider.isMetaMask) {
     window.ethUserAddress = provider.selectedAddress

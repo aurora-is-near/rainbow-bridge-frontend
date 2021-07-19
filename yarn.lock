@@ -1524,10 +1524,10 @@
     decimal.js "^10.2.1"
     near-api-js "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb"
 
-"@near-eth/near-ether@^1.2.0-2":
-  version "1.2.0-2"
-  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-1.2.0-2.tgz#507f509478975396fed5ef7daeb60ace54b2cb46"
-  integrity sha512-ES6YV5co7SuAnv3DWL5i7v+BTrW44wkxROqQ4njC/QaoVda3c7W0DeaDJ7NqKAYSuDu0coEj01yDsolBq5kbAA==
+"@near-eth/near-ether@^1.2.0-3":
+  version "1.2.0-3"
+  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-1.2.0-3.tgz#67ed5ce1d933103ce9479c9cdef94eae57a8f742"
+  integrity sha512-zR9n5UVpi0AW0n/hwNQTpG5zZohjK28Esj3PET6dHUzm7nPl75SCBzavPeAzKAOkss++DRBM7mWfONrW8v7Z2Q==
   dependencies:
     "@near-eth/client" "1.5.0-0"
     "@near-eth/utils" "1.1.0-0"
@@ -1540,10 +1540,10 @@
     promisfy "^1.2.0"
     rlp "^2.2.6"
 
-"@near-eth/nep141-erc20@^1.6.0-2":
-  version "1.6.0-2"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.6.0-2.tgz#3ab5404ba71ba5c7a45a2159235ba88aaa577c2f"
-  integrity sha512-hw9A5wKjqx09lNf7S17y71jf2sjSfDT3eJ7axvz1CTQGEZ1ANk2cGxvZ9KnVR3NqsMlzHgEHB59z/wcbygU/sg==
+"@near-eth/nep141-erc20@^1.6.0-3":
+  version "1.6.0-3"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-1.6.0-3.tgz#c583507654c4e4c21434852160a4057dac5315a6"
+  integrity sha512-Rv7Eng3rqPgY/KKaDMVXyNMCDpMyGCo29Mek97bLKlw9dtKeuZjGm7rzglhHOATywUe4AIIku1IhDPshcke88Q==
   dependencies:
     "@near-eth/client" "1.5.0-0"
     "@near-eth/utils" "1.1.0-0"
