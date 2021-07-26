@@ -261,9 +261,11 @@
     if (window.urlParams.get("erc20") === null) return;
 
     const allTokens = await window.utils.getAllTokens();
+    // TODO Re-enable ETH
+    const allTokensMinusETH = Object.values(allTokens).filter(token => token.address !== 'eth')
 
     window.dom.fill("erc20List").with(
-      Object.values(allTokens).sort(ownedErc20OnTop).map(
+      allTokensMinusETH.sort(ownedErc20OnTop).map(
         (token) => `
         <label class="space-between">
           <input
