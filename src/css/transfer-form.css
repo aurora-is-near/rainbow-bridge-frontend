@@ -204,5 +204,26 @@ button.maxAmount {
 
 .token-selector .token-list img {
   width: 1.5em;
-  margin-right: 1em;
+}
+
+.token-in-list-name {
+  margin-left: 1em;
+}
+
+.bridged-token-icon {
+  border: 2px solid #fb5152;
+  border-radius: 50%;
+}
+
+.bridged-token {
+  position: relative;
+  display: inline-block;
+}
+.bridged-token:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(254, 170, 170, 0.2);
+  border-radius: 50%;
 }
