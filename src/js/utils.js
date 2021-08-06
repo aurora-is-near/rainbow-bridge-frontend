@@ -1,5 +1,6 @@
 import BN from 'bn.js'
 import { ethers } from 'ethers'
+import { serialize as serializeBorsh } from 'near-api-js/lib/utils/serialize'
 
 // import { bridgedNep141, naturalErc20 } from '@near-eth/nep141-erc20'
 // import { bridgedNEAR, naturalNEAR } from '@near-eth/near-ether'
@@ -199,15 +200,32 @@ export function rememberCustomErc20 (nep141Address) {
 
 export async function getAuroraErc20Address (nep141Address) {
   if (auroraErc20Addresses[nep141Address]) return auroraErc20Addresses[nep141Address]
+  class BorshArgs {
+    constructor (args) {
+      Object.assign(this, args)
+    }
+  };
+  const schema = new Map([
+    [BorshArgs, {
+      kind: 'struct',
+      fields: [
+        ['nep141', 'String']
+      ]
+    }]
+  ])
+  const args = new BorshArgs({
+    nep141: nep141Address
+  })
+  const serializedArgs = serializeBorsh(schema, args)
   try {
-    const address = await window.near.connection.provider.query({
-      request_type: 'call_function',
-      finality: 'final',
-      account_id: 'aurora',
-      method_name: 'get_erc20_from_nep141',
-      args_base64: Buffer.from(nep141Address).toString('base64')
-    })
-    auroraErc20Addresses[nep141Address] = Buffer.from(address.result).toString('hex')
+    const nearAccount = await window.nearConnection.account()
+    const address = await nearAccount.viewFunction(
+      'aurora',
+      'get_erc20_from_nep141',
+      Buffer.from(serializedArgs),
+      { parse: (result) => Buffer.from(result).toString('hex') }
+    )
+    auroraErc20Addresses[nep141Address] = address
   } catch (error) {
     console.error(error, nep141Address)
     return null
