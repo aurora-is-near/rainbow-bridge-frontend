@@ -27,7 +27,7 @@ window.nearUserAddress = window.nearConnection.getAccountId()
 
 onClick('authNear', () => {
   // sign in without access keys
-  window.nearConnection.requestSignIn()
+  window.nearConnection.requestSignIn(process.env.nearClientAccount)
 })
 
 function login () {
