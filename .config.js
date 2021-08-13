@@ -83,7 +83,7 @@ module.exports = {
     nativeNEARLockerAddress: 'enear.goerli.testnet',
     etherCustodianAddress: '0x8dcA798Bd346C4a84BB4c6635B98D5b16aC7f882',
     etherCustodianAbiText: readFileSync('./abi/etherCustodian.full.abi'),
-    auroraEvmAccount: 'develop.aurora',
+    auroraEvmAccount: 'aurora',
     auroraRelayerAccount: 'relay.aurora',
 
     nearEventRelayerMargin: 10,
