@@ -51,6 +51,8 @@
 </div>
 
 <script>
+  let bridgeErc20Address
+
   window.addEventListener('load', function handleSelectErc20Events () {
     const confirmBridgeTxButton = window.dom.find("nearBridgeTxConfirmButton");
     window.dom.find('bridgeErc20Form').onsubmit = async function bridgeIt (e) {
@@ -65,6 +67,7 @@
         await window.nep141Xerc20.bridgedNep141.deploy(erc20Address)
       } catch (e) {
         // only hide if error, show until redirect happens
+        bridgeErc20Address = null
         console.error(e)
         alert(
           "Something went wrong! " +
@@ -76,6 +79,7 @@
     }
 
     window.dom.find('bridgeErc20Cancel').onclick = () => {
+      bridgeErc20Address = null
       window.dom.hide('bridgeErc20Form')
       window.urlParams.clear()
       window.render()
@@ -89,17 +93,20 @@
     const { erc20, erc20n } = window.urlParams.get('erc20', 'erc20n')
     const erc20Address = erc20 || erc20n
 
-    if (!erc20Address || erc20Address.toLowerCase() === process.env.eNEARAddress || erc20Address === 'eth') {
+    if (!erc20Address || erc20Address.toLowerCase() === process.env.eNEARAddress.toLowerCase() || erc20Address === 'eth') {
       window.dom.hide('bridgeErc20Form')
       return
     }
+    if (erc20Address === bridgeErc20Address) return
 
     let token
     try {
       token = await window.utils.getErc20Data(erc20Address)
+      bridgeErc20Address = erc20Address
     } catch (e) {
       // error message filled in by other components
       window.dom.hide('bridgeErc20Form')
+      bridgeErc20Address = null
       return
     }
 
