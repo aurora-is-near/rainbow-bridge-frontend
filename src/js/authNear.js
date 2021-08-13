@@ -25,8 +25,7 @@ setNearConnection(window.nearConnection)
 window.nearUserAddress = window.nearConnection.getAccountId()
 
 onClick('authNear', () => {
-  // sign in with any account id
-  window.nearConnection.requestSignIn(process.env.nearClientAccount)
+  window.nearConnection.requestSignIn()
 })
 
 function login () {

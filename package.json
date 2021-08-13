@@ -34,13 +34,13 @@
     "posthtml-include": "^1.7.0"
   },
   "dependencies": {
-    "@near-eth/client": "1.5.0",
-    "@near-eth/nep141-erc20": "1.6.0",
-    "@near-eth/near-ether": "1.2.0",
+    "@near-eth/client": "1.6.0-0",
+    "@near-eth/nep141-erc20": "2.0.0-0",
+    "@near-eth/near-ether": "2.0.0-0",
     "decimal.js": "^10.2.1",
-    "near-api-js": "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb",
+    "near-api-js": "https://github.com/aurora-is-near/near-api-js#b31f9975b29c69e65c6db2feca2183fac400109e",
     "@walletconnect/web3-provider": "^1.5.0",
-    "ethers": "^5.4.0",
+    "ethers": "^5.4.4",
     "web3modal": "^1.9.3"
   },
   "browserslist": [

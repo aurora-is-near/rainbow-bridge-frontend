@@ -28,6 +28,7 @@
           type="number"
         />
       </div>
+      <span style="display: none" name="erc20nDecimals" data-behavior="erc20nDecimals"></span>
       <div class="account--origin__token-details" data-behavior="erc20nInfo">
         <label>Available to transfer</label>
         <span>
@@ -211,28 +212,30 @@
 
     confirmSubmit.onclick = async function confirmTransferErc20n(e) {
       confirmSubmit.disabled = true
+      const decimalAmount = window.Decimal(amount.value)
+      const decimals = window.dom.find("erc20nDecimals").innerHTML
+      const bigNumAmount = decimalAmount.times(Decimal(10).pow(decimals)).toFixed()
       try {
-        if (erc20nAddress.toLowerCase() === process.env.eNEARAddress) {
+        if (erc20nAddress.toLowerCase() === process.env.eNEARAddress.toLowerCase()) {
           await window.ethXnear.naturalNEAR.sendToEthereum({
-            amount: amount.value,
-            sender: window.nearUserAddress,
+            amount: bigNumAmount,
             recipient: window.ethUserAddress,
+            options: { sender: window.nearUserAddress }
           })
         } else if (erc20nAddress === 'eth') {
           await window.ethXnear.bridgedETH.sendToEthereum({
-            amount: amount.value,
-            sender: window.nearUserAddress,
+            amount: bigNumAmount,
             recipient: window.ethUserAddress,
+            options: { sender: window.nearUserAddress }
           })
         } else {
           await window.nep141Xerc20.bridgedNep141.sendToEthereum({
-            amount: amount.value,
-            erc20Address: window.urlParams.get("erc20n"),
-            sender: window.nearUserAddress,
+            amount: bigNumAmount,
+            erc20Address: erc20nAddress,
             recipient: window.ethUserAddress,
+            options: { sender: window.nearUserAddress }
           })
         }
-        window.urlParams.clear("erc20n");
         // Client library will redirect to NEAR Wallet
       } catch (e) {
         console.error(e)
@@ -305,6 +308,11 @@
     if (!(window.ethInitialized && window.nearInitialized)) return;
     if (!window.isValidEthNetwork) return;
 
+    // Enables keeping erc20n in urlParams before wallet signature redirect,
+    // while not rendering the form after redirect is complete.
+    const params = Object.keys(window.urlParams.get())
+    if (params.includes('transactionHashes') || params.includes('errorCode')) return
+
     if (window.urlParams.get("erc20n") === erc20nAddress) return;
     else erc20nAddress = window.urlParams.get("erc20n");
 
@@ -336,7 +344,7 @@
 
     let token;
     try {
-      if (erc20nAddress.toLowerCase() === process.env.eNEARAddress) {
+      if (erc20nAddress.toLowerCase() === process.env.eNEARAddress.toLowerCase()) {
         token = await window.utils.getNearData();
       } else if (erc20nAddress === 'eth') {
         token = await window.utils.getEthData();
@@ -376,6 +384,7 @@
     window.dom.find("erc20nFreeForm").value = "";
     window.dom.hide("erc20nAddressError");
     window.dom.fill("erc20Name").with(token.name);
+    window.dom.fill("erc20nDecimals").with(token.decimals);
     window.dom.hide("erc20nModal");
     window.dom.fill("erc20nName").with(token.nep141.name);
     window.dom
