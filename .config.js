@@ -65,6 +65,43 @@ module.exports = {
     ethNetworkId: 'ropsten',
     ethChainId: 3
   },
+  goerli_development: {
+    // library settings
+    ethClientAddress: '0xbe22ac13ad6af062843eb33adfccfee6bbb4481b',
+    ethNearOnEthClientAbiText: readFileSync('./abi/nearOnEthClient.abi'),
+    ethErc20AbiText: readFileSync('./abi/erc20.abi'),
+    ethLockerAbiText: readFileSync('./abi/ERC20Locker.full.abi'),
+    ethLockerAddress: '0xc115851ca60aed2ccc6ee3d5343f590834e4a3ab',
+    ethProverAddress: '0xf3430be687dc5652e3e96a9a7b291b5d423dfc3b',
+    ethProverAbiText: readFileSync('./abi/prover.abi'),
+    nearClientAccount: 'client4.goerli.testnet',
+    nearHelperUrl: 'https://helper.testnet.near.org',
+    nearProverAccount: 'prover.goerli.testnet',
+    nearTokenFactoryAccount: 'factory.goerli.testnet',
+    eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
+    eNEARAddress: '0xe6b7C088Da1c2BfCf84aaE03fd6DE3C4f28629dA',
+    nativeNEARLockerAddress: 'enear.goerli.testnet',
+    etherCustodianAddress: '0x8dcA798Bd346C4a84BB4c6635B98D5b16aC7f882',
+    etherCustodianAbiText: readFileSync('./abi/etherCustodian.full.abi'),
+    auroraEvmAccount: 'develop.aurora',
+    auroraRelayerAccount: 'relay.aurora',
+
+    nearEventRelayerMargin: 10,
+    sendToEthereumSyncInterval: 60000,  // 60sec
+    sendToNearSyncInterval: 20000,  // 20sec
+    maxFindEthProofInterval: 600000,  // 600sec / 10min
+
+    // frontend settings
+    featuredErc20s: JSON.stringify([
+      '0xba62bcfcaafc6622853cca2be6ac7d845bc0f2dc', // FAU: https://goerli.etherscan.io/token/0xba62bcfcaafc6622853cca2be6ac7d845bc0f2dc
+    ]),
+    nearNodeUrl: 'https://archival-rpc.testnet.near.org/',
+    nearWalletUrl: 'https://wallet.testnet.near.org',
+    nearExplorerUrl: 'https://explorer.testnet.near.org',
+    nearNetworkId: 'testnet',
+    ethNetworkId: 'goerli',
+    ethChainId: 5
+  },
   mainnet: {
     // library settings
     ethClientAddress: '0x0151568af92125fb289f1dd81d9d8f7484efc362',

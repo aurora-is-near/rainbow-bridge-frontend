@@ -127,5 +127,6 @@ export function rememberCustomErc20 (erc20Address) {
 export const chainIdToEthNetwork = {
   1: 'main',
   3: 'ropsten',
-  4: 'rinkeby'
+  4: 'rinkeby',
+  5: 'goerli'
 }

@@ -265,6 +265,7 @@
       main: "#29b6af",
       ropsten: "#ff4a8d",
       rinkeby: "#f6c343",
+      goerli: "#2c8eeb",
     };
     window.dom.fill("bridgeName").with({
       innerHTML: window.bridgeName,
@@ -285,12 +286,12 @@
       auroraBridgeName = `Aurora <span class="arrow-divider">↔︎</span> NEAR`
       url = 'https://ethereum.bridgetonear.org'
       auroraUrl = 'https://aurora.bridgetonear.org'
-      testnetOrMainnetUrl = 'https://ropsten.bridgetonear.org'
+      testnetOrMainnetUrl = 'https://goerli.bridgetonear.org'
       testnetOrMainnet = 'testnet'
     } else {
-      bridgeName = `Ropsten <span class="arrow-divider">↔︎</span> NEAR Tesnet`
+      bridgeName = `Goerli <span class="arrow-divider">↔︎</span> NEAR Tesnet`
       auroraBridgeName = `Aurora Testnet <span class="arrow-divider">↔︎</span> NEAR Testnet`
-      url = 'https://ropsten.bridgetonear.org'
+      url = 'https://goerli.bridgetonear.org'
       auroraUrl = 'https://aurora-testnet.bridgetonear.org'
       testnetOrMainnetUrl = 'https://ethereum.bridgetonear.org'
       testnetOrMainnet = 'mainnet'
