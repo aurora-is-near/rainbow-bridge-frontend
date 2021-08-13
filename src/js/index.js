@@ -28,6 +28,7 @@ window.utils = utils
 switch (`${process.env.ethNetworkId}-${process.env.nearNetworkId}`) {
   case 'ropsten-testnet': window.bridgeName = 'Ropsten ↔︎ NEAR Testnet'; break
   case 'rinkeby-testnet': window.bridgeName = 'Rinkeby ↔︎ NEAR Testnet'; break
+  case 'goerli-testnet': window.bridgeName = 'Goerli ↔︎ NEAR Testnet'; break
   case 'main-mainnet': window.bridgeName = 'Ethereum ↔︎ NEAR'; break
   default: window.bridgeName = 'Unknown'
 }
