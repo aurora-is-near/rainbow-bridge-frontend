@@ -50,6 +50,26 @@ window.addEventListener('load', function cleanUrlParams () {
 render()
 
 transfers.onChange(render)
+transfers.setBridgeParams({
+  nearEventRelayerMargin: Number(process.env.nearEventRelayerMargin),
+  sendToNearSyncInterval: Number(process.env.sendToNearSyncInterval),
+  sendToEthereumSyncInterval: Number(process.env.sendToEthereumSyncInterval),
+  ethChainId: Number(process.env.ethChainId),
+  erc20Abi: process.env.ethErc20AbiText,
+  erc20LockerAddress: process.env.ethLockerAddress,
+  erc20LockerAbi: process.env.ethLockerAbiText,
+  nep141Factory: process.env.nearTokenFactoryAccount,
+  nativeNEARLockerAddress: process.env.nativeNEARLockerAddress,
+  eNEARAddress: process.env.eNEARAddress,
+  eNEARAbi: process.env.eNEARAbiText,
+  etherCustodianAddress: process.env.etherCustodianAddress,
+  etherCustodianAbi: process.env.etherCustodianAbiText,
+  auroraEvmAccount: process.env.auroraEvmAccount,
+  etherExitToEthereumPrecompile: process.env.exitToEthereumPrecompile,
+  ethClientAddress: process.env.ethClientAddress,
+  ethClientAbi: process.env.ethNearOnEthClientAbiText,
+  nearClientAccount: process.env.nearClientAccount
+})
 
 // Render when user clicks goBack
 window.onpopstate = render

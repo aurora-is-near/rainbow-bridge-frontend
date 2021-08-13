@@ -28,6 +28,7 @@
           type="number"
         />
       </div>
+      <span style="display: none" name="erc20Decimals" data-behavior="erc20Decimals"></span>
       <div class="account--origin__token-details" data-behavior="erc20Info">
         <label>Available to transfer</label>
         <span>
@@ -127,10 +128,24 @@
       </div>
       <h1 class="modal__heading">Confirm Ethereum Transaction</h1>
       <p class="modal__message">
-        Transfers are a two-step process, requiring confirmations in both your Ethereum and NEAR wallets, with a delay of about 10 minutes between.
+        Transfers from Ethereum to NEAR take about 10 minutes.
       </p>
       <p class="modal__message">
         Once initiated from Ethereum, the transfer cannot be canceled.
+      </p>
+    </div>
+  </div>
+  <div data-behavior="approveErc20" class="modal" style="display: none">
+    <div class="modal__container">
+      <div class="modal-image__container">
+        <img src="img/eth-wallet-sig.svg" alt="" class="modal__image" />
+      </div>
+      <h1 class="modal__heading">Approve Ethereum Transaction</h1>
+      <p class="modal__message">
+        ERC20 tokens need to be approved before they can be transfered over the bridge.
+      </p>
+      <p class="modal__message">
+        Wait for this approval transaction to be executed and then click Submit Transfer to proceed with the transfer.
       </p>
     </div>
   </div>
@@ -189,7 +204,7 @@
         // decimalAmount is bigger than decimalBalance
         submit.disabled = true
       else submit.disabled = false
-      if (decimalAmount.comparedTo(decimalAllowance) === 1 && decimalAllowance.isPositive())
+      if (decimalAllowance.isPositive() && decimalAmount.comparedTo(decimalAllowance) === 1)
         // decimalAmount is bigger than decimalAllowance
         submit.innerHTML = "Approve transfer"
       else submit.innerHTML = "Submit transfer"
@@ -209,27 +224,79 @@
       e.preventDefault();
 
       disableForm();
+      const decimalAllowance = window.Decimal(window.dom.find("erc20Allowance").innerHTML)
+      const decimalAmount = window.Decimal(amount.value)
+      const decimals = window.dom.find("erc20Decimals").innerHTML
+      const bigNumAmount = decimalAmount.times(Decimal(10).pow(decimals)).toFixed()
+      if (decimalAllowance.isPositive() && decimalAmount.comparedTo(decimalAllowance) === 1) {
+        window.dom.show("approveErc20")
+        let tx
+        try {
+          tx = await window.nep141Xerc20.naturalErc20.approve({
+            erc20Address,
+            amount: bigNumAmount
+          })
+          // Wait for transaction receipt.
+          let confirmed = false
+          let checkedTx
+          while (!confirmed) {
+            console.log('waiting for token allowance update...')
+            await new Promise(r => setTimeout(r, window.LOOP_INTERVAL));
+            try {
+              checkedTx = await window.nep141Xerc20.naturalErc20.checkApprove(tx)
+              if (checkedTx.status === 'failed') {
+                confirmed = true
+                alert("Something went wrong!\n" + checkedTx.errors[0]);
+              } else if (checkedTx.completedStep === 'approve-natural-erc20-to-nep141') {
+                confirmed = true
+              } else {
+                continue
+              }
+              const token = await window.utils.getErc20Data(erc20Address);
+              window.dom
+                .fill("erc20Allowance")
+                .with(window.utils.formatLargeNum(token.allowance, token.decimals));
+              window.dom
+                .fill("erc20Balance")
+                .with(window.utils.formatLargeNum(token.balance, token.decimals));
+              window.dom.show('erc20InfoAllowance', 'flex')
+              enableOrDisableErc20()
+            } catch (err) {
+              console.error(err)
+              continue
+            }
+          }
+        } catch (e) {
+          alert("Something went wrong!\n" + e.message);
+          throw e;
+        } finally {
+          window.dom.hide("approveErc20")
+          // re-enable the form, whether the call succeeded or failed
+          enableForm();
+        }
+        return
+      }
 
       window.dom.show("startTransferToNearModal")
       try {
-        if (erc20Address.toLowerCase() === process.env.eNEARAddress) {
+        if (erc20Address.toLowerCase() === process.env.eNEARAddress.toLowerCase()) {
           await window.ethXnear.bridgedNEAR.sendToNear({
-            amount: amount.value,
-            sender: window.ethUserAddress,
+            amount: bigNumAmount,
             recipient: window.nearUserAddress,
+            options: { sender: window.ethUserAddress }
           })
         } else if (erc20Address === 'eth') {
           await window.ethXnear.naturalETH.sendToNear({
-            amount: amount.value,
-            sender: window.ethUserAddress,
+            amount: bigNumAmount,
             recipient: window.nearUserAddress,
+            options: { sender: window.ethUserAddress }
           })
         } else {
           await window.nep141Xerc20.naturalErc20.sendToNear({
-            amount: amount.value,
-            erc20Address: window.dom.find("erc20Address").value,
-            sender: window.ethUserAddress,
+            erc20Address,
+            amount: bigNumAmount,
             recipient: window.nearUserAddress,
+            options: { sender: window.ethUserAddress }
           });
         }
       } catch (e) {
@@ -344,7 +411,7 @@
 
     let token;
     try {
-      if (erc20Address.toLowerCase() === process.env.eNEARAddress) {
+      if (erc20Address.toLowerCase() === process.env.eNEARAddress.toLowerCase()) {
         token = await window.utils.getNearData();
       } else if (erc20Address === 'eth') {
         token = await window.utils.getEthData();
@@ -384,6 +451,7 @@
     window.dom.find("erc20FreeForm").value = "";
     window.dom.hide("erc20AddressError");
     window.dom.fill("erc20Name").with(token.name);
+    window.dom.fill("erc20Decimals").with(token.decimals);
     window.dom.hide("erc20Modal");
     window.dom
       .fill("erc20Balance")

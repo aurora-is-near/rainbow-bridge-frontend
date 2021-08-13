@@ -16,15 +16,22 @@ export function formatLargeNum (n, decimals = 18) {
 }
 
 export async function getErc20Data (address) {
-  const [erc20, allowance, nep141] = await Promise.all([
-    naturalErc20.getMetadata(address, window.ethUserAddress),
+  const [erc20Metadata, allowance, erc20Balance, nep141Metadata, nep141Balance] = await Promise.all([
+    naturalErc20.getMetadata({ erc20Address: address }),
     naturalErc20.getAllowance({
       erc20Address: address,
       owner: window.ethUserAddress,
       spender: process.env.ethLockerAddress
     }),
-    bridgedNep141.getMetadata(address, window.nearUserAddress)
+    naturalErc20.getBalance({
+      erc20Address: address,
+      owner: window.ethUserAddress
+    }),
+    bridgedNep141.getMetadata({ erc20Address: address }),
+    bridgedNep141.getBalance({ erc20Address: address, owner: window.nearUserAddress })
   ])
+  const erc20 = { ...erc20Metadata, name: erc20Metadata.symbol, address, balance: erc20Balance }
+  const nep141 = { ...nep141Metadata, balance: nep141Balance }
   if (address.toLowerCase() === '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2') {
     erc20.name = 'MKR'
     nep141.name = 'nMKR'
@@ -67,7 +74,7 @@ async function getNep141Balance (address, user) {
 export async function getEthData () {
   const provider = new ethers.providers.Web3Provider(window.provider)
   const ethBalance = (await provider.getBalance(window.ethUserAddress)).toString()
-  const ethOnNearBalance = await getNep141Balance('aurora', window.nearUserAddress)
+  const ethOnNearBalance = await getNep141Balance(process.env.auroraEvmAccount, window.nearUserAddress)
   console.log(ethBalance, ethOnNearBalance)
   return {
     address: 'eth',
@@ -77,7 +84,7 @@ export async function getEthData () {
     name: 'ETH',
     icon: 'ethereum.svg',
     nep141: {
-      address: 'aurora',
+      address: process.env.auroraEvmAccount,
       balance: ethOnNearBalance,
       name: 'nETH'
     }
@@ -85,7 +92,7 @@ export async function getEthData () {
 }
 
 export async function getNearData () {
-  const nearBalance = await naturalNEAR.getBalance(window.ethUserAddress)
+  const nearBalance = await naturalNEAR.getBalance()
   const eNearBalance = await bridgedNEAR.getBalance(window.ethUserAddress)
   return {
     address: process.env.eNEARAddress,
@@ -106,7 +113,7 @@ export function rememberCustomErc20 (erc20Address) {
   if (!erc20Address) return
   erc20Address = erc20Address.toLowerCase()
   if (process.env.featuredErc20s.includes(erc20Address)) return
-  if (erc20Address === process.env.eNEARAddress) return
+  if (erc20Address === process.env.eNEARAddress.toLowerCase()) return
   if (erc20Address === 'eth') return
 
   const customErc20s = JSON.parse(localStorage.getItem(CUSTOM_ERC20_STORAGE))
