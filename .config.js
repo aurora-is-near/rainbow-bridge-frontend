@@ -25,7 +25,7 @@ module.exports = {
     nearWalletUrl: 'http://localhost:4000/',
     nearHelperUrl: 'http://localhost:3000/'
   },
-  ropsten_development: {
+  ropsten_development: { // NOT AVAILABLE
     // library settings
     ethClientAddress: '0xb289c6e6c98644dc9f6a03c044564bc8558b6087',
     ethNearOnEthClientAbiText: readFileSync('./abi/nearOnEthClient.abi'),
@@ -81,7 +81,7 @@ module.exports = {
     eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
     eNEARAddress: '0xe6b7C088Da1c2BfCf84aaE03fd6DE3C4f28629dA',
     nativeNEARLockerAddress: 'enear.goerli.testnet',
-    etherCustodianAddress: '0x8dcA798Bd346C4a84BB4c6635B98D5b16aC7f882',
+    etherCustodianAddress: '0x84a82Bb39c83989D5Dc07e1310281923D2544dC2',
     etherCustodianAbiText: readFileSync('./abi/etherCustodian.full.abi'),
     auroraEvmAccount: 'aurora',
     auroraRelayerAccount: 'relay.aurora',
