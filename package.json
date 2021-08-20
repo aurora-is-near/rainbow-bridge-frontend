@@ -4,11 +4,10 @@
   "license": "(MIT AND Apache-2.0)",
   "private": true,
   "scripts": {
-    "build": "env-cmd -e ropsten_development -r .config.js parcel build src/index.html --public-url ./",
+    "build": "env-cmd -e goerli_development -r .config.js parcel build src/index.html --public-url ./",
     "build_mainnet": "env-cmd -e mainnet -r .config.js parcel build src/index.html --public-url ./",
-    "build_ropsten": "env-cmd -e ropsten_development -r .config.js parcel build src/index.html --public-url ./",
-    "build_rinkeby": "env-cmd -e rinkeby_development -r .config.js parcel build src/index.html --public-url ./",
-    "start": "env-cmd -e ropsten_development -r .config.js parcel src/index.html --port 5555",
+    "build_goerli": "env-cmd -e goerli_development -r .config.js parcel build src/index.html --public-url ./",
+    "start": "env-cmd -e goerli_development -r .config.js parcel src/index.html --port 8888",
     "start_mainnet": "env-cmd -e mainnet -r .config.js parcel src/index.html --port 7777",
     "local": "env-cmd -e local -r .config.js parcel src/index.html",
     "lint": "eslint src",
@@ -34,11 +33,11 @@
     "posthtml-include": "^1.7.0"
   },
   "dependencies": {
-    "@near-eth/client": "^1.5.0-0",
+    "@near-eth/client": "^1.6.0-0",
     "@walletconnect/web3-provider": "^1.4.1",
     "decimal.js": "^10.2.1",
     "ethers": "^5.4.0",
-    "near-api-js": "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb",
+    "near-api-js": "https://github.com/aurora-is-near/near-api-js#b31f9975b29c69e65c6db2feca2183fac400109e",
     "toastify-js": "^1.11.0",
     "web3modal": "^1.9.3"
   },

@@ -86,26 +86,28 @@
           <span class="visually-hidden">close</span>
         </button>
       </nav>
-      <form method="get">
-        <h2 class="modal-section__label">Enter a token address</h2>
-        <label for="erc20" class="visually-hidden">ERC20 Address</label>
-        <input
-          data-behavior="erc20FreeForm"
-          name="erc20"
-          id="erc20"
-          placeholder="0x89d24A6b4C..."
-          autocomplete="off"
-        />
-        <div data-behavior="erc20AddressError" class="errorMessage"></div>
-      </form>
-      <div class="modal-section__separator">or choose</div>
-      <form method="get">
+      <div data-behavior="hideWhenError">
+        <form method="get">
+          <h2 class="modal-section__label">Enter a token address</h2>
+          <label for="erc20" class="visually-hidden">ERC20 Address</label>
+          <input
+            data-behavior="erc20FreeForm"
+            name="erc20"
+            id="erc20"
+            placeholder="0x89d24A6b4C..."
+            autocomplete="off"
+          />
+          <div data-behavior="erc20AddressError" class="errorMessage"></div>
+        </form>
+        <div class="modal-section__separator">or choose</div>
         <header class="token-selector-section__header">
           <div class="space-between">
             <span>Token name</span>
             <span>Available balance</span>
           </div>
         </header>
+      </div>
+      <form method="get">
         <div class="token-list" data-behavior="erc20List"></div>
       </form>
     </div>
@@ -146,6 +148,7 @@
     }
 
     select.onclick = () => {
+      fillErc20List()
       window.urlParams.set({ erc20: '' })
       window.dom.find("erc20FreeForm").value = ''
       window.dom.find("erc20FreeForm").classList.remove("error")
@@ -256,7 +259,20 @@
     if (!window.isValidEthNetwork) return;
     if (window.urlParams.get("erc20") === null) return;
 
-    const allTokens = await window.utils.getAllTokens();
+    let allTokens
+    try {
+      allTokens = await window.utils.getAllTokens();
+      console.log(allTokens)
+      window.dom.show("hideWhenError")
+    } catch (error) {
+      window.dom.hide("hideWhenError")
+      window.dom.fill("erc20List").with(
+        `
+          <p>Network connection error, please try again later.</p>
+          <a href="https://t.me/rainbowbridgesupport">Support telegram channel</a>
+        `
+      )
+    }
     const allTokensList = Object.values(allTokens).filter(token => token.nep141.address !== 'near')
 
     window.dom.fill("erc20List").with(
@@ -310,6 +326,9 @@
       window.dom.hide("erc20Info");
       window.dom.show("sendNaturalErc20");
       window.dom.hide("useMaxErc20")
+      // Set token list to `Loading...` when user is on another url
+      window.dom.hide("hideWhenError")
+      window.dom.fill("erc20List").with(`Loading token balances...`)
       return;
     }
 
@@ -317,7 +336,7 @@
     try {
       if (erc20Address === "near") {
         token = await window.utils.getNearData();
-      } else if (erc20Address === 'aurora') {
+      } else if (erc20Address === process.env.auroraEvmAccount) {
         token = await window.utils.getEthData();
       } else {
         token = await window.utils.getErc20Data(erc20Address);
@@ -385,6 +404,8 @@
     amount.focus();
   }
 
-  window.renderers.push(fillErc20List);
+  // window.renderers.push(fillErc20List);
+  // NOTE: token list balances are updated when clicking on the token selector
+  // Set token list to `Loading...` when user is on another url
   window.renderers.push(renderErc20Form);
 </script>

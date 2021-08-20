@@ -54,7 +54,7 @@ export async function sendToAurora (nep141Address, amount, decimals, name) {
 
   // nETH (aurora) transfers to Aurora has a different protocol:
   // <relayer_id>:<fee(32 bytes)><eth_address_receiver(20 bytes)>
-  const msgPrefix = nep141Address === 'aurora' ? window.nearUserAddress + ':' + '0'.repeat(64) : ''
+  const msgPrefix = nep141Address === process.env.auroraEvmAccount ? window.nearUserAddress + ':' + '0'.repeat(64) : ''
 
   await track(transfer)
 
@@ -63,7 +63,7 @@ export async function sendToAurora (nep141Address, amount, decimals, name) {
     nep141Address,
     'ft_transfer_call',
     {
-      receiver_id: 'aurora',
+      receiver_id: process.env.auroraEvmAccount,
       amount: amount,
       memo: null,
       msg: msgPrefix + window.ethUserAddress.slice(2)
@@ -102,7 +102,7 @@ export async function wrapAndSendNearToAurora (amount) {
   actions.push(transactions.functionCall(
     'ft_transfer_call',
     Buffer.from(JSON.stringify({
-      receiver_id: 'aurora',
+      receiver_id: process.env.auroraEvmAccount,
       amount: amount,
       memo: null,
       msg: window.ethUserAddress.slice(2)
@@ -122,7 +122,6 @@ export async function wrapAndSendNearToAurora (amount) {
     recipient: window.ethUserAddress
   }
   await track(transfer)
-  window.urlParams.clear('erc20n')
   await nearAccount.signAndSendTransaction(process.env.wNearNep141, actions)
 }
 
@@ -150,7 +149,7 @@ export async function deployToAurora (nep141Address) {
   const nearAccount = await window.nearConnection.account()
   window.urlParams.set({ bridging: nep141Address })
   await nearAccount.functionCall(
-    'aurora',
+    process.env.auroraEvmAccount,
     'deploy_erc20_token',
     arg,
     new BN('100' + '0'.repeat(12)),
