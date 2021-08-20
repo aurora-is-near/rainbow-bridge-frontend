@@ -84,26 +84,28 @@
           <span class="visually-hidden">close</span>
         </button>
       </nav>
-      <form method="get">
-        <h2 class="modal-section__label">Enter a token address</h2>
-        <label for="erc20n" class="visually-hidden">ERC20 Address</label>
-        <input
-          data-behavior="erc20nFreeForm"
-          name="erc20n"
-          id="erc20n"
-          placeholder="0x89d24A6b4C..."
-          autocomplete="off"
-        />
-        <div data-behavior="erc20nAddressError" class="errorMessage"></div>
-      </form>
-      <div class="modal-section__separator">or choose</div>
-      <form method="get">
+      <div data-behavior="hideWhenError">
+        <form method="get">
+          <h2 class="modal-section__label">Enter a token address</h2>
+          <label for="erc20n" class="visually-hidden">ERC20 Address</label>
+          <input
+            data-behavior="erc20nFreeForm"
+            name="erc20n"
+            id="erc20n"
+            placeholder="0x89d24A6b4C..."
+            autocomplete="off"
+          />
+          <div data-behavior="erc20nAddressError" class="errorMessage"></div>
+        </form>
+        <div class="modal-section__separator">or choose</div>
         <header class="token-selector-section__header">
           <div class="space-between">
             <span>Token name</span>
             <span>Available balance</span>
           </div>
         </header>
+      </div>
+      <form method="get">
         <div class="token-list" data-behavior="erc20nList"></div>
       </form>
     </div>
@@ -157,6 +159,7 @@
     }
 
     select.onclick = () => {
+      fillErc20nList()
       window.urlParams.set({ erc20n: '' })
       window.dom.find('erc20nFreeForm').value = ''
       window.dom.find("erc20nFreeForm").classList.remove("error")
@@ -206,17 +209,18 @@
       try {
         const decimals = window.dom.find("erc20nDecimals").innerHTML
         if (erc20nAddress === "near") {
-          window.nearXaurora.naturalNep141.wrapAndSendNearToAurora(
+          await window.nearXaurora.naturalNep141.wrapAndSendNearToAurora(
             new window.Decimal(amount.value).times(Decimal(10).pow(24)).toFixed()
           )
         } else {
-          window.nearXaurora.naturalNep141.sendToAurora(
+          await window.nearXaurora.naturalNep141.sendToAurora(
             erc20nAddress,
             new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
             decimals,
             window.dom.find("erc20nName").innerHTML
           )
         }
+        window.urlParams.clear('erc20n')
         // new window.Decimal(token.nep141.balance).times(Decimal(10).pow(-token.decimals)).toFixed()
         // TODO ft transfer nep141 tokens to aurora account
         /*
@@ -265,7 +269,20 @@
     if (!window.isValidEthNetwork) return;
     if (window.urlParams.get("erc20n") === null) return;
 
-    const allTokens = await window.utils.getAllTokens();
+    let allTokens
+    try {
+      allTokens = await window.utils.getAllTokens();
+      window.dom.show("hideWhenError")
+    } catch (error) {
+      window.dom.hide("hideWhenError")
+      window.dom.fill("erc20nList").with(
+        `
+          <p>Network connection error, please try again later.</p>
+          <a href="https://t.me/rainbowbridgesupport">Support telegram channel</a>
+        `
+      )
+    }
+
 
     window.dom.fill("erc20nList").with(
       Object.values(allTokens).sort(ownedErc20nOnTop).map(
@@ -317,6 +334,9 @@
       window.dom.hide("erc20nInfo");
       window.dom.show("sendBridgedNep141");
       window.dom.hide("useMaxErc20n")
+      // Set token list to `Loading...` when user is on another url
+      window.dom.hide("hideWhenError")
+      window.dom.fill("erc20nList").with(`Loading token balances...`)
       return;
     }
 
@@ -325,7 +345,7 @@
     try {
       if (erc20nAddress === "near") {
         token = await window.utils.getNearData();
-      } else if (erc20nAddress === 'aurora') {
+      } else if (erc20nAddress === process.env.auroraEvmAccount) {
         token = await window.utils.getEthData();
       } else {
         token = await window.utils.getErc20Data(erc20nAddress);
@@ -389,6 +409,8 @@
     amount.focus();
   }
 
-  window.renderers.push(fillErc20nList);
+  // window.renderers.push(fillErc20nList);
+  // NOTE: token list balances are updated when clicking on the token selector
+  // Set token list to `Loading...` when user is on another url
   window.renderers.push(renderErc20nForm);
 </script>

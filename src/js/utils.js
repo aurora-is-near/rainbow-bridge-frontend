@@ -63,7 +63,7 @@ async function getErc20Balance (address, user) {
     )
     return (await erc20Contract.balanceOf(user)).toString()
   } catch (e) {
-    console.warn(e)
+    console.warn(e, address)
     return null
   }
 }
@@ -122,11 +122,11 @@ export async function getErc20Data (nep141Address) {
   }
   const erc20 = {
     address: erc20Address,
-    name: metadata.symbol || '0x' + erc20Address.slice(0, 5) + '...',
+    name: metadata.symbol || erc20Address.slice(0, 5) + '...',
     balance: await getErc20Balance(erc20Address, window.ethUserAddress),
     decimals: metadata.decimals
   }
-  const auroraStorageBalance = await getStorageBalance(nep141Address, 'aurora')
+  const auroraStorageBalance = await getStorageBalance(nep141Address, process.env.auroraEvmAccount)
   return { ...erc20, nep141, auroraStorageBalance }
 }
 
@@ -158,7 +158,7 @@ export async function getNearData () {
     decimals: 24,
     name: 'NEAR',
     icon: 'near.svg',
-    auroraStorageBalance: await getStorageBalance(process.env.wNearNep141, 'aurora'),
+    auroraStorageBalance: await getStorageBalance(process.env.wNearNep141, process.env.auroraEvmAccount),
     nep141: {
       address: 'near',
       balance: nearBalance,
@@ -169,8 +169,7 @@ export async function getNearData () {
 
 export async function getEthData () {
   const ethOnAuroraBalance = (await window.web3Provider.getBalance(window.ethUserAddress)).toString()
-  const ethOnNearBalance = await getNep141Balance('aurora', window.nearUserAddress)
-  console.log(ethOnAuroraBalance, ethOnNearBalance)
+  const ethOnNearBalance = await getNep141Balance(process.env.auroraEvmAccount, window.nearUserAddress)
   return {
     address: 'eth',
     balance: ethOnAuroraBalance,
@@ -179,7 +178,7 @@ export async function getEthData () {
     // icon: 'ethereum.svg',
     auroraStorageBalance: true,
     nep141: {
-      address: 'aurora',
+      address: process.env.auroraEvmAccount,
       balance: ethOnNearBalance,
       name: 'nETH'
     }
@@ -187,7 +186,7 @@ export async function getEthData () {
 }
 
 export function rememberCustomErc20 (nep141Address) {
-  if (!nep141Address || nep141Address === 'near' || nep141Address === 'aurora') return
+  if (!nep141Address || nep141Address === 'near' || nep141Address === process.env.auroraEvmAccount) return
   if (process.env.featuredNep141s.includes(nep141Address)) return
 
   const customNep141s = JSON.parse(localStorage.getItem(CUSTOM_NEP141_STORAGE))
@@ -225,7 +224,7 @@ export async function getAuroraErc20Address (nep141Address) {
       Buffer.from(serializedArgs),
       { parse: (result) => Buffer.from(result).toString('hex') }
     )
-    auroraErc20Addresses[nep141Address] = address
+    auroraErc20Addresses[nep141Address] = '0x' + address
   } catch (error) {
     console.error(error, nep141Address)
     return null

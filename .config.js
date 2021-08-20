@@ -25,26 +25,16 @@ module.exports = {
     nearWalletUrl: 'http://localhost:4000/',
     nearHelperUrl: 'http://localhost:3000/'
   },
-  ropsten_development: {
+  goerli_development: {
     // library settings
-    ethClientAddress: '0xb289c6e6c98644dc9f6a03c044564bc8558b6087',
-    ethNearOnEthClientAbiText: readFileSync('./abi/nearOnEthClient.abi'),
-    ethEd25519Address: '0xe729ee84db978d7971bbc5079fd32bb0ae8d1856',
     ethErc20AbiText: readFileSync('./abi/erc20.abi'),
     ethLockerAbiText: readFileSync('./abi/ERC20Locker.full.abi'),
-    ethLockerAddress: '0xb48e6441524f261e141bc766a7ebd54b19ca7465',
-    ethProverAddress: '0xb3df48b0ea3e91b43226fb3c5eb335b7e3d76faa',
-    ethProverAbiText: readFileSync('./abi/prover.abi'),
-    nearClientAccount: '0.client.ropsten.testnet',
     nearHelperUrl: 'https://helper.testnet.near.org',
-    nearProverAccount: 'prover.ropsten.testnet',
-    nearTokenFactoryAccount: 'f.ropsten.testnet',
+    nearTokenFactoryAccount: 'factory.goerli.testnet',
 
     // frontend settings
     featuredNep141s: JSON.stringify([
-      // 'fab46e002bbf0b4509813474841e0716e6730136.f.ropsten.testnet', // FAU: https://ropsten.etherscan.io/token/0xfab46e002bbf0b4509813474841e0716e6730136
-      // '722dd3f80bac40c951b51bdd28dd19d435762180.f.ropsten.testnet', // TST: https://ropsten.etherscan.io/address/0x722dd3f80bac40c951b51bdd28dd19d435762180
-      // 'bf4d811e6891ed044d245cafcc4caa96c969204d.f.ropsten.testnet', // USDT: https://ropsten.etherscan.io/token/0xbf4d811e6891ed044d245cafcc4caa96c969204d
+      'ba62bcfcaafc6622853cca2be6ac7d845bc0f2dc.factory.goerli.testnet', // FAU: https://goerli.etherscan.io/token/0xba62bcfcaafc6622853cca2be6ac7d845bc0f2dc
       'wrap.testnet'
     ]),
     nearNodeUrl: 'https://rpc.testnet.near.org/',
@@ -54,20 +44,13 @@ module.exports = {
     ethNetworkId: 'aurora',
     auroraRpc: 'https://testnet.aurora.dev',
     auroraChainId: 1313161555,
+    auroraEvmAccount: 'aurora',
 
-    eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
-    eNEARAddress: '0x2b3077b25909f24de5543d1e350c4d60f9e0c3ed',
-    nativeNEARLockerAddress: '0.e-near.testnet',
     wNearNep141: 'wrap.testnet'
   },
   mainnet: {
     // library settings
-    ethClientAddress: '0x0151568af92125fb289f1dd81d9d8f7484efc362',
-    ethNearOnEthClientAbiText: readFileSync('./abi/nearOnEthClient.abi'),
     ethErc20AbiText: readFileSync('./abi/erc20.abi'),
-    ethLockerAbiText: readFileSync('./abi/ERC20Locker.full.abi'),
-    ethLockerAddress: '0x23ddd3e3692d1861ed57ede224608875809e127f',
-    nearClientAccount: 'client.bridge.near',
     nearHelperUrl: 'https://helper.near.org',
     nearTokenFactoryAccount: 'factory.bridge.near',
 
@@ -102,10 +85,8 @@ module.exports = {
     ethNetworkId: 'aurora',
     auroraRpc: 'https://mainnet.aurora.dev',
     auroraChainId: 1313161554,
+    auroraEvmAccount: 'aurora',
 
-    eNEARAbiText: readFileSync('./abi/eNEAR.abi'),
-    eNEARAddress: '0x85f17cf997934a597031b2e18a9ab6ebd4b9f6a4',
-    nativeNEARLockerAddress: 'e-near.near',
     wNearNep141: 'wrap.near'
   }
 }
