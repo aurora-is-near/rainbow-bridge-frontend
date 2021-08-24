@@ -138,6 +138,7 @@ module.exports = {
       '0x6f259637dcd74c767781e37bc6133cd6a68aa161', //   HT
       '0x514910771af9ca656af840dff83e8264ecf986ca', //   LINK
       '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', //   MKR
+      '0xf5cfbc74057c610c8ef151a439252680ac68c6dc', //   OCT
       '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f', //   SNX
       '0x6b3595068778dd592e39a122f4f5a5cf09c90fe2', //   SUSHI
       '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', //   UNI
