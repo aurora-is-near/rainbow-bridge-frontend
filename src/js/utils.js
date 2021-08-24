@@ -36,6 +36,10 @@ export async function getErc20Data (address) {
     erc20.name = 'MKR'
     nep141.name = 'nMKR'
   }
+  // TODO remove once available on trustwallet.
+  if (address.toLowerCase() === '0xf5cfbc74057c610c8ef151a439252680ac68c6dc') {
+    erc20.icon = 'oct-token.svg'
+  }
   return { ...erc20, allowance, nep141 }
 }
 
