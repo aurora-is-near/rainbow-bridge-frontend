@@ -100,7 +100,9 @@ module.exports = {
     nearExplorerUrl: 'https://explorer.testnet.near.org',
     nearNetworkId: 'testnet',
     ethNetworkId: 'goerli',
-    ethChainId: 5
+    ethChainId: 5,
+    ethAutoSyncFromBlock: 5297174, // ethClientAddress contract creation block: https://goerli.etherscan.io/tx/0x35073f5913b3fd3a9c725a253bb5a6b79541fcdcbdc62a5ff0c9477b9beb2e5d
+    nearAutoSyncFromBlock: '1628179200000000000' // nearClientAccount contract creation time (rounded * 10^9 (nanosec)): https://explorer.testnet.near.org/transactions/6rWdGyRSAHXxidb4pnzM7bPS5uhKZvUZFrFC7SPC1zf3
   },
   mainnet: {
     // library settings
@@ -154,6 +156,8 @@ module.exports = {
     nearExplorerUrl: 'https://explorer.near.org',
     nearNetworkId: 'mainnet',
     ethNetworkId: 'main',
-    ethChainId: 1
+    ethChainId: 1,
+    ethAutoSyncFromBlock: 12272165, // ethClientAddress contract creation block: https://etherscan.io/tx/0xe5a568aaec37f9a201b54ebfc3f38883237ebc12fad94ea41663fcc13093abbd
+    nearAutoSyncFromBlock: '1615737600000000000' // nearClientAccount contract creation time (rounded * 10^9 (nanosec)): https://explorer.near.org/transactions/DEfAyk1tydsb5rpGo13QoVsJoyg7hZmwccv41LzAYQCo
   }
 }

@@ -2,6 +2,9 @@
   <header class="transfers__header">
     <h1 class="transfers__heading">Your Transfers</h1>
     <p class="subheading">Manage your transfers below or begin a new one.</p>
+    <button class="link button--missing-transfer" data-behavior="syncTransfers">
+      Sync transfers.
+    </button>
     <button class="link button--missing-transfer" data-behavior="newRecovery">
       Missing a transfer?
     </button>
@@ -654,7 +657,7 @@
       if (!(window.ethInitialized && window.nearInitialized)) return;
       if (!window.isValidEthNetwork) return;
 
-      const transfers = await window.transfers.get();
+      const transfers = (await window.transfers.get()).sort((a, b) => b.startTime < a.startTime ? -1 : 1);
 
       if (!transfers.length) {
         window.dom.hide("recent-transfers");
