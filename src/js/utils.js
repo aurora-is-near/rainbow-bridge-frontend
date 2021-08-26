@@ -5,7 +5,7 @@ import { ethers } from 'ethers'
 
 import { Decimal } from 'decimal.js'
 
-const CUSTOM_ERC20_STORAGE = 'custom-erc20s'
+export const CUSTOM_ERC20_STORAGE = 'custom-erc20s'
 
 export function formatLargeNum (n, decimals = 18) {
   // decimals defaults to 18 for old transfers in state that didn't record transfer.decimals
