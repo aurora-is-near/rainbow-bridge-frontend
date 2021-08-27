@@ -1501,23 +1501,23 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@near-eth/client@1.6.0-0":
-  version "1.6.0-0"
-  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.6.0-0.tgz#1bf028b95d7e72a0b17a87c905662f93c94b4f7f"
-  integrity sha512-z8mzGQ6G45keajBnUWISt5ALFTJLWQaFwSFpDs9xdI0FxFym8mGMVbd2wcmZ0VNhVC8yPgL7rIFtCHHMNz+/PA==
+"@near-eth/client@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.6.0.tgz#b3fec4cd9a3f3b03956fc98e5c1a4209d92f8764"
+  integrity sha512-b58ybK6x1bhME+gWARu2NUYqrmSyiuZZvBoHVTh864GRoAFedimz5Tp3+XWodL2pKKVNhhHjabK1TX+kZHDUtg==
   dependencies:
     bn.js "^5.1.3"
     decimal.js "^10.2.1"
     ethers "^5.4.0"
-    near-api-js "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb"
+    near-api-js "https://github.com/aurora-is-near/near-api-js#b31f9975b29c69e65c6db2feca2183fac400109e"
 
-"@near-eth/near-ether@2.0.0-0":
-  version "2.0.0-0"
-  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-2.0.0-0.tgz#9d2ede37e0c9e5bc968bf1d44d41b8f2e47c0497"
-  integrity sha512-fjar1kKSBPqQUHIrnw7N1VWYqK//52qVNERtDeH/aZCVavVTtNALgpi5goucxGieHDfW6FoG4JLctBCsSO6WYw==
+"@near-eth/near-ether@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-2.0.0.tgz#0dd50d7dc32f3f80353f9edbd92492317e2a3b1b"
+  integrity sha512-4vVPGXgpKmxrPUluT9nwO597GZecSPpxj7dc0zZYEUPS1GDTUhOLx7vEIiSK5qT6Q6mYB29nXTcasVUpQy5iQQ==
   dependencies:
-    "@near-eth/client" "1.6.0-0"
-    "@near-eth/utils" "2.0.0-0"
+    "@near-eth/client" "1.6.0"
+    "@near-eth/utils" "2.0.0"
     bn.js "^5.1.3"
     bs58 "^4.0.1"
     ethereumjs-util "^7.0.10"
@@ -1527,13 +1527,13 @@
     promisfy "^1.2.0"
     rlp "^2.2.6"
 
-"@near-eth/nep141-erc20@2.0.0-0":
-  version "2.0.0-0"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-2.0.0-0.tgz#f58a31ad968592494efb5c695f021d24b95060b3"
-  integrity sha512-3LjU0w9heLVXEAtxHqM28XIv8psXulZC+gNuztD9WZ6f9FETdCWmjCo9ZVm5fxaglBYiBLuRZAla8Hg44MMSIw==
+"@near-eth/nep141-erc20@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-2.0.0.tgz#e4af95964b0d9edb1ee460618f5864b571630c4e"
+  integrity sha512-3HryxQh3jwVOQj/+XXVOJtjlvcWvXwFNR5hvXv7ICuC35PhlCoMmBkgSX3lKRnG5labdV9m1o3o5iInU2AEhiw==
   dependencies:
-    "@near-eth/client" "1.6.0-0"
-    "@near-eth/utils" "2.0.0-0"
+    "@near-eth/client" "1.6.0"
+    "@near-eth/utils" "2.0.0"
     bn.js "^5.1.3"
     bs58 "^4.0.1"
     ethereumjs-util "^7.0.10"
@@ -1543,10 +1543,10 @@
     promisfy "^1.2.0"
     rlp "^2.2.6"
 
-"@near-eth/utils@2.0.0-0":
-  version "2.0.0-0"
-  resolved "https://registry.yarnpkg.com/@near-eth/utils/-/utils-2.0.0-0.tgz#e86a7be034555b636f63eb9d48781f7e2cf19a44"
-  integrity sha512-ONz9KsqeGG2sYR9zoCNTxJrWE+VwWRtMkhrxhZ4vi9fCnyzNptcMQWYPTgNw1Exxmhwf2YemWZN8Fs7HiGq68g==
+"@near-eth/utils@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/utils/-/utils-2.0.0.tgz#c65c1e61c8d84d2a20497ac83935ccc96ac97362"
+  integrity sha512-NQkbmIxYule8WpHnYU9Gom+VrPhJMmfMD+VrmVv+Y4fz6z6GBWOmt4c5aUvGT2BU3YXHqOBMfOGNuHnArb/HCA==
   dependencies:
     bs58 "^4.0.1"
     eth-object aurora-is-near/eth-object#383b6ea68c7050bea4cab6950c1d5a7fa553e72b
@@ -2400,16 +2400,6 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
-
-borsh@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/borsh/-/borsh-0.4.0.tgz#9dd6defe741627f1315eac2a73df61421f6ddb9f"
-  integrity sha512-aX6qtLya3K0AkT66CmYWCCDr77qsE9arV05OmdFpmat9qu8Pg9J5tBUPDztAW5fNh/d/MyVG/OYziP52Ndzx1g==
-  dependencies:
-    "@types/bn.js" "^4.11.5"
-    bn.js "^5.0.0"
-    bs58 "^4.0.0"
-    text-encoding-utf-8 "^1.0.2"
 
 borsh@^0.5.0:
   version "0.5.0"
@@ -6879,22 +6869,6 @@ natural-compare@^1.4.0:
   dependencies:
     bn.js "5.2.0"
     borsh "^0.5.0"
-    bs58 "^4.0.0"
-    depd "^2.0.0"
-    error-polyfill "^0.1.2"
-    http-errors "^1.7.2"
-    js-sha256 "^0.9.0"
-    mustache "^4.0.0"
-    node-fetch "^2.6.1"
-    text-encoding-utf-8 "^1.0.2"
-    tweetnacl "^1.0.1"
-
-"near-api-js@https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb":
-  version "0.41.0"
-  resolved "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb"
-  dependencies:
-    bn.js "5.2.0"
-    borsh "^0.4.0"
     bs58 "^4.0.0"
     depd "^2.0.0"
     error-polyfill "^0.1.2"
