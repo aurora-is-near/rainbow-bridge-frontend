@@ -37,7 +37,7 @@
     "posthtml-include": "^1.7.0"
   },
   "dependencies": {
-    "@near-eth/client": "1.6.0-0",
+    "@near-eth/client": "1.6.0-1",
     "@near-eth/nep141-erc20": "2.0.0-0",
     "@near-eth/near-ether": "2.0.0-0",
     "decimal.js": "^10.2.1",
