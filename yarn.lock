@@ -1511,6 +1511,16 @@
     ethers "^5.4.0"
     near-api-js "https://github.com/near/near-api-js#fef7f683fca86980f3509987226fbc7f63b455cb"
 
+"@near-eth/client@1.6.0-1":
+  version "1.6.0-1"
+  resolved "https://registry.yarnpkg.com/@near-eth/client/-/client-1.6.0-1.tgz#5feca1a6aac13499fe8115d3dc704eaa908e736c"
+  integrity sha512-rT/uDEtWqtKlbonvIwbP5kN1Uqdf4pMi2UdJhLU5yRKWc/mBuhZS498m8AweuCYRgtABuRb43NvPIQs08UKtiQ==
+  dependencies:
+    bn.js "^5.1.3"
+    decimal.js "^10.2.1"
+    ethers "^5.4.0"
+    near-api-js "https://github.com/aurora-is-near/near-api-js#b31f9975b29c69e65c6db2feca2183fac400109e"
+
 "@near-eth/near-ether@2.0.0-0":
   version "2.0.0-0"
   resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-2.0.0-0.tgz#9d2ede37e0c9e5bc968bf1d44d41b8f2e47c0497"
@@ -1527,13 +1537,13 @@
     promisfy "^1.2.0"
     rlp "^2.2.6"
 
-"@near-eth/nep141-erc20@2.0.0-0":
-  version "2.0.0-0"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-2.0.0-0.tgz#f58a31ad968592494efb5c695f021d24b95060b3"
-  integrity sha512-3LjU0w9heLVXEAtxHqM28XIv8psXulZC+gNuztD9WZ6f9FETdCWmjCo9ZVm5fxaglBYiBLuRZAla8Hg44MMSIw==
+"@near-eth/nep141-erc20@2.0.0-1":
+  version "2.0.0-1"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-2.0.0-1.tgz#b11aba4977811115f4e9eb5138b5ebf8ef9156be"
+  integrity sha512-H2wnCLo5chvfmkXcGEZzHi1+rVJBM2UV/sYi0HAQ4MIvsZ3dvWG6WovobC/Y6+PZWPulF85LChOBEJ3jjkEotw==
   dependencies:
-    "@near-eth/client" "1.6.0-0"
-    "@near-eth/utils" "2.0.0-0"
+    "@near-eth/client" "1.6.0-1"
+    "@near-eth/utils" "2.0.0-1"
     bn.js "^5.1.3"
     bs58 "^4.0.1"
     ethereumjs-util "^7.0.10"
@@ -1547,6 +1557,19 @@
   version "2.0.0-0"
   resolved "https://registry.yarnpkg.com/@near-eth/utils/-/utils-2.0.0-0.tgz#e86a7be034555b636f63eb9d48781f7e2cf19a44"
   integrity sha512-ONz9KsqeGG2sYR9zoCNTxJrWE+VwWRtMkhrxhZ4vi9fCnyzNptcMQWYPTgNw1Exxmhwf2YemWZN8Fs7HiGq68g==
+  dependencies:
+    bs58 "^4.0.1"
+    eth-object aurora-is-near/eth-object#383b6ea68c7050bea4cab6950c1d5a7fa553e72b
+    ethereumjs-util "^7.0.10"
+    ethers "^5.4.0"
+    lite-merkle-patricia-tree "1.0.0"
+    near-api-js "https://github.com/aurora-is-near/near-api-js#b31f9975b29c69e65c6db2feca2183fac400109e"
+    web3-utils "^1.3.4"
+
+"@near-eth/utils@2.0.0-1":
+  version "2.0.0-1"
+  resolved "https://registry.yarnpkg.com/@near-eth/utils/-/utils-2.0.0-1.tgz#be4f9401b37ed0b1874a702979004be58a440b5b"
+  integrity sha512-9zRSAbd1joD0Y+YpzIYtiqCFaF14sjDqkUqczC4LsGreOqM8G6V+OHK9iKPgaxeMboSSJiIw5Ch4h15g254Qjw==
   dependencies:
     bs58 "^4.0.1"
     eth-object aurora-is-near/eth-object#383b6ea68c7050bea4cab6950c1d5a7fa553e72b
