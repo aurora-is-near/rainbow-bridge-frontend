@@ -43,7 +43,7 @@
     "decimal.js": "^10.2.1",
     "near-api-js": "https://github.com/aurora-is-near/near-api-js#b31f9975b29c69e65c6db2feca2183fac400109e",
     "@walletconnect/web3-provider": "^1.5.0",
-    "ethers": "^5.4.4",
+    "ethers": "^5.4.5",
     "web3modal": "^1.9.3"
   },
   "browserslist": [
