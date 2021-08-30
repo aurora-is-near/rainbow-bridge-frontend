@@ -1,7 +1,8 @@
 import autobahn from 'autobahn'
 import {
   replaceTransfers,
-  get as getTransfers
+  get as getTransfers,
+  getReplacementTransfers
 } from '@near-eth/client'
 import { CUSTOM_ERC20_STORAGE } from './utils'
 
@@ -41,7 +42,7 @@ async function getWampSession () {
   })
 }
 
-export default async function syncTransfers () {
+export default async function syncTransfers ({ ethAddress, nearAccountId }) {
   const session = await getWampSession()
   const featuredErc20s = JSON.parse(process.env.featuredErc20s)
   const customErc20s = JSON.parse(localStorage.getItem(CUSTOM_ERC20_STORAGE)) ?? []
@@ -56,12 +57,12 @@ export default async function syncTransfers () {
       await window.ethXnear.naturalETH.findAllTransactions({
         fromBlock: Number(process.env.ethAutoSyncFromBlock),
         toBlock: 'latest',
-        sender: window.ethUserAddress
+        sender: ethAddress ?? window.ethUserAddress
       }),
       await window.ethXnear.bridgedETH.findAllTransactions({
         fromBlock: process.env.nearAutoSyncFromBlock,
         toBlock: 'latest',
-        sender: window.nearUserAddress,
+        sender: nearAccountId ?? window.nearUserAddress,
         callIndexer: async (query) => await session.call(`com.nearprotocol.${process.env.nearNetworkId}.explorer.select:INDEXER_BACKEND`, [query])
       })
     ]),
@@ -69,13 +70,13 @@ export default async function syncTransfers () {
       await window.ethXnear.naturalNEAR.findAllTransactions({
         fromBlock: process.env.nearAutoSyncFromBlock,
         toBlock: 'latest',
-        sender: window.nearUserAddress,
+        sender: nearAccountId ?? window.nearUserAddress,
         callIndexer: async (query) => await session.call(`com.nearprotocol.${process.env.nearNetworkId}.explorer.select:INDEXER_BACKEND`, [query])
       }),
       await window.ethXnear.bridgedNEAR.findAllTransactions({
         fromBlock: Number(process.env.ethAutoSyncFromBlock),
         toBlock: 'latest',
-        sender: window.ethUserAddress
+        sender: ethAddress ?? window.ethUserAddress
       })
     ]),
     await Promise.all(tokens.map(async erc20Address => {
@@ -83,13 +84,13 @@ export default async function syncTransfers () {
         await window.nep141Xerc20.naturalErc20.findAllTransactions({
           fromBlock: Number(process.env.ethAutoSyncFromBlock),
           toBlock: 'latest',
-          sender: window.ethUserAddress,
+          sender: ethAddress ?? window.ethUserAddress,
           erc20Address
         }),
         await window.nep141Xerc20.bridgedNep141.findAllTransactions({
           fromBlock: process.env.nearAutoSyncFromBlock,
           toBlock: 'latest',
-          sender: window.nearUserAddress,
+          sender: nearAccountId ?? window.nearUserAddress,
           erc20Address,
           callIndexer: async (query) => await session.call(`com.nearprotocol.${process.env.nearNetworkId}.explorer.select:INDEXER_BACKEND`, [query])
         })
@@ -207,6 +208,11 @@ export default async function syncTransfers () {
   console.log('syncTransfers: ', syncTransfers)
   // Transfer will be updated at the next checkStatus
   replaceTransfers(syncTransfers)
+
+  while (getReplacementTransfers().length !== 0) {
+    await new Promise(resolve => setTimeout(resolve, 10000))
+  }
+  console.log('Auto sync completed')
 }
 
 const last = (arr) => arr[arr.length - 1]

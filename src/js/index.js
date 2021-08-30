@@ -8,6 +8,7 @@ import * as transfers from '@near-eth/client'
 import * as nep141Xerc20 from '@near-eth/nep141-erc20'
 import * as ethXnear from '@near-eth/near-ether'
 import * as utils from './utils'
+import syncTransfers from './autoSync'
 
 dom.init()
 
@@ -24,6 +25,7 @@ window.render = render
 window.transfers = transfers
 window.urlParams = urlParams
 window.utils = utils
+window.syncTransfers = syncTransfers
 
 switch (`${process.env.ethNetworkId}-${process.env.nearNetworkId}`) {
   case 'ropsten-testnet': window.bridgeName = 'Ropsten ↔︎ NEAR Testnet'; break

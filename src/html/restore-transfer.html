@@ -1,7 +1,7 @@
 <div class="restore" data-behavior="restore" style="display: none">
   <div data-behavior="locateTransfer">
     <header>
-      <h2>Restore transfer</h2>
+      <h2>Restore single transfer</h2>
       <p>
         Restore a bridge transfer by providing it's initiating transaction ID
         from NEAR or Ethereum.
@@ -17,8 +17,28 @@
       />
       <footer>
         <button class="full-width" data-behavior="restoreSubmit" disabled>
-          Locate transfer
+          Locate single transfer
         </button>
+      </footer>
+    </form>
+    <header>
+      <h2>Scan transfer history</h2>
+      <p>
+        Scan transfer history from the following accounts (default to the connected accounts).
+      </p>
+    </header>
+    <form method="get" class="auto-sync-form" data-behavior="customAutoSyncForm">
+      <label for="ethAddrInput">Ethereum address</label>
+      <input id="ethAddrInput" data-behavior="ethAddrInput" placeholder="0x..." autocomplete="off"/>
+      <label for="nearAddrInput">NEAR account id</label>
+      <input id="nearAddrInput" data-behavior="nearAddrInput" placeholder="rainbow.near" autocomplete="off"/>
+      <div class="auto-sync-search" data-behavior="autoSyncMessage">
+        <span class="icon" style="display: none;" data-behavior="autoSyncSpinner"></span>
+      </div>
+        <button class="full-width" data-behavior="customAutoSyncSubmit">
+          Scan transfer history
+        </button>
+      <footer>
         <button type="button" class="cancel" data-behavior="cancelRestore">
           Cancel
         </button>
@@ -78,16 +98,17 @@
   }
   .restore header {
     text-align: center;
-    margin-bottom: 5em;
+    margin-bottom: 2em;
+  }
+  .restore .auto-sync-search {
+    text-align: center;
   }
   .restore input {
     margin-top: 0.5em;
+    margin-bottom: 1em;
   }
-  .restore footer {
-    margin-top: 2em;
-  }
-  .restore button {
-    margin-top: 1em;
+  .restore-form {
+    margin-bottom: 7em;
   }
   .restoredTransfer.in-progress {
     --color--transfer-header: var(--orange-300);
@@ -224,7 +245,7 @@
     return null
   }
 
-  window.addEventListener("load", function handleInputTxHashEvents() {
+  window.addEventListener("load", function handleInputRestoreEvents() {
     let transferToRestore;
     const txHashInput = window.dom.find("txHashInput");
     const restoreSubmit = window.dom.find("restoreSubmit");
@@ -280,6 +301,28 @@
           window.dom.hide("transferFound");
         })
     );
+    window.dom.find("customAutoSyncForm").onsubmit = async function customAutoSyncTransfers (
+      e
+    ) {
+      e.preventDefault();
+      const customAutoSyncSubmit = window.dom.find("customAutoSyncSubmit")
+      const ethAddress = window.dom.find("ethAddrInput").value || null
+      const nearAccountId = window.dom.find("nearAddrInput").value || null
+      customAutoSyncSubmit.disabled = true
+      window.dom.show("autoSyncSpinner")
+      try {
+        await window.syncTransfers({ ethAddress, nearAccountId })
+      } catch (error) {
+        console.log(error)
+        alert(error)
+        return
+      } finally {
+        customAutoSyncSubmit.disabled = false
+        window.dom.hide("autoSyncSpinner")
+      }
+      window.urlParams.clear("new");
+      window.render();
+    }
   });
   function renderRestoredTransfer(transfer) {
     transfer = window.transfers.decorate(transfer, { locale: "en_US" });

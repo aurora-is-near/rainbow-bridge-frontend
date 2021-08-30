@@ -1,13 +1,11 @@
 <div class="transfers" data-behavior="recent-transfers" style="display: none">
   <header class="transfers__header">
     <h1 class="transfers__heading">Your Transfers</h1>
-    <p class="subheading">Manage your transfers below or begin a new one.</p>
-    <button class="link button--missing-transfer" data-behavior="syncTransfers">
-      Sync transfers.
-    </button>
-    <button class="link button--missing-transfer" data-behavior="newRecovery">
-      Missing a transfer?
-    </button>
+    <p class="subheading">
+      Your pending and completed transfers are listed below.
+      If you’re having a problem with a particular transaction, or things seem to be missing, you can
+      <a class="auto-sync-link" data-behavior="showAutoSyncTransfersModal">rescan the blockchain</a>.
+    </p>
     <!-- TODO: <nav> -->
   </header>
   <div class="transfers__wrapper">
@@ -23,7 +21,7 @@
   </div>
   <p style="margin-top: 2em; font-size: small; text-align: center">
     Need help? Join our
-    <a href="https://t.me/rainbowbridgesupport"> support telegram channel</a>.
+    <a href="https://t.me/rainbowbridgesupport" target="_blank" rel="noopener noreferrer">support telegram channel</a>
   </p>
   <div data-behavior="deleteModal" class="modal" style="display: none">
     <div class="modal__container">
@@ -91,7 +89,7 @@
     }
 
     .transfers__header {
-      padding: 0 5rem;
+      padding: 0 2rem;
       margin: 0 auto var(--spacing-xxl);
       text-align: center;
     }
@@ -104,9 +102,11 @@
       margin-bottom: 0;
     }
 
+    .auto-sync-link:hover {
+      cursor: pointer;
+    }
     .transfers__header .button--missing-transfer {
-      margin-bottom: var(--spacing-s);
-      font-size: var(--fs-small);
+      font-size: var(--fs-regular);
       font-weight: var(--fw-regular);
       text-decoration: underline;
     }
