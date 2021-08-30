@@ -29,9 +29,10 @@
         <button
           type="button"
           class="link button--missing-transfer"
-          data-behavior="newRecovery"
+          data-behavior="showAutoSyncTransfersModal"
+          style="display: none;"
         >
-          Missing a transfer?
+          Scan my transfer history
         </button>
       </div>
     </form>
@@ -104,8 +105,10 @@
   async function renderLanding() {
     if (window.ethInitialized && window.nearInitialized) {
       window.dom.find("landingSubmit").disabled = false;
+      window.dom.show('showAutoSyncTransfersModal')
     } else {
       // window.dom.show("landing");
+      window.dom.hide('showAutoSyncTransfersModal')
       window.dom.find("landingSubmit").disabled = true;
       return;
     }

@@ -1,6 +1,5 @@
 import render from './render'
 import * as urlParams from './urlParams'
-import syncTransfers from './autoSync'
 
 const isObject = x =>
   Object.prototype.toString.call(x) === '[object Object]'
@@ -107,8 +106,6 @@ export function init () {
     window.urlParams.setPush({ new: 'restore' })
     render()
   })
-
-  onClick('syncTransfers', syncTransfers)
 
   onClick('newTransfer', function startTransfer () {
     // Add url param with history.pushState to enable goBack.
