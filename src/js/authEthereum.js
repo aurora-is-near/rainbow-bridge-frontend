@@ -41,7 +41,7 @@ async function login () {
   ))
   setSignerProvider(new ethers.providers.Web3Provider(provider, 'any'))
 
-  if (provider.isMetaMask) {
+  if (provider.isMetaMask || provider.isImToken) {
     window.ethUserAddress = provider.selectedAddress
     window.connectedEthNetwork = chainIdToEthNetwork[parseInt(provider.chainId)]
   } else {
