@@ -3,7 +3,7 @@
 
 An app that moves assets between Ethereum and NEAR. You can use this as the starting point for your own app on the [Rainbow Bridge].
 
-Try it between [Ethereum Ropsten] & [NEAR Testnet]: https://aurora-is-near.github.io/rainbow-bridge-frontend/
+Try it between [Ethereum Goerli] & [NEAR Testnet]: https://goerli.bridgetonear.org/
 
 ![Deploy](https://github.com/aurora-is-near/rainbow-bridge-frontend/actions/workflows/deploy.yaml/badge.svg)
 ![Lint](https://github.com/aurora-is-near/rainbow-bridge-frontend/actions/workflows/lint.yaml/badge.svg)
@@ -140,7 +140,7 @@ If your change should show up in release notes as a feature, use `feat:`. If it 
   [Rainbow Bridge]: https://github.com/near/rainbow-bridge
   [NEP141]: https://github.com/near/NEPs/issues/141
   [NEAR]: https://near.org/
-  [Ethereum Ropsten]: https://ropsten.etherscan.io
+  [Ethereum Goerli]: https://goerli.etherscan.io
   [NEAR Testnet]: https://docs.near.org/docs/concepts/networks#testnet
   [storage]: https://docs.near.org/docs/concepts/storage-staking
   [Node.js]: https://nodejs.org/en/download/package-manager/
