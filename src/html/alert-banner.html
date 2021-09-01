@@ -1,4 +1,4 @@
-<aside class="banner caution">
+<aside class="banner caution" style="display: none;" data-behavior="banner">
   <svg
     width="25"
     height="25"
@@ -29,10 +29,7 @@
     />
   </svg>
   <span>
-    <strong>CAUTION: </strong>The Rainbow Bridge is temporarily incompatible
-    with NEAR wallets secured by Ledger devices and/or two-factor
-    authentication.
-  </span>
+    <strong>CAUTION: </strong>Goerli -> NEAR transfers under maintenance.</span>
 </aside>
 
 <style>
@@ -77,3 +74,11 @@
     stroke: var(--blue-700);
   }
 </style>
+
+<script>
+  window.addEventListener('load', function hideOrShowBanner () {
+    if (process.env.nearNetworkId === 'testnet') {
+      window.dom.show('banner')
+    }
+  })
+</script>
