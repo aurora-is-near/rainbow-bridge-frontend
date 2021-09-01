@@ -25,9 +25,7 @@ async function getWampSession () {
         }
         throw new Error('WAMP authentication error: unsupported challenge method')
       },
-      retry_if_unreachable: true,
-      max_retries: Number.MAX_SAFE_INTEGER,
-      max_retry_delay: 10
+      retry_if_unreachable: false
     })
     wamp.onopen = (session) => {
       console.log('open: ', session)
