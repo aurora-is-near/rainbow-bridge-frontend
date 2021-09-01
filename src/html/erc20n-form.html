@@ -126,20 +126,42 @@
       </div>
       <h1 class="modal__heading">Confirm NEAR Transaction</h1>
       <p class="modal__message">
-        Transfers are a two-step process, requiring confirmations in both your NEAR and Ethereum wallets, with a delay of about 16 hours between.
+        Transfers are a two-step process, requiring confirmations in both your NEAR and Ethereum wallets, with a delay of about <strong>16 hours</strong> between.
       </p>
       <p class="modal__message">
-        When Ethereum gas is expensive—say 100 Gwei—that confirmation could cost 0.05 ETH or more, and once initiated from NEAR, the transfer cannot be canceled.
+        When Ethereum gas is expensive—say 100 Gwei—that confirmation could cost <strong>0.05 ETH</strong> or more, and once initiated from NEAR, <strong>the transfer cannot be canceled</strong>.
       </p>
       <p class="modal__message">
         Continue to your NEAR wallet, and do not close the window until the NEAR confirmation is complete.
       </p>
-      <button data-behavior="erc20nConfirmSubmit" class="full-width">
-        Continue to NEAR Wallet
-      </button>
+      <form>
+        <div class="check-fees">
+          <input type="checkbox" id="check-fees" data-behavior="checkFees">
+          <label for="check-fees">I understand it may not be economical to send small value over the bridge.</label><br>
+        </div>
+        <button data-behavior="erc20nConfirmSubmit" class="full-width">
+          Continue to NEAR Wallet
+        </button>
+      </form>
     </div>
   </div>
 </div>
+<style>
+  .check-fees {
+    display: flex;
+    align-content: flex-start;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+  }
+  .check-fees input  {
+    margin: 0 var(--spacing-m);
+    height: var(--spacing-m);
+    width: var(--spacing-m);
+  }
+  .check-fees label  {
+    margin: 0;
+  }
+</style>
 
 <script>
   window.addEventListener("load", function sendBridgedNep141OnLoad() {
@@ -147,6 +169,7 @@
     const maxAmount = window.dom.find("useMaxErc20n");
     const select = window.dom.find("erc20nSelectButton");
     const submit = window.dom.find("erc20nSubmit");
+    const checkFees = window.dom.find("checkFees");
     const confirmSubmit = window.dom.find("erc20nConfirmSubmit");
     const cancel = document.getElementById("erc20nCancel")
 
@@ -207,7 +230,14 @@
       "sendBridgedNep141Form"
     ).onsubmit = async function transferErc20n(e) {
       e.preventDefault();
+      checkFees.checked = false
+      confirmSubmit.disabled = true
       window.dom.show("startTransferToEthereumModal")
+    }
+
+    checkFees.onclick = async function activateConfirm(e) {
+      if (checkFees.checked) confirmSubmit.disabled = false
+      else confirmSubmit.disabled = true
     }
 
     confirmSubmit.onclick = async function confirmTransferErc20n(e) {
