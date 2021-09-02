@@ -116,7 +116,7 @@
     const transfers = await window.transfers.get();
     const params = Object.keys(window.urlParams.get());
 
-    if (transfers.length || params.length) {
+    if (transfers.length || ['erc20', 'erc20n', 'new'].some(p => params.includes(p))) {
       window.dom.hide("landing");
     } else {
       window.dom.show("landing");

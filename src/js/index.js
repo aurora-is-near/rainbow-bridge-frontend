@@ -35,20 +35,23 @@ switch (`${process.env.ethNetworkId}-${process.env.nearNetworkId}`) {
   default: window.bridgeName = 'Unknown'
 }
 
-window.addEventListener('load', function cleanUrlParams () {
-  // When signing a Near tx, if user clicks goBack, then the dapp will think
-  // it is waiting for the redirect to Near wallet, so clear url params so the
-  // transfer can be marked FAILED and retried.
-  const params = Object.keys(window.urlParams.get())
-  if (
-    (params.includes('withdrawing') || params.includes('minting')) &&
-    !(params.includes('transactionHashes') || params.includes('errorCode'))
-  ) {
-    window.urlParams.clear()
-  }
-  // If a new token was bridged it is safe to clear transactionHashes
-  if (params.includes('bridging')) { window.urlParams.clear() }
-})
+const params = Object.keys(window.urlParams.get())
+// When redirecting from NEAR wallet, stay on the landing page
+if (params.includes('withdrawing') || params.includes('locking')) {
+  window.urlParams.clear('erc20n')
+}
+// If the user clicks goBack in NEAR wallet, then the dapp will think
+// it is waiting for the redirect to Near wallet, so clear the transfer id (withdrawing | locking | minting | unlocking)
+// so that the transfer can be marked FAILED and retried.
+const transferIds = ['withdrawing', 'locking', 'minting', 'unlocking']
+if (
+  (params.some(p => transferIds.includes(p))) &&
+  !(params.includes('transactionHashes') || params.includes('errorCode'))
+) {
+  window.urlParams.clear(...transferIds)
+}
+// If a new token was bridged it is safe to clear transactionHashes
+if (params.includes('bridging')) { window.urlParams.clear('bridging', 'transactionHashes', 'errorCode', 'errorMessage', 'erc20', 'erc20n') }
 
 render()
 
