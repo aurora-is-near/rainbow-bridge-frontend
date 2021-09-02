@@ -1511,10 +1511,10 @@
     ethers "^5.4.0"
     near-api-js "https://github.com/aurora-is-near/near-api-js#b31f9975b29c69e65c6db2feca2183fac400109e"
 
-"@near-eth/near-ether@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-2.0.0.tgz#0dd50d7dc32f3f80353f9edbd92492317e2a3b1b"
-  integrity sha512-4vVPGXgpKmxrPUluT9nwO597GZecSPpxj7dc0zZYEUPS1GDTUhOLx7vEIiSK5qT6Q6mYB29nXTcasVUpQy5iQQ==
+"@near-eth/near-ether@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-2.0.1.tgz#2b8a7c5a4ccab6ff60ad77b688b15ebdd33e884a"
+  integrity sha512-9ngUx3YVdhV6K43ARjetZ2r9ej7Oasa5Ab4ZFOReknqsDyoCgGosEOvKR8iPXV3QnhLRXVqZshW59YBbIVqnzg==
   dependencies:
     "@near-eth/client" "1.6.0"
     "@near-eth/utils" "2.0.0"
@@ -1527,10 +1527,10 @@
     promisfy "^1.2.0"
     rlp "^2.2.6"
 
-"@near-eth/nep141-erc20@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-2.0.0.tgz#e4af95964b0d9edb1ee460618f5864b571630c4e"
-  integrity sha512-3HryxQh3jwVOQj/+XXVOJtjlvcWvXwFNR5hvXv7ICuC35PhlCoMmBkgSX3lKRnG5labdV9m1o3o5iInU2AEhiw==
+"@near-eth/nep141-erc20@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@near-eth/nep141-erc20/-/nep141-erc20-2.0.1.tgz#4256d28a05f63bd19281c37a278c3443ed0c2cb9"
+  integrity sha512-UbqKo0SD3yd/DvnCNxXcJpmhk5MlqEBINfOfpXDN1VdRyQKqJXuj1v+qHDcUYGNNVoUKgBB5r75qxwjQzSTRcw==
   dependencies:
     "@near-eth/client" "1.6.0"
     "@near-eth/utils" "2.0.0"

@@ -23,11 +23,12 @@ export function set (newParams) {
   window.history.replaceState({}, '', `${location.pathname}?${params}`)
 }
 
-export function setPush (newParams, replace) {
-  const params = replace ? new URLSearchParams() : new URLSearchParams(window.location.search)
+export function setPush (newParams) {
+  const params = new URLSearchParams(window.location.search)
   for (const param in newParams) {
     params.set(param, newParams[param])
   }
+  if (!newParams.new) params.delete('new')
   window.history.pushState({}, '', `${location.pathname}?${params}`)
 }
 

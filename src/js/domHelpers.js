@@ -77,7 +77,7 @@ export const show = (selector, display) =>
 // call this once, after page load
 export function init () {
   onClick('goHome', function goHome () {
-    urlParams.clear()
+    urlParams.clear('erc20n', 'erc20', 'new')
     render()
   })
 
@@ -124,7 +124,7 @@ export function init () {
 
       // Replace url params with history.pushState to enable goBack.
       Array.from(e.target.elements).forEach(el => {
-        if (el.name) urlParams.setPush({ [el.name]: el.value }, true)
+        if (el.name) urlParams.setPush({ [el.name]: el.value })
       })
 
       render()

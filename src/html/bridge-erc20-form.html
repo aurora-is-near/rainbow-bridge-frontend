@@ -81,7 +81,7 @@
     window.dom.find('bridgeErc20Cancel').onclick = () => {
       bridgeErc20Address = null
       window.dom.hide('bridgeErc20Form')
-      window.urlParams.clear()
+      window.urlParams.clear('erc20', 'erc20n')
       window.render()
     }
   })
