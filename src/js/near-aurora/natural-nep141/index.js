@@ -23,23 +23,35 @@ export const i18n = {
 }
 
 export async function checkStatus (transfer) {
-  const params = Object.keys(window.urlParams.get())
-  if (params.includes('transactionHashes')) {
-    const hash = window.urlParams.get('transactionHashes')
-    window.urlParams.clear()
-    return { ...transfer, status: 'completed', hash }
+  const id = window.urlParams.get('locking')
+  const txHash = window.urlParams.get('transactionHashes')
+  const errorCode = window.urlParams.get('errorCode')
+  if (!id && !txHash) {
+    // The user closed the tab and never rejected or approved the tx from Near wallet.
+    // This doesn't protect agains the user broadcasting a tx and closing the tab before
+    // redirect. So the dapp has no way of knowing the status of that transaction.
+    const newError = 'Transaction hash not available.'
+    console.error(newError)
+    return {
+      ...transfer,
+      status: 'failed',
+      errors: [newError]
+    }
   }
-  if (params.includes('errorCode') || params.includes('errorMessage')) {
+  if (txHash) {
+    window.urlParams.clear('transactionHashes', 'locking')
+    return { ...transfer, status: 'completed', txHash }
+  }
+  if (errorCode) {
     const errorCode = window.urlParams.get('errorCode')
-    window.urlParams.clear()
-    // window.urlParams.clear('errorCode', 'errorMessage')
+    window.urlParams.clear('errorCode', 'errorMessage', 'locking')
     return { ...transfer, status: 'failed', errors: [`Failed: ${errorCode}`] }
   }
   return transfer
 }
 
 export async function sendToAurora (nep141Address, amount, decimals, name) {
-  const transfer = {
+  let transfer = {
     status: 'in-progress',
     type: TRANSFER_TYPE,
     amount: amount,
@@ -56,9 +68,10 @@ export async function sendToAurora (nep141Address, amount, decimals, name) {
   // <relayer_id>:<fee(32 bytes)><eth_address_receiver(20 bytes)>
   const msgPrefix = nep141Address === process.env.auroraEvmAccount ? window.nearUserAddress + ':' + '0'.repeat(64) : ''
 
-  await track(transfer)
+  window.urlParams.set({ locking: 'processing' })
+  transfer = await track(transfer)
+  window.urlParams.set({ locking: transfer.id })
 
-  window.urlParams.clear('erc20n')
   await nearAccount.functionCall(
     nep141Address,
     'ft_transfer_call',
@@ -110,7 +123,7 @@ export async function wrapAndSendNearToAurora (amount) {
     new BN('70' + '0'.repeat(12)),
     new BN('1')
   ))
-  const transfer = {
+  let transfer = {
     status: 'in-progress',
     type: TRANSFER_TYPE,
     amount: amount,
@@ -121,7 +134,9 @@ export async function wrapAndSendNearToAurora (amount) {
     sender: window.nearUserAddress,
     recipient: window.ethUserAddress
   }
-  await track(transfer)
+  window.urlParams.set({ locking: 'processing' })
+  transfer = await track(transfer)
+  window.urlParams.set({ locking: transfer.id })
   await nearAccount.signAndSendTransaction(process.env.wNearNep141, actions)
 }
 
