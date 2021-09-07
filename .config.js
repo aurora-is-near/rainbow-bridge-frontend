@@ -136,6 +136,7 @@ module.exports = {
       '0x6b175474e89094c44da98b954eedeac495271d0f', //   DAI
       '0x50d1c9771902476076ecfc8b2a83ad6b9355a4c9', //   FTT
       '0xc944e90c64b2c07662a292be6244bdf05cda44a7', //   GRT
+      '0xd9c2d319cd7e6177336b0a9c93c21cb48d84fb54', //   HAPI
       '0x0316eb71485b0ab14103307bf65a021042c6d380', //   HBTC
       '0x6f259637dcd74c767781e37bc6133cd6a68aa161', //   HT
       '0x514910771af9ca656af840dff83e8264ecf986ca', //   LINK

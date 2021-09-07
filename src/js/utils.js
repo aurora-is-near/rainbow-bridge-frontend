@@ -40,6 +40,9 @@ export async function getErc20Data (address) {
   if (address.toLowerCase() === '0xf5cfbc74057c610c8ef151a439252680ac68c6dc') {
     erc20.icon = 'oct-token.svg'
   }
+  if (address.toLowerCase() === '0xd9c2d319cd7e6177336b0a9c93c21cb48d84fb54') {
+    erc20.icon = 'hapi-token.svg'
+  }
   return { ...erc20, allowance, nep141 }
 }
 
