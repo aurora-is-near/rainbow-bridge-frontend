@@ -416,6 +416,9 @@
       } else if (erc20Address === 'eth') {
         token = await window.utils.getEthData();
       } else {
+        if (!/^0x([A-Fa-f0-9]{40})$/.test(erc20Address)) {
+          throw new Error('Invalid address')
+        }
         token = await window.utils.getErc20Data(erc20Address);
       }
     } catch (e) {
