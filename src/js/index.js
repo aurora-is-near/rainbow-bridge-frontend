@@ -63,11 +63,11 @@ if (params.includes('bridging')) {
     )
   } else if (params.includes('transactionHashes')) {
     window.dom.toast(
-      'Token registration transaction submitted! Check the transaction status from your NEAR wallet.',
+      'Success! Check the transaction status from your NEAR wallet.',
       `https://explorer.${process.env.nearNetworkId}.near.org/transactions/${window.urlParams.get('transactionHashes')}`
     )
   }
-  window.urlParams.clear('bridging', 'transactionHashes', 'errorCode', 'errorMessage', 'erc20', 'erc20n')
+  window.urlParams.clear('bridging', 'transactionHashes', 'errorCode', 'errorMessage')
 }
 
 render()

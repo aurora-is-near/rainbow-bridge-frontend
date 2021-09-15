@@ -66,6 +66,13 @@
       </div>
     </div>
     <footer>
+      <div data-behavior="tokenStorage" class="token-storage" style="display: none;">
+        <p>NEAR Protocol requires a one time payment to store token balances.</p>
+        <p>This is required before transferring this token.</p>
+        <button type="button" data-behavior="tokenStoragePayment" class="full-width">
+          Pay Storage Fee (0.0125 NEAR)
+        </button>
+      </div>
       <button disabled data-behavior="erc20Submit" class="full-width">
         Submit transfer
       </button>
@@ -124,6 +131,12 @@
     </div>
   </div>
 </div>
+
+<style>
+  .token-storage {
+    margin-bottom: var(--spacing-m);
+  }
+</style>
 
 <script>
   window.addEventListener("load", function handleSelectErc20Events() {
@@ -247,6 +260,21 @@
       window.urlParams.set({ erc20: target.value });
       window.dom.hide("erc20Modal");
       window.render();
+    });
+    window.dom.onClick("tokenStoragePayment", async () => {
+      try {
+        await window.utils.registerStorage(
+          window.urlParams.get("erc20"),
+          window.nearUserAddress
+        )
+      } catch (e) {
+        if (e.message.includes('Failed to redirect to sign transaction')) {
+          // Increase time to redirect to wallet before alerting an error
+          await new Promise(resolve => setTimeout(resolve, 10000))
+        }
+        console.error(e)
+        alert("Something went wrong!\n" + e.message);
+      }
     });
   });
 
@@ -402,6 +430,16 @@
     amount.min = Number(Decimal(10).pow(-token.decimals).toFixed())
     window.dom.show("erc20Info", "flex");
     amount.focus();
+    console.log('Selected token: ', token)
+    if (
+      (new window.BN(token.nep141.storageBalance.total)).lt(new window.BN(token.nep141.minStorageBalance))
+      && window.urlParams.get("erc20") !== process.env.auroraEvmAccount // TODO `aurora` currently doesn't implement storage fees for recipient
+    ) {
+      amount.disabled = true
+      window.dom.show("tokenStorage")
+    } else {
+      window.dom.hide("tokenStorage")
+    }
   }
 
   // window.renderers.push(fillErc20List);

@@ -87,14 +87,23 @@ export async function getMinStorageBalance (nep141Address) {
       nep141Address,
       'storage_balance_bounds'
     )
+    console.log('storage_balance_bounds', balance, nep141Address)
     return balance.min
   } catch (e) {
+    console.error(e, nep141Address)
+  }
+  try {
     const balance = await nearAccount.viewFunction(
       nep141Address,
       'storage_minimum_balance'
     )
     return balance
+  } catch (e) {
+    console.error(e, nep141Address)
   }
+  // Default to the usual storage balance requirement
+  console.error('Failed to fetch storage balance requirement, defaulting to 0.0125 $NEAR')
+  return '12500000000000000000000'
 }
 
 export async function getStorageBalance (nep141Address, accountId) {
@@ -105,7 +114,8 @@ export async function getStorageBalance (nep141Address, accountId) {
       'storage_balance_of',
       { account_id: accountId }
     )
-    return balance
+    console.log('storage_balance_of: ', balance, nep141Address, accountId)
+    return balance || { total: '0', available: '0' }
   } catch (e) {
     console.warn(e, nep141Address)
     return null
@@ -118,7 +128,9 @@ export async function getErc20Data (nep141Address) {
   const nep141 = {
     address: nep141Address,
     balance: await getNep141Balance(nep141Address, window.nearUserAddress),
-    name: metadata.symbol || nep141Address.slice(0, 5) + '...'
+    name: metadata.symbol || nep141Address.slice(0, 5) + '...',
+    storageBalance: await getStorageBalance(nep141Address, window.nearUserAddress),
+    minStorageBalance: await getMinStorageBalance(nep141Address)
   }
   const erc20 = {
     address: erc20Address,
@@ -180,7 +192,9 @@ export async function getEthData () {
     nep141: {
       address: process.env.auroraEvmAccount,
       balance: ethOnNearBalance,
-      name: 'nETH'
+      name: 'nETH',
+      storageBalance: await getStorageBalance(process.env.auroraEvmAccount, window.nearUserAddress),
+      minStorageBalance: await getMinStorageBalance(process.env.auroraEvmAccount)
     }
   }
 }
