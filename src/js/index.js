@@ -51,7 +51,7 @@ if (
   window.urlParams.clear(...transferIds)
 }
 // If a new token was bridged it is safe to clear transactionHashes
-if (params.includes('bridging')) { window.urlParams.clear('bridging', 'transactionHashes', 'errorCode', 'errorMessage', 'erc20', 'erc20n') }
+if (params.includes('bridging')) { window.urlParams.clear('bridging', 'transactionHashes', 'errorCode', 'errorMessage') }
 
 render()
 
