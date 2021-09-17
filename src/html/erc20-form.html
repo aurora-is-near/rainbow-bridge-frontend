@@ -414,6 +414,7 @@
       if (erc20Address.toLowerCase() === process.env.eNEARAddress.toLowerCase()) {
         token = await window.utils.getNearData();
       } else if (erc20Address === 'eth') {
+        throw new Error('Invalid address')
         token = await window.utils.getEthData();
       } else {
         if (!/^0x([A-Fa-f0-9]{40})$/.test(erc20Address)) {
