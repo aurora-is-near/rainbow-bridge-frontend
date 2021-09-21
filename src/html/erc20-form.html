@@ -391,7 +391,7 @@
     // getErc20Data succeeded so remember this token if not already in storage
     window.utils.rememberCustomErc20(erc20Address)
 
-    if (token.address === '' || !token.auroraStorageBalance) {
+    if (token.address === '' || token.auroraStorageBalance === '0') {
       window.dom.hide("sendNaturalErc20");
       return;
     }

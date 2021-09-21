@@ -375,7 +375,7 @@
     // getErc20Data succeeded so remember this token if not already in storage
     window.utils.rememberCustomErc20(erc20nAddress)
 
-    if (token.address === '' || !token.auroraStorageBalance) {
+    if (token.address === '' || token.auroraStorageBalance === '0') {
       window.dom.hide("sendBridgedNep141");
       return;
     }

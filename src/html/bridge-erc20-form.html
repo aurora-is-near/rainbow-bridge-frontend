@@ -132,11 +132,11 @@
       return
     }
 
-    if (token.address !== '' && token.auroraStorageBalance) {
+    if (token.address !== '' && token.auroraStorageBalance !== '0') {
       window.dom.hide('bridgeErc20Form')
     } else if (token.address === '') {
       window.dom.show('bridgeErc20Form')
-    } else if (!token.auroraStorageBalance) {
+    } else if (token.auroraStorageBalance === '0') {
       window.dom.show('registerAuroraForm')
     }
     window.dom.fill('erc20Name').with(token.nep141.name)

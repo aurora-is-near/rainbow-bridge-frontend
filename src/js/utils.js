@@ -138,7 +138,7 @@ export async function getErc20Data (nep141Address) {
     balance: await getErc20Balance(erc20Address, window.ethUserAddress),
     decimals: metadata.decimals
   }
-  const auroraStorageBalance = await getStorageBalance(nep141Address, process.env.auroraEvmAccount)
+  const { total: auroraStorageBalance } = await getStorageBalance(nep141Address, process.env.auroraEvmAccount)
   return { ...erc20, nep141, auroraStorageBalance }
 }
 
@@ -188,7 +188,7 @@ export async function getEthData () {
     decimals: 18,
     name: 'ETH',
     // icon: 'ethereum.svg',
-    auroraStorageBalance: true,
+    auroraStorageBalance: '1',
     nep141: {
       address: process.env.auroraEvmAccount,
       balance: ethOnNearBalance,
@@ -236,7 +236,7 @@ export async function getAuroraErc20Address (nep141Address) {
       'aurora',
       'get_erc20_from_nep141',
       Buffer.from(serializedArgs),
-      { parse: (result) => Buffer.from(result).toString('hex') }
+      { parse: (result) => Buffer.from(result).toString('hex'), stringify: (args) => args }
     )
     auroraErc20Addresses[nep141Address] = '0x' + address
   } catch (error) {
