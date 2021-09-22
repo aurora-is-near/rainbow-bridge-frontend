@@ -209,16 +209,20 @@
       try {
         const decimals = window.dom.find("erc20nDecimals").innerHTML
         if (erc20nAddress === "near") {
-          await window.nearXaurora.naturalNep141.wrapAndSendNearToAurora(
-            new window.Decimal(amount.value).times(Decimal(10).pow(24)).toFixed()
-          )
+          await window.nearXaurora.naturalNep141.wrapAndSendNearToAurora({
+            amount: new window.Decimal(amount.value).times(Decimal(10).pow(24)).toFixed(),
+            recipient: window.ethUserAddress
+          })
         } else {
-          await window.nearXaurora.naturalNep141.sendToAurora(
-            erc20nAddress,
-            new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
-            decimals,
-            window.dom.find("erc20nName").innerHTML
-          )
+          await window.nearXaurora.naturalNep141.sendToAurora({
+            nep141Address: erc20nAddress,
+            amount: new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
+            recipient: window.ethUserAddress,
+            options: {
+              decimals,
+              symbol: window.dom.find("erc20nName").innerHTML
+            }
+          })
         }
         window.urlParams.clear('erc20n')
         // new window.Decimal(token.nep141.balance).times(Decimal(10).pow(-token.decimals)).toFixed()
@@ -242,10 +246,6 @@
         // Client library will redirect to NEAR Wallet
       } catch (e) {
         console.error(e)
-        if (e.message.includes('Failed to redirect to sign transaction')) {
-          // Increase time to redirect to wallet before alerting an error
-          await new Promise(resolve => setTimeout(resolve, 10000))
-        }
         alert(
           "Something went wrong! " +
             "Maybe you need to sign out and back in? " +

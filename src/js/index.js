@@ -5,7 +5,7 @@ import * as dom from './domHelpers'
 import render from './render'
 import * as urlParams from './urlParams'
 import * as transfers from '@near-eth/client'
-import * as nearXaurora from './near-aurora'
+import * as nearXaurora from '@near-eth/aurora-nep141'
 // import * as nep141Xerc20 from '@near-eth/nep141-erc20'
 // import * as eNEAR from '@near-eth/near-ether'
 import * as utils from './utils'
@@ -13,9 +13,10 @@ import * as utils from './utils'
 dom.init()
 
 // Set custom transfer types to use @near-eth/client for tracking and checking transaction status.
+// Deprecated: set old transfer types to not break the app when decorating old transfers.
 transfers.setTransferTypes({
-  [nearXaurora.bridgedNep141.TRANSFER_TYPE]: nearXaurora.bridgedNep141,
-  [nearXaurora.naturalNep141.TRANSFER_TYPE]: nearXaurora.naturalNep141
+  'aurora<>near/sendToNear': require('@near-eth/aurora-nep141/dist/bridged-erc20/sendToNear'),
+  'aurora<>near/sendToAurora': require('@near-eth/aurora-nep141/dist/natural-nep141/sendToAurora')
 })
 
 // Can't import modules in <script> tags in files included via PostHTML 😞
@@ -73,6 +74,13 @@ if (params.includes('bridging')) {
 render()
 
 transfers.onChange(render)
+transfers.setBridgeParams({
+  auroraErc20Abi: process.env.auroraErc20AbiText,
+  auroraEvmAccount: process.env.auroraEvmAccount,
+  etherExitToNearPrecompile: process.env.etherExitToNearPrecompile,
+  wNearNep141: process.env.wNearNep141,
+  auroraChainId: Number(process.env.auroraChainId)
+})
 
 // Render when user clicks goBack
 window.onpopstate = render

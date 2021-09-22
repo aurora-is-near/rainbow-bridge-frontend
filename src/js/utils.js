@@ -1,6 +1,5 @@
 import BN from 'bn.js'
-import { ethers } from 'ethers'
-import { serialize as serializeBorsh } from 'near-api-js/lib/utils/serialize'
+import { naturalNep141, bridgedErc20 } from '@near-eth/aurora-nep141'
 
 // import { bridgedNep141, naturalErc20 } from '@near-eth/nep141-erc20'
 // import { bridgedNEAR, naturalNEAR } from '@near-eth/near-ether'
@@ -17,67 +16,25 @@ export function formatLargeNum (n, decimals = 18) {
   return new Decimal(n).dividedBy(10 ** decimals)
 }
 
-/*
-export async function getErc20Data (address) {
-  const [erc20, allowance, nep141] = await Promise.all([
-    naturalErc20.getMetadata(address, window.ethUserAddress),
-    naturalErc20.getAllowance({
-      erc20Address: address,
-      owner: window.ethUserAddress,
-      spender: process.env.ethLockerAddress
-    }),
-    bridgedNep141.getMetadata(address, window.nearUserAddress)
-  ])
-  if (address.toLowerCase() === '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2') {
-    erc20.name = 'MKR'
-    nep141.name = 'nMKR'
-  }
-  return { ...erc20, allowance, nep141 }
-}
-*/
-
-// Query this data once
-const tokenMetadata = {}
-const auroraErc20Addresses = {}
-
-async function getNep141Balance (address, user) {
-  const nearAccount = await window.nearConnection.account()
+async function getNep141Balance (nep141Address, owner) {
   try {
-    const balanceAsString = await nearAccount.viewFunction(
-      address,
-      'ft_balance_of',
-      { account_id: user }
-    )
+    const balanceAsString = await naturalNep141.getBalance({ nep141Address, owner })
     return balanceAsString
   } catch (e) {
     console.warn(e)
     return null
   }
 }
-async function getErc20Balance (address, user) {
+async function getErc20Balance (erc20Address, owner) {
   try {
-    const erc20Contract = new ethers.Contract(
-      address,
-      process.env.ethErc20AbiText,
-      window.web3Provider
+    const balance = await bridgedErc20.getBalance(
+      { erc20Address, owner, options: { provider: window.web3Provider } }
     )
-    return (await erc20Contract.balanceOf(user)).toString()
+    return balance
   } catch (e) {
-    console.warn(e, address)
+    console.warn(e, erc20Address)
     return null
   }
-}
-
-async function getMetadata (nep141Address) {
-  if (tokenMetadata[nep141Address]) return tokenMetadata[nep141Address]
-
-  const nearAccount = await window.nearConnection.account()
-  const metadata = await nearAccount.viewFunction(
-    nep141Address,
-    'ft_metadata'
-  )
-  tokenMetadata[nep141Address] = metadata
-  return metadata
 }
 
 export async function getMinStorageBalance (nep141Address) {
@@ -123,8 +80,8 @@ export async function getStorageBalance (nep141Address, accountId) {
 }
 
 export async function getErc20Data (nep141Address) {
-  const metadata = await getMetadata(nep141Address) || {}
-  const erc20Address = await getAuroraErc20Address(nep141Address) || ''
+  const metadata = await naturalNep141.getMetadata({ nep141Address }) || {}
+  const erc20Address = await bridgedErc20.getAuroraErc20Address({ nep141Address }) || ''
   const nep141 = {
     address: nep141Address,
     balance: await getNep141Balance(nep141Address, window.nearUserAddress),
@@ -160,7 +117,7 @@ export async function getAllTokens () {
 }
 
 export async function getNearData () {
-  const aNearAddress = await getAuroraErc20Address(process.env.wNearNep141)
+  const aNearAddress = await bridgedErc20.getAuroraErc20Address({ nep141Address: process.env.wNearNep141 })
   const aNearBalance = await getErc20Balance(aNearAddress, window.ethUserAddress)
   const nearAccount = await window.nearConnection.account()
   const { available: nearBalance } = await nearAccount.getAccountBalance()
@@ -209,41 +166,6 @@ export function rememberCustomErc20 (nep141Address) {
   } else if (!customNep141s.includes(nep141Address)) {
     localStorage.setItem(CUSTOM_NEP141_STORAGE, JSON.stringify([...customNep141s, nep141Address]))
   }
-}
-
-export async function getAuroraErc20Address (nep141Address) {
-  if (auroraErc20Addresses[nep141Address]) return auroraErc20Addresses[nep141Address]
-  class BorshArgs {
-    constructor (args) {
-      Object.assign(this, args)
-    }
-  };
-  const schema = new Map([
-    [BorshArgs, {
-      kind: 'struct',
-      fields: [
-        ['nep141', 'String']
-      ]
-    }]
-  ])
-  const args = new BorshArgs({
-    nep141: nep141Address
-  })
-  const serializedArgs = serializeBorsh(schema, args)
-  try {
-    const nearAccount = await window.nearConnection.account()
-    const address = await nearAccount.viewFunction(
-      'aurora',
-      'get_erc20_from_nep141',
-      Buffer.from(serializedArgs),
-      { parse: (result) => Buffer.from(result).toString('hex'), stringify: (args) => args }
-    )
-    auroraErc20Addresses[nep141Address] = '0x' + address
-  } catch (error) {
-    console.error(error, nep141Address)
-    return null
-  }
-  return auroraErc20Addresses[nep141Address]
 }
 
 export async function registerStorage (nep141Address, accountId) {
