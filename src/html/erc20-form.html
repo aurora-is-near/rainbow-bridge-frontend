@@ -210,16 +210,21 @@
       try {
         const decimals = window.dom.find("erc20Decimals").innerHTML
         if (erc20Address === "aurora") {
-          const tx = await window.nearXaurora.bridgedNep141.withdrawEthToNear(
-            new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
-          )
+          const tx = await window.nearXaurora.bridgedErc20.sendEthToNear({
+            amount: new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
+            recipient: window.nearUserAddress
+          })
         } else {
-          const tx = await window.nearXaurora.bridgedNep141.withdrawToNear(
-            window.dom.find("auroraErc20").innerHTML,
-            new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
-            decimals,
-            window.dom.find("erc20Name").innerHTML,
-          )
+          const tx = await window.nearXaurora.bridgedErc20.sendToNear({
+            nep141Address: window.urlParams.get("erc20"),
+            amount: new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
+            recipient: window.nearUserAddress,
+            options: {
+              decimals,
+              symbol: window.dom.find("erc20Name").innerHTML,
+              auroraErc20Address: window.dom.find("auroraErc20").innerHTML
+            }
+          })
         }
         /*
         window.dom.toast(

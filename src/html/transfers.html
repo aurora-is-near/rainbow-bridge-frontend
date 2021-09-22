@@ -458,13 +458,7 @@
         const [transfer] = await window.transfers.get({
           filter: (t) => t.id === transferId
         });
-        // const transfer = {}
-        if (
-          // At transfer start completedStep is null when retrying approve or burn e-near
-          (transfer.type.includes('sendToNear') && transfer.completedStep === null) ||
-          // Lock or transfer finalization
-          ['approve-natural-erc20-to-nep141', 'sync-bridged-nep141-to-erc20', 'sync-natural-near-to-e-near'].includes(transfer.completedStep)
-        ) {
+        if (transfer.type.includes('sendToNear') && transfer.completedStep === null) {
           window.dom.show("ethTxModal")
           try {
             await window.transfers.act(transferId)
@@ -531,7 +525,7 @@
           <h3 class="transfer__amount">${window.utils.formatLargeNum(
             transfer.amount,
             transfer.decimals
-          )} ${transfer.sourceTokenName}</h3>
+          )} ${transfer.symbol ?? transfer.sourceTokenName}</h3>
           <div class="transfer__status">
             <span class="icon"></span>
             <span>${transfer.statusMessage}</span>

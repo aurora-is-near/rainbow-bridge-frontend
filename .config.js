@@ -19,7 +19,7 @@ module.exports = {
   local: {
     ...localConfig,
     ethNetwork: 'localhost:9545',
-    ethErc20AbiText: readFileSync('./abi/erc20.abi'),
+    auroraErc20AbiText: readFileSync('./abi/auroraErc20.abi'),
     ethLockerAbiText: readFileSync('./abi/ERC20Locker.full.abi'),
     nearClientAccount: 'rainbow_bridge_eth_on_near_client',
     nearWalletUrl: 'http://localhost:4000/',
@@ -27,7 +27,7 @@ module.exports = {
   },
   goerli_development: {
     // library settings
-    ethErc20AbiText: readFileSync('./abi/erc20.abi'),
+    auroraErc20AbiText: readFileSync('./abi/auroraErc20.abi'),
     ethLockerAbiText: readFileSync('./abi/ERC20Locker.full.abi'),
     nearHelperUrl: 'https://helper.testnet.near.org',
     nearTokenFactoryAccount: 'factory.goerli.testnet',
@@ -46,11 +46,12 @@ module.exports = {
     auroraChainId: 1313161555,
     auroraEvmAccount: 'aurora',
 
-    wNearNep141: 'wrap.testnet'
+    wNearNep141: 'wrap.testnet',
+    etherExitToNearPrecompile: '0xe9217bc70b7ed1f598ddd3199e80b093fa71124f'
   },
   mainnet: {
     // library settings
-    ethErc20AbiText: readFileSync('./abi/erc20.abi'),
+    auroraErc20AbiText: readFileSync('./abi/auroraErc20.abi'),
     nearHelperUrl: 'https://helper.near.org',
     nearTokenFactoryAccount: 'factory.bridge.near',
 
@@ -87,6 +88,7 @@ module.exports = {
     auroraChainId: 1313161554,
     auroraEvmAccount: 'aurora',
 
-    wNearNep141: 'wrap.near'
+    wNearNep141: 'wrap.near',
+    etherExitToNearPrecompile: '0xe9217bc70b7ed1f598ddd3199e80b093fa71124f'
   }
 }

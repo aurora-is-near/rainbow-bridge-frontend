@@ -43,7 +43,7 @@ async function login () {
   const provider = await window.web3Modal.connect()
   window.web3Provider = new ethers.providers.Web3Provider(provider, 'any')
   setAuroraProvider(new ethers.providers.JsonRpcProvider(process.env.auroraRpc))
-  setSignerProvider(provider)
+  setSignerProvider(window.web3Provider)
   if (provider.isMetaMask) {
     window.ethUserAddress = provider.selectedAddress
     window.connectedEthNetwork = parseInt(provider.chainId)
