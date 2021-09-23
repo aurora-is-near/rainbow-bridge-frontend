@@ -33,7 +33,8 @@
     "posthtml-include": "^1.7.0"
   },
   "dependencies": {
-    "@near-eth/client": "^1.6.0-0",
+    "@near-eth/client": "^1.7.0",
+    "@near-eth/aurora-nep141": "^1.0.0",
     "@walletconnect/web3-provider": "^1.4.1",
     "decimal.js": "^10.2.1",
     "ethers": "^5.4.0",
