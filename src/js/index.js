@@ -40,36 +40,38 @@ switch (`${process.env.nearNetworkId}-${process.env.ethNetworkId}`) {
   default: window.bridgeName = 'Unknown'
 }
 
-const params = Object.keys(window.urlParams.get())
-// When redirecting from NEAR wallet, stay on the landing page
-if (params.includes('locking')) {
-  window.urlParams.clear('erc20n')
-}
-// If the user clicks goBack in NEAR wallet, then the dapp will think
-// it is waiting for the redirect to Near wallet, so clear the transfer id (locking)
-// so that the transfer can be marked FAILED and retried.
-if (
-  (params.includes('locking')) &&
-  !(params.includes('transactionHashes') || params.includes('errorCode'))
-) {
-  window.urlParams.clear('locking', 'erc20', 'erc20n')
-}
-
-if (params.includes('bridging')) {
-  if (params.includes('errorCode') || params.includes('errorMessage')) {
-    window.dom.toast(
-      `${decodeURI(window.urlParams.get('errorMessage'))}.`,
-      null,
-      'toastError'
-    )
-  } else if (params.includes('transactionHashes')) {
-    window.dom.toast(
-      'Success! Check the transaction status from your NEAR wallet.',
-      `https://explorer.${process.env.nearNetworkId}.near.org/transactions/${window.urlParams.get('transactionHashes')}`
-    )
+window.addEventListener('load', async () => {
+  const params = Object.keys(window.urlParams.get())
+  // When redirecting from NEAR wallet, stay on the landing page
+  if (params.includes('locking')) {
+    window.urlParams.clear('erc20n')
   }
-  window.urlParams.clear('bridging', 'transactionHashes', 'errorCode', 'errorMessage')
-}
+  // If the user clicks goBack in NEAR wallet, then the dapp will think
+  // it is waiting for the redirect to Near wallet, so clear the transfer id (locking)
+  // so that the transfer can be marked FAILED and retried.
+  if (
+    (params.includes('locking')) &&
+    !(params.includes('transactionHashes') || params.includes('errorCode'))
+  ) {
+    window.urlParams.clear('locking', 'erc20', 'erc20n')
+  }
+
+  if (params.includes('bridging')) {
+    if (params.includes('errorCode') || params.includes('errorMessage')) {
+      window.dom.toast(
+        `${decodeURI(window.urlParams.get('errorMessage'))}.`,
+        null,
+        'toastError'
+      )
+    } else if (params.includes('transactionHashes')) {
+      window.dom.toast(
+        'Success! Check the transaction status from your NEAR wallet.',
+        `https://explorer.${process.env.nearNetworkId}.near.org/transactions/${window.urlParams.get('transactionHashes')}`
+      )
+    }
+    window.urlParams.clear('bridging', 'transactionHashes', 'errorCode', 'errorMessage')
+  }
+})
 
 render()
 
