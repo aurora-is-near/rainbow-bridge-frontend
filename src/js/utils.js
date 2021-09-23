@@ -44,10 +44,9 @@ export async function getMinStorageBalance (nep141Address) {
       nep141Address,
       'storage_balance_bounds'
     )
-    console.log('storage_balance_bounds', balance, nep141Address)
     return balance.min
   } catch (e) {
-    console.error(e, nep141Address)
+    console.warn(e, nep141Address)
   }
   try {
     const balance = await nearAccount.viewFunction(
@@ -56,10 +55,10 @@ export async function getMinStorageBalance (nep141Address) {
     )
     return balance
   } catch (e) {
-    console.error(e, nep141Address)
+    console.warn(e, nep141Address)
   }
   // Default to the usual storage balance requirement
-  console.error('Failed to fetch storage balance requirement, defaulting to 0.0125 $NEAR')
+  console.error('Failed to fetch storage balance requirement, defaulting to 0.0125 $NEAR: ', nep141Address)
   return '12500000000000000000000'
 }
 
@@ -71,7 +70,6 @@ export async function getStorageBalance (nep141Address, accountId) {
       'storage_balance_of',
       { account_id: accountId }
     )
-    console.log('storage_balance_of: ', balance, nep141Address, accountId)
     return balance || { total: '0', available: '0' }
   } catch (e) {
     console.warn(e, nep141Address)
