@@ -35,28 +35,6 @@ switch (`${process.env.ethNetworkId}-${process.env.nearNetworkId}`) {
   default: window.bridgeName = 'Unknown'
 }
 
-window.addEventListener('load', () => {
-  const params = Object.keys(window.urlParams.get())
-  // When redirecting from NEAR wallet, stay on the landing page
-  if (params.includes('withdrawing') || params.includes('locking')) {
-    window.urlParams.clear('erc20n')
-  }
-  // If the user clicks goBack in NEAR wallet, then the dapp will think
-  // it is waiting for the redirect to Near wallet, so clear the transfer id (withdrawing | locking | minting | unlocking)
-  // so that the transfer can be marked FAILED and retried.
-  const transferIds = ['withdrawing', 'locking', 'minting', 'unlocking']
-  if (
-    (params.some(p => transferIds.includes(p))) &&
-    !(params.includes('transactionHashes') || params.includes('errorCode'))
-  ) {
-    window.urlParams.clear(...transferIds)
-  }
-  // If a new token was bridged it is safe to clear transactionHashes
-  if (params.includes('bridging')) { window.urlParams.clear('bridging', 'transactionHashes', 'errorCode', 'errorMessage') }
-})
-
-render()
-
 transfers.onChange(render)
 transfers.setBridgeParams({
   nearEventRelayerMargin: Number(process.env.nearEventRelayerMargin),
@@ -78,6 +56,29 @@ transfers.setBridgeParams({
   ethClientAbi: process.env.ethNearOnEthClientAbiText,
   nearClientAccount: process.env.nearClientAccount
 })
+
+window.addEventListener('load', () => {
+  const params = Object.keys(window.urlParams.get())
+  // When redirecting from NEAR wallet, stay on the landing page
+  if (params.includes('withdrawing') || params.includes('locking')) {
+    window.urlParams.clear('erc20n')
+  }
+  // If the user clicks goBack in NEAR wallet, then the dapp will think
+  // it is waiting for the redirect to Near wallet, so clear the transfer id (withdrawing | locking | minting | unlocking)
+  // so that the transfer can be marked FAILED and retried.
+  const transferIds = ['withdrawing', 'locking', 'minting', 'unlocking']
+  if (
+    (params.some(p => transferIds.includes(p))) &&
+    !(params.includes('transactionHashes') || params.includes('errorCode'))
+  ) {
+    window.urlParams.clear(...transferIds)
+  }
+  // If a new token was bridged it is safe to clear transactionHashes
+  if (params.includes('bridging')) { window.urlParams.clear('bridging', 'transactionHashes', 'errorCode', 'errorMessage') }
+  transfers.checkStatusAll({ loop: window.LOOP_INTERVAL })
+})
+
+render()
 
 // Render when user clicks goBack
 window.onpopstate = render

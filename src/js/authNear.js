@@ -1,7 +1,6 @@
 import { keyStores, WalletConnection, Near } from 'near-api-js'
 
 import {
-  checkStatusAll as checkTransferStatuses,
   setNearConnection
 } from '@near-eth/client'
 import render from './render'
@@ -32,8 +31,6 @@ function login () {
   window.nearInitialized = true
 
   render()
-
-  if (window.ethInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
 }
 
 // The NEAR signin flow redirects from the current URL to NEAR Wallet,

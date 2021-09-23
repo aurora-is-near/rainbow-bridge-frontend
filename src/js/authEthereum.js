@@ -3,7 +3,6 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import { ethers } from 'ethers'
 
 import {
-  checkStatusAll as checkTransferStatuses,
   setEthProvider,
   setSignerProvider
 } from '@near-eth/client'
@@ -68,8 +67,6 @@ async function login () {
   window.ethInitialized = true
 
   render()
-
-  if (window.nearInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
 }
 
 onClick('authEthereum', login)
