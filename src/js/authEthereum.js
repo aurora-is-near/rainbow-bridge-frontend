@@ -2,7 +2,6 @@ import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 
 import {
-  checkStatusAll as checkTransferStatuses,
   setAuroraProvider,
   setSignerProvider
 } from '@near-eth/client'
@@ -73,8 +72,6 @@ async function login () {
   window.ethInitialized = true
 
   render()
-
-  if (window.nearInitialized) checkTransferStatuses({ loop: window.LOOP_INTERVAL })
 }
 
 onClick('authEthereum', login)

@@ -40,6 +40,15 @@ switch (`${process.env.nearNetworkId}-${process.env.ethNetworkId}`) {
   default: window.bridgeName = 'Unknown'
 }
 
+transfers.onChange(render)
+transfers.setBridgeParams({
+  auroraErc20Abi: process.env.auroraErc20AbiText,
+  auroraEvmAccount: process.env.auroraEvmAccount,
+  etherExitToNearPrecompile: process.env.etherExitToNearPrecompile,
+  wNearNep141: process.env.wNearNep141,
+  auroraChainId: Number(process.env.auroraChainId)
+})
+
 window.addEventListener('load', async () => {
   const params = Object.keys(window.urlParams.get())
   // When redirecting from NEAR wallet, stay on the landing page
@@ -71,18 +80,11 @@ window.addEventListener('load', async () => {
     }
     window.urlParams.clear('bridging', 'transactionHashes', 'errorCode', 'errorMessage')
   }
+
+  transfers.checkStatusAll({ loop: window.LOOP_INTERVAL })
 })
 
 render()
-
-transfers.onChange(render)
-transfers.setBridgeParams({
-  auroraErc20Abi: process.env.auroraErc20AbiText,
-  auroraEvmAccount: process.env.auroraEvmAccount,
-  etherExitToNearPrecompile: process.env.etherExitToNearPrecompile,
-  wNearNep141: process.env.wNearNep141,
-  auroraChainId: Number(process.env.auroraChainId)
-})
 
 // Render when user clicks goBack
 window.onpopstate = render
