@@ -269,10 +269,6 @@
         // Client library will redirect to NEAR Wallet
       } catch (e) {
         console.error(e)
-        if (e.message.includes('Failed to redirect to sign transaction')) {
-          // Increase time to redirect to wallet before alerting an error
-          await new Promise(resolve => setTimeout(resolve, 10000))
-        }
         alert(
           "Something went wrong! " +
             "Maybe you need to sign out and back in? " +

@@ -74,7 +74,7 @@ module.exports = {
     ethLockerAddress: '0xc115851ca60aed2ccc6ee3d5343f590834e4a3ab',
     ethProverAddress: '0xf3430be687dc5652e3e96a9a7b291b5d423dfc3b',
     ethProverAbiText: readFileSync('./abi/prover.abi'),
-    nearClientAccount: 'client4.goerli.testnet',
+    nearClientAccount: 'client6.goerli.testnet',
     nearHelperUrl: 'https://helper.testnet.near.org',
     nearProverAccount: 'prover.goerli.testnet',
     nearTokenFactoryAccount: 'factory.goerli.testnet',
@@ -85,6 +85,8 @@ module.exports = {
     etherCustodianAbiText: readFileSync('./abi/etherCustodian.full.abi'),
     auroraEvmAccount: 'aurora',
     auroraRelayerAccount: 'relay.aurora',
+    // TODO: Remove tempGoerliGethFix once this is released: https://github.com/ethereum/go-ethereum/pull/23466
+    tempGoerliGethFix: '1',
 
     nearEventRelayerMargin: 10,
     sendToEthereumSyncInterval: 60000,  // 60sec
