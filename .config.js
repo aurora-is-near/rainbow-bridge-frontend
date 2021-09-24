@@ -153,6 +153,7 @@ module.exports = {
       '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', //   WETH
       '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e', //   YFI
       '0x111111111117dc0aa78b770fa6a738034120c302', //   1INCH
+      '0xa4ef4b0b23c1fc81d3f9ecf93510e64f58a4a016', //   1MIL
     ]),
     nearNodeUrl: 'https://archival-rpc.mainnet.near.org/',
     nearWalletUrl: 'https://wallet.near.org',

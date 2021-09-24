@@ -59,6 +59,7 @@ transfers.setBridgeParams({
 
 window.addEventListener('load', () => {
   const params = Object.keys(window.urlParams.get())
+  console.log(params)
   // When redirecting from NEAR wallet, stay on the landing page
   if (params.includes('withdrawing') || params.includes('locking')) {
     window.urlParams.clear('erc20n')
