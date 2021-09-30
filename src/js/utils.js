@@ -127,30 +127,37 @@ export async function getAllTokens () {
 
 export async function getNearData () {
   const aNearAddress = await bridgedErc20.getAuroraErc20Address({ nep141Address: process.env.wNearNep141 })
-  const aNearBalance = await getErc20Balance(aNearAddress, window.ethUserAddress)
   const nearAccount = await window.nearConnection.account()
-  const { available: nearBalance } = await nearAccount.getAccountBalance()
+  const [aNearBalance, nearBalance, auroraStorageBalance] = await Promise.all([
+    getErc20Balance(aNearAddress, window.ethUserAddress),
+    nearAccount.getAccountBalance(),
+    getStorageBalance(process.env.wNearNep141, process.env.auroraEvmAccount)
+  ])
   return {
     address: aNearAddress,
     balance: aNearBalance,
     decimals: 24,
     name: 'NEAR',
     icon: 'near.svg',
-    auroraStorageBalance: await getStorageBalance(process.env.wNearNep141, process.env.auroraEvmAccount),
+    auroraStorageBalance,
     nep141: {
       address: 'near',
-      balance: nearBalance,
+      balance: nearBalance.available,
       name: 'NEAR'
     }
   }
 }
 
 export async function getEthData () {
-  const ethOnAuroraBalance = (await window.web3Provider.getBalance(window.ethUserAddress)).toString()
-  const ethOnNearBalance = await getNep141Balance(process.env.auroraEvmAccount, window.nearUserAddress)
+  const [ethOnAuroraBalance, ethOnNearBalance, storageBalance, minStorageBalance] = await Promise.all([
+    window.web3Provider.getBalance(window.ethUserAddress),
+    getNep141Balance(process.env.auroraEvmAccount, window.nearUserAddress),
+    getStorageBalance(process.env.auroraEvmAccount, window.nearUserAddress),
+    getMinStorageBalance(process.env.auroraEvmAccount)
+  ])
   return {
     address: 'eth',
-    balance: ethOnAuroraBalance,
+    balance: ethOnAuroraBalance.toString(),
     decimals: 18,
     name: 'ETH',
     // icon: 'ethereum.svg',
@@ -159,8 +166,8 @@ export async function getEthData () {
       address: process.env.auroraEvmAccount,
       balance: ethOnNearBalance,
       name: 'nETH',
-      storageBalance: await getStorageBalance(process.env.auroraEvmAccount, window.nearUserAddress),
-      minStorageBalance: await getMinStorageBalance(process.env.auroraEvmAccount)
+      storageBalance,
+      minStorageBalance
     }
   }
 }
