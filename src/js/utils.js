@@ -78,23 +78,30 @@ export async function getStorageBalance (nep141Address, accountId) {
 }
 
 export async function getErc20Data (nep141Address) {
-  const metadata = await naturalNep141.getMetadata({ nep141Address }) || {}
   const erc20Address = await bridgedErc20.getAuroraErc20Address({ nep141Address }) || ''
+  const [nep141Metadata, nep141Balance, erc20Balance, storageBalance, minStorageBalance, auroraStorageBalance] = await Promise.all([
+    naturalNep141.getMetadata({ nep141Address }),
+    getNep141Balance(nep141Address, window.nearUserAddress),
+    getErc20Balance(erc20Address, window.ethUserAddress),
+    getStorageBalance(nep141Address, window.nearUserAddress),
+    getMinStorageBalance(nep141Address),
+    getStorageBalance(nep141Address, process.env.auroraEvmAccount)
+  ])
+  const metadata = nep141Metadata || {}
   const nep141 = {
     address: nep141Address,
-    balance: await getNep141Balance(nep141Address, window.nearUserAddress),
+    balance: nep141Balance,
     name: metadata.symbol || nep141Address.slice(0, 5) + '...',
-    storageBalance: await getStorageBalance(nep141Address, window.nearUserAddress),
-    minStorageBalance: await getMinStorageBalance(nep141Address)
+    storageBalance,
+    minStorageBalance
   }
   const erc20 = {
     address: erc20Address,
     name: metadata.symbol || erc20Address.slice(0, 5) + '...',
-    balance: await getErc20Balance(erc20Address, window.ethUserAddress),
+    balance: erc20Balance,
     decimals: metadata.decimals
   }
-  const { total: auroraStorageBalance } = await getStorageBalance(nep141Address, process.env.auroraEvmAccount)
-  return { ...erc20, nep141, auroraStorageBalance }
+  return { ...erc20, nep141, auroraStorageBalance: auroraStorageBalance.total }
 }
 
 export async function getAllTokens () {
@@ -102,16 +109,20 @@ export async function getAllTokens () {
   let customNep141s = JSON.parse(localStorage.getItem(CUSTOM_NEP141_STORAGE))
   if (customNep141s === null) { customNep141s = [] }
 
-  const tokens = (await Promise.all(
-    [...customNep141s, ...featuredNep141s].map(getErc20Data)
-  )).reduce(
-    (acc, token) => {
-      acc[token.address] = token
-      return acc
-    },
-    {}
-  )
-  return { near: await getNearData(), eth: await getEthData(), ...tokens }
+  const [tokens, near, eth] = await Promise.all([
+    (await Promise.all(
+      [...customNep141s, ...featuredNep141s].map(getErc20Data)
+    )).reduce(
+      (acc, token) => {
+        acc[token.address] = token
+        return acc
+      },
+      {}
+    ),
+    await getNearData(),
+    await getEthData()
+  ])
+  return { near, eth, ...tokens }
 }
 
 export async function getNearData () {
