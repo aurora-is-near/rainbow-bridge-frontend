@@ -54,16 +54,20 @@ export async function getAllTokens () {
   let customErc20s = JSON.parse(localStorage.getItem(CUSTOM_ERC20_STORAGE))
   if (customErc20s === null) { customErc20s = [] }
 
-  const tokens = (await Promise.all(
-    [...customErc20s, ...featuredErc20s].map(getErc20Data)
-  )).reduce(
-    (acc, token) => {
-      acc[token.address] = token
-      return acc
-    },
-    {}
-  )
-  return { near: await getNearData(), eth: await getEthData(), ...tokens }
+  const [tokens, near, eth] = await Promise.all([
+    (await Promise.all(
+      [...customErc20s, ...featuredErc20s].map(getErc20Data)
+    )).reduce(
+      (acc, token) => {
+        acc[token.address] = token
+        return acc
+      },
+      {}
+    ),
+    await getNearData(),
+    await getEthData()
+  ])
+  return { near, eth, ...tokens }
 }
 
 async function getNep141Balance (address, user) {
