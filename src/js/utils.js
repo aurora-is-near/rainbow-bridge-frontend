@@ -44,7 +44,7 @@ export async function getMinStorageBalance (nep141Address) {
       nep141Address,
       'storage_balance_bounds'
     )
-    return balance.min
+    if (balance?.min) return balance.min
   } catch (e) {
     console.warn(e, nep141Address)
   }
