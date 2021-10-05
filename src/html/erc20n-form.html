@@ -346,6 +346,7 @@
 
 
     let token;
+    amount.disabled = true;
     try {
       if (erc20nAddress === "near") {
         token = await window.utils.getNearData();
@@ -397,8 +398,6 @@
       .with(window.utils.formatLargeNum(token.balance, token.decimals));
 
     window.dom.show("sendBridgedNep141");
-    if (token.nep141.balance) amount.disabled = false;
-    else amount.disabled = true;
 
     amount.step = Number(Decimal(10).pow(-token.decimals).toFixed())
     // NOTE: the html input field makes the comparison on rounded numbers
@@ -411,6 +410,8 @@
     amount.min = Number(Decimal(10).pow(-token.decimals).toFixed())
     window.dom.show("erc20nInfo", "flex");
     amount.focus();
+    if (token.nep141.balance) amount.disabled = false;
+    else amount.disabled = true;
   }
 
   // window.renderers.push(fillErc20nList);

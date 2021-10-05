@@ -366,6 +366,8 @@
     }
 
     let token;
+    amount.disabled = true;
+    window.dom.hide("tokenStorage")
     try {
       if (erc20Address === "near") {
         token = await window.utils.getNearData();
@@ -391,7 +393,6 @@
     }
 
     window.dom.find("erc20Address").value = token.address;
-    window.dom.show("useMaxErc20")
 
     // getErc20Data succeeded so remember this token if not already in storage
     window.utils.rememberCustomErc20(erc20Address)
@@ -403,7 +404,6 @@
 
     window.dom.show("sendNaturalErc20");
 
-    window.dom.find("erc20Amount").disabled = false;
     window.dom.find("erc20SelectButton").classList.add("selected");
     window.dom.fill("erc20SelectButton").with(token.name);
     window.dom.find("erc20FreeForm").classList.remove("error");
@@ -421,9 +421,6 @@
       .fill("nep141Balance")
       .with(window.utils.formatLargeNum(token.nep141.balance, token.decimals));
 
-    if (token.balance) amount.disabled = false;
-    else amount.disabled = true;
-
     amount.step = Number(Decimal(10).pow(-token.decimals).toFixed())
     // NOTE: the html input field makes the comparison on rounded numbers
     // So the max check is not precise for very small decimals.
@@ -434,7 +431,6 @@
     )
     amount.min = Number(Decimal(10).pow(-token.decimals).toFixed())
     window.dom.show("erc20Info", "flex");
-    amount.focus();
     console.log('Selected token: ', token)
     if (
       (new window.BN(token.nep141.storageBalance.total)).lt(new window.BN(token.nep141.minStorageBalance))
@@ -442,8 +438,10 @@
     ) {
       amount.disabled = true
       window.dom.show("tokenStorage")
-    } else {
-      window.dom.hide("tokenStorage")
+    } else if (token.balance) {
+      amount.disabled = false;
+      window.dom.show("useMaxErc20")
+      amount.focus();
     }
   }
 
