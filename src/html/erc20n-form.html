@@ -287,9 +287,12 @@
       )
     }
 
+    const allTokensMinusWETH = Object.values(allTokens).filter(
+      token => token.nep141.address !== 'c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.factory.bridge.near'
+    )
 
     window.dom.fill("erc20nList").with(
-      Object.values(allTokens).sort(ownedErc20nOnTop).map(
+      allTokensMinusWETH.sort(ownedErc20nOnTop).map(
         (token) => `
         <label class="space-between">
           <input
