@@ -6,6 +6,8 @@ import { naturalNep141, bridgedErc20 } from '@near-eth/aurora-nep141'
 
 import { Decimal } from 'decimal.js'
 
+Decimal.rounding = Decimal.ROUND_DOWN
+
 const CUSTOM_NEP141_STORAGE = 'custom-nep141s'
 
 export function formatLargeNum (n, decimals = 18) {
