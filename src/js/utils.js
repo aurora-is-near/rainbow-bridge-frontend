@@ -5,6 +5,8 @@ import { ethers } from 'ethers'
 
 import { Decimal } from 'decimal.js'
 
+Decimal.rounding = Decimal.ROUND_DOWN
+
 export const CUSTOM_ERC20_STORAGE = 'custom-erc20s'
 
 export function formatLargeNum (n, decimals = 18) {
