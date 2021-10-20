@@ -43,7 +43,7 @@
     "@walletconnect/web3-provider": "^1.6.4",
     "autobahn": "^20.9.2",
     "decimal.js": "^10.2.1",
-    "ethers": "^5.4.6",
+    "ethers": "^5.5.0",
     "near-api-js": "https://github.com/aurora-is-near/near-api-js#2a63db0016a59d031b58033f3ee50942dab4f5f7",
     "web3modal": "^1.9.4"
   },
