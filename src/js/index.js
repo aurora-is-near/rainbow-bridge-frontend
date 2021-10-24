@@ -76,7 +76,48 @@ window.addEventListener('load', () => {
   }
   // If a new token was bridged it is safe to clear transactionHashes
   if (params.includes('bridging')) { window.urlParams.clear('bridging', 'transactionHashes', 'errorCode', 'errorMessage') }
-  transfers.checkStatusAll({ loop: window.LOOP_INTERVAL })
+
+  // When redirecting to NEAR wallet, url-params are set.
+  // But if another tab is open with checkTransferStatuses running it will mark the transfer as failed
+  // because it is expecting correct url-params for an in-progress transfer and that tab doesn't have them.
+  // So before starting checkTransferStatuses, the tab makes sure that it is allowed to do so by getting a session.
+  // The tab owning the session rejects other session requests.
+  // If a session request is not rejected within 6s we can assume there is no other tab currently owning the session.
+  const getSession = () => {
+    const sessionId = window.sessionStorage.getItem('session-id')
+    if (sessionId && (sessionId === window.localStorage.getItem('session-id'))) {
+      // Page re-load, NEAR Wallet redirect ... the current tab owns the session.
+      transfers.checkStatusAll({ loop: window.LOOP_INTERVAL })
+    } else {
+      // Try to get a new session. If another tab is already open, it will reject the session request from checkSessionRequests()
+      const newSessionId = Date.now().toString()
+      window.localStorage.setItem('session-requested', newSessionId)
+      window.setTimeout(
+        function checkSessionIsAllowed () {
+          // Create a new session if the session request wan't rejected.
+          if (window.localStorage.getItem('session-requested') === newSessionId) {
+            window.localStorage.setItem('session-id', newSessionId)
+            window.sessionStorage.setItem('session-id', newSessionId)
+            window.localStorage.removeItem('session-requested')
+            transfers.checkStatusAll({ loop: window.LOOP_INTERVAL })
+          } else {
+            alert('Another tab or window is open ! Please make sure you open this dapp in a single tab.')
+            getSession()
+          }
+        },
+        6000
+      )
+    }
+  }
+  const checkSessionRequests = () => {
+    // Reject the request if the current tab is already the session owner
+    if (window.sessionStorage.getItem('session-id') && window.localStorage.getItem('session-requested')) {
+      window.localStorage.removeItem('session-requested')
+    }
+    window.setTimeout(checkSessionRequests, 2000)
+  }
+  getSession()
+  checkSessionRequests()
 })
 
 render()
