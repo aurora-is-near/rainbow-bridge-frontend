@@ -266,7 +266,7 @@
         <h3>${window.utils.formatLargeNum(
           transfer.amount,
           transfer.decimals
-        )} ${transfer.sourceTokenName}</h3>
+        )} ${transfer.symbol ?? transfer.sourceTokenName}</h3>
         <div class="transfer__status">
           <span class="icon"></span>
           <span>${transfer.statusMessage}</span>

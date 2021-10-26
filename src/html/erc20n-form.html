@@ -50,13 +50,6 @@
         class="account--destination__token-details"
         data-behavior="erc20nInfo"
       >
-        <label>Receive as</label>
-        <strong data-behavior="erc20Name"></strong>
-      </div>
-      <div
-        class="account--destination__token-details"
-        data-behavior="erc20nInfo"
-      >
         <label>Current balance</label>
         <strong>
           <span data-behavior="erc20Balance"></span>
@@ -302,8 +295,8 @@
             value="${token.nep141.address}"
           />
           <span>
-            <img src="${token.nep141.icon || "near.svg"}" alt="" />
-            ${token.nep141.name}
+            <img src="${token.icon || "near.svg"}" alt="" />
+            ${token.name}
           </span>
           <span>
             ${window.utils.formatLargeNum(token.nep141.balance, token.decimals).toFixed(2, window.Decimal.ROUND_DOWN)}
@@ -391,7 +384,7 @@
     window.dom.hide("erc20nAddressError");
     window.dom.fill("erc20Name").with(token.name);
     window.dom.hide("erc20nModal");
-    window.dom.fill("erc20nName").with(token.nep141.name);
+    window.dom.fill("erc20nName").with(token.name);
     window.dom.fill("erc20nDecimals").with(token.decimals);
     window.dom
       .fill("erc20nBalance")
@@ -413,8 +406,10 @@
     amount.min = Number(Decimal(10).pow(-token.decimals).toFixed())
     window.dom.show("erc20nInfo", "flex");
     amount.focus();
-    if (token.nep141.balance) amount.disabled = false;
-    else amount.disabled = true;
+    if (token.nep141.balance) {
+      amount.disabled = false;
+      window.dom.show("useMaxErc20n");
+    } else amount.disabled = true;
   }
 
   // window.renderers.push(fillErc20nList);

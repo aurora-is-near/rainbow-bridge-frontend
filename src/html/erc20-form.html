@@ -51,13 +51,6 @@
         class="account--destination__token-details"
         data-behavior="erc20Info"
       >
-        <label>Receive as</label>
-        <strong data-behavior="nep141Name"></strong>
-      </div>
-      <div
-        class="account--destination__token-details"
-        data-behavior="erc20Info"
-      >
         <label>Current balance</label>
         <strong>
           <span data-behavior="nep141Balance"></span>
@@ -175,6 +168,7 @@
       window.dom.fill("erc20SelectButton").with("Select ERC20")
       window.dom.hide("useMaxErc20")
       amount.disabled = true
+      window.dom.hide("tokenStorage")
     }
 
     function enableOrDisableErc20() {
@@ -210,7 +204,7 @@
       try {
         const decimals = window.dom.find("erc20Decimals").innerHTML
         if (erc20Address === "aurora") {
-          const tx = await window.nearXaurora.bridgedErc20.sendEthToNear({
+          const tx = await window.nearXaurora.bridgedEther.sendToNear({
             amount: new window.Decimal(amount.value).times(Decimal(10).pow(decimals)).toFixed(),
             recipient: window.nearUserAddress
           })
@@ -416,7 +410,7 @@
     window.dom
       .fill("erc20Balance")
       .with(window.utils.formatLargeNum(token.balance, token.decimals));
-    window.dom.fill("nep141Name").with(token.nep141.name);
+    window.dom.fill("nep141Name").with(token.name);
     window.dom
       .fill("nep141Balance")
       .with(window.utils.formatLargeNum(token.nep141.balance, token.decimals));

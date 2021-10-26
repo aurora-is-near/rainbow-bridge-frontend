@@ -139,7 +139,7 @@
     } else if (token.auroraStorageBalance === '0') {
       window.dom.show('registerAuroraForm')
     }
-    window.dom.fill('erc20Name').with(token.nep141.name)
+    window.dom.fill('erc20Name').with(token.name)
   }
 
   window.renderers.push(renderBridgeErc20)

@@ -568,8 +568,7 @@
       if (!(window.ethInitialized && window.nearInitialized)) return;
       if (!window.isValidEthNetwork) return;
 
-      const transfers = await window.transfers.get();
-      // const transfers = []
+      const transfers = (window.transfers.get()).sort((a, b) => b.startTime < a.startTime ? -1 : 1);
 
       if (!transfers.length) {
         window.dom.hide("recent-transfers");

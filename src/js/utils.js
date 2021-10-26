@@ -101,7 +101,8 @@ export async function getErc20Data (nep141Address) {
     address: erc20Address,
     name: metadata.symbol || erc20Address.slice(0, 5) + '...',
     balance: erc20Balance,
-    decimals: metadata.decimals
+    decimals: metadata.decimals,
+    icon: metadata.icon
   }
   return { ...erc20, nep141, auroraStorageBalance: auroraStorageBalance.total }
 }
@@ -162,12 +163,12 @@ export async function getEthData () {
     balance: ethOnAuroraBalance.toString(),
     decimals: 18,
     name: 'ETH',
-    // icon: 'ethereum.svg',
+    icon: 'ethereum.svg',
     auroraStorageBalance: '1',
     nep141: {
       address: process.env.auroraEvmAccount,
       balance: ethOnNearBalance,
-      name: 'nETH',
+      name: 'ETH',
       storageBalance,
       minStorageBalance
     }
