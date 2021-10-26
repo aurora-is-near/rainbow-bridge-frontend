@@ -60,13 +60,6 @@
         class="account--destination__token-details"
         data-behavior="erc20Info"
       >
-        <label>Receive as</label>
-        <strong data-behavior="nep141Name"></strong>
-      </div>
-      <div
-        class="account--destination__token-details"
-        data-behavior="erc20Info"
-      >
         <label>Current balance</label>
         <strong>
           <span data-behavior="nep141Balance"></span>
@@ -463,7 +456,7 @@
     window.dom
       .fill("erc20Allowance")
       .with(window.utils.formatLargeNum(token.allowance, token.decimals));
-    window.dom.fill("nep141Name").with(token.nep141.name);
+    window.dom.fill("nep141Name").with(token.name);
     window.dom
       .fill("nep141Balance")
       .with(window.utils.formatLargeNum(token.nep141.balance, token.decimals));

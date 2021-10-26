@@ -50,13 +50,6 @@
         class="account--destination__token-details"
         data-behavior="erc20nInfo"
       >
-        <label>Receive as</label>
-        <strong data-behavior="erc20Name"></strong>
-      </div>
-      <div
-        class="account--destination__token-details"
-        data-behavior="erc20nInfo"
-      >
         <label>Current balance</label>
         <strong>
           <span data-behavior="erc20Balance"></span>
@@ -321,8 +314,8 @@
             value="${token.address}"
           />
           <span>
-            <img src="${token.nep141.icon || "near.svg"}" alt="" />
-            ${token.nep141.name}
+            <img src="${token.icon || "near.svg"}" alt="" />
+            ${token.name}
           </span>
           <span>
             ${window.utils.formatLargeNum(token.nep141.balance, token.decimals)}
@@ -412,14 +405,14 @@
     }
 
     window.dom.find("erc20nSelectButton").classList.add("selected");
-    window.dom.fill("erc20nSelectButton").with(token.nep141.name);
+    window.dom.fill("erc20nSelectButton").with(token.name);
     window.dom.find("erc20nFreeForm").classList.remove("error");
     window.dom.find("erc20nFreeForm").value = "";
     window.dom.hide("erc20nAddressError");
     window.dom.fill("erc20Name").with(token.name);
     window.dom.fill("erc20nDecimals").with(token.decimals);
     window.dom.hide("erc20nModal");
-    window.dom.fill("erc20nName").with(token.nep141.name);
+    window.dom.fill("erc20nName").with(token.name);
     window.dom
       .fill("erc20nBalance")
       .with(window.utils.formatLargeNum(token.nep141.balance, token.decimals));

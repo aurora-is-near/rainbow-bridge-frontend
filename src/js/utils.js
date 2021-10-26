@@ -38,16 +38,6 @@ export async function getErc20Data (address) {
     erc20.name = 'MKR'
     nep141.name = 'nMKR'
   }
-  // TODO remove once available on trustwallet.
-  if (address.toLowerCase() === '0xf5cfbc74057c610c8ef151a439252680ac68c6dc') {
-    erc20.icon = 'oct-token.svg'
-  }
-  if (address.toLowerCase() === '0xd9c2d319cd7e6177336b0a9c93c21cb48d84fb54') {
-    erc20.icon = 'hapi-token.svg'
-  }
-  if (address.toLowerCase() === '0xa4ef4b0b23c1fc81d3f9ecf93510e64f58a4a016') {
-    erc20.icon = '1mil.svg'
-  }
   return { ...erc20, allowance, nep141 }
 }
 
