@@ -1,4 +1,5 @@
-<aside class="banner caution">
+<aside class="banner new">
+  <!--
   <svg
     width="25"
     height="25"
@@ -28,8 +29,11 @@
       stroke-linejoin="round"
     />
   </svg>
+  -->
   <span>
-    <strong>CAUTION: Under maintenance.</strong>
+    🎉  &ensp; Check out
+    <strong><u><a target="_blank" rel="noopener noreferrer" href="https://rainbowbridge.app/">Rainbow Bridge 2.0</a></u></strong>
+    — the new official bridge of NEAR and Aurora
   </span>
 </aside>
 
@@ -38,13 +42,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--fs-micro);
+    font-size: var(--fs-small);
     font-weight: var(--fw-regular);
     padding: var(--spacing-m);
   }
 
-  .banner svg {
-    margin-right: var(--spacing-s);
+  .banner a {
+    color: var(--black);
+  }
+
+  .banner.new {
+    color: var(--black);
+    background: #f4f19c
   }
 
   .banner.caution {
