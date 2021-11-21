@@ -45,6 +45,7 @@ transfers.setBridgeParams({
   erc20LockerAddress: process.env.ethLockerAddress,
   erc20LockerAbi: process.env.ethLockerAbiText,
   nep141Factory: process.env.nearTokenFactoryAccount,
+  nearTokenFactoryAccount: process.env.nearTokenFactoryAccount,
   nativeNEARLockerAddress: process.env.nativeNEARLockerAddress,
   eNEARAddress: process.env.eNEARAddress,
   eNEARAbi: process.env.eNEARAbiText,
