@@ -67,7 +67,7 @@ module.exports = {
   },
   goerli_development: {
     // library settings
-    ethClientAddress: '0xbe22ac13ad6af062843eb33adfccfee6bbb4481b',
+    ethClientAddress: 'TODO',
     ethNearOnEthClientAbiText: readFileSync('./abi/nearOnEthClient.abi'),
     ethErc20AbiText: readFileSync('./abi/erc20.abi'),
     ethLockerAbiText: readFileSync('./abi/ERC20Locker.full.abi'),
