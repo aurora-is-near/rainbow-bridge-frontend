@@ -108,7 +108,7 @@ module.exports = {
   },
   mainnet: {
     // library settings
-    ethClientAddress: '0x0151568af92125fb289f1dd81d9d8f7484efc362',
+    ethClientAddress: '0x3be7Df8dB39996a837041bb8Ee0dAdf60F767038',
     ethNearOnEthClientAbiText: readFileSync('./abi/nearOnEthClient.abi'),
     ethErc20AbiText: readFileSync('./abi/erc20.abi'),
     ethLockerAbiText: readFileSync('./abi/ERC20Locker.full.abi'),
