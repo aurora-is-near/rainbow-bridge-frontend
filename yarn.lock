@@ -1512,18 +1512,18 @@
     ethers "^5.4.6"
     near-api-js "^0.43.0"
 
-"@near-eth/near-ether@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-2.1.1.tgz#c0b4b07b9b400853ead03f0bbedda2dffb573b00"
-  integrity sha512-zMBICvjFJ5CQ5CHz7W0AMfll2U1Ewg//U03pRF3YtwpCliFikj34eewgPlbLprpZPr/uhntw6NTS/DQCk4vD/g==
+"@near-eth/near-ether@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/near-ether/-/near-ether-2.2.0.tgz#84b005770556d4b0b4c068d8ceefddab7e49edfe"
+  integrity sha512-NnCE2sRdjkcE91PxnDUj5aNtg6G4sv2Kf/AyJmNA6imcnw6TumTTlmSgsOLtUw1TqgMGKYkx7ygAjkVFZ+AP0w==
   dependencies:
     "@near-eth/client" "1.8.0"
-    "@near-eth/utils" "2.1.2"
+    "@near-eth/utils" "2.2.0"
     bn.js "^5.1.3"
     bs58 "^4.0.1"
     ethereumjs-util "^7.0.10"
     ethers "^5.4.6"
-    find-replacement-tx "1.2.1"
+    find-replacement-tx "1.2.2"
     near-api-js "^0.43.0"
     promisfy "^1.2.0"
     rlp "^2.2.6"
@@ -1548,6 +1548,19 @@
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@near-eth/utils/-/utils-2.1.2.tgz#713bf9c9376320364c7d648c069f41ba328891f8"
   integrity sha512-sGQRg0sra/7dAtKNHvL4YoQ2CRzivnRitakYcm6P4qFclD1dLrVPW1Mza+CngPndxz1AzXaSnZ9fU5RTsKt01A==
+  dependencies:
+    bs58 "^4.0.1"
+    eth-object aurora-is-near/eth-object#383b6ea68c7050bea4cab6950c1d5a7fa553e72b
+    ethereumjs-util "^7.0.10"
+    ethers "^5.4.0"
+    lite-merkle-patricia-tree "1.0.0"
+    near-api-js "^0.43.0"
+    web3-utils "^1.3.4"
+
+"@near-eth/utils@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@near-eth/utils/-/utils-2.2.0.tgz#8e15cec956afc0fc03d18751d71b7ee2da2df4d7"
+  integrity sha512-npno+59sBb4yoMd/GiJYtx5+1Jg5+W/7B+XTptw2uoB3znlG2ZrTFriBwcMjO1fywVLpqNfsNFO5gJPH85hXmw==
   dependencies:
     bs58 "^4.0.1"
     eth-object aurora-is-near/eth-object#383b6ea68c7050bea4cab6950c1d5a7fa553e72b
@@ -5181,6 +5194,13 @@ find-replacement-tx@1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/find-replacement-tx/-/find-replacement-tx-1.2.1.tgz#874fe08bf3ce06ecff67b65fccfdc11a6d05b49c"
   integrity sha512-blp+15sy4/elbAfrJxtPksEwH20Q2yApiumQfxSSOeB2NshmMiCrn9uIFhy4lQOe0zC2lUvLyVQ4p1Zl4r7K9A==
+  dependencies:
+    ethers "^5.4.6"
+
+find-replacement-tx@1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/find-replacement-tx/-/find-replacement-tx-1.2.2.tgz#d0f52f179308228cb67c6827370fe470f7ce76ee"
+  integrity sha512-68Ex6qllXKOD7zAdDnQ9+Xhh2IBF1ixKCNYWaYhWRzvUegqrx0tI5bL1l7EglSfu6isN0kkM5+2PRhSnjefStQ==
   dependencies:
     ethers "^5.4.6"
 
