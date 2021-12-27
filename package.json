@@ -22,7 +22,7 @@
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
     "conventional-changelog-angular": "^5.0.12",
-    "conventional-changelog-cli": "^2.1.1",
+    "conventional-changelog-cli": "^2.2.2",
     "env-cmd": "^10.1.0",
     "eslint": "^7.24.0",
     "eslint-config-standard": "^16.0.2",
