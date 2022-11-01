@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.1",
-    "@commitlint/config-conventional": "^12.1.1",
+    "@commitlint/config-conventional": "^17.2.0",
     "conventional-changelog-angular": "^5.0.12",
     "conventional-changelog-cli": "^2.1.1",
     "env-cmd": "^10.1.0",
