@@ -43,7 +43,7 @@
     "@walletconnect/web3-provider": "^1.6.4",
     "autobahn": "^20.9.2",
     "decimal.js": "^10.2.1",
-    "ethers": "^5.4.6",
+    "ethers": "^6.0.2",
     "near-api-js": "^0.43.0",
     "web3modal": "^1.9.4"
   },
